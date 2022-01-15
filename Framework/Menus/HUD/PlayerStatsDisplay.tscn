@@ -1,0 +1,81 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5h4g1aj3ynt"]
+
+[ext_resource type="Font" uid="uid://bbuk4chu2svr2" path="res://Assets/Fonts/3x6.tres" id="1_hagkc"]
+
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.960784, 0.34902, 1)
+
+[node name="PlayerStatsDisplay" type="Panel"]
+texture_filter = 1
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 52.0
+offset_bottom = 27.0
+theme_override_styles/panel = SubResource( "1" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginWrapper" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_bottom = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Control" parent="MarginWrapper"]
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 44.0
+offset_bottom = 19.0
+
+[node name="Name" type="Label" parent="MarginWrapper/Panel"]
+offset_right = 12.0
+offset_bottom = 11.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource( "1_hagkc" )
+text = "Ady"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HPLabel" type="Label" parent="MarginWrapper/Panel"]
+offset_left = 1.0
+offset_top = 9.0
+offset_right = 9.0
+offset_bottom = 20.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource( "1_hagkc" )
+text = "HP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HP" type="Label" parent="MarginWrapper/Panel"]
+offset_left = 15.0
+offset_top = 9.0
+offset_right = 27.0
+offset_bottom = 20.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource( "1_hagkc" )
+text = "0/0"
+__meta__ = {
+"_edit_use_anchors_": false
+}

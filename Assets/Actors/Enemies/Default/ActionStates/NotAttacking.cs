@@ -1,0 +1,25 @@
+using Arenbee.Framework;
+using Arenbee.Framework.Actors;
+
+namespace Arenbee.Assets.Enemies.ActionStates
+{
+    public class NotAttacking : State<Enemy>
+    {
+        public NotAttacking() { IsInitialState = true; }
+        public override void Enter()
+        {
+        }
+
+        public override void Update()
+        {
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void CheckForTransitions()
+        {
+        }
+    }
+}

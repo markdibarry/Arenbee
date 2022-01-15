@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0mpecnfsorq8"]
+
+[ext_resource type="Script" path="res://Framework/Items/Weapon.cs" id="1_unber"]
+[ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="2_eug3a"]
+
+[node name="Weapon" type="Node2D"]
+texture_filter = 1
+script = ExtResource( "1_unber" )
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+[node name="StateAnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="HitBox" parent="." instance=ExtResource( "2_eug3a" )]

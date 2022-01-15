@@ -1,0 +1,2 @@
+﻿54830
+D:/Coding/godot/Godot_Latest/godot.windows.opt.tools.64.mono.exe

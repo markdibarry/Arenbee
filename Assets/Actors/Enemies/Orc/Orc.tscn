@@ -1,0 +1,37 @@
+[gd_scene load_steps=8 format=3 uid="uid://bgw7nate55esi"]
+
+[ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_kkfne"]
+[ext_resource type="Script" path="res://Assets/Actors/Enemies/Orc/Orc.cs" id="2_0isoc"]
+[ext_resource type="Texture2D" uid="uid://du7e0xw7padv2" path="res://Assets/Actors/Enemies/Orc/orc.png" id="3_cduir"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_vd3dt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ymup"]
+resource_local_to_scene = true
+shader = ExtResource( "3_vd3dt" )
+shader_param/flash_color = Color(1, 1, 1, 1)
+shader_param/flash_mix = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2755h"]
+size = Vector2(18, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xe4kc"]
+resource_local_to_scene = true
+size = Vector2(18, 26)
+
+[node name="Orc" instance=ExtResource( "1_kkfne" )]
+script = ExtResource( "2_0isoc" )
+
+[node name="BodySprite" parent="." index="1"]
+material = SubResource( "ShaderMaterial_0ymup" )
+texture = ExtResource( "3_cduir" )
+
+[node name="HurtBox" parent="BodySprite" index="0"]
+collision_mask = 40
+
+[node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
+position = Vector2(0, 2)
+shape = SubResource( "RectangleShape2D_2755h" )
+
+[node name="CollisionShape2D" parent="." index="3"]
+position = Vector2(0, 2)
+shape = SubResource( "RectangleShape2D_xe4kc" )

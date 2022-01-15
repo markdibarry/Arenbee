@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Actors/Enemies/Default/Animation/default_destroy.png" id="1_6jtp1"]
+[ext_resource type="Script" path="res://Assets/Actors/Enemies/Default/Animation/EnemyDeathEffect.cs" id="2_huydp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o58t6"]
+atlas = ExtResource( "1_6jtp1" )
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ad33w"]
+atlas = ExtResource( "1_6jtp1" )
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qlwxa"]
+atlas = ExtResource( "1_6jtp1" )
+region = Rect2(48, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtegx"]
+atlas = ExtResource( "1_6jtp1" )
+region = Rect2(72, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqv1q"]
+atlas = ExtResource( "1_6jtp1" )
+region = Rect2(96, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8iab2"]
+animations = [{
+"frames": [SubResource( "AtlasTexture_o58t6" ), SubResource( "AtlasTexture_ad33w" ), SubResource( "AtlasTexture_qlwxa" ), SubResource( "AtlasTexture_qtegx" ), SubResource( "AtlasTexture_hqv1q" )],
+"loop": false,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="EnemyDeathEffect" type="AnimatedSprite2D"]
+texture_filter = 1
+frames = SubResource( "SpriteFrames_8iab2" )
+script = ExtResource( "2_huydp" )

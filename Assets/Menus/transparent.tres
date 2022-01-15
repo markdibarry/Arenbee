@@ -1,0 +1,16 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://d0g3x5kq07us6"]
+
+[ext_resource type="Texture2D" uid="uid://djd6u7vmsso0e" path="res://Assets/Menus/transparent.png" id="1"]
+
+[resource]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( "1" )
+region_rect = Rect2(0, 0, 3, 3)
+margin_right = 1.0
+margin_bottom = 1.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(0.431373, 0.45098, 0.298039, 1)

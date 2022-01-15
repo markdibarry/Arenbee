@@ -1,0 +1,95 @@
+[gd_scene load_steps=6 format=3 uid="uid://c38qa4n4acslv"]
+
+[ext_resource type="Script" path="res://Framework/Menus/MessageBox.cs" id="1"]
+[ext_resource type="StyleBox" uid="uid://d0g3x5kq07us6" path="res://Assets/Menus/transparent.tres" id="2"]
+[ext_resource type="Font" uid="uid://bbuk4chu2svr2" path="res://Assets/Fonts/3x6.tres" id="3_cg2je"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av8k5"]
+bg_color = Color(0, 0, 0, 0.45098)
+
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0, 0, 0, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.760784, 0.745098, 0.756863, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+anti_aliasing = false
+
+[node name="MessageBox" type="MarginContainer"]
+texture_filter = 1
+offset_right = 126.0
+offset_bottom = 17.0
+script = ExtResource( "1" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BoxWrapper" type="MarginContainer" parent="."]
+offset_right = 9.0
+offset_bottom = 17.0
+size_flags_horizontal = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackgroundMargin" type="MarginContainer" parent="BoxWrapper"]
+offset_right = 9.0
+offset_bottom = 17.0
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="BackgroundColor" type="Panel" parent="BoxWrapper/BackgroundMargin"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 8.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource( "StyleBoxFlat_av8k5" )
+
+[node name="BackgroundPattern" type="Panel" parent="BoxWrapper/BackgroundMargin"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 8.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+theme_override_styles/panel = ExtResource( "2" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Border" type="Panel" parent="BoxWrapper"]
+offset_right = 9.0
+offset_bottom = 17.0
+rect_clip_content = true
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource( "1" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MessageMargin" type="MarginContainer" parent="BoxWrapper"]
+offset_right = 9.0
+offset_bottom = 17.0
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Message" type="Label" parent="BoxWrapper/MessageMargin"]
+texture_filter = 1
+offset_left = 4.0
+offset_top = 6.0
+offset_right = 5.0
+offset_bottom = 11.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource( "3_cg2je" )
+theme_override_font_sizes/font_size = 16

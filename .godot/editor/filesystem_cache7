@@ -1,0 +1,307 @@
+102b54792f6b2ef812636a2bdaeb9d34
+::res://::1642186507
+default_env.tres::Environment::-1::1639362532::0::1::::<><>::
+icon.png::StreamTexture2D::3269217757440186911::1637076312::1639708194::1::::<><>::
+::res://Assets/::1642182391
+DemoLevel.cs::CSharpScript::-1::1641335718::0::1::::<><>::
+DemoLevel.tscn::PackedScene::6043137277581951552::1642182391::0::1::::<><>::res://Assets/DemoLevel.cs<>uid://dnbas3hk0lkoa<>uid://coaevubr6v0g1<>uid://bprpapx7m8llp<>uid://dakh8nw6p5pn8<>uid://ls47we5pcnrr<>uid://bacp6g8cce1b2<>uid://fteruht4dtyr<>uid://bp7onxgqet02i<>uid://c3n3fmjf2qxh0<>uid://bu1vrvwkfu6aw<>uid://bgw7nate55esi<>uid://dlhf2h7gt57an
+World.cs::CSharpScript::-1::1642044606::0::1::::<><>::
+World.tscn::PackedScene::3261787878463159401::1642182391::0::1::::<><>::res://Assets/World.cs
+::res://Assets/Actors/::1641052669
+::res://Assets/Actors/Enemies/::1641998855
+::res://Assets/Actors/Enemies/Default/::1641225371
+::res://Assets/Actors/Enemies/Default/ActionStates/::1641824043
+NotAttacking.cs::CSharpScript::-1::1642004278::0::1::::<><>::
+::res://Assets/Actors/Enemies/Default/Animation/::1641232014
+default_destroy.png::StreamTexture2D::9011919603425189462::1641224254::1641232014::1::::<><>::
+EnemyDeathEffect.cs::CSharpScript::-1::1641225499::0::1::::<><>::
+EnemyDeathEffect.tscn::PackedScene::-1::1641232014::0::1::::<><>::res://Assets/Actors/Enemies/Default/Animation/default_destroy.png<>res://Assets/Actors/Enemies/Default/Animation/EnemyDeathEffect.cs
+::res://Assets/Actors/Enemies/Default/MoveStates/::1642124754
+Dead.cs::CSharpScript::-1::1642124778::0::1::::<><>::
+Idle.cs::CSharpScript::-1::1642125548::0::1::::<><>::
+Stagger.cs::CSharpScript::-1::1642125169::0::1::::<><>::
+Walk.cs::CSharpScript::-1::1642124792::0::1::::<><>::
+::res://Assets/Actors/Enemies/Orc/::1641911415
+Orc.cs::CSharpScript::-1::1642125254::0::1::::<><>::
+orc.png::StreamTexture2D::8629387768285285217::1636767873::1641052666::1::::<><>::
+Orc.tscn::PackedScene::2854936244774200972::1641911415::0::1::::<><>::uid://cmwindadvvm2l<>res://Assets/Actors/Enemies/Orc/Orc.cs<>uid://du7e0xw7padv2<>res://Framework/Actors/Animation/IFrame.gdshader
+::res://Assets/Actors/Enemies/Plant/::1642182391
+Plant.cs::CSharpScript::-1::1641998862::0::1::::<><>::
+Plant.tscn::PackedScene::7946142194171753709::1642182391::0::1::::<><>::uid://cmwindadvvm2l<>res://Assets/Actors/Enemies/Plant/Plant.cs<>res://Framework/Actors/Animation/IFrame.gdshader<>uid://diw5wotpv1xch<>uid://cobq0o2vl27mi
+::res://Assets/Actors/Enemies/Plant/Animation/::1642004465
+Idle.tres::Animation::7768050673410607847::1641825367::0::1::::<><>::
+plant1.png::StreamTexture2D::2680194942322747262::1641174877::1642004465::1::::<><>::
+plant_idle.png::StreamTexture2D::5758566450811164552::1641174042::1642004465::1::::<><>::
+subplant1.png::StreamTexture2D::5373036243685236989::1641174877::1642004465::1::::<><>::
+::res://Assets/Actors/Enemies/Plant/MoveStates/::1640830763
+Idle.cs::CSharpScript::-1::1642004674::0::1::::<><>::
+::res://Assets/Actors/Players/::1641768738
+::res://Assets/Actors/Players/Ady/::1642182391
+Ady.cs::CSharpScript::-1::1641998604::0::1::::<><>::
+Ady.tscn::PackedScene::6766675549268226803::1642182391::0::1::::<><>::uid://bj28sv5vq5vnv<>res://Assets/Actors/Players/Ady/Ady.cs<>uid://btpwopgyi1ojn<>uid://duu0xw5t5b1xq<>uid://dimyi2m7odx30<>uid://co615bidb54o1<>uid://ce7pokvam44wb<>uid://daavf15ohry4b<>uid://bu0lnw8lkiuf<>uid://ckug8y3cgsnn1<>uid://2ik4a1kw6j1o<>uid://cnxu11xftd3m2<>uid://b6niy2ts1d5o2
+::res://Assets/Actors/Players/Ady/ActionStates/::1641429186
+::res://Assets/Actors/Players/Ady/Animation/::1642184116
+Ady.png::StreamTexture2D::8605886679761389518::1642128163::1642128166::1::::<><>::
+Dead.tres::Animation::7747018265550808485::1642112057::0::1::::<><>::
+Idle.tres::Animation::3752335952303401671::1641824778::0::1::::<><>::
+Jump.tres::Animation::5821113169344224714::1641824784::0::1::::<><>::
+Reset.tres::Animation::9169468346732985775::1641824796::0::1::::<><>::
+Run.tres::Animation::5120593143766014281::1641824801::0::1::::<><>::
+SpearWeakAttack1.tres::Animation::5516441895917720760::1642112037::0::1::::<><>::
+SpearWeakAttack2.tres::Animation::1912272798860157374::1642112110::0::1::::<><>::
+Stagger.tres::Animation::5734039194911178059::1642112046::0::1::::<><>::
+UnarmedAttack.tres::Animation::7160547449494306803::1641824805::0::1::::<><>::
+Walk.tres::Animation::113014685575064045::1641824809::0::1::::<><>::
+::res://Assets/Actors/Players/Ady/MoveStates/::1641429301
+::res://Assets/Actors/Players/Default/::1642124606
+::res://Assets/Actors/Players/Default/ActionStates/::1641604292
+NotAttacking.cs::CSharpScript::-1::1642002333::0::1::::<><>::
+UnarmedAttack.cs::CSharpScript::-1::1642015075::0::1::::<><>::
+::res://Assets/Actors/Players/Default/MoveStates/::1642097261
+Dead.cs::CSharpScript::-1::1642097661::0::1::::<><>::
+Idle.cs::CSharpScript::-1::1642003039::0::1::::<><>::
+Jump.cs::CSharpScript::-1::1642003056::0::1::::<><>::
+Run.cs::CSharpScript::-1::1642003064::0::1::::<><>::
+Stagger.cs::CSharpScript::-1::1642125182::0::1::::<><>::
+Walk.cs::CSharpScript::-1::1642003069::0::1::::<><>::
+::res://Assets/Fonts/::1642177168
+3x6.tres::Font::2498556157169088689::1642177168::0::1::::<><>::uid://ungm2bp6hwxr
+m3x6.ttf::FontData::1431000935445399743::1637422222::1639747414::1::::<><>::
+m5x7.ttf::FontData::4559301843679641647::1637422231::1639747404::1::::<><>::
+Poco.ttf::FontData::2874052921900102111::1637382035::1639747404::1::::<><>::
+::res://Assets/Items/::1641768691
+::res://Assets/Items/Bat/::1641768691
+Bat.cs::CSharpScript::-1::1641756303::0::1::::<><>::
+Bat.tscn::PackedScene::-1::1641768691::0::1::::<><>::uid://l6lrechdburc<>res://Assets/Items/Bat/Bat.cs<>uid://bp7onxgqet02i
+Bat_(16 x 16).png::StreamTexture2D::5671513245637220643::1636578236::1641768691::1::::<><>::
+::res://Assets/Items/HockeyStick/::1642182391
+HockeyStick.cs::CSharpScript::-1::1642000641::0::1::::<><>::
+HockeyStick.png::StreamTexture2D::1516449417536622495::1642128134::1642128166::1::::<><>::
+HockeyStick.tres::Animation::3634593704548667671::1641921440::0::1::::<><>::
+HockeyStick.tscn::PackedScene::4589641790605204519::1642182391::0::1::::<><>::uid://c0mpecnfsorq8<>res://Assets/Items/HockeyStick/HockeyStick.cs<>uid://vutx2ut8lvpf<>uid://bygnulqi68y5j
+WeakAttack1.tres::Animation::4084164837194256733::1642127704::0::1::::<><>::
+::res://Assets/Items/HockeyStick/ActionStates/::1642112457
+NotAttacking.cs::CSharpScript::-1::1642112542::0::1::::<><>::
+WeakAttack1.cs::CSharpScript::-1::1642125402::0::1::::<><>::
+WeakAttack2.cs::CSharpScript::-1::1642112540::0::1::::<><>::
+::res://Assets/Menus/::1641071479
+transparent.png::StreamTexture2D::7799074433495733246::1637464267::1639937102::1::::<><>::
+transparent.tres::StyleBoxTexture::8928112149521950179::1641071479::0::1::::<><>::uid://djd6u7vmsso0e
+::res://Assets/Scenery/::1642177168
+DemoTiles.tres::TileSet::811055180862739143::1642177168::0::1::::<><>::uid://bk5jxha3iuipu
+Spike.png::StreamTexture2D::3845177930841689922::1642087535::1642087539::1::::<><>::
+::res://Assets/Scenery/Barrel/::1641347541
+Barrel.tscn::PackedScene::2391515919916146789::1641347541::0::1::::<><>::uid://b2ks1y8asjmip<>uid://cb3m6g7tsek0v
+barrel_default.png::StreamTexture2D::4901617117123496495::1641233230::1641233233::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/::1636320466
+LICENSE.txt::TextFile::-1::1636320465::0::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/::1642125867
+Clouds.tres::TileSet::-1::1642125867::0::1::::<><>::res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png
+Extra_plants (16 x 16).png::StreamTexture2D::5840389163682342451::1636320466::1642125867::1::::<><>::
+Grassland_entities (16 x 16).png::StreamTexture2D::1410006787366979420::1636320466::1642125867::1::::<><>::
+Solids.tres::TileSet::-1::1642125867::0::1::::<><>::res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png
+Terrain (16 x 16).png::StreamTexture2D::3150828347837058386::1636402625::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/::1642125867
+1 - Foreground_scenery.png::StreamTexture2D::7180390496987116887::1636403348::1642125867::1::::<><>::
+2 - Hills.png::StreamTexture2D::3475259339826133433::1636403308::1642125867::1::::<><>::
+3 - Cloud_cover_1.png::StreamTexture2D::5755766600788214594::1636320466::1642125867::1::::<><>::
+4 - Cloud_cover_2.png::StreamTexture2D::1508637608737230602::1636320466::1642125867::1::::<><>::
+5 - Sky_color.png::StreamTexture2D::8073815022373714028::1636320466::1642125867::1::::<><>::
+_Complete_static_BG_(288 x 208).png::StreamTexture2D::2659165261900854346::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/::1642125867
+Autumn_entities (16 x 16).png::StreamTexture2D::6224811149714490030::1636320466::1642125867::1::::<><>::
+Terrain (16 x 16).png::StreamTexture2D::4333551832690954842::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/::1642125867
+1 - Leaf_top.png::StreamTexture2D::8363380487331887244::1636320466::1642125867::1::::<><>::
+2 - Trees.png::StreamTexture2D::2612596472761171412::1636320466::1642125867::1::::<><>::
+3 - Bottom_leaf_piles.png::StreamTexture2D::5629099865872097265::1636320466::1642125867::1::::<><>::
+4 - Tree_row_BG_1.png::StreamTexture2D::9064634107420939300::1636320466::1642125867::1::::<><>::
+5 - Tree_row_BG_2.png::StreamTexture2D::7728903510847707576::1636320466::1642125867::1::::<><>::
+6 - Distant_trees.png::StreamTexture2D::5577759777063293489::1636320466::1642125867::1::::<><>::
+_Complete_static_BG_(288 x 208).png::StreamTexture2D::3525438945077830326::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/3 - Tropics/::1642125867
+Terrain (16 x 16).png::StreamTexture2D::6429837923149634268::1636320466::1642125867::1::::<><>::
+Tropics_entities (16 x 16).png::StreamTexture2D::5158358685684797434::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/3 - Tropics/Background parts/::1642125867
+1 - Waters_version_1.png::StreamTexture2D::6189728383794687825::1636320466::1642125867::1::::<><>::
+2 - Waters_version_2.png::StreamTexture2D::4455894120332318427::1636320466::1642125867::1::::<><>::
+3 - Floating_clouds.png::StreamTexture2D::7964958670861368426::1636320466::1642125867::1::::<><>::
+4 - Background_clouds.png::StreamTexture2D::1398704020500295659::1636320466::1642125867::1::::<><>::
+5 - Sky_color.png::StreamTexture2D::5666881759520489901::1636320466::1642125867::1::::<><>::
+_Complete_static_BG_(288 x 208).png::StreamTexture2D::5869847323586676900::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/4 - Winter World/::1642125867
+Terrain (16 x 16).png::StreamTexture2D::4256366349730217566::1636320466::1642125867::1::::<><>::
+Winter_entities (16 x 16).png::StreamTexture2D::5064616018541179321::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/4 - Winter World/Background parts/::1642125867
+1 - Snowy_foreground_area.png::StreamTexture2D::8227640139306865659::1636320466::1642125867::1::::<><>::
+2 - Smaller_mountains.png::StreamTexture2D::7897675328649390593::1636320466::1642125867::1::::<><>::
+3 - Big_mountain_BG.png::StreamTexture2D::8705039963151521307::1636320466::1642125867::1::::<><>::
+_Complete_static_BG_(288 x 208).png::StreamTexture2D::8001640529117383085::1636320466::1642125867::1::::<><>::
+::res://Assets/Scenery/Seasonal Tilesets/5 - Misc. universal tiles/::1642125867
+Blocks (16 x 16).png::StreamTexture2D::4694988133518711494::1636402421::1642125867::1::::<><>::
+Bubbling_Oil_frames (16 x 32).png::StreamTexture2D::69474335505884093::1636320466::1642125867::1::::<><>::
+Flowers (16 x 16).png::StreamTexture2D::1882570726355329132::1636320466::1642125867::1::::<><>::
+House (112 x 96).png::StreamTexture2D::1621615638814887937::1636320466::1642125867::1::::<><>::
+Lava_frames (16 x 32).png::StreamTexture2D::6345836669096374223::1636320466::1642125867::1::::<><>::
+Metal_Wire_fence (16 x 16).png::StreamTexture2D::3123483108399070392::1636320466::1642125867::1::::<><>::
+Rock_shape (16 x 16).png::StreamTexture2D::3128740562478899637::1636320466::1642125867::1::::<><>::
+Snack_machine_Bench_Trash_bin (16 x 16).png::StreamTexture2D::9096811418833557445::1636320466::1642125867::1::::<><>::
+Water_frames (16 x 32).png::StreamTexture2D::1533133932179545718::1636320466::1642125867::1::::<><>::
+::res://Assets/Sprite Pack 5/::1636553067
+::res://Assets/Sprite Pack 5/Sprite Pack 5/::1636553067
+LICENSE.txt::TextFile::-1::1636504064::0::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/1 - Robo Retro/::1639708194
+Flight_Ending_(32 x 32).png::StreamTexture2D::1930304080283443997::1636504064::1639708194::1::::<><>::
+Flight_Hurt_(32 x 32).png::StreamTexture2D::2483101825234723536::1636504064::1639708194::1::::<><>::
+Flight_Start-up_(32 x 32).png::StreamTexture2D::4023672075303613556::1636504064::1639708194::1::::<><>::
+Flying_(32 x 32).png::StreamTexture2D::5838048803963722626::1636504064::1639708194::1::::<><>::
+Hurt_(32 x 32).png::StreamTexture2D::8501612026958641095::1636504064::1639708194::1::::<><>::
+Idle_(32 x 32).png::StreamTexture2D::2253514634283954122::1636504064::1639708194::1::::<><>::
+Pilot_Front-facing_(32 x 32).png::StreamTexture2D::80811805965740384::1636504064::1639708194::1::::<><>::
+Pilot_Hurt_(32 x 32).png::StreamTexture2D::7432969444148910567::1636504064::1639708194::1::::<><>::
+Pilot_Idle_(32 x 32).png::StreamTexture2D::79165095369064596::1636504064::1639708194::1::::<><>::
+Pilot_Running_(32 x 32).png::StreamTexture2D::7322074629954319204::1636504064::1639708194::1::::<><>::
+Pilot_Suiting-up_(32 x 32).png::StreamTexture2D::3324010034585627326::1636504064::1639708194::1::::<><>::
+Spin-attack_(32 x 32).png::StreamTexture2D::3817602482426514132::1636504064::1639708194::1::::<><>::
+Walking_(32 x 32).png::StreamTexture2D::7838170299675942329::1636504064::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/2 - Lil Wiz/::1641050198
+Casting_Spell_(32 x 32).png::StreamTexture2D::42146522962681101::1636504064::1639708194::1::::<><>::
+Casting_Spell_Aerial_(32 x 32).png::StreamTexture2D::7225869479650752451::1636504064::1639708194::1::::<><>::
+Casting_Spell_Repeating_(32 x 32).png::StreamTexture2D::9146435988086570617::1636504064::1639708194::1::::<><>::
+Ducking_(32 x 32).png::StreamTexture2D::7491865579548211526::1636504064::1639708194::1::::<><>::
+Falling_(32 x 32).png::StreamTexture2D::5371317442320712318::1636504064::1639708194::1::::<><>::
+Ground_Recovery_(32 x 32).png::StreamTexture2D::5237492347347793510::1636504064::1639708194::1::::<><>::
+Hurt_(32 x 32).png::StreamTexture2D::849152286013161121::1636504064::1639708194::1::::<><>::
+Jumping_(32 x 32).png::StreamTexture2D::1479403090866350460::1636504064::1639708194::1::::<><>::
+Magical_Orbs_Spell_(32 x 32).png::StreamTexture2D::5699208229561046626::1636504064::1639708194::1::::<><>::
+Running_(32 x 32).png::StreamTexture2D::627155344941217085::1636504064::1639708194::1::::<><>::
+Sparkles_(8 x 8).png::StreamTexture2D::7209172960345877999::1636504064::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/3 - Big Red/::1639708194
+Blocking_(32 x 32).png::StreamTexture2D::6220515491959685495::1636504064::1639708194::1::::<><>::
+Facing_Player_(32 x 32).png::StreamTexture2D::4505852711882991259::1636504065::1639708194::1::::<><>::
+Hurt_(32 x 32).png::StreamTexture2D::5070320961651620289::1636504065::1639708194::1::::<><>::
+Idle_(32 x 32).png::StreamTexture2D::2775223160710288665::1636504065::1639708194::1::::<><>::
+Jumping_&_Falling_(32 x 32).png::StreamTexture2D::5807695380163412380::1636504065::1639708194::1::::<><>::
+Landed_(32 x 32).png::StreamTexture2D::8634271004652475444::1636504065::1639708194::1::::<><>::
+Punching_(48 x 32).png::StreamTexture2D::4075301209395875463::1636504065::1639708194::1::::<><>::
+Running_(32 x 32).png::StreamTexture2D::2493514628753787638::1636504065::1639708194::1::::<><>::
+Super_Punch_(64 x 32).png::StreamTexture2D::1067202511228463602::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/4 - Squirmy Wormy/::1639708194
+Hurt_(32 x 32).png::StreamTexture2D::7580117450008595302::1636504065::1639708194::1::::<><>::
+Movement_(32 x 32).png::StreamTexture2D::4491398006306712676::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/5 - Moe Scotty/::1639708194
+Flying_(32 x 32).png::StreamTexture2D::5380184354003054061::1636504065::1639708194::1::::<><>::
+Hurt_(32 x 32).png::StreamTexture2D::8960155824620252289::1636504065::1639708194::1::::<><>::
+Sting_Attack_(32 x 32).png::StreamTexture2D::1096626917321449130::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/6 - Mr. Chomps/::1639708194
+Crawling_(32 x 32).png::StreamTexture2D::2378571124424479639::1636504065::1639708194::1::::<><>::
+Crawl_&_Blink_(32 x 32).png::StreamTexture2D::7193703985035398419::1636504065::1639708194::1::::<><>::
+Crawl_&_Chomp_(32 x 32).png::StreamTexture2D::8136356071881419600::1636504065::1639708194::1::::<><>::
+Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png::StreamTexture2D::1167949532083733746::1636504065::1639708194::1::::<><>::
+Hurt_(32 x 32).png::StreamTexture2D::6890865294344197290::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/7 - Grizzly/::1639708194
+Attack_(48 x 32).png::StreamTexture2D::5017410656223767236::1636504065::1639708194::1::::<><>::
+Idle_(48 x 32).png::StreamTexture2D::6001012751572599934::1636504065::1639708194::1::::<><>::
+Sleeping_&_Wakeup_(48 x 32).png::StreamTexture2D::8041705851090278204::1636504065::1639708194::1::::<><>::
+Walking_(48 x 32).png::StreamTexture2D::542325494089908784::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/8 - Orc/::1639708194
+Blink_(Replace last frame on Walking)_(64 x 32).png::StreamTexture2D::7323017795102742159::1636504065::1639708194::1::::<><>::
+Falling_(64 x 32).png::StreamTexture2D::745671208069678991::1636504065::1639708194::1::::<><>::
+Hurt_(64 x 32).png::StreamTexture2D::7511732865661808972::1636504065::1639708194::1::::<><>::
+Idle_(64 x 32).png::StreamTexture2D::4086074284236792242::1636504065::1639708194::1::::<><>::
+Spear_Jab_(64 x 32).png::StreamTexture2D::6904252268560092317::1636504065::1639708194::1::::<><>::
+Walking_&_Blink_(64 x 32).png::StreamTexture2D::1611386983545342023::1636504065::1639708194::1::::<><>::
+Walking_(64 x 32).png::StreamTexture2D::866080593183954174::1636504065::1639708194::1::::<><>::
+::res://Assets/Sprite Pack 5/Sprite Pack 5/9 - Wispy Fire/::1639708194
+Death_(32 x 32).png::StreamTexture2D::3665978497236564414::1636504065::1639708194::1::::<><>::
+Idle_Flicker_(32 x 32).png::StreamTexture2D::1766290808434078272::1636504065::1639708194::1::::<><>::
+Weak_Flicker_(32 x 32).png::StreamTexture2D::3501950064448365357::1636504065::1639708194::1::::<><>::
+::res://Framework/::1641946827
+EventSourceInfo.cs::CSharpScript::-1::1642099981::0::1::::<><>::
+::res://Framework/Actors/::1642125403
+Actor.cs::CSharpScript::-1::1642177957::0::1::::<><>::
+Actor.Movement.cs::CSharpScript::-1::1642174938::0::1::::<><>::
+Actor.State.cs::CSharpScript::-1::1642112393::0::1::::<><>::
+Actor.tscn::PackedScene::1171350879663813575::1642097856::0::1::::<><>::res://Framework/Items/WeaponSlot.cs<>uid://dj0tycf31xs3q<>res://Framework/Actors/Animation/IFrame.gdshader<>res://Framework/Actors/Actor.cs<>uid://d4at3vj6l08gv
+ActorStats.cs::CSharpScript::-1::1641922830::0::1::::<><>::
+Enemy.cs::CSharpScript::-1::1642124916::0::1::::<><>::
+Enemy.tscn::PackedScene::5661032910630061097::1642125403::0::1::::<><>::uid://qxn8inqies2j<>res://Framework/Actors/Enemy.cs<>res://Framework/Actors/Animation/IFrame.gdshader
+IActor.cs::CSharpScript::-1::1641737714::0::1::::<><>::
+Player.cs::CSharpScript::-1::1642103841::0::1::::<><>::
+Player.tscn::PackedScene::3075895431157802547::1642125403::0::1::::<><>::uid://qxn8inqies2j<>res://Framework/Actors/Player.cs
+::res://Framework/Actors/Animation/::1642177168
+Blinker.cs::CSharpScript::-1::1642098478::0::1::::<><>::
+Blinker.tscn::PackedScene::9195943259991953789::1641086996::0::1::::<><>::res://Framework/Actors/Animation/Blinker.cs
+IFrame.gdshader::Shader::-1::1642177168::0::1::::<><>::
+::res://Framework/Actors/Animation/Destroy/::1641233703
+destroy1.png::StreamTexture2D::5784345184085838168::1641009073::1641010021::1::::<><>::
+destroy2.png::StreamTexture2D::1442904661961626356::1641009417::1641010021::1::::<><>::
+destroy3.png::StreamTexture2D::8274765577436773851::1641009585::1641010021::1::::<><>::
+destroy4.png::StreamTexture2D::2366499022411300102::1641009875::1641010021::1::::<><>::
+destroy5.png::StreamTexture2D::1090038424380472636::1641010017::1641010021::1::::<><>::
+Destroy.tres::Animation::6765696894329695404::1641233703::0::1::::<><>::uid://con8k5amnyp1y<>uid://us7ot5kb6llk<>uid://dp5mgegy14crj<>uid://8yl5mqlshx4y<>uid://psa1kjkdhdrg
+::res://Framework/Actors/State/::1641996773
+IState.cs::CSharpScript::-1::1642002196::0::1::::<><>::
+IStateMachine.cs::CSharpScript::-1::1642026349::0::1::::<><>::
+State.cs::CSharpScript::-1::1642009567::0::1::::<><>::
+StateController.cs::CSharpScript::-1::1642182292::0::1::::<><>::
+StateMachine.cs::CSharpScript::-1::1642026351::0::1::::<><>::
+::res://Framework/Actors/Stats/::1642087981
+ActorStat.cs::CSharpScript::-1::1637847241::0::1::::<><>::
+ElementModifier.cs::CSharpScript::-1::1638153116::0::1::::<><>::
+HitBox.cs::CSharpScript::-1::1642096716::0::1::::<><>::
+HitBox.tscn::PackedScene::3506187897651962330::1641755002::0::1::::<><>::res://Framework/Actors/Stats/HitBox.cs
+HitBoxAction.cs::CSharpScript::-1::1642100586::0::1::::<><>::
+HitBoxActionRecievedData.cs::CSharpScript::-1::1642100255::0::1::::<><>::
+HurtBox.cs::CSharpScript::-1::1641348915::0::1::::<><>::
+HurtBox.tscn::PackedScene::7843767683667954088::1641348831::0::1::::<><>::res://Framework/Actors/Stats/HurtBox.cs
+StatDB.cs::CSharpScript::-1::1636812273::0::1::::<><>::
+StatInfo.cs::CSharpScript::-1::1636810325::0::1::::<><>::
+StatModifier.cs::CSharpScript::-1::1637877868::0::1::::<><>::
+StatusEffectModifier.cs::CSharpScript::-1::1638132909::0::1::::<><>::
+::res://Framework/Constants/::1641999294
+ActionConstants.cs::CSharpScript::-1::1641524420::0::1::::<><>::
+PathConstants.cs::CSharpScript::-1::1642015826::0::1::::<><>::
+WeaponTypeConstants.cs::CSharpScript::-1::1642000597::0::1::::<><>::
+::res://Framework/Enums/::1641767623
+ActionType.cs::CSharpScript::-1::1642088228::0::1::::<><>::
+Direction.cs::CSharpScript::-1::1637074574::0::1::::<><>::
+Element.cs::CSharpScript::-1::1637285382::0::1::::<><>::
+EquipmentType.cs::CSharpScript::-1::1638410833::0::1::::<><>::
+ItemType.cs::CSharpScript::-1::1636990780::0::1::::<><>::
+ModifierEffect.cs::CSharpScript::-1::1641054107::0::1::::<><>::
+SizeFlags.cs::CSharpScript::-1::1640028218::0::1::::<><>::
+StatType.cs::CSharpScript::-1::1636809514::0::1::::<><>::
+StatusEffect.cs::CSharpScript::-1::1637095724::0::1::::<><>::
+::res://Framework/Extensions/::1640184509
+ExtensionMethods.cs::CSharpScript::-1::1642031237::0::1::::<><>::
+::res://Framework/Items/::1642010237
+EquipableItem.cs::CSharpScript::-1::1641416891::0::1::::<><>::
+Equipment.cs::CSharpScript::-1::1641424080::0::1::::<><>::
+EquipmentSlot.cs::CSharpScript::-1::1641416891::0::1::::<><>::
+Inventory.cs::CSharpScript::-1::1641681401::0::1::::<><>::
+InventorySlot.cs::CSharpScript::-1::1641416891::0::1::::<><>::
+Item.cs::CSharpScript::-1::1641416891::0::1::::<><>::
+Weapon.cs::CSharpScript::-1::1642015073::0::1::::<><>::
+Weapon.tscn::PackedScene::6553253014833804917::1642010237::0::1::::<><>::res://Framework/Items/Weapon.cs<>uid://bp7onxgqet02i
+WeaponSlot.cs::CSharpScript::-1::1642003921::0::1::::<><>::
+::res://Framework/Menus/::1641071479
+MessageBox.cs::CSharpScript::-1::1640190958::0::1::::<><>::
+MessageBox.tscn::PackedScene::6807226471596683587::1641071479::0::1::::<><>::res://Framework/Menus/MessageBox.cs<>uid://d0g3x5kq07us6<>uid://bbuk4chu2svr2
+MessageBoxFont.tres::Font::-1::1639260773::0::1::::<><>::res://Assets/Fonts/3x6.tres
+MessageBoxList.cs::CSharpScript::-1::1640190919::0::1::::<><>::
+MessageBoxList.tscn::PackedScene::3463670634215966834::1640104039::0::1::::<><>::res://Framework/Menus/MessageBoxList.cs
+TimedMessageBox.cs::CSharpScript::-1::1641947929::0::1::::<><>::
+TimedMessageBox.tscn::PackedScene::-1::1637608105::0::1::::<><>::res://Framework/Menus/MessageBox.tscn<>res://Framework/Menus/TimedMessageBox.cs
+::res://Framework/Menus/HUD/::1641516370
+HUD.cs::CSharpScript::-1::1642181845::0::1::::<><>::
+HUD.tscn::PackedScene::390441684167548053::1641071454::0::1::::<><>::res://Framework/Menus/HUD/HUD.cs<>uid://d31djr2n5eihx<>uid://bpl3fct74bwww<>uid://b5h4g1aj3ynt
+PlayerStatsDisplay.tscn::PackedScene::132597338550604317::1641071454::0::1::::<><>::uid://bbuk4chu2svr2
+StateDisplay.tscn::PackedScene::6298966491146258018::1641516370::0::1::::<><>::uid://ungm2bp6hwxr
+TestDisplay.tscn::PackedScene::9178422652910796549::1641251564::0::1::::<><>::uid://ungm2bp6hwxr
+::res://Framework/SaveData/::1637612455
+GameStats.cs::CSharpScript::-1::1637612659::0::1::::<><>::
+::res://Framework/Scenery/::1640995713
+::res://Framework/Scenery/Breakable/::1641347488
+Breakable.cs::CSharpScript::-1::1641347397::0::1::::<><>::
+Breakable.tscn::PackedScene::4303303887535267959::1641347488::0::1::::<><>::res://Framework/Scenery/Breakable/Breakable.cs

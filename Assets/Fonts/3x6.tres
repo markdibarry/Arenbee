@@ -1,0 +1,7 @@
+[gd_resource type="Font" load_steps=2 format=3 uid="uid://bbuk4chu2svr2"]
+
+[ext_resource type="FontData" uid="uid://ungm2bp6hwxr" path="res://Assets/Fonts/m3x6.ttf" id="1_cy2tw"]
+
+[resource]
+spacing_top = -4
+data/0 = ExtResource( "1_cy2tw" )

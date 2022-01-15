@@ -1,0 +1,10 @@
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.csproj.AssemblyReference.cache
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.AssemblyInfoInputs.cache
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.AssemblyInfo.cs
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.csproj.CoreCompileInputs.cache
+D:\Coding\godot\Arenbee\.godot\mono\temp\bin\Debug\Arenbee.deps.json
+D:\Coding\godot\Arenbee\.godot\mono\temp\bin\Debug\Arenbee.dll
+D:\Coding\godot\Arenbee\.godot\mono\temp\bin\Debug\Arenbee.pdb
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.dll
+D:\Coding\godot\Arenbee\.godot\mono\temp\obj\Debug\Arenbee.pdb

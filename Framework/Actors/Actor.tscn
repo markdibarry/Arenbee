@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://qxn8inqies2j"]
+
+[ext_resource type="Script" path="res://Framework/Items/WeaponSlot.cs" id="1"]
+[ext_resource type="PackedScene" uid="uid://dj0tycf31xs3q" path="res://Framework/Actors/Stats/HurtBox.tscn" id="2"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="2_gfi1y"]
+[ext_resource type="Script" path="res://Framework/Actors/Actor.cs" id="3"]
+[ext_resource type="PackedScene" uid="uid://d4at3vj6l08gv" path="res://Framework/Actors/Animation/Blinker.tscn" id="8_ddi1u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4xqgv"]
+shader = ExtResource( "2_gfi1y" )
+shader_param/flash_color = null
+shader_param/flash_mix = null
+
+[sub_resource type="RectangleShape2D" id="40"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Actor" type="CharacterBody2D"]
+texture_filter = 1
+collision_mask = 18
+script = ExtResource( "3" )
+
+[node name="StateAnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="BodySprite" type="Sprite2D" parent="."]
+modulate = Color(10, 10, 10, 1)
+material = SubResource( "ShaderMaterial_4xqgv" )
+
+[node name="HurtBox" parent="BodySprite" instance=ExtResource( "2" )]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+
+[node name="WeaponSlot" type="Node2D" parent="BodySprite"]
+script = ExtResource( "1" )
+
+[node name="Blinker" parent="." instance=ExtResource( "8_ddi1u" )]
+IFrameDuration = 0.6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( "40" )

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bj28sv5vq5vnv"]
+
+[ext_resource type="PackedScene" uid="uid://qxn8inqies2j" path="res://Framework/Actors/Actor.tscn" id="1"]
+[ext_resource type="Script" path="res://Framework/Actors/Player.cs" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5hcfj"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Player" instance=ExtResource( "1" )]
+collision_mask = 276
+script = ExtResource( "2" )
+
+[node name="HurtBox" parent="BodySprite" index="0"]
+collision_mask = 32
+
+[node name="Blinker" parent="." index="2"]
+IFrameDuration = 1.0
+
+[node name="CollisionShape2D" parent="." index="3"]
+shape = SubResource( "RectangleShape2D_5hcfj" )
