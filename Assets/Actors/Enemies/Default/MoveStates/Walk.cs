@@ -12,7 +12,7 @@ namespace Arenbee.Assets.Enemies.MoveStates
         {
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
 

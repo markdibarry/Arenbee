@@ -1,7 +1,5 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Godot;
-using Arenbee.Framework.Constants;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
@@ -9,18 +7,19 @@ namespace Arenbee.Assets.Players.MoveStates
     {
         public override void Enter()
         {
-            StateController.PlayBase("Walk");
+            AnimationName = "Walk";
+            StateController.PlayBase(AnimationName);
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
 
-            if (Input.IsActionPressed(ActionConstants.Right))
+            if (StateMachine.IsActionPressed(Actor.InputHandler.Right))
             {
                 Actor.MoveRight();
             }
-            else if (Input.IsActionPressed(ActionConstants.Left))
+            else if (StateMachine.IsActionPressed(Actor.InputHandler.Left))
             {
                 Actor.MoveLeft();
             }
@@ -32,27 +31,13 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (Actor.IsOnFloor())
+            if (!StateMachine.IsActionPressed(Actor.InputHandler.Left) && !StateMachine.IsActionPressed(Actor.InputHandler.Right))
             {
-                if (Input.IsActionJustPressed(ActionConstants.Jump))
-                {
-                    StateMachine.TransitionTo(new Jump());
-                }
-                else if (!Input.IsActionPressed(ActionConstants.Left) && !Input.IsActionPressed(ActionConstants.Right))
-                {
-                    StateMachine.TransitionTo(new Idle());
-                }
-                else if (Input.IsActionPressed(ActionConstants.Run))
-                {
-                    StateMachine.TransitionTo(new Run());
-                }
+                StateMachine.TransitionTo(new Idle());
             }
-            else
+            else if (StateMachine.IsActionPressed(Actor.InputHandler.Run))
             {
-                if (Actor.MotionVelocity.y >= 0)
-                {
-                    StateMachine.TransitionTo(new Fall());
-                }
+                StateMachine.TransitionTo(new Run());
             }
         }
     }

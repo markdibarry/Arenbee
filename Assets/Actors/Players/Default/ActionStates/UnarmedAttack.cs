@@ -1,7 +1,6 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Godot;
-using Arenbee.Framework.Constants;
 
 namespace Arenbee.Assets.Players.ActionStates
 {
@@ -14,7 +13,7 @@ namespace Arenbee.Assets.Players.ActionStates
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
@@ -27,12 +26,12 @@ namespace Arenbee.Assets.Players.ActionStates
         public void OnAnimationFinished(StringName animationName)
         {
             StateMachine.TransitionTo(new NotAttacking());
-            StateController.PlayLastBaseAnimation();
+            StateController.PlayFallbackAnimation();
         }
 
         public override void CheckForTransitions()
         {
-            if (Input.IsActionJustPressed(ActionConstants.Attack))
+            if (StateMachine.IsActionPressed(Actor.InputHandler.Attack))
             {
                 StateMachine.TransitionTo(new UnarmedAttack());
             }

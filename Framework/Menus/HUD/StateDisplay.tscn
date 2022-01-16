@@ -31,6 +31,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="JumpState" type="Label" parent="."]
+texture_filter = 1
+offset_left = -6.0
+offset_top = -22.0
+offset_right = 6.0
+offset_bottom = -11.0
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = 0
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = SubResource( "Font_jmtlx" )
+theme_override_font_sizes/font_size = 16
+text = "123"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ActionState" type="Label" parent="."]
 texture_filter = 1
 offset_left = -6.0

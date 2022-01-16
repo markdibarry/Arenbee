@@ -9,10 +9,11 @@ namespace Arenbee.Assets.Players.MoveStates
     {
         public override void Enter()
         {
-            StateController.PlayBase("Run");
+            AnimationName = "Run";
+            StateController.PlayBase(AnimationName);
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
 
@@ -32,27 +33,13 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (Actor.IsOnFloor())
+            if (!StateMachine.IsActionPressed(Actor.InputHandler.Right) && !StateMachine.IsActionPressed(Actor.InputHandler.Left))
             {
-                if (Input.IsActionJustPressed(ActionConstants.Jump))
-                {
-                    StateMachine.TransitionTo(new Jump());
-                }
-                else if (!Input.IsActionPressed(ActionConstants.Left) && !Input.IsActionPressed(ActionConstants.Right))
-                {
-                    StateMachine.TransitionTo(new Idle());
-                }
-                else if (!Input.IsActionPressed(ActionConstants.Run))
-                {
-                    StateMachine.TransitionTo(new Walk());
-                }
+                StateMachine.TransitionTo(new Idle());
             }
-            else
+            else if (!StateMachine.IsActionPressed(Actor.InputHandler.Run))
             {
-                if (Actor.MotionVelocity.y >= 0)
-                {
-                    StateMachine.TransitionTo(new Fall());
-                }
+                StateMachine.TransitionTo(new Walk());
             }
         }
     }

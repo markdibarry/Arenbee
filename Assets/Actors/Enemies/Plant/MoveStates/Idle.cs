@@ -6,10 +6,11 @@ namespace Arenbee.Assets.Enemies.PlantNS.MoveStates
     {
         public override void Enter()
         {
-            StateController.PlayBase("Idle");
+            AnimationName = "Idle";
+            StateController.PlayBase(AnimationName);
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
         }
 

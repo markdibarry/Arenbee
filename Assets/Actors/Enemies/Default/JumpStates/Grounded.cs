@@ -1,15 +1,14 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Players.MoveStates
+namespace Arenbee.Assets.Enemies.JumpStates
 {
-    public class Dead : State<Player>
+    public class Grounded : State<Enemy>
     {
         public override void Enter()
         {
-            AnimationName = "Dead";
-            StateController.ActionStateMachine.TransitionTo(new None());
-            StateController.PlayBase(AnimationName);
+            Actor.MotionVelocityY = Actor.GroundedGravity;
+            StateController.PlayFallbackAnimation();
         }
 
         public override void Update(float delta)
@@ -23,6 +22,10 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void CheckForTransitions()
         {
+            if (!Actor.IsOnFloor())
+            {
+                StateMachine.TransitionTo(new Fall());
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Input;
 
 namespace Arenbee.Assets.Players.AdyNS
 {
@@ -9,7 +10,11 @@ namespace Arenbee.Assets.Players.AdyNS
         public override void _Ready()
         {
             base._Ready();
-            StateController.Init(new MoveStates.Idle(), new ActionStates.NotAttacking());
+            InputHandler = new Player1();
+            StateController.Init(
+                new MoveStates.Idle(),
+                new JumpStates.Grounded(),
+                new ActionStates.NotAttacking());
         }
 
         public string TestAdyString { get; set; }

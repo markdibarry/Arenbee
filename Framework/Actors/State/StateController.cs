@@ -9,11 +9,13 @@ namespace Arenbee.Framework.Actors
         public StateController(Actor actor)
         {
             _actor = actor;
+            JumpStateMachine = new StateMachine(_actor, this);
             BaseStateMachine = new StateMachine(_actor, this);
             ActionStateMachine = new StateMachine(_actor, this);
             CreateStateDisplay();
         }
 
+        public IStateMachine JumpStateMachine { get; }
         public IStateMachine BaseStateMachine { get; }
         public IStateMachine ActionStateMachine { get; }
         private readonly Actor _actor;
@@ -29,26 +31,22 @@ namespace Arenbee.Framework.Actors
         {
             get { return CurrentWeapon?.AnimationPlayer; }
         }
+        private Label _jumpStateDisplay;
         private Label _moveStateDisplay;
         private Label _actionStateDisplay;
-        public bool IsNonBaseActive { get; set; }
-        /// <summary>
-        /// If the Actor is able to switch states
-        /// </summary>
-        /// <value></value>
-        public bool IsAvailable { get; set; }
-        private string _lastBaseAnimation;
 
-        public void Init(IState baseState, IState actionState)
+        public void Init(IState baseState, IState jumpState, IState actionState)
         {
             BaseStateMachine.Init(baseState);
+            JumpStateMachine.Init(jumpState);
             if (CurrentWeapon == null)
                 ActionStateMachine.Init(actionState);
         }
 
-        public void TransitionToInit()
+        public void ResetMachines()
         {
             BaseStateMachine.TransitionTo(BaseStateMachine.InitialState);
+            JumpStateMachine.TransitionTo(JumpStateMachine.InitialState);
             ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
         }
 
@@ -75,23 +73,37 @@ namespace Arenbee.Framework.Actors
 
         public void PlayBase(string animationName)
         {
-            _lastBaseAnimation = animationName;
             if (ActionStateMachine.State.IsInitialState)
             {
                 ActorAnimationPlayer.Play(animationName);
             }
         }
 
-        public void PlayLastBaseAnimation()
+        public void PlayFallbackAnimation()
         {
-            PlayBase(_lastBaseAnimation);
+            string animation = null;
+            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
+            {
+                animation = ActionStateMachine.State.AnimationName;
+            }
+            else if (!string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
+            {
+                animation = JumpStateMachine.State.AnimationName;
+            }
+            else if (!string.IsNullOrEmpty(BaseStateMachine.State.AnimationName))
+            {
+                animation = BaseStateMachine.State.AnimationName;
+            }
+            if (animation != null) PlayBase(animation);
         }
 
-        public void UpdateStates()
+        public void UpdateStates(float delta)
         {
-            BaseStateMachine.Update();
-            ActionStateMachine.Update();
+            BaseStateMachine.Update(delta);
+            JumpStateMachine.Update(delta);
+            ActionStateMachine.Update(delta);
             _moveStateDisplay.Text = BaseStateMachine.State.GetType().Name;
+            _jumpStateDisplay.Text = JumpStateMachine.State.GetType().Name;
             _actionStateDisplay.Text = ActionStateMachine.State.GetType().Name;
         }
 
@@ -99,6 +111,7 @@ namespace Arenbee.Framework.Actors
         {
             //Debug Only
             var stateDisplay = GD.Load<PackedScene>(PathConstants.StateDisplay).Instantiate<Control>();
+            _jumpStateDisplay = stateDisplay.GetNode<Label>("JumpState");
             _moveStateDisplay = stateDisplay.GetNode<Label>("MoveState");
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");
             _actor.AddChild(stateDisplay);

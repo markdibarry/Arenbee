@@ -1,15 +1,12 @@
+using System;
 using Arenbee.Framework;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Actors;
-using Godot;
-using Arenbee.Framework.Constants;
 
-namespace Arenbee.Assets.Players.ActionStates
+namespace Arenbee.Assets.Enemies.JumpStates
 {
-    public class NotAttacking : State<Player>
+    public class Fall : State<Enemy>
     {
-        public NotAttacking() { IsInitialState = true; }
-
+        readonly float _fallMultiplier = 2f;
         public override void Enter()
         {
         }
@@ -17,6 +14,7 @@ namespace Arenbee.Assets.Players.ActionStates
         public override void Update(float delta)
         {
             CheckForTransitions();
+            Actor.MotionVelocityY = Math.Min(Actor.MotionVelocity.y + (Actor.JumpGravity * _fallMultiplier * delta), -Actor.JumpVelocity * 1.5f);
         }
 
         public override void Exit()
@@ -25,9 +23,9 @@ namespace Arenbee.Assets.Players.ActionStates
 
         public override void CheckForTransitions()
         {
-            if (StateMachine.IsActionPressed(Actor.InputHandler.Attack))
+            if (Actor.IsOnFloor())
             {
-                StateMachine.TransitionTo(new UnarmedAttack());
+                StateMachine.TransitionTo(new Grounded());
             }
         }
     }

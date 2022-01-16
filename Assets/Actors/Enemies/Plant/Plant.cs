@@ -11,7 +11,10 @@ namespace Arenbee.Assets.Enemies.PlantNS
         public override void _Ready()
         {
             base._Ready();
-            StateController.Init(new MoveStates.Idle(), new ActionStates.NotAttacking());
+            StateController.Init(
+                new MoveStates.Idle(),
+                new JumpStates.Grounded(),
+                new ActionStates.NotAttacking());
         }
 
         protected override void SetStats()

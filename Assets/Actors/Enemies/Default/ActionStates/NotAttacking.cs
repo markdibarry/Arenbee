@@ -10,7 +10,7 @@ namespace Arenbee.Assets.Enemies.ActionStates
         {
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
         }
 

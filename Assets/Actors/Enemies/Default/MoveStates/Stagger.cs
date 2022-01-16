@@ -11,12 +11,11 @@ namespace Arenbee.Assets.Enemies.MoveStates
         public override void Enter()
         {
             StateController.ActionStateMachine.TransitionTo(new None());
-            //StateController.PlayBase("Stagger");
             _staggerTimer = Actor.CreateOneShotTimer(0.5f);
             _staggerTimer.Timeout += OnStaggerTimeout;
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
@@ -31,7 +30,7 @@ namespace Arenbee.Assets.Enemies.MoveStates
         {
             if (!_isStaggered)
             {
-                StateController.TransitionToInit();
+                StateController.ResetMachines();
             }
         }
 

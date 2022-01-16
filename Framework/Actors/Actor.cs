@@ -60,9 +60,9 @@ namespace Arenbee.Framework.Actors
 
         public override void _PhysicsProcess(float delta)
         {
-            HandleGravity(delta);
+            //HandleGravity(delta);
             _isMoving = false;
-            StateController.UpdateStates();
+            StateController.UpdateStates(delta);
             HandleMove(delta);
             MoveAndSlide();
 

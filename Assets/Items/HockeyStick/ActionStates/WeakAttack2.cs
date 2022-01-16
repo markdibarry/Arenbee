@@ -8,11 +8,12 @@ namespace Arenbee.Assets.Items.HockeyStickNS
     {
         public override void Enter()
         {
-            StateController.PlayWeaponAttack("WeakAttack2");
+            AnimationName = "WeakAttack2";
+            StateController.PlayWeaponAttack(AnimationName);
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
@@ -25,7 +26,7 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         public void OnAnimationFinished(StringName animationName)
         {
             StateMachine.TransitionTo(new NotAttacking());
-            StateController.PlayLastBaseAnimation();
+            StateController.PlayFallbackAnimation();
         }
 
         public override void CheckForTransitions()

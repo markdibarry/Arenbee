@@ -8,6 +8,7 @@ namespace Arenbee.Framework
         public StateController StateController { get; set; }
         public IStateMachine StateMachine { get; set; }
         public bool IsInitialState { get; set; }
+        public string AnimationName { get; set; }
 
         public virtual void Init()
         {
@@ -16,7 +17,7 @@ namespace Arenbee.Framework
         }
 
         public abstract void Enter();
-        public abstract void Update();
+        public abstract void Update(float delta);
         public abstract void Exit();
         public abstract void CheckForTransitions();
     }
@@ -28,7 +29,7 @@ namespace Arenbee.Framework
         {
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
         }
 

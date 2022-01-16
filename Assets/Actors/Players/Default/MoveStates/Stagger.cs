@@ -11,19 +11,23 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void Enter()
         {
-            StateController.ActionStateMachine.TransitionTo(new None());
-            StateController.PlayBase("Stagger");
+            AnimationName = "Stagger";
+            StateController.ActionStateMachine.InputDisabled = true;
+            StateController.BaseStateMachine.InputDisabled = true;
+            StateController.PlayBase(AnimationName);
             _staggerTimer = Actor.CreateOneShotTimer(0.4f);
             _staggerTimer.Timeout += OnStaggerTimeout;
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
 
         public override void Exit()
         {
+            StateController.ActionStateMachine.InputDisabled = false;
+            StateController.BaseStateMachine.InputDisabled = false;
             if (Object.IsInstanceValid(_staggerTimer))
                 _staggerTimer.QueueFree();
         }
@@ -32,7 +36,7 @@ namespace Arenbee.Assets.Players.MoveStates
         {
             if (!_isStaggered)
             {
-                StateController.TransitionToInit();
+                StateController.ResetMachines();
             }
         }
 

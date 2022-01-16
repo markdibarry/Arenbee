@@ -11,13 +11,14 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         private Timer _retriggerTimer;
         public override void Enter()
         {
-            StateController.PlayWeaponAttack("WeakAttack1");
+            AnimationName = "WeakAttack1";
+            StateController.PlayWeaponAttack(AnimationName);
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
             _retriggerTimer = Actor.CreateOneShotTimer(0.1f);
             _retriggerTimer.Timeout += OnRepeatAttackTimerTimeout;
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
@@ -32,12 +33,12 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         public void OnAnimationFinished(StringName animationName)
         {
             StateMachine.TransitionTo(new NotAttacking());
-            StateController.PlayLastBaseAnimation();
+            StateController.PlayFallbackAnimation();
         }
 
         public override void CheckForTransitions()
         {
-            if (Input.IsActionJustPressed(ActionConstants.Attack) && _canRetrigger)
+            if (StateMachine.IsActionJustPressed(Actor.InputHandler.Attack) && _canRetrigger)
             {
                 StateMachine.TransitionTo(new WeakAttack2());
             }

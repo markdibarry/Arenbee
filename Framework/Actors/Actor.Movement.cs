@@ -1,6 +1,7 @@
 using System;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Godot;
 
@@ -12,40 +13,29 @@ namespace Arenbee.Framework.Actors
         protected float _jumpHeight = 64;
         [Export]
         protected float _timeToJumpPeak = 0.4f;
-        protected float _groundedGravity = 0.05f;
+        public float GroundedGravity { get; set; } = 0.05f;
         private bool _isMoving;
-        protected float JumpVelocity { get; set; }
+        public float JumpVelocity { get; set; }
         public float JumpGravity { get; set; }
         protected float Acceleration { get; set; }
         protected float Deceleration { get; set; }
         protected int WalkSpeed { get; set; }
         protected int RunSpeed { get; set; }
         protected int MaxSpeed { get; set; }
+        public float MotionVelocityX
+        {
+            get { return MotionVelocity.x; }
+            set { MotionVelocity = new Vector2(value, MotionVelocity.y); }
+        }
+        public float MotionVelocityY
+        {
+            get { return MotionVelocity.y; }
+            set { MotionVelocity = new Vector2(MotionVelocity.x, value); }
+        }
         public CollisionShape2D CollisionShape2D { get; set; }
         public Direction Direction { get; set; }
         public WeaponSlot WeaponSlot { get; set; }
-
-        protected virtual void HandleGravity(float delta)
-        {
-            bool isFalling = MotionVelocity.y >= 0 || !Input.IsActionPressed(ActionConstants.Jump);
-            float fallMultiplier = 2f;
-            float velocity;
-
-            if (IsOnFloor())
-            {
-                velocity = _groundedGravity;
-            }
-            else if (isFalling)
-            {
-                velocity = Mathf.Min(MotionVelocity.y + (JumpGravity * fallMultiplier * delta), -JumpVelocity * 1.5f);
-            }
-            else
-            {
-                velocity = MotionVelocity.y + (JumpGravity * delta);
-            }
-
-            MotionVelocity = new Vector2(MotionVelocity.x, velocity);
-        }
+        public InputHandler InputHandler { get; set; }
 
         public void HandleMove(float delta)
         {

@@ -1,7 +1,5 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Constants;
-using Godot;
 
 namespace Arenbee.Assets.Items.HockeyStickNS
 {
@@ -13,7 +11,7 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         {
         }
 
-        public override void Update()
+        public override void Update(float delta)
         {
             CheckForTransitions();
         }
@@ -24,7 +22,7 @@ namespace Arenbee.Assets.Items.HockeyStickNS
 
         public override void CheckForTransitions()
         {
-            if (Input.IsActionJustPressed(ActionConstants.Attack))
+            if (StateMachine.IsActionJustPressed(Actor.InputHandler.Attack))
             {
                 StateMachine.TransitionTo(new WeakAttack1());
             }
