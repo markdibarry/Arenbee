@@ -1,5 +1,5 @@
 using System;
-using Arenbee.Framework.Constants;
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
@@ -14,14 +14,14 @@ namespace Arenbee.Framework.Actors
         [Export]
         protected float _timeToJumpPeak = 0.4f;
         public float GroundedGravity { get; set; } = 0.05f;
-        private bool _isMoving;
+        private int _moveX;
         public float JumpVelocity { get; set; }
         public float JumpGravity { get; set; }
         protected float Acceleration { get; set; }
-        protected float Deceleration { get; set; }
-        protected int WalkSpeed { get; set; }
-        protected int RunSpeed { get; set; }
-        protected int MaxSpeed { get; set; }
+        protected float Friction { get; set; }
+        public int WalkSpeed { get; protected set; }
+        public int RunSpeed { get; protected set; }
+        public int MaxSpeed { get; set; }
         public float MotionVelocityX
         {
             get { return MotionVelocity.x; }
@@ -33,54 +33,40 @@ namespace Arenbee.Framework.Actors
             set { MotionVelocity = new Vector2(MotionVelocity.x, value); }
         }
         public CollisionShape2D CollisionShape2D { get; set; }
-        public Direction Direction { get; set; }
+        public Facings Facing { get; set; }
         public WeaponSlot WeaponSlot { get; set; }
         public InputHandler InputHandler { get; set; }
 
         public void HandleMove(float delta)
         {
-            int directionVector = Direction == Direction.Right ? 1 : -1;
-            if (_isMoving)
+            if (_moveX != 0)
             {
-                MotionVelocity = new Vector2(Mathf.Lerp(MotionVelocity.x, directionVector * MaxSpeed, Acceleration), MotionVelocity.y);
+                MotionVelocityX = MotionVelocity.x.LerpClamp(_moveX * MaxSpeed, Acceleration * delta);
             }
             else
             {
-                MotionVelocity = new Vector2(Mathf.Lerp(MotionVelocity.x, 0, Deceleration), MotionVelocity.y);
+                MotionVelocityX = MotionVelocity.x.LerpClamp(0, Friction * delta);
             }
         }
 
-        public void MoveLeft(bool run = false)
+        public void Move(Facings newFacing)
         {
-            _isMoving = true;
-            HandleDirection(Direction.Left);
-            MaxSpeed = run ? RunSpeed : WalkSpeed;
-        }
-
-        public void MoveRight(bool run = false)
-        {
-            _isMoving = true;
-            HandleDirection(Direction.Right);
-            MaxSpeed = run ? RunSpeed : WalkSpeed;
-        }
-
-        public void HandleDirection(Direction newDirection)
-        {
-            if (Direction != newDirection)
+            _moveX = (int)newFacing;
+            if (Facing != newFacing)
             {
-                ChangeDirection();
+                ChangeFacing();
             }
         }
 
-        public void ChangeDirection()
+        public void ChangeFacing()
         {
-            Direction = Direction == Direction.Left ? Direction.Right : Direction.Left;
+            Facing = (Facings)(-(int)Facing);
             BodySprite.FlipScaleX();
         }
 
         public void Jump()
         {
-            MotionVelocity = new Vector2(MotionVelocity.x, JumpVelocity);
+            MotionVelocityY = JumpVelocity;
         }
     }
 }

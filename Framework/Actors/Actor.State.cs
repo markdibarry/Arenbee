@@ -6,6 +6,7 @@ namespace Arenbee.Framework.Actors
 {
     public abstract partial class Actor
     {
+        public bool IsAttackDisabled { get; set; }
         public Sprite2D BodySprite { get; set; }
         public AnimationPlayer AnimationPlayer { get; set; }
         public StateController StateController { get; set; }

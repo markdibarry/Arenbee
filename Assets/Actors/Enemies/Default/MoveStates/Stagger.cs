@@ -1,5 +1,6 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Assets.Enemies.MoveStates

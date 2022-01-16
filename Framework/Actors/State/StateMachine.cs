@@ -1,6 +1,3 @@
-using System;
-using Arenbee.Framework.Input;
-
 namespace Arenbee.Framework.Actors
 {
     public class StateMachine : IStateMachine
@@ -19,7 +16,6 @@ namespace Arenbee.Framework.Actors
         /// <value></value>
         public Actor Actor { get; set; }
         public StateController StateController { get; set; }
-        public bool InputDisabled { get; set; }
         /// <summary>
         /// State to return to as a starting point.
         /// Helpful for when switching weapons.
@@ -62,18 +58,6 @@ namespace Arenbee.Framework.Actors
         {
             InitialState = initialState;
             TransitionTo(initialState);
-        }
-
-        public bool IsActionJustPressed(string action)
-        {
-            if (InputDisabled) return false;
-            else return Godot.Input.IsActionJustPressed(action);
-        }
-
-        public bool IsActionPressed(string action)
-        {
-            if (InputDisabled) return false;
-            else return Godot.Input.IsActionPressed(action);
         }
     }
 }

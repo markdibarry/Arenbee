@@ -1,12 +1,11 @@
+using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Input;
 
 namespace Arenbee.Assets.Players.AdyNS
 {
     public partial class Ady : Player
     {
-
         public override void _Ready()
         {
             base._Ready();
@@ -16,8 +15,6 @@ namespace Arenbee.Assets.Players.AdyNS
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
         }
-
-        public string TestAdyString { get; set; }
 
         protected override void SetStats()
         {

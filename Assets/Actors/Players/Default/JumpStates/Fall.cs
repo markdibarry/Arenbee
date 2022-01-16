@@ -1,12 +1,15 @@
 using System;
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Players.JumpStates
 {
     public class Fall : State<Player>
     {
         readonly float _fallMultiplier = 2f;
+        float _jumpGraceTimer = 0;
+        readonly float _jumpGraceTime = 0.1f;
         public override void Enter()
         {
         }
@@ -14,7 +17,12 @@ namespace Arenbee.Assets.Players.JumpStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-            Actor.MotionVelocityY = Math.Min(Actor.MotionVelocity.y + (Actor.JumpGravity * _fallMultiplier * delta), -Actor.JumpVelocity * 1.5f);
+            Actor.MotionVelocityY = Actor.MotionVelocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
+            if (_jumpGraceTimer > 0)
+                _jumpGraceTimer -= delta;
+
+            if (InputHandler.Jump.IsActionJustPressed)
+                _jumpGraceTimer = _jumpGraceTime;
         }
 
         public override void Exit()
@@ -25,7 +33,10 @@ namespace Arenbee.Assets.Players.JumpStates
         {
             if (Actor.IsOnFloor())
             {
-                StateMachine.TransitionTo(new Grounded());
+                if (_jumpGraceTimer > 0)
+                    StateMachine.TransitionTo(new Jump());
+                else
+                    StateMachine.TransitionTo(new Grounded());
             }
         }
     }

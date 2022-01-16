@@ -1,7 +1,5 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Constants;
-using Godot;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
@@ -24,15 +22,17 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (StateMachine.IsActionPressed(Actor.InputHandler.Right) || StateMachine.IsActionPressed(Actor.InputHandler.Left))
+            if (InputHandler.Right.IsActionPressed || InputHandler.Left.IsActionPressed)
             {
-                if (StateMachine.IsActionPressed(Actor.InputHandler.Run))
+                if (InputHandler.Run.IsActionPressed)
                 {
-                    StateMachine.TransitionTo(new Run());
+                    if (!Actor.IsRunDisabled)
+                        StateMachine.TransitionTo(new Run());
                 }
                 else
                 {
-                    StateMachine.TransitionTo(new Walk());
+                    if (!Actor.IsWalkDisabled)
+                        StateMachine.TransitionTo(new Walk());
                 }
             }
         }

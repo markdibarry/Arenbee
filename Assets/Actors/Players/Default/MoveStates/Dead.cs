@@ -10,6 +10,9 @@ namespace Arenbee.Assets.Players.MoveStates
             AnimationName = "Dead";
             StateController.ActionStateMachine.TransitionTo(new None());
             StateController.PlayBase(AnimationName);
+            Actor.IsWalkDisabled = true;
+            Actor.IsAttackDisabled = true;
+            Actor.IsJumpDisabled = true;
         }
 
         public override void Update(float delta)

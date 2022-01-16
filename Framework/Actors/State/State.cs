@@ -1,4 +1,5 @@
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Input;
 
 namespace Arenbee.Framework
 {
@@ -7,6 +8,10 @@ namespace Arenbee.Framework
         protected T Actor { get; private set; }
         public StateController StateController { get; set; }
         public IStateMachine StateMachine { get; set; }
+        public InputHandler InputHandler
+        {
+            get { return Actor.InputHandler; }
+        }
         public bool IsInitialState { get; set; }
         public string AnimationName { get; set; }
 

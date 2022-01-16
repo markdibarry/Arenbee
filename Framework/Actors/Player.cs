@@ -5,6 +5,9 @@ namespace Arenbee.Framework.Actors
 {
     public abstract partial class Player : Actor
     {
+        public bool IsWalkDisabled { get; set; }
+        public bool IsRunDisabled { get; set; }
+        public bool IsJumpDisabled { get; set; }
         public delegate void PlayerDefeatedHandler(string playerName);
         public event PlayerDefeatedHandler PlayerDefeated;
 
@@ -20,6 +23,20 @@ namespace Arenbee.Framework.Actors
         {
             PlayerDefeated?.Invoke(Name);
             StateController.BaseStateMachine.TransitionTo(new Dead());
+        }
+
+        public bool ShouldWalk()
+        {
+            return !IsWalkDisabled
+                && InputHandler.Left.IsActionPressed
+                || InputHandler.Right.IsActionPressed;
+        }
+
+        public bool ShouldRun()
+        {
+            return ShouldWalk()
+                && !IsRunDisabled
+                && InputHandler.Run.IsActionPressed;
         }
     }
 }

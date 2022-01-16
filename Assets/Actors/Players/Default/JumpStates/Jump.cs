@@ -14,7 +14,10 @@ namespace Arenbee.Assets.Players.JumpStates
 
         public override void Update(float delta)
         {
+            if (InputHandler.Jump.IsActionJustReleased)
+                Actor.MotionVelocityY = Actor.MotionVelocity.y * 0.5f;
             Actor.MotionVelocityY = Actor.MotionVelocity.y + (Actor.JumpGravity * delta);
+
             CheckForTransitions();
         }
 

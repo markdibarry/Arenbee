@@ -1,13 +1,13 @@
 namespace Arenbee.Framework.Input
 {
-    public class InputHandler
+    public abstract class InputHandler
     {
-        public string Jump { get; set; }
-        public string Attack { get; set; }
-        public string Run { get; set; }
-        public string Up { get; set; }
-        public string Down { get; set; }
-        public string Left { get; set; }
-        public string Right { get; set; }
+        public InputAction Jump { get; protected set; }
+        public InputAction Attack { get; protected set; }
+        public InputAction Run { get; protected set; }
+        public InputAction Up { get; protected set; }
+        public InputAction Down { get; protected set; }
+        public InputAction Left { get; protected set; }
+        public InputAction Right { get; protected set; }
     }
 }

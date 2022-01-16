@@ -31,7 +31,7 @@ namespace Arenbee.Assets.Players.ActionStates
 
         public override void CheckForTransitions()
         {
-            if (StateMachine.IsActionPressed(Actor.InputHandler.Attack))
+            if (InputHandler.Attack.IsActionJustPressed && !Actor.IsAttackDisabled)
             {
                 StateMachine.TransitionTo(new UnarmedAttack());
             }

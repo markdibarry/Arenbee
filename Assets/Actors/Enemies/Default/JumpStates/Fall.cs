@@ -1,6 +1,6 @@
-using System;
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Enemies.JumpStates
 {
@@ -14,7 +14,7 @@ namespace Arenbee.Assets.Enemies.JumpStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-            Actor.MotionVelocityY = Math.Min(Actor.MotionVelocity.y + (Actor.JumpGravity * _fallMultiplier * delta), -Actor.JumpVelocity * 1.5f);
+            Actor.MotionVelocityY = Actor.MotionVelocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
         }
 
         public override void Exit()

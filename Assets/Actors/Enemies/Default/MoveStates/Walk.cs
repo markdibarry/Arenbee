@@ -1,8 +1,5 @@
-using System;
-using Arenbee.Assets.Players.AdyNS;
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.MoveStates
 {
@@ -18,17 +15,10 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
             if (Actor.IsOnWall())
             {
-                Actor.ChangeDirection();
+                Actor.ChangeFacing();
             }
 
-            if (Actor.Direction == Direction.Left)
-            {
-                Actor.MoveLeft();
-            }
-            else
-            {
-                Actor.MoveRight();
-            }
+            Actor.Move(Actor.Facing);
         }
 
         public override void Exit()

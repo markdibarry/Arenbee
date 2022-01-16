@@ -1,5 +1,6 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Assets.Players.MoveStates
@@ -12,8 +13,9 @@ namespace Arenbee.Assets.Players.MoveStates
         public override void Enter()
         {
             AnimationName = "Stagger";
-            StateController.ActionStateMachine.InputDisabled = true;
-            StateController.BaseStateMachine.InputDisabled = true;
+            Actor.IsWalkDisabled = true;
+            Actor.IsAttackDisabled = true;
+            Actor.IsJumpDisabled = true;
             StateController.PlayBase(AnimationName);
             _staggerTimer = Actor.CreateOneShotTimer(0.4f);
             _staggerTimer.Timeout += OnStaggerTimeout;
@@ -26,8 +28,9 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void Exit()
         {
-            StateController.ActionStateMachine.InputDisabled = false;
-            StateController.BaseStateMachine.InputDisabled = false;
+            Actor.IsWalkDisabled = false;
+            Actor.IsAttackDisabled = false;
+            Actor.IsJumpDisabled = false;
             if (Object.IsInstanceValid(_staggerTimer))
                 _staggerTimer.QueueFree();
         }

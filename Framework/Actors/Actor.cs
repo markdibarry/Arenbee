@@ -2,6 +2,7 @@ using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Actors.Stats;
 using Godot;
+using Arenbee.Assets.Input;
 
 namespace Arenbee.Framework.Actors
 {
@@ -20,19 +21,26 @@ namespace Arenbee.Framework.Actors
         public override void _Ready()
         {
             SetNodeReferences();
+            SetDefaults();
             Init();
         }
 
-        private void Init()
+        public virtual void SetDefaults()
         {
-            Acceleration = 0.25f;
-            Deceleration = 0.25f;
+            Acceleration = 1000f;
+            Friction = 1000f;
             WalkSpeed = 100;
+            Facing = Facings.Right;
+            UpDirection = Vector2.Up;
+            InputHandler = new Dummy();
+        }
+
+        public virtual void Init()
+        {
             RunSpeed = (int)(WalkSpeed * 1.5);
+            MaxSpeed = WalkSpeed;
             JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1f;
             JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1f;
-            Direction = Direction.Right;
-            UpDirection = Vector2.Up;
             Inventory = new Inventory(this);
             ActorStats = new ActorStats(this);
             ActorStats.StatsUpdated += OnStatsUpdated;
@@ -60,8 +68,7 @@ namespace Arenbee.Framework.Actors
 
         public override void _PhysicsProcess(float delta)
         {
-            //HandleGravity(delta);
-            _isMoving = false;
+            _moveX = 0;
             StateController.UpdateStates(delta);
             HandleMove(delta);
             MoveAndSlide();

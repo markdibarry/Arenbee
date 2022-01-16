@@ -1,5 +1,6 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
@@ -14,14 +15,13 @@ namespace Arenbee.Assets.Players.MoveStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-
-            if (StateMachine.IsActionPressed(Actor.InputHandler.Right))
+            if (InputHandler.Left.IsActionPressed)
             {
-                Actor.MoveRight();
+                Actor.Move(Facings.Left);
             }
-            else if (StateMachine.IsActionPressed(Actor.InputHandler.Left))
+            else if (InputHandler.Right.IsActionPressed)
             {
-                Actor.MoveLeft();
+                Actor.Move(Facings.Right);
             }
         }
 
@@ -31,13 +31,14 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (!StateMachine.IsActionPressed(Actor.InputHandler.Left) && !StateMachine.IsActionPressed(Actor.InputHandler.Right))
+            if (Actor.ShouldWalk())
+            {
+                if (Actor.ShouldRun())
+                    StateMachine.TransitionTo(new Run());
+            }
+            else
             {
                 StateMachine.TransitionTo(new Idle());
-            }
-            else if (StateMachine.IsActionPressed(Actor.InputHandler.Run))
-            {
-                StateMachine.TransitionTo(new Run());
             }
         }
     }

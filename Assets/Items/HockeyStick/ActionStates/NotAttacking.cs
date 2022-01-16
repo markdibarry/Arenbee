@@ -22,7 +22,7 @@ namespace Arenbee.Assets.Items.HockeyStickNS
 
         public override void CheckForTransitions()
         {
-            if (StateMachine.IsActionJustPressed(Actor.InputHandler.Attack))
+            if (InputHandler.Attack.IsActionJustPressed && !Actor.IsAttackDisabled)
             {
                 StateMachine.TransitionTo(new WeakAttack1());
             }

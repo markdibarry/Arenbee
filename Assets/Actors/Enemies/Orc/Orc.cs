@@ -9,11 +9,16 @@ namespace Arenbee.Assets.Enemies.OrcNS
         public override void _Ready()
         {
             base._Ready();
-            WalkSpeed = 50;
             StateController.Init(
                 new MoveStates.Walk(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
+        }
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            WalkSpeed = 50;
         }
 
         protected override void SetStats()

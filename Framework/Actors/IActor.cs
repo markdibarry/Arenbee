@@ -14,7 +14,7 @@ namespace Arenbee.Framework.Actors
         public Equipment Equipment { get; set; }
         public HurtBox HurtBox { get; set; }
         public CollisionShape2D CollisionShape2D { get; set; }
-        public Direction Direction { get; set; }
+        public Facings Facing { get; set; }
         public WeaponSlot WeaponSlot { get; set; }
         public Sprite2D BodySprite { get; set; }
         public Blinker Blinker { get; set; }

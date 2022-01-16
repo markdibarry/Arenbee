@@ -22,7 +22,7 @@ namespace Arenbee.Assets.Players.JumpStates
 
         public override void CheckForTransitions()
         {
-            if (StateMachine.IsActionJustPressed(Actor.InputHandler.Jump))
+            if (InputHandler.Jump.IsActionJustPressed && !Actor.IsJumpDisabled)
             {
                 StateMachine.TransitionTo(new Jump());
             }

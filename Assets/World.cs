@@ -18,7 +18,7 @@ namespace Arenbee.Assets
         public override void _PhysicsProcess(float delta)
         {
             base._PhysicsProcess(delta);
-            if (Input.IsActionJustPressed("Load"))
+            if (Godot.Input.IsActionJustPressed("Load"))
             {
                 if (LevelLoaded)
                 {
@@ -34,12 +34,12 @@ namespace Arenbee.Assets
                 }
             }
 
-            if (Input.IsActionJustPressed("pause"))
+            if (Godot.Input.IsActionJustPressed("pause"))
             {
                 GetTree().Paused = !GetTree().Paused;
             }
 
-            if (Input.IsActionJustPressed("collect"))
+            if (Godot.Input.IsActionJustPressed("collect"))
             {
                 GC.Collect();
             }

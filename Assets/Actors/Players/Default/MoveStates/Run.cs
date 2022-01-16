@@ -1,7 +1,6 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Godot;
-using Arenbee.Framework.Constants;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
@@ -11,35 +10,35 @@ namespace Arenbee.Assets.Players.MoveStates
         {
             AnimationName = "Run";
             StateController.PlayBase(AnimationName);
+            Actor.MaxSpeed = Actor.RunSpeed;
         }
 
         public override void Update(float delta)
         {
             CheckForTransitions();
-
-            if (Input.IsActionPressed(ActionConstants.Right))
+            if (InputHandler.Left.IsActionPressed)
             {
-                Actor.MoveRight(true);
+                Actor.Move(Facings.Left);
             }
-            else if (Input.IsActionPressed(ActionConstants.Left))
+            else if (InputHandler.Right.IsActionPressed)
             {
-                Actor.MoveLeft(true);
+                Actor.Move(Facings.Right);
             }
         }
 
         public override void Exit()
         {
+            Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
         public override void CheckForTransitions()
         {
-            if (!StateMachine.IsActionPressed(Actor.InputHandler.Right) && !StateMachine.IsActionPressed(Actor.InputHandler.Left))
+            if (!Actor.ShouldRun())
             {
-                StateMachine.TransitionTo(new Idle());
-            }
-            else if (!StateMachine.IsActionPressed(Actor.InputHandler.Run))
-            {
-                StateMachine.TransitionTo(new Walk());
+                if (Actor.ShouldWalk())
+                    StateMachine.TransitionTo(new Walk());
+                else
+                    StateMachine.TransitionTo(new Idle());
             }
         }
     }
