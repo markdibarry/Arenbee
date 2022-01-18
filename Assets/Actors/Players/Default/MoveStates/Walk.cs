@@ -17,11 +17,11 @@ namespace Arenbee.Assets.Players.MoveStates
             CheckForTransitions();
             if (InputHandler.Left.IsActionPressed)
             {
-                Actor.Move(Facings.Left);
+                Actor.MoveX(Facings.Left);
             }
             else if (InputHandler.Right.IsActionPressed)
             {
-                Actor.Move(Facings.Right);
+                Actor.MoveX(Facings.Right);
             }
         }
 

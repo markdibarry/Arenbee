@@ -20,6 +20,10 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
         public override void CheckForTransitions()
         {
+            if (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed)
+            {
+                StateMachine.TransitionTo(new Walk());
+            }
         }
     }
 }

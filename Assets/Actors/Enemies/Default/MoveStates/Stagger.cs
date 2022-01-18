@@ -7,24 +7,24 @@ namespace Arenbee.Assets.Enemies.MoveStates
 {
     public class Stagger : State<Enemy>
     {
-        Timer _staggerTimer;
+        float _staggerTimer = 0.5f;
         bool _isStaggered = true;
         public override void Enter()
         {
             StateController.ActionStateMachine.TransitionTo(new None());
-            _staggerTimer = Actor.CreateOneShotTimer(0.5f);
-            _staggerTimer.Timeout += OnStaggerTimeout;
         }
 
         public override void Update(float delta)
         {
             CheckForTransitions();
+            if (_staggerTimer > 0)
+                _staggerTimer -= delta;
+            else
+                _isStaggered = false;
         }
 
         public override void Exit()
         {
-            if (Object.IsInstanceValid(_staggerTimer))
-                _staggerTimer.QueueFree();
         }
 
         public override void CheckForTransitions()
@@ -33,11 +33,6 @@ namespace Arenbee.Assets.Enemies.MoveStates
             {
                 StateController.ResetMachines();
             }
-        }
-
-        public void OnStaggerTimeout()
-        {
-            _isStaggered = false;
         }
     }
 }

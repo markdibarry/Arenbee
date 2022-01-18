@@ -1,6 +1,5 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Assets.Items.HockeyStickNS
@@ -8,26 +7,26 @@ namespace Arenbee.Assets.Items.HockeyStickNS
     public class WeakAttack1 : State<Actor>
     {
         private bool _canRetrigger;
-        private Timer _retriggerTimer;
+        private float _retriggerTimer;
         public override void Enter()
         {
             AnimationName = "WeakAttack1";
             StateController.PlayWeaponAttack(AnimationName);
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
-            _retriggerTimer = Actor.CreateOneShotTimer(0.1f);
-            _retriggerTimer.Timeout += OnRepeatAttackTimerTimeout;
         }
 
         public override void Update(float delta)
         {
             CheckForTransitions();
+            if (_retriggerTimer > 0)
+                _retriggerTimer -= delta;
+            else
+                _canRetrigger = true;
         }
 
         public override void Exit()
         {
             Actor.AnimationPlayer.AnimationFinished -= OnAnimationFinished;
-            if (Object.IsInstanceValid(_retriggerTimer))
-                _retriggerTimer.QueueFree();
         }
 
         public void OnAnimationFinished(StringName animationName)
@@ -42,11 +41,6 @@ namespace Arenbee.Assets.Items.HockeyStickNS
             {
                 StateMachine.TransitionTo(new WeakAttack2());
             }
-        }
-
-        public void OnRepeatAttackTimerTimeout()
-        {
-            _canRetrigger = true;
         }
     }
 }

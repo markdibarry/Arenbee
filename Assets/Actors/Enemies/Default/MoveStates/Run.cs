@@ -4,10 +4,11 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.MoveStates
 {
-    public class Walk : State<Enemy>
+    public class Run : State<Enemy>
     {
         public override void Enter()
         {
+            Actor.MaxSpeed = Actor.RunSpeed;
         }
 
         public override void Update(float delta)
@@ -26,18 +27,19 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
         public override void Exit()
         {
+            Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
         public override void CheckForTransitions()
         {
-            if (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed)
+            if (!InputHandler.Left.IsActionPressed && !InputHandler.Right.IsActionPressed)
             {
-                if (InputHandler.Run.IsActionPressed)
-                    StateMachine.TransitionTo(new Run());
+                StateMachine.TransitionTo(new Idle());
             }
             else
             {
-                StateMachine.TransitionTo(new Idle());
+                if (!InputHandler.Run.IsActionPressed)
+                    StateMachine.TransitionTo(new Walk());
             }
         }
     }

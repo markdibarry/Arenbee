@@ -69,10 +69,15 @@ namespace Arenbee.Framework.Actors
         public override void _PhysicsProcess(float delta)
         {
             _moveX = 0;
+            _moveXY = Vector2.Zero;
+            BehaviorTree?.Update(delta);
             StateController.UpdateStates(delta);
-            HandleMove(delta);
+            if (_isFloater)
+                HandleMoveXY(delta);
+            else
+                HandleMoveX(delta);
             MoveAndSlide();
-
+            InputHandler.Update();
         }
 
         private void OnStatsUpdated(ActorStats actorStats)

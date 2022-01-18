@@ -12,7 +12,7 @@ namespace Arenbee.Framework.Actors.Stats
             SourceInfo = new EventSourceInfo();
             ActionType = ActionType.Environment;
             Element = Element.None;
-            Value = 0;
+            Value = 1;
         }
 
         public HitBoxAction(Node2D node)

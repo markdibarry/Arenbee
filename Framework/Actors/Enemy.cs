@@ -11,6 +11,12 @@ namespace Arenbee.Framework.Actors
         public event EnemyDefeatedHandler EnemyDefeated;
         private PackedScene _enemyDeathEffectScene;
 
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            WalkSpeed = 50;
+        }
+
         public override void _Ready()
         {
             base._Ready();

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://csdlt81wg78im"]
+[gd_scene load_steps=16 format=3 uid="uid://stb55u8teb1t"]
 
 [ext_resource type="Script" path="res://Assets/DemoLevel.cs" id="1_b0cml"]
 [ext_resource type="Texture2D" uid="uid://dnbas3hk0lkoa" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_m6cvi"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bu1vrvwkfu6aw" path="res://Assets/Scenery/Spike.png" id="10_4axe6"]
 [ext_resource type="PackedScene" uid="uid://bgw7nate55esi" path="res://Assets/Actors/Enemies/Orc/Orc.tscn" id="10_rab5m"]
 [ext_resource type="PackedScene" uid="uid://dlhf2h7gt57an" path="res://Assets/Actors/Enemies/Plant/Plant.tscn" id="11_ae5l1"]
+[ext_resource type="PackedScene" uid="uid://bf50wbn1thieg" path="res://Assets/Actors/Enemies/Whisp/Wisp.tscn" id="13_1xvvk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_osggw"]
 size = Vector2(16, 12)
@@ -132,7 +133,13 @@ texture_filter = 1
 position = Vector2(496, 163)
 
 [node name="Plant" parent="Enemies" instance=ExtResource( "11_ae5l1" )]
-position = Vector2(277, 100)
+position = Vector2(362, 206)
+
+[node name="Whisp" parent="Enemies" instance=ExtResource( "13_1xvvk" )]
+position = Vector2(178, 55)
+
+[node name="Whisp2" parent="Enemies" instance=ExtResource( "13_1xvvk" )]
+position = Vector2(679, 76)
 
 [node name="Players" type="Node2D" parent="."]
 

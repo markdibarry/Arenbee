@@ -9,5 +9,16 @@ namespace Arenbee.Framework.Input
         public InputAction Down { get; protected set; }
         public InputAction Left { get; protected set; }
         public InputAction Right { get; protected set; }
+
+        public void Update()
+        {
+            Jump.ClearOneTimeActions();
+            Attack.ClearOneTimeActions();
+            Run.ClearOneTimeActions();
+            Up.ClearOneTimeActions();
+            Down.ClearOneTimeActions();
+            Left.ClearOneTimeActions();
+            Right.ClearOneTimeActions();
+        }
     }
 }

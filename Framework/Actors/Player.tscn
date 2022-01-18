@@ -12,7 +12,7 @@ collision_mask = 276
 script = ExtResource( "2" )
 
 [node name="HurtBox" parent="BodySprite" index="0"]
-collision_mask = 32
+collision_mask = 160
 
 [node name="Blinker" parent="." index="2"]
 IFrameDuration = 1.0

@@ -1,13 +1,11 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Extensions;
-using Godot;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
     public class Stagger : State<Player>
     {
-        Timer _staggerTimer;
+        float _staggerTimer = 0.4f;
         bool _isStaggered = true;
 
         public override void Enter()
@@ -17,13 +15,15 @@ namespace Arenbee.Assets.Players.MoveStates
             Actor.IsAttackDisabled = true;
             Actor.IsJumpDisabled = true;
             StateController.PlayBase(AnimationName);
-            _staggerTimer = Actor.CreateOneShotTimer(0.4f);
-            _staggerTimer.Timeout += OnStaggerTimeout;
         }
 
         public override void Update(float delta)
         {
             CheckForTransitions();
+            if (_staggerTimer > 0)
+                _staggerTimer -= delta;
+            else
+                _isStaggered = false;
         }
 
         public override void Exit()
@@ -31,8 +31,6 @@ namespace Arenbee.Assets.Players.MoveStates
             Actor.IsWalkDisabled = false;
             Actor.IsAttackDisabled = false;
             Actor.IsJumpDisabled = false;
-            if (Object.IsInstanceValid(_staggerTimer))
-                _staggerTimer.QueueFree();
         }
 
         public override void CheckForTransitions()
@@ -41,11 +39,6 @@ namespace Arenbee.Assets.Players.MoveStates
             {
                 StateController.ResetMachines();
             }
-        }
-
-        public void OnStaggerTimeout()
-        {
-            _isStaggered = false;
         }
     }
 }

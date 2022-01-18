@@ -106,6 +106,7 @@ print={
 2d_physics/layer_4="Player Weapon"
 2d_physics/layer_5="Environment Solid"
 2d_physics/layer_6="Environment HitBox"
+2d_physics/layer_8="Enemy HitBox"
 2d_physics/layer_9="Enemy Collide Player"
 2d_physics/layer_10="Enemy Pass Player"
 2d_physics/layer_11="Enemy Pass Environment"

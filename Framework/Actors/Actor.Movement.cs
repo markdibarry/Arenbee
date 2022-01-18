@@ -15,6 +15,8 @@ namespace Arenbee.Framework.Actors
         protected float _timeToJumpPeak = 0.4f;
         public float GroundedGravity { get; set; } = 0.05f;
         private int _moveX;
+        protected bool _isFloater;
+        private Vector2 _moveXY;
         public float JumpVelocity { get; set; }
         public float JumpGravity { get; set; }
         protected float Acceleration { get; set; }
@@ -37,7 +39,7 @@ namespace Arenbee.Framework.Actors
         public WeaponSlot WeaponSlot { get; set; }
         public InputHandler InputHandler { get; set; }
 
-        public void HandleMove(float delta)
+        public void HandleMoveX(float delta)
         {
             if (_moveX != 0)
             {
@@ -49,7 +51,30 @@ namespace Arenbee.Framework.Actors
             }
         }
 
-        public void Move(Facings newFacing)
+        public void HandleMoveXY(float delta)
+        {
+            if (_moveXY != Vector2.Zero)
+            {
+                MotionVelocityX = MotionVelocity.x.LerpClamp(_moveXY.x * MaxSpeed, Acceleration * delta);
+                MotionVelocityY = MotionVelocity.y.LerpClamp(_moveXY.y * MaxSpeed, Acceleration * delta);
+            }
+            else
+            {
+                MotionVelocityX = MotionVelocity.x.LerpClamp(0, Friction * delta);
+                MotionVelocityY = MotionVelocity.y.LerpClamp(0, Friction * delta);
+            }
+        }
+
+        public void MoveXY(Vector2 direction)
+        {
+            _moveXY = direction;
+            if ((int)Facing != Math.Sign(direction.x))
+            {
+                ChangeFacing();
+            }
+        }
+
+        public void MoveX(Facings newFacing)
         {
             _moveX = (int)newFacing;
             if (Facing != newFacing)

@@ -1,11 +1,13 @@
 using System;
 using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Input;
 using Godot;
 
 namespace Arenbee.Framework.Actors
 {
     public abstract partial class Actor
     {
+        public BehaviorTree BehaviorTree { get; set; }
         public bool IsAttackDisabled { get; set; }
         public Sprite2D BodySprite { get; set; }
         public AnimationPlayer AnimationPlayer { get; set; }

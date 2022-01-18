@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://bsh3eotc3xc3g"
-path="res://.godot/imported/Death_(32 x 32).png-7435c90906c6a0c6d3c666e008b8dacf.stex"
+uid="uid://0fus0um6v4bs"
+path="res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/9 - Wispy Fire/Death_(32 x 32).png"
-dest_files=["res://.godot/imported/Death_(32 x 32).png-7435c90906c6a0c6d3c666e008b8dacf.stex"]
+source_file="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png"
+dest_files=["res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.stex"]
 
 [params]
 

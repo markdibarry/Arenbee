@@ -1,8 +1,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
-using Godot;
-using System;
 
 namespace Arenbee.Assets.Enemies.PlantNS
 {

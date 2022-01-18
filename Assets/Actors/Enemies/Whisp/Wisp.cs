@@ -1,20 +1,26 @@
-﻿using Arenbee.Assets.Enemies.Behavior.PatrolChaseGround;
+using Arenbee.Assets.Enemies.Behavior.PatrolChaseAir;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Enemies.OrcNS
+namespace Arenbee.Assets.Enemies.WhispNS
 {
-    public partial class Orc : Enemy
+    public partial class Wisp : Enemy
     {
         public override void _Ready()
         {
             base._Ready();
             StateController.Init(
-                new MoveStates.Walk(),
-                new JumpStates.Grounded(),
+                new MoveStates.Idle(),
+                new JumpStates.Float(),
                 new ActionStates.NotAttacking());
-            BehaviorTree = new PatrolChaseGroundBT(this);
+            BehaviorTree = new PatrolChaseAirBT(this);
+        }
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            _isFloater = true;
         }
 
         protected override void SetStats()
