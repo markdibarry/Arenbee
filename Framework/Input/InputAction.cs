@@ -12,6 +12,7 @@ namespace Arenbee.Framework.Input
         private bool _simulatedPress;
         private bool _simulatedJustPressed;
         private bool _simulatedJustReleased;
+        private float _simulatedStrength;
         public bool IsActionPressed
         {
             get
@@ -45,6 +46,20 @@ namespace Arenbee.Framework.Input
             }
         }
 
+        public float ActionStrength
+        {
+            get
+            {
+                if (_simulatedStrength != 0)
+                    return _simulatedStrength;
+                if (IsActionPressed)
+                    return 1;
+                if (string.IsNullOrEmpty(Alias))
+                    return 0;
+                return Godot.Input.GetActionStrength(Alias);
+            }
+        }
+
         public void Press()
         {
             if (!_simulatedPress)
@@ -61,6 +76,11 @@ namespace Arenbee.Framework.Input
                 _simulatedPress = false;
                 _simulatedJustReleased = true;
             }
+        }
+
+        public void SetActionStrength(float value)
+        {
+            _simulatedStrength = value;
         }
 
         public void ClearOneTimeActions()

@@ -20,7 +20,7 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
                 }
                 else
                 {
-                    SetData("Area2D", _area2D);
+                    _area2D.BodyEntered += OnBodyEntered;
                 }
             }
         }
@@ -30,24 +30,22 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
             object t = GetData("Target");
             if (t == null)
             {
-                var bodies = _area2D.GetOverlappingBodies();
-                if (bodies.Count > 0)
-                {
-                    object target = bodies[0];
-                    if (target is Actor)
-                    {
-                        SetData("Target", target);
-
-                        State = NodeState.Success;
-                        return State;
-                    }
-                }
                 State = NodeState.Failure;
                 return State;
             }
 
             State = NodeState.Success;
             return State;
+        }
+
+        public void OnBodyEntered(Node body)
+        {
+            if (body is Actor)
+            {
+                object target = GetData("Target");
+                if (target == null)
+                    SetData("Target", body);
+            }
         }
     }
 }

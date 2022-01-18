@@ -6,7 +6,7 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
 {
     public class CheckIsHome : BTNode
     {
-        private readonly float _minHomeDistance = 5f;
+        private readonly float _minHomeDistance = 20f;
         public override NodeState Evaluate(float delta)
         {
             object home = GetData("Home");
@@ -18,10 +18,7 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
             var distance = Actor.GlobalPosition.DistanceTo((Vector2)home);
             if (distance <= _minHomeDistance)
             {
-                Actor.InputHandler.Up.Release();
-                Actor.InputHandler.Down.Release();
-                Actor.InputHandler.Right.Release();
-                Actor.InputHandler.Left.Release();
+                Actor.InputHandler.SetLeftAxis(Vector2.Zero);
                 State = NodeState.Success;
                 return State;
             }

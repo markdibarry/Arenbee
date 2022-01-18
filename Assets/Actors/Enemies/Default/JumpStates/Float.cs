@@ -14,15 +14,7 @@ namespace Arenbee.Assets.Enemies.JumpStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-            var velocity = new Vector2();
-            if (InputHandler.Up.IsActionPressed)
-                velocity.y -= 1;
-            if (InputHandler.Down.IsActionPressed)
-                velocity.y += 1;
-            if (InputHandler.Left.IsActionPressed)
-                velocity.x -= 1;
-            if (InputHandler.Right.IsActionPressed)
-                velocity.x += 1;
+            var velocity = InputHandler.GetLeftAxis();
 
             if (velocity != Vector2.Zero)
                 Actor.MoveXY(velocity);

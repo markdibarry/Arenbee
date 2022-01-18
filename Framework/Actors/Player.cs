@@ -11,6 +11,12 @@ namespace Arenbee.Framework.Actors
         public delegate void PlayerDefeatedHandler(string playerName);
         public event PlayerDefeatedHandler PlayerDefeated;
 
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            WalkSpeed = 100;
+        }
+
         public override void OnHitBoxActionRecieved(HitBoxActionRecievedData data)
         {
             base.OnHitBoxActionRecieved(data);

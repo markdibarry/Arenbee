@@ -29,7 +29,7 @@ namespace Arenbee.Framework.Actors
         {
             Acceleration = 1000f;
             Friction = 1000f;
-            WalkSpeed = 100;
+            WalkSpeed = 50;
             Facing = Facings.Right;
             UpDirection = Vector2.Up;
             InputHandler = new Dummy();

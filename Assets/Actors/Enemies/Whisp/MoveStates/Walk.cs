@@ -20,10 +20,7 @@ namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (!InputHandler.Left.IsActionPressed
-                && !InputHandler.Right.IsActionPressed
-                && !InputHandler.Up.IsActionPressed
-                && !InputHandler.Down.IsActionPressed)
+            if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
             {
                 StateMachine.TransitionTo(new Idle());
             }

@@ -16,46 +16,19 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
             {
                 if (distance > _maxChaseDistance)
                 {
-                    Actor.InputHandler.Up.Release();
-                    Actor.InputHandler.Down.Release();
-                    Actor.InputHandler.Right.Release();
-                    Actor.InputHandler.Left.Release();
+                    Actor.InputHandler.SetLeftAxis(Vector2.Zero);
                     Actor.InputHandler.Run.Release();
                     ClearData("Target");
                     State = NodeState.Failure;
                     return State;
                 }
                 Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
-                if (direction.x > 0)
-                {
-                    Actor.InputHandler.Left.Release();
-                    Actor.InputHandler.Right.Press();
-                }
-                else if (direction.x < 0)
-                {
-                    Actor.InputHandler.Right.Release();
-                    Actor.InputHandler.Left.Press();
-                }
-
-                if (direction.y < 0)
-                {
-                    Actor.InputHandler.Down.Release();
-                    Actor.InputHandler.Up.Press();
-                }
-                else if (direction.y > 0)
-                {
-                    Actor.InputHandler.Up.Release();
-                    Actor.InputHandler.Down.Press();
-                }
-
+                Actor.InputHandler.SetLeftAxis(direction);
                 Actor.InputHandler.Run.Press();
             }
             else
             {
-                Actor.InputHandler.Up.Release();
-                Actor.InputHandler.Down.Release();
-                Actor.InputHandler.Right.Release();
-                Actor.InputHandler.Left.Release();
+                Actor.InputHandler.SetLeftAxis(Vector2.Zero);
                 Actor.InputHandler.Run.Release();
             }
 

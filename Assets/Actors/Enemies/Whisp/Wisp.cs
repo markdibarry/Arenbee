@@ -21,6 +21,8 @@ namespace Arenbee.Assets.Enemies.WhispNS
         {
             base.SetDefaults();
             _isFloater = true;
+            Friction = 30f;
+            Acceleration = 1000f;
         }
 
         protected override void SetStats()
