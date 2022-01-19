@@ -13,7 +13,7 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseGround
             {
                 new Sequence(new List<BTNode>
                 {
-                    new CheckPlayerInRayCastRange(),
+                    new CheckTargetInRayCastRange(),
                     new TaskChaseTargetOnGround()
                 }),
                 new TaskPatrol()

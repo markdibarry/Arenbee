@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
-    public class Idle : State<Player>
+    public class Idle : State<Actor>
     {
         public override void Enter()
         {

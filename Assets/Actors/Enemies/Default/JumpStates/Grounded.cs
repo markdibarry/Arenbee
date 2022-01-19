@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Enemies.JumpStates
 {
-    public class Grounded : State<Enemy>
+    public class Grounded : State<Actor>
     {
         public override void Enter()
         {

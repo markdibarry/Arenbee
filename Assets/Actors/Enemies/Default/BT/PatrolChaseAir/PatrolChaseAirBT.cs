@@ -13,7 +13,7 @@ namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
             {
                 new Sequence(new List<BTNode>
                 {
-                    new CheckPlayerInArea(),
+                    new CheckTargetInArea(),
                     new TaskChaseTargetInAir()
                 }),
                 new Sequence(new List<BTNode>

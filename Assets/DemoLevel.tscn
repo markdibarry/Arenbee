@@ -102,7 +102,7 @@ position = Vector2(311, 72)
 collision_mask = 8
 
 [node name="Spike" parent="Scenery" instance=ExtResource( "9_f6p71" )]
-position = Vector2(7, 217)
+position = Vector2(712, 217)
 collision_layer = 32
 collision_mask = 0
 monitoring = false
@@ -115,7 +115,7 @@ shape = SubResource( "RectangleShape2D_osggw" )
 texture = ExtResource( "10_4axe6" )
 
 [node name="Spike2" parent="Scenery" instance=ExtResource( "9_f6p71" )]
-position = Vector2(440, 217)
+position = Vector2(744, 217)
 collision_layer = 32
 collision_mask = 0
 monitoring = false

@@ -4,7 +4,7 @@ using Godot;
 
 namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseGround
 {
-    public class CheckPlayerInRayCastRange : BTNode
+    public class CheckTargetInRayCastRange : BTNode
     {
         private RayCast2D _rayCast2D;
 

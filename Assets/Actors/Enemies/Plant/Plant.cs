@@ -4,7 +4,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.PlantNS
 {
-    public partial class Plant : Enemy
+    public partial class Plant : Actor
     {
         public override void Init()
         {

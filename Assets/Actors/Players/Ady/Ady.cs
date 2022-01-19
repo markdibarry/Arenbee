@@ -1,11 +1,9 @@
-using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
-using Godot;
 
 namespace Arenbee.Assets.Players.AdyNS
 {
-    public partial class Ady : Player
+    public partial class Ady : Actor
     {
         public override void Init()
         {

@@ -4,7 +4,7 @@ using Godot;
 
 namespace Arenbee.Assets.Enemies.MoveStates
 {
-    public class Dead : State<Enemy>
+    public class Dead : State<Actor>
     {
         public override void Enter()
         {

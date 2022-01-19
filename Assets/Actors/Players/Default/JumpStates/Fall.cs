@@ -5,7 +5,7 @@ using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Players.JumpStates
 {
-    public class Fall : State<Player>
+    public class Fall : State<Actor>
     {
         readonly float _fallMultiplier = 2f;
         float _jumpGraceTimer = 0;

@@ -35,16 +35,12 @@ namespace Arenbee.Framework.Menus.HUD
             foreach (Actor actor in actors)
             {
                 actor.ActorStats.HitBoxActionRecieved += OnHitBoxActionRecieved;
-                if (actor is Enemy enemy)
+                actor.ActorDefeated += OnActorDefeated;
+                if (actor.ActorType == ActorType.Player)
                 {
-                    enemy.EnemyDefeated += OnEnemyDefeated;
-                }
 
-                if (actor is Player player)
-                {
-                    player.PlayerDefeated += OnPlayerDefeated;
-                    UpdatePlayerStatsDisplay(player.ActorStats);
-                    player.StatsUpdated += OnPlayerStatsUpdated;
+                    UpdatePlayerStatsDisplay(actor.ActorStats);
+                    actor.StatsUpdated += OnPlayerStatsUpdated;
                 }
             }
         }
@@ -74,17 +70,10 @@ namespace Arenbee.Framework.Menus.HUD
             MessageBoxList.AddMessageToTop(actionMessage);
         }
 
-        private void OnEnemyDefeated(string enemyName)
+        private void OnActorDefeated(string actorName)
         {
             var defeatedMessage = TimedMessageBox.Instantiate() as TimedMessageBox;
-            defeatedMessage.MessageText = $"{enemyName} was defeated!";
-            MessageBoxList.AddMessageToTop(defeatedMessage);
-        }
-
-        private void OnPlayerDefeated(string playerName)
-        {
-            var defeatedMessage = TimedMessageBox.Instantiate() as TimedMessageBox;
-            defeatedMessage.MessageText = $"{playerName} was defeated!";
+            defeatedMessage.MessageText = $"{actorName} was defeated!";
             MessageBoxList.AddMessageToTop(defeatedMessage);
         }
 

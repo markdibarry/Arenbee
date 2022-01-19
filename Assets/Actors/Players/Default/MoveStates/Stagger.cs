@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
-    public class Stagger : State<Player>
+    public class Stagger : State<Actor>
     {
         float _staggerTimer = 0.4f;
         bool _isStaggered = true;

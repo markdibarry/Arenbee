@@ -5,7 +5,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.OrcNS
 {
-    public partial class Orc : Enemy
+    public partial class Orc : Actor
     {
         public override void Init()
         {

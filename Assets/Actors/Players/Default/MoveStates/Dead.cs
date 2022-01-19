@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Players.MoveStates
 {
-    public class Dead : State<Player>
+    public class Dead : State<Actor>
     {
         public override void Enter()
         {

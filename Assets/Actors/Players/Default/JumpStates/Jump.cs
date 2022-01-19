@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Players.JumpStates
 {
-    public class Jump : State<Player>
+    public class Jump : State<Actor>
     {
         public override void Enter()
         {

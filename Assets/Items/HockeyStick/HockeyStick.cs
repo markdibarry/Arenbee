@@ -1,4 +1,3 @@
-using Arenbee.Assets.Items.HockeyStickNS;
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
@@ -6,7 +5,7 @@ using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 
-namespace Arenbee.Assets.Items
+namespace Arenbee.Assets.Items.HockeyStickNS
 {
     public partial class HockeyStick : Weapon
     {

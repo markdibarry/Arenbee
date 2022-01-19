@@ -4,7 +4,7 @@ using Godot;
 
 namespace Arenbee.Assets.Players.ActionStates
 {
-    public class UnarmedAttack : State<Player>
+    public class UnarmedAttack : State<Actor>
     {
         public override void Enter()
         {

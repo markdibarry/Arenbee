@@ -4,7 +4,7 @@ using Godot;
 
 namespace Arenbee.Assets.Enemies.JumpStates
 {
-    public class Float : State<Enemy>
+    public class Float : State<Actor>
     {
         public override void Enter()
         {

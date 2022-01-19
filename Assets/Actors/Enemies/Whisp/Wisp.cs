@@ -5,7 +5,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.WhispNS
 {
-    public partial class Wisp : Enemy
+    public partial class Wisp : Actor
     {
         public override void SetDefaults()
         {

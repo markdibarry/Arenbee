@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Players.ActionStates
 {
-    public class NotAttacking : State<Player>
+    public class NotAttacking : State<Actor>
     {
         public NotAttacking() { IsInitialState = true; }
 

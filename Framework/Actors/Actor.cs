@@ -3,6 +3,7 @@ using Arenbee.Framework.Items;
 using Arenbee.Framework.Actors.Stats;
 using Godot;
 using Arenbee.Framework.Input;
+using Arenbee.Framework.Constants;
 
 namespace Arenbee.Framework.Actors
 {
@@ -11,12 +12,15 @@ namespace Arenbee.Framework.Actors
     /// </summary>
     public abstract partial class Actor : CharacterBody2D
     {
+        [Export(PropertyHint.Enum)]
+        public ActorType ActorType { get; set; }
         public ActorStats ActorStats { get; set; }
         public Inventory Inventory { get; set; }
         public Equipment Equipment { get; set; }
         public HurtBox HurtBox { get; set; }
         public delegate void StatsUpdatedHandler(ActorStats actorStats);
         public event StatsUpdatedHandler StatsUpdated;
+        private PackedScene _enemyDeathEffectScene;
 
         public override void _Ready()
         {
@@ -29,7 +33,6 @@ namespace Arenbee.Framework.Actors
         {
             Acceleration = 1000f;
             Friction = 1000f;
-            WalkSpeed = 50;
             Facing = Facings.Right;
             UpDirection = Vector2.Up;
         }
@@ -64,6 +67,7 @@ namespace Arenbee.Framework.Actors
             StateController = new StateController(this);
             WeaponSlot.Init(this);
             SetStats();
+            _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
         }
 
         public override void _PhysicsProcess(float delta)

@@ -4,7 +4,7 @@ using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Enemies.JumpStates
 {
-    public class Fall : State<Enemy>
+    public class Fall : State<Actor>
     {
         readonly float _fallMultiplier = 2f;
         public override void Enter()

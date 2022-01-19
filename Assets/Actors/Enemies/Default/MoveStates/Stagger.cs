@@ -5,7 +5,7 @@ using Godot;
 
 namespace Arenbee.Assets.Enemies.MoveStates
 {
-    public class Stagger : State<Enemy>
+    public class Stagger : State<Actor>
     {
         float _staggerTimer = 0.5f;
         bool _isStaggered = true;

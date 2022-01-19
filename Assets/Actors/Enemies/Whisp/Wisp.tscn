@@ -56,7 +56,7 @@ resource_local_to_scene = true
 size = Vector2(14, 22)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j7q7d"]
-radius = 58.0775
+radius = 78.0064
 
 [node name="Wisp" instance=ExtResource( "1_0h21x" )]
 collision_layer = 1024

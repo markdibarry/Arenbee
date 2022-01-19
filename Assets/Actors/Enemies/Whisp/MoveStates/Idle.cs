@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
 {
-    public class Idle : State<Enemy>
+    public class Idle : State<Actor>
     {
         public override void Enter()
         {

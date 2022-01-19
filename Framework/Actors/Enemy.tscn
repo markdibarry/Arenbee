@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmwindadvvm2l"]
+[gd_scene load_steps=5 format=3 uid="uid://cmwindadvvm2l"]
 
 [ext_resource type="PackedScene" uid="uid://qxn8inqies2j" path="res://Framework/Actors/Actor.tscn" id="2"]
-[ext_resource type="Script" path="res://Framework/Actors/Enemy.cs" id="3"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_dclnh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cu1ha"]
@@ -17,7 +16,7 @@ size = Vector2(16, 27)
 [node name="Enemy" instance=ExtResource( "2" )]
 collision_layer = 256
 collision_mask = 21
-script = ExtResource( "3" )
+ActorType = 1
 
 [node name="BodySprite" parent="." index="1"]
 material = SubResource( "ShaderMaterial_cu1ha" )

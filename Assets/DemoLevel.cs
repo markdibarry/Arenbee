@@ -27,11 +27,11 @@ namespace Arenbee.Assets
                 var actors = new List<Actor>();
                 var players = GetNodeOrNull<Node>("Players")?
                     .GetChildren()
-                    .OfType<Player>()
+                    .OfType<Actor>()
                     .ToList();
                 var enemies = GetNodeOrNull<Node>("Enemies")?
                     .GetChildren()
-                    .OfType<Enemy>()
+                    .OfType<Actor>()
                     .ToList();
                 if (players != null) actors.AddRange(players);
                 if (enemies != null) actors.AddRange(enemies);

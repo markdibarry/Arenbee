@@ -4,7 +4,7 @@ using Godot;
 
 namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
 {
-    public class CheckPlayerInArea : BTNode
+    public class CheckTargetInArea : BTNode
     {
         private Area2D _area2D;
 

@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Enemies.ActionStates
 {
-    public class NotAttacking : State<Enemy>
+    public class NotAttacking : State<Actor>
     {
         public NotAttacking() { IsInitialState = true; }
         public override void Enter()

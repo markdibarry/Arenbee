@@ -4,7 +4,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Enemies.MoveStates
 {
-    public class Walk : State<Enemy>
+    public class Walk : State<Actor>
     {
         public override void Enter()
         {

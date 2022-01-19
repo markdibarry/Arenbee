@@ -15,12 +15,16 @@ namespace Arenbee.Framework.Actors
         protected float _jumpHeight = 64;
         [Export]
         protected float _timeToJumpPeak = 0.4f;
+        [Export]
+        public int WalkSpeed { get; protected set; }
         public float GroundedGravity { get; set; } = 0.05f;
         public float JumpVelocity { get; set; }
         public float JumpGravity { get; set; }
-        public int WalkSpeed { get; protected set; }
         public int RunSpeed { get; protected set; }
         public int MaxSpeed { get; set; }
+        public bool IsWalkDisabled { get; set; }
+        public bool IsRunDisabled { get; set; }
+        public bool IsJumpDisabled { get; set; }
         public float MotionVelocityX
         {
             get { return MotionVelocity.x; }
@@ -95,6 +99,20 @@ namespace Arenbee.Framework.Actors
         public void Jump()
         {
             MotionVelocityY = JumpVelocity;
+        }
+
+        public bool ShouldWalk()
+        {
+            return !IsWalkDisabled
+                && InputHandler.Left.IsActionPressed
+                || InputHandler.Right.IsActionPressed;
+        }
+
+        public bool ShouldRun()
+        {
+            return ShouldWalk()
+                && !IsRunDisabled
+                && InputHandler.Run.IsActionPressed;
         }
 
         private void AttachInitialInputHandler()
