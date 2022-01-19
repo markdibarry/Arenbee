@@ -4,6 +4,8 @@ using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Godot;
+using Arenbee.Assets.Input;
+using System.Linq;
 
 namespace Arenbee.Framework.Actors
 {
@@ -14,13 +16,8 @@ namespace Arenbee.Framework.Actors
         [Export]
         protected float _timeToJumpPeak = 0.4f;
         public float GroundedGravity { get; set; } = 0.05f;
-        private int _moveX;
-        protected bool _isFloater;
-        private Vector2 _moveXY;
         public float JumpVelocity { get; set; }
         public float JumpGravity { get; set; }
-        protected float Acceleration { get; set; }
-        protected float Friction { get; set; }
         public int WalkSpeed { get; protected set; }
         public int RunSpeed { get; protected set; }
         public int MaxSpeed { get; set; }
@@ -38,8 +35,14 @@ namespace Arenbee.Framework.Actors
         public Facings Facing { get; set; }
         public WeaponSlot WeaponSlot { get; set; }
         public InputHandler InputHandler { get; set; }
+        protected float Acceleration { get; set; }
+        protected float Friction { get; set; }
+        protected bool _isFloater;
+        private bool _isPlayerControlled;
+        private int _moveX;
+        private Vector2 _moveXY;
 
-        public void HandleMoveX(float delta)
+        private void HandleMoveX(float delta)
         {
             if (_moveX != 0)
             {
@@ -51,7 +54,7 @@ namespace Arenbee.Framework.Actors
             }
         }
 
-        public void HandleMoveXY(float delta)
+        private void HandleMoveXY(float delta)
         {
             if (_moveXY != Vector2.Zero)
             {
@@ -68,7 +71,7 @@ namespace Arenbee.Framework.Actors
         public void MoveXY(Vector2 direction)
         {
             _moveXY = direction;
-            if ((int)Facing != Math.Sign(direction.x))
+            if (direction.x != 0 && (int)Facing != Math.Sign(direction.x))
             {
                 ChangeFacing();
             }
@@ -92,6 +95,23 @@ namespace Arenbee.Framework.Actors
         public void Jump()
         {
             MotionVelocityY = JumpVelocity;
+        }
+
+        private void AttachInitialInputHandler()
+        {
+            var attachedInputHandler = GetChildren()
+                .OfType<InputHandler>()
+                .FirstOrDefault();
+            if (attachedInputHandler != null)
+            {
+                _isPlayerControlled = true;
+                InputHandler = attachedInputHandler;
+            }
+            else
+            {
+                InputHandler = new Dummy();
+                AddChild(InputHandler);
+            }
         }
     }
 }

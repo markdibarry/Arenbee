@@ -7,22 +7,22 @@ namespace Arenbee.Assets.Enemies.WhispNS
 {
     public partial class Wisp : Enemy
     {
-        public override void _Ready()
-        {
-            base._Ready();
-            StateController.Init(
-                new MoveStates.Idle(),
-                new JumpStates.Float(),
-                new ActionStates.NotAttacking());
-            BehaviorTree = new PatrolChaseAirBT(this);
-        }
-
         public override void SetDefaults()
         {
             base.SetDefaults();
             _isFloater = true;
             Friction = 30f;
             Acceleration = 1000f;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            StateController.Init(
+                new MoveStates.Idle(),
+                new JumpStates.Float(),
+                new ActionStates.NotAttacking());
+            BehaviorTree = new PatrolChaseAirBT(this);
         }
 
         protected override void SetStats()

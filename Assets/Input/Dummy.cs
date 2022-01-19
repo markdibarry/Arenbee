@@ -2,7 +2,7 @@ using Arenbee.Framework.Input;
 
 namespace Arenbee.Assets.Input
 {
-    public class Dummy : InputHandler
+    public partial class Dummy : InputHandler
     {
         public Dummy()
         {

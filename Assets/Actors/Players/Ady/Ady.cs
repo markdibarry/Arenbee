@@ -1,15 +1,15 @@
 using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
+using Godot;
 
 namespace Arenbee.Assets.Players.AdyNS
 {
     public partial class Ady : Player
     {
-        public override void _Ready()
+        public override void Init()
         {
-            base._Ready();
-            InputHandler = new Player1();
+            base.Init();
             StateController.Init(
                 new MoveStates.Idle(),
                 new JumpStates.Grounded(),

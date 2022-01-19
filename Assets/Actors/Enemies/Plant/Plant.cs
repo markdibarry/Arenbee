@@ -6,9 +6,9 @@ namespace Arenbee.Assets.Enemies.PlantNS
 {
     public partial class Plant : Enemy
     {
-        public override void _Ready()
+        public override void Init()
         {
-            base._Ready();
+            base.Init();
             StateController.Init(
                 new MoveStates.Idle(),
                 new JumpStates.Grounded(),

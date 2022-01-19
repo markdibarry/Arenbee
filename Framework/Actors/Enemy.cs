@@ -17,9 +17,9 @@ namespace Arenbee.Framework.Actors
             WalkSpeed = 50;
         }
 
-        public override void _Ready()
+        public override void Init()
         {
-            base._Ready();
+            base.Init();
             _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
         }
 

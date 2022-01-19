@@ -2,7 +2,7 @@ using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Actors.Stats;
 using Godot;
-using Arenbee.Assets.Input;
+using Arenbee.Framework.Input;
 
 namespace Arenbee.Framework.Actors
 {
@@ -20,8 +20,8 @@ namespace Arenbee.Framework.Actors
 
         public override void _Ready()
         {
-            SetNodeReferences();
             SetDefaults();
+            SetNodeReferences();
             Init();
         }
 
@@ -32,7 +32,17 @@ namespace Arenbee.Framework.Actors
             WalkSpeed = 50;
             Facing = Facings.Right;
             UpDirection = Vector2.Up;
-            InputHandler = new Dummy();
+        }
+
+        private void SetNodeReferences()
+        {
+            BodySprite = GetNode<Sprite2D>("BodySprite");
+            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
+            WeaponSlot = BodySprite.GetNode<WeaponSlot>("WeaponSlot");
+            HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
+            AnimationPlayer = GetNode<AnimationPlayer>("StateAnimationPlayer");
+            _blinker = GetNode<Blinker>("Blinker");
+            AttachInitialInputHandler();
         }
 
         public virtual void Init()
@@ -56,21 +66,15 @@ namespace Arenbee.Framework.Actors
             SetStats();
         }
 
-        private void SetNodeReferences()
-        {
-            BodySprite = GetNode<Sprite2D>("BodySprite");
-            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
-            WeaponSlot = BodySprite.GetNode<WeaponSlot>("WeaponSlot");
-            HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
-            AnimationPlayer = GetNode<AnimationPlayer>("StateAnimationPlayer");
-            _blinker = GetNode<Blinker>("Blinker");
-        }
-
         public override void _PhysicsProcess(float delta)
         {
             _moveX = 0;
             _moveXY = Vector2.Zero;
-            BehaviorTree?.Update(delta);
+            if (!_isPlayerControlled)
+            {
+                BehaviorTree?.Update(delta);
+            }
+
             StateController.UpdateStates(delta);
             if (_isFloater)
                 HandleMoveXY(delta);

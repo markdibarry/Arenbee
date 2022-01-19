@@ -2,7 +2,7 @@ using Godot;
 
 namespace Arenbee.Framework.Input
 {
-    public abstract class InputHandler
+    public abstract partial class InputHandler : Node
     {
         public InputAction Jump { get; protected set; }
         public InputAction Attack { get; protected set; }

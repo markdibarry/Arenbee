@@ -7,9 +7,9 @@ namespace Arenbee.Assets.Enemies.OrcNS
 {
     public partial class Orc : Enemy
     {
-        public override void _Ready()
+        public override void Init()
         {
-            base._Ready();
+            base.Init();
             StateController.Init(
                 new MoveStates.Walk(),
                 new JumpStates.Grounded(),

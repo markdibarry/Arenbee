@@ -44,6 +44,10 @@ namespace Arenbee.Assets
                 GC.Collect();
             }
 
+            if (Godot.Input.IsActionJustPressed("print"))
+            {
+                PrintStrayNodes();
+            }
         }
     }
 }
