@@ -3,6 +3,7 @@ using Arenbee.Framework.Enums;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Input;
 using Godot;
+using Arenbee.Assets.Actors.Default.BaseStates;
 
 namespace Arenbee.Framework.Actors
 {
@@ -29,14 +30,7 @@ namespace Arenbee.Framework.Actors
 
             if (data.TotalDamage > 0)
             {
-                if (ActorType == ActorType.Player)
-                {
-                    StateController.BaseStateMachine.TransitionTo(new Assets.Players.MoveStates.Stagger());
-                }
-                else if (ActorType == ActorType.Enemy)
-                {
-                    StateController.BaseStateMachine.TransitionTo(new Assets.Enemies.MoveStates.Stagger());
-                }
+                StateController.BaseStateMachine.TransitionTo(new Stagger());
             }
         }
 
@@ -58,11 +52,11 @@ namespace Arenbee.Framework.Actors
             ActorDefeated?.Invoke(Name);
             if (ActorType == ActorType.Player)
             {
-                StateController.BaseStateMachine.TransitionTo(new Assets.Players.MoveStates.Dead());
+                StateController.BaseStateMachine.TransitionTo(new Assets.Actors.Players.BaseStates.Dead());
             }
             else if (ActorType == ActorType.Enemy)
             {
-                StateController.BaseStateMachine.TransitionTo(new Assets.Enemies.MoveStates.Dead());
+                StateController.BaseStateMachine.TransitionTo(new Assets.Actors.Enemies.BaseStates.Dead());
             }
         }
 

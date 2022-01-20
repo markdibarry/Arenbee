@@ -39,7 +39,7 @@ size = Vector2(14, 24)
 [node name="Ady" instance=ExtResource( "1_n2y5e" )]
 script = ExtResource( "2_0vmt5" )
 
-[node name="StateAnimationPlayer" parent="." index="0"]
+[node name="AnimationPlayer" parent="." index="0"]
 anims/Dead = ExtResource( "3_c80ot" )
 anims/Idle = ExtResource( "3_5sjqk" )
 anims/Jump = ExtResource( "4_6fk4c" )

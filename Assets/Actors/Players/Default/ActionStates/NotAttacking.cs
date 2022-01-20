@@ -1,7 +1,7 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Players.ActionStates
+namespace Arenbee.Assets.Actors.Players.ActionStates
 {
     public class NotAttacking : State<Actor>
     {

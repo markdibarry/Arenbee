@@ -2,7 +2,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Input;
 using Godot;
 
-namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseGround
+namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
 {
     public class TaskChaseTargetOnGround : BTNode
     {

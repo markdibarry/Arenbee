@@ -1,7 +1,7 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Players.AdyNS
+namespace Arenbee.Assets.Actors.Players.AdyNS
 {
     public partial class Ady : Actor
     {
@@ -9,7 +9,7 @@ namespace Arenbee.Assets.Players.AdyNS
         {
             base.Init();
             StateController.Init(
-                new MoveStates.Idle(),
+                new BaseStates.Idle(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
         }

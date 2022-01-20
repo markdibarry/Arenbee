@@ -1,7 +1,7 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.WhispNS.BaseStates
 {
     public class Walk : State<Actor>
     {
@@ -20,11 +20,11 @@ namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
+            if (!Actor.IsWalkDisabled && InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
             {
                 StateMachine.TransitionTo(new Idle());
             }
-            else if (InputHandler.Run.IsActionPressed)
+            else if (!Actor.IsRunDisabled && InputHandler.Run.IsActionPressed)
             {
                 StateMachine.TransitionTo(new Run());
             }

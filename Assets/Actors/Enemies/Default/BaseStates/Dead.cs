@@ -1,18 +1,16 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
+using Godot;
 
-namespace Arenbee.Assets.Players.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
     public class Dead : State<Actor>
     {
         public override void Enter()
         {
-            AnimationName = "Dead";
-            StateController.ActionStateMachine.TransitionTo(new None());
-            StateController.PlayBase(AnimationName);
-            Actor.IsWalkDisabled = true;
-            Actor.IsAttackDisabled = true;
-            Actor.IsJumpDisabled = true;
+            Actor.MotionVelocity = new Vector2(0, 0);
+            Actor.QueueFree();
+            Actor.CreateDeathEffect();
         }
 
         public override void Update(float delta)

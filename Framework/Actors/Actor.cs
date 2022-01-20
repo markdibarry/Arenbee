@@ -43,7 +43,7 @@ namespace Arenbee.Framework.Actors
             CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
             WeaponSlot = BodySprite.GetNode<WeaponSlot>("WeaponSlot");
             HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
-            AnimationPlayer = GetNode<AnimationPlayer>("StateAnimationPlayer");
+            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             _blinker = GetNode<Blinker>("Blinker");
             AttachInitialInputHandler();
         }

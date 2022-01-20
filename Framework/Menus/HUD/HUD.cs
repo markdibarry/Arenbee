@@ -38,21 +38,20 @@ namespace Arenbee.Framework.Menus.HUD
                 actor.ActorDefeated += OnActorDefeated;
                 if (actor.ActorType == ActorType.Player)
                 {
-
                     UpdatePlayerStatsDisplay(actor.ActorStats);
                     actor.StatsUpdated += OnPlayerStatsUpdated;
                 }
             }
         }
 
-        private void OnPlayerStatsUpdated(ActorStats actorStats)
-        {
-            UpdatePlayerStatsDisplay(actorStats);
-        }
-
         private void UpdatePlayerStatsDisplay(ActorStats actorStats)
         {
             PlayerStatsDisplay.Text = $"{actorStats.Stats[StatType.HP].DisplayValue}/{actorStats.Stats[StatType.MaxHP].DisplayValue}";
+        }
+
+        private void OnPlayerStatsUpdated(ActorStats actorStats)
+        {
+            UpdatePlayerStatsDisplay(actorStats);
         }
 
         private void OnHitBoxActionRecieved(HitBoxActionRecievedData data)

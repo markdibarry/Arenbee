@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Input;
 
-namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseGround
+namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
 {
     public class PatrolChaseGroundBT : BehaviorTree
     {

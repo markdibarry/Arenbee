@@ -1,4 +1,5 @@
 using Arenbee.Framework.Constants;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Items;
 using Godot;
@@ -10,9 +11,9 @@ namespace Arenbee.Framework.Actors
         public StateController(Actor actor)
         {
             _actor = actor;
-            JumpStateMachine = new StateMachine(_actor, this);
-            BaseStateMachine = new StateMachine(_actor, this);
-            ActionStateMachine = new StateMachine(_actor, this);
+            BaseStateMachine = new StateMachine(_actor, this, StateMachineType.Base);
+            JumpStateMachine = new StateMachine(_actor, this, StateMachineType.Jump);
+            ActionStateMachine = new StateMachine(_actor, this, StateMachineType.Action);
             CreateStateDisplay();
         }
 
@@ -51,19 +52,52 @@ namespace Arenbee.Framework.Actors
             ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
         }
 
-        public void PlayWeaponAttack(string animationName)
+        public void PlayAnimation(string animationName, StateMachineType stateMachineType)
+        {
+            switch (stateMachineType)
+            {
+                case StateMachineType.Action:
+                    PlayActionAnimation(animationName);
+                    break;
+                case StateMachineType.Jump:
+                    PlayJumpAnimation(animationName);
+                    break;
+                case StateMachineType.Base:
+                    PlayBaseAnimation(animationName);
+                    break;
+            }
+        }
+
+        public void PlayActionAnimation(string animationName)
         {
             if (CurrentWeapon != null)
             {
                 CurrentWeapon.SetHitBoxAction();
                 ActorAnimationPlayer.Stop();
-                ActorAnimationPlayer.Play(CurrentWeapon.WeaponTypeName + animationName);
+                PlayIfAvailable(CurrentWeapon.WeaponTypeName + animationName);
                 CurrentWeapon.AnimationPlayer.Stop();
                 CurrentWeapon.AnimationPlayer.Play(animationName);
             }
             else
             {
-                ActorAnimationPlayer.Play(animationName);
+                PlayIfAvailable(animationName);
+            }
+        }
+
+        public void PlayJumpAnimation(string animationName)
+        {
+            if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
+            {
+                PlayIfAvailable(animationName);
+            }
+        }
+
+        public void PlayBaseAnimation(string animationName)
+        {
+            if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName)
+                && string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
+            {
+                PlayIfAvailable(animationName);
             }
         }
 
@@ -72,9 +106,9 @@ namespace Arenbee.Framework.Actors
 
         // }
 
-        public void PlayBase(string animationName)
+        public void PlayIfAvailable(string animationName)
         {
-            if (ActionStateMachine.State.IsInitialState)
+            if (ActorAnimationPlayer.HasAnimation(animationName))
             {
                 ActorAnimationPlayer.Play(animationName);
             }
@@ -95,7 +129,7 @@ namespace Arenbee.Framework.Actors
             {
                 animation = BaseStateMachine.State.AnimationName;
             }
-            if (animation != null) PlayBase(animation);
+            if (animation != null) PlayIfAvailable(animation);
         }
 
         public void UpdateStates(float delta)

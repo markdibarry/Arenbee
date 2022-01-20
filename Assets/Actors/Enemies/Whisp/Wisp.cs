@@ -1,9 +1,9 @@
-using Arenbee.Assets.Enemies.Behavior.PatrolChaseAir;
+using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Enemies.WhispNS
+namespace Arenbee.Assets.Actors.Enemies.WhispNS
 {
     public partial class Wisp : Actor
     {
@@ -19,7 +19,7 @@ namespace Arenbee.Assets.Enemies.WhispNS
         {
             base.Init();
             StateController.Init(
-                new MoveStates.Idle(),
+                new BaseStates.Idle(),
                 new JumpStates.Float(),
                 new ActionStates.NotAttacking());
             BehaviorTree = new PatrolChaseAirBT(this);

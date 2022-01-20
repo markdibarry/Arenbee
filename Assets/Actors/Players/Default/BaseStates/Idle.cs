@@ -1,14 +1,14 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Players.MoveStates
+namespace Arenbee.Assets.Actors.Players.BaseStates
 {
     public class Idle : State<Actor>
     {
+        public Idle() { AnimationName = "Idle"; }
         public override void Enter()
         {
-            AnimationName = "Idle";
-            StateController.PlayBase(AnimationName);
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

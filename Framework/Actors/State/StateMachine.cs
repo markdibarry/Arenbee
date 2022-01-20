@@ -1,15 +1,19 @@
+using Arenbee.Framework.Enums;
+
 namespace Arenbee.Framework.Actors
 {
     public class StateMachine : IStateMachine
     {
-        public StateMachine(Actor actor, StateController stateController)
+        public StateMachine(Actor actor, StateController stateController, StateMachineType stateMachineType)
         {
+            StateMachineType = stateMachineType;
             Actor = actor;
             StateController = stateController;
             State = new None { StateMachine = this };
             State.Init();
         }
 
+        public StateMachineType StateMachineType { get; }
         /// <summary>
         /// The Actor using the StateMachine
         /// </summary>
@@ -58,6 +62,11 @@ namespace Arenbee.Framework.Actors
         {
             InitialState = initialState;
             TransitionTo(initialState);
+        }
+
+        public void PlayAnimation(string animationName)
+        {
+            StateController.PlayAnimation(animationName, StateMachineType);
         }
     }
 }

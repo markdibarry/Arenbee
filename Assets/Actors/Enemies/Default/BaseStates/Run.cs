@@ -2,12 +2,13 @@ using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Enemies.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
-    public class Walk : State<Actor>
+    public class Run : State<Actor>
     {
         public override void Enter()
         {
+            Actor.MaxSpeed = Actor.RunSpeed;
         }
 
         public override void Update(float delta)
@@ -26,18 +27,19 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
         public override void Exit()
         {
+            Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
         public override void CheckForTransitions()
         {
-            if (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed)
+            if (!InputHandler.Left.IsActionPressed && !InputHandler.Right.IsActionPressed)
             {
-                if (InputHandler.Run.IsActionPressed)
-                    StateMachine.TransitionTo(new Run());
+                StateMachine.TransitionTo(new Idle());
             }
             else
             {
-                StateMachine.TransitionTo(new Idle());
+                if (!InputHandler.Run.IsActionPressed)
+                    StateMachine.TransitionTo(new Walk());
             }
         }
     }

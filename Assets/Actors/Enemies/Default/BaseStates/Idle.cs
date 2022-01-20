@@ -1,16 +1,12 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Godot;
 
-namespace Arenbee.Assets.Enemies.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
-    public class Dead : State<Actor>
+    public class Idle : State<Actor>
     {
         public override void Enter()
         {
-            Actor.MotionVelocity = new Vector2(0, 0);
-            Actor.QueueFree();
-            Actor.CreateDeathEffect();
         }
 
         public override void Update(float delta)
@@ -24,6 +20,10 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
         public override void CheckForTransitions()
         {
+            if (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed)
+            {
+                StateMachine.TransitionTo(new Walk());
+            }
         }
     }
 }

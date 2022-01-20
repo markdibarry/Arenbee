@@ -2,13 +2,14 @@ using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Godot;
 
-namespace Arenbee.Assets.Players.ActionStates
+namespace Arenbee.Assets.Actors.Players.ActionStates
 {
     public class UnarmedAttack : State<Actor>
     {
+        public UnarmedAttack() { AnimationName = "UnarmedAttack"; }
         public override void Enter()
         {
-            StateController.PlayWeaponAttack("UnarmedAttack");
+            StateMachine.PlayAnimation(AnimationName);
             StateController.BaseStateMachine.TransitionTo(new None());
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
         }
@@ -20,7 +21,7 @@ namespace Arenbee.Assets.Players.ActionStates
 
         public override void Exit()
         {
-            StateController.BaseStateMachine.TransitionTo(new MoveStates.Idle());
+            StateController.BaseStateMachine.TransitionTo(new BaseStates.Idle());
         }
 
         public void OnAnimationFinished(StringName animationName)

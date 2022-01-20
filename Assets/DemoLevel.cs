@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Menus.HUD;
@@ -24,18 +23,12 @@ namespace Arenbee.Assets
         {
             if (HUD != null)
             {
-                var actors = new List<Actor>();
-                var players = GetNodeOrNull<Node>("Players")?
-                    .GetChildren()
-                    .OfType<Actor>()
-                    .ToList();
-                var enemies = GetNodeOrNull<Node>("Enemies")?
-                    .GetChildren()
-                    .OfType<Actor>()
-                    .ToList();
-                if (players != null) actors.AddRange(players);
-                if (enemies != null) actors.AddRange(enemies);
-                HUD.SubscribeToEvents(actors);
+                var players = GetNodeOrNull<Node>("Players")
+                    .GetChildren().OfType<Actor>();
+                var enemies = GetNodeOrNull<Node>("Enemies")
+                    .GetChildren().OfType<Actor>();
+                HUD.SubscribeToEvents(players);
+                HUD.SubscribeToEvents(enemies);
             }
         }
     }

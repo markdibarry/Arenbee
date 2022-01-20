@@ -1,7 +1,7 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Players.JumpStates
+namespace Arenbee.Assets.Actors.Players.JumpStates
 {
     public class Grounded : State<Actor>
     {

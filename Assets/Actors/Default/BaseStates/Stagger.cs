@@ -1,17 +1,20 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Extensions;
-using Godot;
 
-namespace Arenbee.Assets.Enemies.MoveStates
+namespace Arenbee.Assets.Actors.Default.BaseStates
 {
     public class Stagger : State<Actor>
     {
-        float _staggerTimer = 0.5f;
+        public Stagger() { AnimationName = "Stagger"; }
+        float _staggerTimer = 0.4f;
         bool _isStaggered = true;
+
         public override void Enter()
         {
-            StateController.ActionStateMachine.TransitionTo(new None());
+            Actor.IsWalkDisabled = true;
+            Actor.IsAttackDisabled = true;
+            Actor.IsJumpDisabled = true;
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)
@@ -25,6 +28,9 @@ namespace Arenbee.Assets.Enemies.MoveStates
 
         public override void Exit()
         {
+            Actor.IsWalkDisabled = false;
+            Actor.IsAttackDisabled = false;
+            Actor.IsJumpDisabled = false;
         }
 
         public override void CheckForTransitions()

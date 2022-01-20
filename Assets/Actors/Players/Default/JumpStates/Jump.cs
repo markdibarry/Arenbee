@@ -1,15 +1,15 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Players.JumpStates
+namespace Arenbee.Assets.Actors.Players.JumpStates
 {
     public class Jump : State<Actor>
     {
+        public Jump() { AnimationName = "Jump"; }
         public override void Enter()
         {
-            AnimationName = "Jump";
             Actor.Jump();
-            StateController.PlayBase(AnimationName);
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

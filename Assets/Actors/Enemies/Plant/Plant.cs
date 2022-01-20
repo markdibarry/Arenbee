@@ -2,7 +2,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Enemies.PlantNS
+namespace Arenbee.Assets.Actors.Enemies.PlantNS
 {
     public partial class Plant : Actor
     {
@@ -10,7 +10,7 @@ namespace Arenbee.Assets.Enemies.PlantNS
         {
             base.Init();
             StateController.Init(
-                new MoveStates.Idle(),
+                new BaseStates.Idle(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
         }

@@ -22,7 +22,7 @@ script = ExtResource( "3" )
 ActorType = 2
 WalkSpeed = 50
 
-[node name="StateAnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="BodySprite" type="Sprite2D" parent="."]
 modulate = Color(10, 10, 10, 1)

@@ -1,9 +1,9 @@
-﻿using Arenbee.Assets.Enemies.Behavior.PatrolChaseGround;
+﻿using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Enemies.OrcNS
+namespace Arenbee.Assets.Actors.Enemies.OrcNS
 {
     public partial class Orc : Actor
     {
@@ -11,7 +11,7 @@ namespace Arenbee.Assets.Enemies.OrcNS
         {
             base.Init();
             StateController.Init(
-                new MoveStates.Walk(),
+                new BaseStates.Walk(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
             BehaviorTree = new PatrolChaseGroundBT(this);

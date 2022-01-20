@@ -2,7 +2,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 
-namespace Arenbee.Assets.Enemies.Behavior.PatrolChaseAir
+namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
 {
     public class TaskPatrol : BTNode
     {

@@ -6,12 +6,12 @@ namespace Arenbee.Assets.Items.HockeyStickNS
 {
     public class WeakAttack1 : State<Actor>
     {
+        public WeakAttack1() { AnimationName = "WeakAttack1"; }
         private bool _canRetrigger;
         private float _retriggerTimer;
         public override void Enter()
         {
-            AnimationName = "WeakAttack1";
-            StateController.PlayWeaponAttack(AnimationName);
+            StateMachine.PlayAnimation(AnimationName);
             Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
         }
 

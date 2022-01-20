@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items

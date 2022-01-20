@@ -121,7 +121,7 @@ texture = ExtResource( "3_335gt" )
 hframes = 6
 vframes = 2
 
-[node name="StateAnimationPlayer" parent="." index="1"]
+[node name="AnimationPlayer" parent="." index="1"]
 anims/RESET = SubResource( "Animation_io26f" )
 anims/WeakAttack1 = ExtResource( "4_mu08v" )
 anims/WeakAttack2 = SubResource( "Animation_ajc8v" )

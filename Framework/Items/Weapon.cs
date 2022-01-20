@@ -22,7 +22,7 @@ namespace Arenbee.Framework.Items
 
         private void SetNodeReferences()
         {
-            AnimationPlayer = GetNode<AnimationPlayer>("StateAnimationPlayer");
+            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             Sprite = GetNode<Sprite2D>("Sprite");
             HitBox = GetNode<HitBox>("HitBox");
         }

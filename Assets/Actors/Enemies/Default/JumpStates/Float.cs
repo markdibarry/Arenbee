@@ -2,7 +2,7 @@ using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Godot;
 
-namespace Arenbee.Assets.Enemies.JumpStates
+namespace Arenbee.Assets.Actors.Enemies.JumpStates
 {
     public class Float : State<Actor>
     {

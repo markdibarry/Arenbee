@@ -1,14 +1,14 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
-namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.WhispNS.BaseStates
 {
     public class Idle : State<Actor>
     {
+        public Idle() { AnimationName = "Idle"; }
         public override void Enter()
         {
-            AnimationName = "Idle";
-            StateController.PlayBase(AnimationName);
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)
@@ -22,9 +22,9 @@ namespace Arenbee.Assets.Enemies.WhispNS.MoveStates
 
         public override void CheckForTransitions()
         {
-            if (InputHandler.GetLeftAxis() != Godot.Vector2.Zero)
+            if (!Actor.IsWalkDisabled && InputHandler.GetLeftAxis() != Godot.Vector2.Zero)
             {
-                if (InputHandler.Run.IsActionPressed)
+                if (!Actor.IsRunDisabled && InputHandler.Run.IsActionPressed)
                 {
                     StateMachine.TransitionTo(new Run());
                 }

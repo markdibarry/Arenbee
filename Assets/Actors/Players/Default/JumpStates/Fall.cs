@@ -1,9 +1,8 @@
-using System;
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 
-namespace Arenbee.Assets.Players.JumpStates
+namespace Arenbee.Assets.Actors.Players.JumpStates
 {
     public class Fall : State<Actor>
     {

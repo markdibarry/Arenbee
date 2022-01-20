@@ -1,13 +1,13 @@
 using Arenbee.Framework;
 
-namespace Arenbee.Assets.Enemies.PlantNS.MoveStates
+namespace Arenbee.Assets.Actors.Enemies.PlantNS.BaseStates
 {
     public class Idle : State<Plant>
     {
+        public Idle() { AnimationName = "Idle"; }
         public override void Enter()
         {
-            AnimationName = "Idle";
-            StateController.PlayBase(AnimationName);
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

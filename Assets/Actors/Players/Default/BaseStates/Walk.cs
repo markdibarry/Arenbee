@@ -2,15 +2,14 @@ using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 
-namespace Arenbee.Assets.Players.MoveStates
+namespace Arenbee.Assets.Actors.Players.BaseStates
 {
-    public class Run : State<Actor>
+    public class Walk : State<Actor>
     {
+        public Walk() { AnimationName = "Walk"; }
         public override void Enter()
         {
-            AnimationName = "Run";
-            StateController.PlayBase(AnimationName);
-            Actor.MaxSpeed = Actor.RunSpeed;
+            StateMachine.PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)
@@ -28,17 +27,18 @@ namespace Arenbee.Assets.Players.MoveStates
 
         public override void Exit()
         {
-            Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
         public override void CheckForTransitions()
         {
-            if (!Actor.ShouldRun())
+            if (Actor.ShouldWalk())
             {
-                if (Actor.ShouldWalk())
-                    StateMachine.TransitionTo(new Walk());
-                else
-                    StateMachine.TransitionTo(new Idle());
+                if (Actor.ShouldRun())
+                    StateMachine.TransitionTo(new Run());
+            }
+            else
+            {
+                StateMachine.TransitionTo(new Idle());
             }
         }
     }
