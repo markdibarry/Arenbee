@@ -6,7 +6,7 @@ namespace Arenbee.Framework.Actors
     {
         public SubActor()
         {
-            
+
         }
 
         public Actor ParentActor { get; set; }

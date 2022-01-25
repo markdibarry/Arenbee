@@ -22,18 +22,12 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
 
         public override void CheckForTransitions()
         {
-            if (InputHandler.Right.IsActionPressed || InputHandler.Left.IsActionPressed)
+            if (Actor.ShouldWalk())
             {
-                if (InputHandler.Run.IsActionPressed)
-                {
-                    if (!Actor.IsRunDisabled)
-                        StateMachine.TransitionTo(new Run());
-                }
+                if (Actor.ShouldRun())
+                    StateMachine.TransitionTo(new Run());
                 else
-                {
-                    if (!Actor.IsWalkDisabled)
-                        StateMachine.TransitionTo(new Walk());
-                }
+                    StateMachine.TransitionTo(new Walk());
             }
         }
     }

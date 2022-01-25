@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 
@@ -9,48 +10,55 @@ namespace Arenbee.Framework.Items
     {
         public Equipment(Actor actor)
         {
-            Actor = actor;
-            Slots = new List<EquipmentSlot>
+            _actor = actor;
+            _slots = new List<EquipmentSlot>()
             {
-                new EquipmentSlot() { SlotType = EquipmentType.Weapon },
-                new EquipmentSlot() { SlotType = EquipmentType.Headgear },
-                new EquipmentSlot() { SlotType = EquipmentType.Shirt },
-                new EquipmentSlot() { SlotType = EquipmentType.Pants },
-                new EquipmentSlot() { SlotType = EquipmentType.Footwear },
-                new EquipmentSlot() { SlotType = EquipmentType.Accessory },
-                new EquipmentSlot() { SlotType = EquipmentType.Accessory }
+                new EquipmentSlot(actor, EquipmentSlotName.Weapon, ItemType.Weapon),
+                new EquipmentSlot(actor, EquipmentSlotName.Headgear, ItemType.Headgear),
+                new EquipmentSlot(actor, EquipmentSlotName.Shirt, ItemType.Shirt),
+                new EquipmentSlot(actor, EquipmentSlotName.Pants, ItemType.Pants),
+                new EquipmentSlot(actor, EquipmentSlotName.Footwear, ItemType.Footwear),
+                new EquipmentSlot(actor, EquipmentSlotName.Accessory1, ItemType.Accessory),
+                new EquipmentSlot(actor, EquipmentSlotName.Accessory2, ItemType.Accessory),
             };
 
-            foreach (EquipmentSlot slot in Slots)
+            foreach (var slot in _slots)
             {
-                slot.RemovingItem += OnRemovingItem;
-                slot.ItemSet += OnItemSet;
+                slot.EquipmentSet += OnEquipmentSet;
+                slot.EquipmentRemoved += OnEquipmentRemoved;
             }
         }
 
-        public delegate void EquipmentChangedHandler(EquipableItem equipableItem);
-        public event EquipmentChangedHandler RemovingEquipment;
-        public event EquipmentChangedHandler EquipmentSet;
-        public IEnumerable<EquipmentSlot> Slots { get; set; }
-        public Actor Actor { get; set; }
+        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item newItem);
+        public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
+        public event EquipmentSetHandler EquipmentSet;
+        public event EquipmentRemovedHandler EquipmentRemoved;
+        private readonly ICollection<EquipmentSlot> _slots;
+        private readonly Actor _actor;
 
-        public bool CanEquip(EquipableItem item)
+        public ICollection<EquipmentSlot> GetAllSlots()
         {
-            return false;
+            return _slots;
         }
 
-        private void OnRemovingItem(EquipmentSlot slot)
+        public ICollection<EquipmentSlot> GetSlotsByType(ItemType itemType)
         {
-            EquipableItem item = slot.Item;
-            Console.WriteLine(slot.SlotType.ToString() + " removed " + item.DisplayName);
-            RemovingEquipment?.Invoke(item);
+            return _slots.Where(x => x.SlotType == itemType).ToList();
         }
 
-        private void OnItemSet(EquipmentSlot slot)
+        public EquipmentSlot GetSlot(EquipmentSlotName slotName)
         {
-            EquipableItem item = slot.Item;
-            Console.WriteLine(slot.SlotType.ToString() + " set to " + item.DisplayName);
-            EquipmentSet?.Invoke(item);
+            return _slots.First(x => x.SlotName.Equals(slotName));
+        }
+
+        public void OnEquipmentSet(EquipmentSlot slot, Item newItem)
+        {
+            EquipmentSet?.Invoke(slot, newItem);
+        }
+
+        public void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
+        {
+            EquipmentRemoved?.Invoke(slot, oldItem);
         }
     }
 }

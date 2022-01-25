@@ -10,7 +10,7 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
         public override void SetDefaults()
         {
             base.SetDefaults();
-            _isFloater = true;
+            IsFloater = true;
             Friction = 30f;
             Acceleration = 1000f;
         }
@@ -25,18 +25,17 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
             BehaviorTree = new PatrolChaseAirBT(this);
         }
 
-        protected override void SetStats()
+        protected override void SetDefaultStats()
         {
-            ActorStats.DefenseElementModifiers.Add(new ElementModifier()
+            DefenseElementModifiers.Add(new ElementModifier()
             {
-                Element = Element.Earth,
+                Element = Element.Water,
                 Value = ElementModifier.Weak
             });
-            ActorStats.InitStat(StatType.MaxHP, 4);
-            ActorStats.InitStat(StatType.HP, 4);
-            ActorStats.InitStat(StatType.Attack, 4);
-            ActorStats.InitStat(StatType.Defense, 0);
-            base.SetStats();
+            SetStat(StatType.MaxHP, 4);
+            SetStat(StatType.HP, 4);
+            SetStat(StatType.Attack, 2);
+            SetStat(StatType.Defense, 150);
         }
     }
 }

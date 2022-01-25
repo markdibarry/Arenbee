@@ -1,15 +1,13 @@
 namespace Arenbee.Framework.Enums
 {
-    public enum ItemType
+    public enum EquipmentSlotName
     {
-        Restorative,
-        Field,
-        Key,
         Weapon,
         Headgear,
         Shirt,
         Pants,
         Footwear,
-        Accessory
+        Accessory1,
+        Accessory2
     }
 }

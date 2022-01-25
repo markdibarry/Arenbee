@@ -5,7 +5,12 @@ namespace Arenbee.Framework.Actors.Stats
 {
     public static class StatDB
     {
-        private static readonly Dictionary<StatType, StatInfo> _statInfos = new Dictionary<StatType, StatInfo>
+        public static StatInfo GetStatInfo(StatType statType)
+        {
+            return s_statInfos[statType];
+        }
+
+        private static readonly Dictionary<StatType, StatInfo> s_statInfos = new Dictionary<StatType, StatInfo>
         {
             {
                 StatType.Level, new StatInfo
@@ -92,10 +97,5 @@ namespace Arenbee.Framework.Actors.Stats
                 )
             },
         };
-
-        public static StatInfo GetStatInfo(StatType statType)
-        {
-            return _statInfos[statType];
-        }
     }
 }

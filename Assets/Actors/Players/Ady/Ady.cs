@@ -1,5 +1,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Items;
 
 namespace Arenbee.Assets.Actors.Players.AdyNS
 {
@@ -7,6 +8,10 @@ namespace Arenbee.Assets.Actors.Players.AdyNS
     {
         public override void Init()
         {
+            _equipment = new Equipment(this);
+            var slot = _equipment.GetSlot(EquipmentSlotName.Weapon);
+            slot.SetItem(ItemDB.GetItem("HockeyStick"));
+
             base.Init();
             StateController.Init(
                 new BaseStates.Idle(),
@@ -14,21 +19,20 @@ namespace Arenbee.Assets.Actors.Players.AdyNS
                 new ActionStates.NotAttacking());
         }
 
-        protected override void SetStats()
+        protected override void SetDefaultStats()
         {
-            ActorStats.InitStat(StatType.Level, 1);
-            ActorStats.InitStat(StatType.MaxHP, 12);
-            ActorStats.InitStat(StatType.HP, 12);
-            ActorStats.InitStat(StatType.MaxMP, 1);
-            ActorStats.InitStat(StatType.MP, 1);
-            ActorStats.InitStat(StatType.Attack, 0);
-            ActorStats.InitStat(StatType.Defense, 0);
-            ActorStats.InitStat(StatType.MagicAttack, 1);
-            ActorStats.InitStat(StatType.MagicDefense, 1);
-            ActorStats.InitStat(StatType.Luck, 1);
-            ActorStats.InitStat(StatType.Evade, 1);
-            ActorStats.InitStat(StatType.Speed, 1);
-            base.SetStats();
+            SetStat(StatType.Level, 1);
+            SetStat(StatType.MaxHP, 12);
+            SetStat(StatType.HP, 12);
+            SetStat(StatType.MaxMP, 1);
+            SetStat(StatType.MP, 1);
+            SetStat(StatType.Attack, 0);
+            SetStat(StatType.Defense, 0);
+            SetStat(StatType.MagicAttack, 1);
+            SetStat(StatType.MagicDefense, 1);
+            SetStat(StatType.Luck, 1);
+            SetStat(StatType.Evade, 1);
+            SetStat(StatType.Speed, 1);
         }
     }
 }

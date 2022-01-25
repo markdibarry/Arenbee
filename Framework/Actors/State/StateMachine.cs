@@ -54,6 +54,11 @@ namespace Arenbee.Framework.Actors
             State.Enter();
         }
 
+        public void Reset()
+        {
+            TransitionTo(InitialState);
+        }
+
         /// <summary>
         /// Sets and starts InitialState.
         /// </summary>
@@ -61,12 +66,12 @@ namespace Arenbee.Framework.Actors
         public void Init(IState initialState)
         {
             InitialState = initialState;
-            TransitionTo(initialState);
+            Reset();
         }
 
-        public void PlayAnimation(string animationName)
+        public void PlayAnimation(string animationName, bool force = false)
         {
-            StateController.PlayAnimation(animationName, StateMachineType);
+            StateController.PlayAnimation(animationName, StateMachineType, force);
         }
     }
 }

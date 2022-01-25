@@ -6,24 +6,19 @@ namespace Arenbee.Framework.Actors.Stats
 {
     public class HitBoxAction
     {
-        public HitBoxAction()
+        public HitBoxAction(HitBox hitBox, Node2D source)
         {
+            SourceName = source.Name;
             StatusEffects = new List<StatusEffectModifier>();
-            SourceInfo = new EventSourceInfo();
-            ActionType = ActionType.Environment;
             Element = Element.None;
-            Value = 1;
+            ActionType = ActionType.Environment;
+            Value = hitBox.InitialValue;
         }
 
-        public HitBoxAction(Node2D node)
-        {
-            SourceInfo = new EventSourceInfo(node);
-        }
-
-        public EventSourceInfo SourceInfo { get; set; }
-        public ActionType ActionType { get; set; }
+        public string SourceName { get; set; }
         public IEnumerable<StatusEffectModifier> StatusEffects { get; set; }
         public Element Element { get; set; }
+        public ActionType ActionType { get; set; }
         public int Value { get; set; }
     }
 }

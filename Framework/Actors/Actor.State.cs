@@ -1,54 +1,61 @@
-using System;
-using Arenbee.Framework.Enums;
+﻿using Arenbee.Framework.Enums;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Input;
 using Godot;
 using Arenbee.Assets.Actors.Default.BaseStates;
+using Arenbee.Framework.Constants;
 
 namespace Arenbee.Framework.Actors
 {
     public abstract partial class Actor
     {
-        public BehaviorTree BehaviorTree { get; set; }
         public bool IsAttackDisabled { get; set; }
-        public Sprite2D BodySprite { get; set; }
-        public AnimationPlayer AnimationPlayer { get; set; }
-        public StateController StateController { get; set; }
+        public bool IsWalkDisabled { get; set; }
+        public bool IsRunDisabled { get; set; }
+        public bool IsJumpDisabled { get; set; }
+        public Sprite2D BodySprite { get; private set; }
+        public AnimationPlayer AnimationPlayer { get; private set; }
+        public StateController StateController { get; private set; }
+        protected BehaviorTree BehaviorTree { get; set; }
         private Blinker _blinker;
+        private PackedScene _enemyDeathEffectScene;
         public delegate void ActorDefeatedHandler(string actorName);
         public event ActorDefeatedHandler ActorDefeated;
 
-        public virtual void OnHurtBoxEntered(Area2D area2D, HurtBox hurtBox)
+        private void InitState()
         {
-            ActorStats.HandleHitBoxAction((HitBox)area2D);
+            _blinker.Init(this);
+            HurtBox.AreaEntered += (area2d) => OnHurtBoxEntered(area2d);
+            StateController = new StateController(this);
+            WeaponSlot.Init(this, _equipment.GetSlot(EquipmentSlotName.Weapon));
+            _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
         }
 
-        public virtual void OnHitBoxActionRecieved(HitBoxActionRecievedData data)
+        private void OnHurtBoxEntered(Area2D area2D)
         {
-            _blinker.Start(data.TotalDamage > 0);
-            if (data.TotalDamage > 0) HandleKnockBack(data.SourcePosition);
+            HandleHitBoxAction((HitBox)area2D);
+        }
 
-            if (data.TotalDamage > 0)
+        private void HandleDamage(int damage, Vector2 sourcePosition)
+        {
+            _blinker.Start(damage > 0);
+            if (damage > 0)
             {
+                HandleKnockBack(sourcePosition);
                 StateController.BaseStateMachine.TransitionTo(new Stagger());
             }
         }
 
-        public void HandleKnockBack(Vector2 hitPosition)
+        private void HandleKnockBack(Vector2 hitPosition)
         {
             Vector2 direction = hitPosition.DirectionTo(GlobalPosition);
             MotionVelocity = direction * -JumpVelocity;
         }
 
-        private void OnHPDepleted(object sender, EventArgs e)
+        private void HandleHPDepleted()
         {
             _blinker.Stop();
             HurtBox.SetDeferred("monitoring", false);
-            HandleHPDepleted();
-        }
-
-        protected virtual void HandleHPDepleted()
-        {
             ActorDefeated?.Invoke(Name);
             if (ActorType == ActorType.Player)
             {

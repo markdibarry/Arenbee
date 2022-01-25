@@ -23,28 +23,23 @@ namespace Arenbee.Framework.Actors.Stats
             MaxValue = maxValue;
         }
 
-        public void UpdateModifiedValue()
+        public void UpdateModifiedValue(Actor actor)
         {
             int modifiedValue = BaseValue;
-            int displayValue = modifiedValue;
+            int displayValue = BaseValue;
 
             foreach (var mod in StatModifiers)
             {
                 if (!mod.IsHidden)
                 {
-                    displayValue = mod.Apply(displayValue);
+                    displayValue = mod.Apply(actor, displayValue);
                 }
 
-                modifiedValue = mod.Apply(modifiedValue);
+                modifiedValue = mod.Apply(actor, modifiedValue);
             }
 
             ModifiedValue = modifiedValue;
             DisplayValue = displayValue;
         }
-
-        // public void ApplyStatMod(StatModifier modifier, int value)
-        // {
-        //     modifier.
-        // }
     }
 }

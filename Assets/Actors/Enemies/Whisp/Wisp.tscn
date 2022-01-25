@@ -1,10 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://bf50wbn1thieg"]
+[gd_scene load_steps=12 format=3 uid="uid://bf50wbn1thieg"]
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Wisp.cs" id="2_smssj"]
 [ext_resource type="Texture2D" uid="uid://0fus0um6v4bs" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_qs0xp"]
-[ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="5_v6fct"]
 
 [sub_resource type="Animation" id="Animation_8v7pu"]
 resource_name = "Idle"
@@ -48,8 +47,8 @@ shader_param/flash_mix = 0.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
 size = Vector2(13, 21)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ivy2"]
-size = Vector2(14, 15)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xujb8"]
+size = Vector2(16, 18)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2djvb"]
 resource_local_to_scene = true
@@ -74,23 +73,24 @@ texture = ExtResource( "3_gge5r" )
 hframes = 21
 frame = 1
 
+[node name="HurtBox" parent="BodySprite" index="0"]
+visible = false
+
 [node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
 position = Vector2(0.5, 3.5)
 shape = SubResource( "RectangleShape2D_r0tkl" )
 
-[node name="HitBox" parent="BodySprite" index="2" instance=ExtResource( "5_v6fct" )]
-collision_layer = 128
-collision_mask = 0
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BodySprite/HitBox" index="0"]
-position = Vector2(0, 6.5)
-shape = SubResource( "RectangleShape2D_7ivy2" )
+position = Vector2(0, 6)
+shape = SubResource( "RectangleShape2D_xujb8" )
 
 [node name="CollisionShape2D" parent="." index="3"]
+visible = false
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_2djvb" )
 
 [node name="DetectTargetZone" type="Area2D" parent="." index="4"]
+visible = false
 collision_layer = 0
 monitorable = false
 

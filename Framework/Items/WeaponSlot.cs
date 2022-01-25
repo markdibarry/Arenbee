@@ -1,4 +1,6 @@
-using Arenbee.Framework.Actors;
+﻿using Arenbee.Framework.Actors;
+using Arenbee.Framework.Constants;
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.Items
@@ -6,28 +8,43 @@ namespace Arenbee.Framework.Items
     public partial class WeaponSlot : Node2D
     {
         private Actor _actor;
-        public Weapon CurrentWeapon { get; set; }
+        public Weapon CurrentWeapon { get; private set; }
 
-        public override void _Ready()
-        {
-            base._Ready();
-        }
-
-        public void Init(Actor actor)
+        public void Init(Actor actor, EquipmentSlot equippedWeapon)
         {
             _actor = actor;
-            if (GetChildCount() > 0)
+            if (!string.IsNullOrEmpty(equippedWeapon.ItemId))
             {
-                Weapon weapon = GetChildOrNull<Weapon>(0);
-                if (weapon != null) EquipWeapon(weapon);
+                AttachWeapon(equippedWeapon.ItemId);
             }
         }
 
-        public void EquipWeapon(Weapon weapon)
+        public void AttachWeapon(Item item)
         {
+            AttachWeapon(item.Id);
+        }
+
+        public void AttachWeapon(string itemId)
+        {
+            DetachWeapon();
+            var weaponScene = GD.Load<PackedScene>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
+            var weapon = weaponScene.Instantiate<Weapon>();
             CurrentWeapon = weapon;
             weapon.Actor = _actor;
+            AddChild(weapon);
             _actor.StateController.ActionStateMachine.Init(weapon.InitialState);
+        }
+
+        public void DetachWeapon()
+        {
+            Weapon weapon = this.GetChildOrNullButActually<Weapon>(0);
+            if (weapon != null)
+            {
+                RemoveChild(weapon);
+                weapon.QueueFree();
+                CurrentWeapon = null;
+                _actor.StateController.ActionStateMachine.Init(_actor.StateController.UnarmedInitialState);
+            }
         }
     }
 }

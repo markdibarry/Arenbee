@@ -1,9 +1,8 @@
-using Arenbee.Framework.Enums;
+﻿using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Actors.Stats;
 using Godot;
 using Arenbee.Framework.Input;
-using Arenbee.Framework.Constants;
 
 namespace Arenbee.Framework.Actors
 {
@@ -14,13 +13,11 @@ namespace Arenbee.Framework.Actors
     {
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
-        public ActorStats ActorStats { get; set; }
-        public Inventory Inventory { get; set; }
-        public Equipment Equipment { get; set; }
-        public HurtBox HurtBox { get; set; }
-        public delegate void StatsUpdatedHandler(ActorStats actorStats);
-        public event StatsUpdatedHandler StatsUpdated;
-        private PackedScene _enemyDeathEffectScene;
+        protected Inventory _inventory;
+        protected Equipment _equipment;
+        public WeaponSlot WeaponSlot { get; set; }
+        public HurtBox HurtBox { get; private set; }
+        public HitBox HitBox { get; private set; }
 
         public override void _Ready()
         {
@@ -43,6 +40,7 @@ namespace Arenbee.Framework.Actors
             CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
             WeaponSlot = BodySprite.GetNode<WeaponSlot>("WeaponSlot");
             HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
+            HitBox = BodySprite.GetNode<HitBox>("HitBox");
             AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             _blinker = GetNode<Blinker>("Blinker");
             AttachInitialInputHandler();
@@ -50,24 +48,10 @@ namespace Arenbee.Framework.Actors
 
         public virtual void Init()
         {
-            RunSpeed = (int)(WalkSpeed * 1.5);
-            MaxSpeed = WalkSpeed;
-            JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1f;
-            JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1f;
-            Inventory = new Inventory(this);
-            ActorStats = new ActorStats(this);
-            ActorStats.StatsUpdated += OnStatsUpdated;
-            ActorStats.HPDepleted += OnHPDepleted;
-            ActorStats.HitBoxActionRecieved += OnHitBoxActionRecieved;
-            Equipment = new Equipment(this);
-            Equipment.RemovingEquipment += OnRemovingEquipment;
-            Equipment.EquipmentSet += OnEquipmentSet;
-            _blinker.Init(this);
-            HurtBox.AreaEntered += (area2d) => OnHurtBoxEntered(area2d, HurtBox);
-            StateController = new StateController(this);
-            WeaponSlot.Init(this);
-            SetStats();
-            _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
+            InitMovement();
+            InitStats();
+            InitEquipment();
+            InitState();
         }
 
         public override void _PhysicsProcess(float delta)
@@ -80,32 +64,12 @@ namespace Arenbee.Framework.Actors
             }
 
             StateController.UpdateStates(delta);
-            if (_isFloater)
+            if (IsFloater)
                 HandleMoveXY(delta);
             else
                 HandleMoveX(delta);
             MoveAndSlide();
             InputHandler.Update();
-        }
-
-        private void OnStatsUpdated(ActorStats actorStats)
-        {
-            StatsUpdated?.Invoke(actorStats);
-        }
-
-        private void OnRemovingEquipment(EquipableItem item)
-        {
-            ActorStats.RemoveEquipmentStats(item);
-        }
-
-        private void OnEquipmentSet(EquipableItem item)
-        {
-            ActorStats.SetEquipmentStats(item);
-        }
-
-        protected virtual void SetStats()
-        {
-            ActorStats.CalculateStats();
         }
     }
 }

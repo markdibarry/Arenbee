@@ -8,11 +8,12 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         public Dead() { AnimationName = "Dead"; }
         public override void Enter()
         {
-            StateController.ActionStateMachine.TransitionTo(new None());
-            StateMachine.PlayAnimation(AnimationName);
+            StateController.ActionStateMachine.Reset();
             Actor.IsWalkDisabled = true;
+            Actor.IsRunDisabled = true;
             Actor.IsAttackDisabled = true;
             Actor.IsJumpDisabled = true;
+            StateMachine.PlayAnimation(AnimationName, true);
         }
 
         public override void Update(float delta)

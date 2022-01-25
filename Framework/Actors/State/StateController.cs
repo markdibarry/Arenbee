@@ -20,6 +20,8 @@ namespace Arenbee.Framework.Actors
         public IStateMachine JumpStateMachine { get; }
         public IStateMachine BaseStateMachine { get; }
         public IStateMachine ActionStateMachine { get; }
+        public IState UnarmedInitialState { get; private set; }
+        public bool AnimationOverride { get; set; }
         private readonly Actor _actor;
         public AnimationPlayer ActorAnimationPlayer
         {
@@ -41,6 +43,7 @@ namespace Arenbee.Framework.Actors
         {
             BaseStateMachine.Init(baseState);
             JumpStateMachine.Init(jumpState);
+            UnarmedInitialState = actionState;
             if (CurrentWeapon == null)
                 ActionStateMachine.Init(actionState);
         }
@@ -52,8 +55,17 @@ namespace Arenbee.Framework.Actors
             ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
         }
 
-        public void PlayAnimation(string animationName, StateMachineType stateMachineType)
+        public void PlayAnimation(string animationName, StateMachineType stateMachineType, bool force = false)
         {
+            if (force)
+            {
+                PlayIfAvailable(animationName);
+                AnimationOverride = true;
+                return;
+            }
+
+            if (AnimationOverride) return;
+
             switch (stateMachineType)
             {
                 case StateMachineType.Action:
@@ -72,7 +84,7 @@ namespace Arenbee.Framework.Actors
         {
             if (CurrentWeapon != null)
             {
-                CurrentWeapon.SetHitBoxAction();
+                CurrentWeapon.UpdateHitBoxAction();
                 ActorAnimationPlayer.Stop();
                 PlayIfAvailable(CurrentWeapon.WeaponTypeName + animationName);
                 CurrentWeapon.AnimationPlayer.Stop();

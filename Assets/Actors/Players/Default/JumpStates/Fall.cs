@@ -32,7 +32,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
         {
             if (Actor.IsOnFloor())
             {
-                if (_jumpGraceTimer > 0)
+                if (_jumpGraceTimer > 0 && !Actor.IsJumpDisabled)
                     StateMachine.TransitionTo(new Jump());
                 else
                     StateMachine.TransitionTo(new Grounded());

@@ -12,18 +12,18 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         public override void _Ready()
         {
             base._Ready();
+            ItemId = "HockeyStick";
             WeaponTypeName = WeaponTypeConstants.Spear;
             InitialState = new NotAttacking();
         }
 
-        public override void SetHitBoxAction()
+        public override void UpdateHitBoxAction()
         {
-            HitBox.HitBoxAction = new HitBoxAction()
+            HitBox.HitBoxAction = new HitBoxAction(HitBox, Actor)
             {
-                SourceInfo = new EventSourceInfo(Actor),
                 ActionType = ActionType.Melee,
                 Element = Element.Earth,
-                Value = Actor.ActorStats.Stats[StatType.Attack].ModifiedValue
+                Value = Actor.Stats[StatType.Attack].ModifiedValue
             };
         }
     }

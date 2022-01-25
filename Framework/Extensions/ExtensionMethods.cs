@@ -1,5 +1,8 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
+
 namespace Arenbee.Framework.Extensions
 {
     public static class ExtensionMethods
@@ -55,6 +58,21 @@ namespace Arenbee.Framework.Extensions
                     oneShotTimer.QueueFree();
             };
             return oneShotTimer;
+        }
+
+        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
+        {
+            return source ?? Enumerable.Empty<T>();
+        }
+
+
+        public static T GetChildOrNullButActually<T>(this Node node, int index) where T : class
+        {
+            if (node.GetChildCount() > index)
+            {
+                return node.GetChildOrNull<T>(index);
+            }
+            return null;
         }
     }
 }

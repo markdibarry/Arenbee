@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
@@ -34,24 +34,24 @@ namespace Arenbee.Framework.Menus.HUD
         {
             foreach (Actor actor in actors)
             {
-                actor.ActorStats.HitBoxActionRecieved += OnHitBoxActionRecieved;
+                actor.HitBoxActionRecieved += OnHitBoxActionRecieved;
                 actor.ActorDefeated += OnActorDefeated;
                 if (actor.ActorType == ActorType.Player)
                 {
-                    UpdatePlayerStatsDisplay(actor.ActorStats);
+                    UpdatePlayerStatsDisplay(actor);
                     actor.StatsUpdated += OnPlayerStatsUpdated;
                 }
             }
         }
 
-        private void UpdatePlayerStatsDisplay(ActorStats actorStats)
+        private void OnPlayerStatsUpdated(Actor actor)
         {
-            PlayerStatsDisplay.Text = $"{actorStats.Stats[StatType.HP].DisplayValue}/{actorStats.Stats[StatType.MaxHP].DisplayValue}";
+            UpdatePlayerStatsDisplay(actor);
         }
 
-        private void OnPlayerStatsUpdated(ActorStats actorStats)
+        private void UpdatePlayerStatsDisplay(Actor actor)
         {
-            UpdatePlayerStatsDisplay(actorStats);
+            PlayerStatsDisplay.Text = $"{actor.Stats[StatType.HP].DisplayValue}/{actor.Stats[StatType.MaxHP].DisplayValue}";
         }
 
         private void OnHitBoxActionRecieved(HitBoxActionRecievedData data)
