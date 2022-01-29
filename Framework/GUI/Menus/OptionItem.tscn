@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://04ed2cnm1m6c"]
+
+[ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItem.cs" id="1_xluat"]
+
+[node name="OptionItem" type="MarginContainer"]
+offset_right = 43.0
+offset_bottom = 31.0
+size_flags_vertical = 0
+script = ExtResource( "1_xluat" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+offset_top = 2.0
+offset_right = 62.0
+offset_bottom = 28.0

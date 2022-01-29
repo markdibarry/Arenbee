@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.Actors;
-using Godot;
+using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
 {
@@ -10,27 +8,30 @@ namespace Arenbee.Framework.Items
     {
         public Inventory()
         {
-            _actors = new List<Actor>();
-            _slots = new List<ItemStack>();
+            _items = new List<ItemStack>();
         }
 
-        public Inventory(Actor actor)
-            : this()
-        {
-            _actors.Add(actor);
-        }
+        [JsonProperty]
+        private readonly ICollection<ItemStack> _items;
 
-        private readonly ICollection<Actor> _actors;
-        private readonly ICollection<ItemStack> _slots;
-
+        /// <summary>
+        /// Returns the matching ItemStack for Item Id provided. Returns null if no stack is found.
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public ItemStack GetItemStack(string itemId)
         {
-            return _slots.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(itemId));
+            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(itemId));
         }
 
+        /// <summary>
+        /// Returns the matching ItemStack for item provided. Returns null if no stack is found.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public ItemStack GetItemStack(Item item)
         {
-            return _slots.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
+            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
         }
 
         /// <summary>
@@ -47,12 +48,12 @@ namespace Arenbee.Framework.Items
             {
                 if (amount > item.MaxStack)
                 {
-                    _slots.Add(new ItemStack(item.Id, item.MaxStack));
+                    _items.Add(new ItemStack(item.Id, item.MaxStack));
                     leftOver = amount - item.MaxStack;
                 }
                 else
                 {
-                    _slots.Add(new ItemStack(item.Id, amount));
+                    _items.Add(new ItemStack(item.Id, amount));
                     leftOver = 0;
                 }
             }
@@ -81,7 +82,7 @@ namespace Arenbee.Framework.Items
                 itemStack.RemoveAmount(amount);
                 if (itemStack.Amount == 0)
                 {
-                    _slots.Remove(itemStack);
+                    _items.Remove(itemStack);
                 }
                 return true;
             }

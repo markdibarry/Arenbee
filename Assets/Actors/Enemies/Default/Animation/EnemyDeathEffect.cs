@@ -10,6 +10,7 @@ public partial class EnemyDeathEffect : AnimatedSprite2D
 
     private void OnAnimationFinished()
     {
+        AnimationFinished -= OnAnimationFinished;
         QueueFree();
     }
 }

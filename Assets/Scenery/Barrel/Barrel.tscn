@@ -42,7 +42,7 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_82lx4"]
 resource_local_to_scene = true
-size = Vector2(12, 16)
+size = Vector2(14, 16)
 
 [node name="Barrel" instance=ExtResource( "1_0ty7v" )]
 

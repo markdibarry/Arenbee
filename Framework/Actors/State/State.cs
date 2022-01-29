@@ -8,7 +8,7 @@ namespace Arenbee.Framework
         protected T Actor { get; private set; }
         public StateController StateController { get; set; }
         public IStateMachine StateMachine { get; set; }
-        public InputHandler InputHandler
+        public ActorInputHandler InputHandler
         {
             get { return Actor.InputHandler; }
         }

@@ -19,21 +19,22 @@ namespace Arenbee.Framework.Actors
         protected BehaviorTree BehaviorTree { get; set; }
         private Blinker _blinker;
         private PackedScene _enemyDeathEffectScene;
-        public delegate void ActorDefeatedHandler(string actorName);
+        public delegate void ActorDefeatedHandler(Actor actor);
         public event ActorDefeatedHandler ActorDefeated;
 
         private void InitState()
         {
             _blinker.Init(this);
-            HurtBox.AreaEntered += (area2d) => OnHurtBoxEntered(area2d);
+
             StateController = new StateController(this);
-            WeaponSlot.Init(this, _equipment.GetSlot(EquipmentSlotName.Weapon));
+            WeaponSlot.Init(this, Equipment.GetSlot(EquipmentSlotName.Weapon));
             _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
         }
 
         private void OnHurtBoxEntered(Area2D area2D)
         {
-            HandleHitBoxAction((HitBox)area2D);
+            if (area2D is HitBox hitBox)
+                HandleHitBoxAction(hitBox);
         }
 
         private void HandleDamage(int damage, Vector2 sourcePosition)
@@ -56,7 +57,7 @@ namespace Arenbee.Framework.Actors
         {
             _blinker.Stop();
             HurtBox.SetDeferred("monitoring", false);
-            ActorDefeated?.Invoke(Name);
+            ActorDefeated?.Invoke(this);
             if (ActorType == ActorType.Player)
             {
                 StateController.BaseStateMachine.TransitionTo(new Assets.Actors.Players.BaseStates.Dead());
@@ -77,6 +78,26 @@ namespace Arenbee.Framework.Actors
                 parent.AddChild(enemyDeathEffect);
                 enemyDeathEffect.Play();
             }
+        }
+
+        public void QueueFreeActor()
+        {
+            UnsubscribeEvents();
+            QueueFree();
+        }
+
+        public void SubscribeEvents()
+        {
+            HurtBox.AreaEntered += OnHurtBoxEntered;
+            Equipment.EquipmentRemoved += OnEquipmentRemoved;
+            Equipment.EquipmentSet += OnEquipmentSet;
+        }
+
+        public void UnsubscribeEvents()
+        {
+            HurtBox.AreaEntered -= OnHurtBoxEntered;
+            Equipment.EquipmentRemoved -= OnEquipmentRemoved;
+            Equipment.EquipmentSet -= OnEquipmentSet;
         }
     }
 }

@@ -7,9 +7,9 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
 {
     public partial class Wisp : Actor
     {
-        public override void SetDefaults()
+        public override void SetDefaultValues()
         {
-            base.SetDefaults();
+            base.SetDefaultValues();
             IsFloater = true;
             Friction = 30f;
             Acceleration = 1000f;
@@ -35,7 +35,7 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
             SetStat(StatType.MaxHP, 4);
             SetStat(StatType.HP, 4);
             SetStat(StatType.Attack, 2);
-            SetStat(StatType.Defense, 150);
+            SetStat(StatType.Defense, 1);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Arenbee.Framework.Actors
         }
         public CollisionShape2D CollisionShape2D { get; private set; }
         public Facings Facing { get; private set; }
-        public InputHandler InputHandler { get; private set; }
+        public ActorInputHandler InputHandler { get; set; }
         protected float Acceleration { get; set; }
         protected float Friction { get; set; }
         private bool _isPlayerControlled;
@@ -121,7 +121,7 @@ namespace Arenbee.Framework.Actors
         private void AttachInitialInputHandler()
         {
             var attachedInputHandler = GetChildren()
-                .OfType<InputHandler>()
+                .OfType<ActorInputHandler>()
                 .FirstOrDefault();
             if (attachedInputHandler != null)
             {
@@ -130,7 +130,7 @@ namespace Arenbee.Framework.Actors
             }
             else
             {
-                InputHandler = new Dummy();
+                InputHandler = new DummyInputHandler();
                 AddChild(InputHandler);
             }
         }

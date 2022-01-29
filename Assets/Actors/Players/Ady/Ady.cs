@@ -1,6 +1,5 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Items;
 
 namespace Arenbee.Assets.Actors.Players.AdyNS
 {
@@ -8,10 +7,6 @@ namespace Arenbee.Assets.Actors.Players.AdyNS
     {
         public override void Init()
         {
-            _equipment = new Equipment(this);
-            var slot = _equipment.GetSlot(EquipmentSlotName.Weapon);
-            slot.SetItem(ItemDB.GetItem("HockeyStick"));
-
             base.Init();
             StateController.Init(
                 new BaseStates.Idle(),

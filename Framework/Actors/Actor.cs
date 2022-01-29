@@ -3,6 +3,7 @@ using Arenbee.Framework.Items;
 using Arenbee.Framework.Actors.Stats;
 using Godot;
 using Arenbee.Framework.Input;
+using System;
 
 namespace Arenbee.Framework.Actors
 {
@@ -13,20 +14,20 @@ namespace Arenbee.Framework.Actors
     {
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
-        protected Inventory _inventory;
-        protected Equipment _equipment;
         public WeaponSlot WeaponSlot { get; set; }
         public HurtBox HurtBox { get; private set; }
         public HitBox HitBox { get; private set; }
+        public Inventory Inventory { get; set; }
+        public Equipment Equipment { get; set; }
 
         public override void _Ready()
         {
-            SetDefaults();
+            SetDefaultValues();
             SetNodeReferences();
             Init();
         }
 
-        public virtual void SetDefaults()
+        public virtual void SetDefaultValues()
         {
             Acceleration = 1000f;
             Friction = 1000f;
@@ -52,6 +53,7 @@ namespace Arenbee.Framework.Actors
             InitStats();
             InitEquipment();
             InitState();
+            SubscribeEvents();
         }
 
         public override void _PhysicsProcess(float delta)
@@ -59,15 +61,14 @@ namespace Arenbee.Framework.Actors
             _moveX = 0;
             _moveXY = Vector2.Zero;
             if (!_isPlayerControlled)
-            {
                 BehaviorTree?.Update(delta);
-            }
 
             StateController.UpdateStates(delta);
             if (IsFloater)
                 HandleMoveXY(delta);
             else
                 HandleMoveX(delta);
+
             MoveAndSlide();
             InputHandler.Update();
         }

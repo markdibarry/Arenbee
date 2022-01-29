@@ -65,14 +65,31 @@ namespace Arenbee.Framework.Extensions
             return source ?? Enumerable.Empty<T>();
         }
 
+        public static IEnumerable<T> GetChildren<T>(this Node node) where T : Node
+        {
+            return node.GetChildren().OfType<T>();
+        }
 
         public static T GetChildOrNullButActually<T>(this Node node, int index) where T : class
         {
-            if (node.GetChildCount() > index)
+            var children = node.GetChildren().OfType<T>();
+            if (-1 < index && index < children.Count())
             {
-                return node.GetChildOrNull<T>(index);
+                return children.ElementAt(index);
             }
             return null;
+        }
+
+        public static void RemoveAllChildren(this Node node)
+        {
+            if (node.GetChildCount() > 0)
+            {
+                var children = node.GetChildren().OfType<Node>();
+                foreach (var child in children)
+                {
+                    child.QueueFree();
+                }
+            }
         }
     }
 }

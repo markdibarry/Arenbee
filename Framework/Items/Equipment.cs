@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
+using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
 {
     public class Equipment
     {
-        public Equipment(Actor actor)
+        // TODO: Fix event subscription/ freeing
+        public Equipment()
         {
-            _actor = actor;
             _slots = new List<EquipmentSlot>()
             {
-                new EquipmentSlot(actor, EquipmentSlotName.Weapon, ItemType.Weapon),
-                new EquipmentSlot(actor, EquipmentSlotName.Headgear, ItemType.Headgear),
-                new EquipmentSlot(actor, EquipmentSlotName.Shirt, ItemType.Shirt),
-                new EquipmentSlot(actor, EquipmentSlotName.Pants, ItemType.Pants),
-                new EquipmentSlot(actor, EquipmentSlotName.Footwear, ItemType.Footwear),
-                new EquipmentSlot(actor, EquipmentSlotName.Accessory1, ItemType.Accessory),
-                new EquipmentSlot(actor, EquipmentSlotName.Accessory2, ItemType.Accessory),
+                new EquipmentSlot(EquipmentSlotName.Weapon, ItemType.Weapon),
+                new EquipmentSlot(EquipmentSlotName.Headgear, ItemType.Headgear),
+                new EquipmentSlot(EquipmentSlotName.Shirt, ItemType.Shirt),
+                new EquipmentSlot(EquipmentSlotName.Pants, ItemType.Pants),
+                new EquipmentSlot(EquipmentSlotName.Footwear, ItemType.Footwear),
+                new EquipmentSlot(EquipmentSlotName.Accessory1, ItemType.Accessory),
+                new EquipmentSlot(EquipmentSlotName.Accessory2, ItemType.Accessory),
             };
 
             foreach (var slot in _slots)
@@ -33,8 +33,8 @@ namespace Arenbee.Framework.Items
         public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
         public event EquipmentSetHandler EquipmentSet;
         public event EquipmentRemovedHandler EquipmentRemoved;
+        [JsonProperty]
         private readonly ICollection<EquipmentSlot> _slots;
-        private readonly Actor _actor;
 
         public ICollection<EquipmentSlot> GetAllSlots()
         {

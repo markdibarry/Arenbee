@@ -9,22 +9,23 @@ namespace Arenbee.Framework.Actors
     {
         private void InitEquipment()
         {
-            if (_inventory == null)
-                _inventory = new Inventory(this);
+            if (Inventory == null)
+                Inventory = new Inventory();
 
-            if (_equipment == null)
-                _equipment = new Equipment(this);
+            if (Equipment == null)
+                Equipment = new Equipment();
             else
                 SetInitialEquipmentStats();
 
-            _equipment.EquipmentRemoved += OnEquipmentRemoved;
-            _equipment.EquipmentSet += OnEquipmentSet;
+            CalculateStats();
+
         }
 
         private void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
         {
-            _inventory.RemoveReservation(slot, oldItem);
+            Inventory.RemoveReservation(slot, oldItem);
             RemoveEquipmentStats(oldItem.ItemStats);
+            CalculateStats();
         }
 
         private void RemoveEquipmentStats(ItemStats itemStats)
@@ -50,13 +51,13 @@ namespace Arenbee.Framework.Actors
                         statMods.Remove(mod);
                 }
             }
-            CalculateStats();
         }
 
         private void OnEquipmentSet(EquipmentSlot slot, Item newItem)
         {
-            _inventory.SetReservation(slot, newItem);
+            Inventory.SetReservation(slot, newItem);
             SetEquipmentStats(newItem.ItemStats);
+            CalculateStats();
             if (newItem.ItemType == ItemType.Weapon)
             {
                 WeaponSlot.AttachWeapon(newItem.Id);
@@ -86,18 +87,28 @@ namespace Arenbee.Framework.Actors
                         statMods.Add(mod);
                 }
             }
-            CalculateStats();
         }
 
         private void SetInitialEquipmentStats()
         {
-            foreach (var slot in _equipment.GetAllSlots())
+            foreach (var slot in Equipment.GetAllSlots())
             {
                 if (!string.IsNullOrEmpty(slot.ItemId))
                 {
                     var item = ItemDB.GetItem(slot.ItemId);
                     if (item != null)
-                        SetEquipmentStats(item.ItemStats);
+                    {
+                        ItemStack itemStack = Inventory.GetItemStack(item);
+                        if (itemStack != null)
+                        {
+                            Inventory.SetReservation(slot, item);
+                            SetEquipmentStats(item.ItemStats);
+                        }
+                        else
+                        {
+                            slot.RemoveItem();
+                        }
+                    }
                 }
             }
         }

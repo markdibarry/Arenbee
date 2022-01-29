@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Arenbee.Framework.Actors;
+using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
 {
@@ -7,12 +7,14 @@ namespace Arenbee.Framework.Items
     {
         public ItemStack(string itemId, int amount)
         {
+            Reservations = new List<EquipmentSlot>();
             ItemId = itemId;
             Amount = amount;
         }
 
         public string ItemId { get; private set; }
         public int Amount { get; private set; }
+        [JsonIgnore]
         public ICollection<EquipmentSlot> Reservations { get; set; }
 
         public void AddAmount(int num)

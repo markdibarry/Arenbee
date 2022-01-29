@@ -1,20 +1,22 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Actors.Stats
 {
     public class ActorStat
     {
-        public ActorStat(StatInfo statInfo)
+        public ActorStat()
         {
-            StatInfo = statInfo;
             StatModifiers = new List<StatModifier>();
         }
 
         public int BaseValue { get; set; }
+        [JsonIgnore]
         public int ModifiedValue { get; set; }
+        [JsonIgnore]
         public int DisplayValue { get; set; }
         public int MaxValue { get; set; }
-        public StatInfo StatInfo { get; }
+        [JsonIgnore]
         public ICollection<StatModifier> StatModifiers { get; set; }
 
         public void SetStat(int baseValue, int maxValue)

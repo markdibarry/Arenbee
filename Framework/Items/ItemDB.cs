@@ -41,14 +41,8 @@ namespace Arenbee.Framework.Items
                         {
                             StatType = StatType.Attack,
                             Effect = ModifierEffect.Add,
-                            Value = 100
-                        },
-                        new StatModifier()
-                        {
-                            StatType = StatType.Defense,
-                            Effect = ModifierEffect.Subtract,
-                            Value = 1
-                        },
+                            Value = 2
+                        }
                     }
                 }
             });

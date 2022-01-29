@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://dprgaiq1mkp6g"]
+
+[ext_resource type="Script" path="res://Framework/GUI/Menus/OptionContainer.cs" id="1_obuyk"]
+[ext_resource type="Texture2D" uid="uid://6wqc0ulfgjf0" path="res://Framework/GUI/arrowDown.png" id="2_dqv7b"]
+[ext_resource type="Texture2D" uid="uid://ouhrfxvx3c6b" path="res://Framework/GUI/arrowLeft.png" id="3_ardhv"]
+
+[node name="OptionContainer" type="Control"]
+offset_right = 201.0
+offset_bottom = 112.0
+script = ExtResource( "1_obuyk" )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+texture_filter = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowUp" type="TextureRect" parent="VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 94.0
+offset_right = 106.0
+offset_bottom = 8.0
+rect_pivot_offset = Vector2(6, 4)
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource( "2_dqv7b" )
+stretch_mode = 2
+flip_v = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+offset_top = 12.0
+offset_right = 201.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowLeft" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+offset_top = 38.0
+offset_right = 8.0
+offset_bottom = 50.0
+rect_pivot_offset = Vector2(4, 6)
+size_flags_horizontal = 0
+size_flags_vertical = 4
+texture = ExtResource( "3_ardhv" )
+stretch_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+offset_left = 12.0
+offset_right = 189.0
+offset_bottom = 88.0
+rect_clip_content = true
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/Control"]
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowRight" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 193.0
+offset_top = 38.0
+offset_right = 201.0
+offset_bottom = 50.0
+rect_pivot_offset = Vector2(4, 6)
+size_flags_horizontal = 0
+size_flags_vertical = 4
+texture = ExtResource( "3_ardhv" )
+stretch_mode = 2
+flip_h = true
+
+[node name="ArrowDown" type="TextureRect" parent="VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 94.0
+offset_top = 104.0
+offset_right = 106.0
+offset_bottom = 112.0
+rect_pivot_offset = Vector2(6, 4)
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource( "2_dqv7b" )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}

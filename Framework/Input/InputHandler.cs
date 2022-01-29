@@ -4,9 +4,6 @@ namespace Arenbee.Framework.Input
 {
     public abstract partial class InputHandler : Node
     {
-        public InputAction Jump { get; protected set; }
-        public InputAction Attack { get; protected set; }
-        public InputAction Run { get; protected set; }
         public InputAction Up { get; protected set; }
         public InputAction Down { get; protected set; }
         public InputAction Left { get; protected set; }
@@ -38,11 +35,8 @@ namespace Arenbee.Framework.Input
                 Left.SetActionStrength(-newVector.x);
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            Jump.ClearOneTimeActions();
-            Attack.ClearOneTimeActions();
-            Run.ClearOneTimeActions();
             Up.ClearOneTimeActions();
             Down.ClearOneTimeActions();
             Left.ClearOneTimeActions();

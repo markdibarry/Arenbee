@@ -8,7 +8,7 @@ namespace Arenbee.Framework.Actors
 {
     public abstract partial class Actor
     {
-        public IDictionary<StatType, ActorStat> Stats { get; private set; }
+        public IDictionary<StatType, ActorStat> Stats { get; set; }
         protected ICollection<StatusEffectModifier> ActionStatusEffects { get; set; }
         protected ICollection<StatusEffectModifier> DefenseStatusEffects { get; set; }
         protected ICollection<ElementModifier> DefenseElementModifiers { get; set; }
@@ -28,8 +28,6 @@ namespace Arenbee.Framework.Actors
                 Stats = new Dictionary<StatType, ActorStat>();
                 SetDefaultStats();
             }
-
-            CalculateStats();
         }
 
         protected virtual void SetDefaultStats()
@@ -66,7 +64,7 @@ namespace Arenbee.Framework.Actors
 
             if (!Stats.ContainsKey(statType))
             {
-                Stats[statType] = new ActorStat(StatDB.GetStatInfo(statType));
+                Stats[statType] = new ActorStat();
             }
 
             Stats[statType].SetStat(baseValue, maxValue);

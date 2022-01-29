@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dlhf2h7gt57an"]
+[gd_scene load_steps=11 format=3 uid="uid://dlhf2h7gt57an"]
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_78rot"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Plant/Plant.cs" id="2_bxlyp"]
@@ -42,6 +42,9 @@ shader_param/flash_mix = 0.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nwnae"]
 size = Vector2(22, 18)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8xo7b"]
+size = Vector2(22, 18)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ldsqo"]
 size = Vector2(28, 11)
 
@@ -63,6 +66,10 @@ hframes = 3
 [node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
 position = Vector2(10, -20)
 shape = SubResource( "RectangleShape2D_nwnae" )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodySprite/HitBox" index="0"]
+position = Vector2(10, -19)
+shape = SubResource( "RectangleShape2D_8xo7b" )
 
 [node name="CollisionShape2D" parent="." index="3"]
 position = Vector2(0, 0)

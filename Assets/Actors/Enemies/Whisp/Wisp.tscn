@@ -45,14 +45,14 @@ shader_param/flash_color = Color(1, 1, 1, 1)
 shader_param/flash_mix = 0.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
-size = Vector2(13, 21)
+size = Vector2(16, 18)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xujb8"]
-size = Vector2(16, 18)
+size = Vector2(14, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2djvb"]
 resource_local_to_scene = true
-size = Vector2(14, 22)
+size = Vector2(16, 18)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j7q7d"]
 radius = 78.0064
@@ -73,11 +73,8 @@ texture = ExtResource( "3_gge5r" )
 hframes = 21
 frame = 1
 
-[node name="HurtBox" parent="BodySprite" index="0"]
-visible = false
-
 [node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
-position = Vector2(0.5, 3.5)
+position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_r0tkl" )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BodySprite/HitBox" index="0"]
@@ -85,15 +82,13 @@ position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_xujb8" )
 
 [node name="CollisionShape2D" parent="." index="3"]
-visible = false
-position = Vector2(0, 3)
+position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_2djvb" )
 
 [node name="DetectTargetZone" type="Area2D" parent="." index="4"]
-visible = false
+position = Vector2(0, 6)
 collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectTargetZone" index="0"]
-position = Vector2(0, 4)
 shape = SubResource( "CircleShape2D_j7q7d" )

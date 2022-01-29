@@ -5,17 +5,15 @@ namespace Arenbee.Framework.Items
 {
     public class EquipmentSlot
     {
-        public EquipmentSlot(Actor actor, EquipmentSlotName slotName, ItemType slotType)
+        public EquipmentSlot(EquipmentSlotName slotName, ItemType slotType)
         {
-            Actor = actor;
             SlotName = slotName;
             SlotType = slotType;
         }
 
-        public Actor Actor { get; }
         public EquipmentSlotName SlotName { get; }
         public ItemType SlotType { get; }
-        public string ItemId { get; private set; }
+        public string ItemId { get; set; }
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item newItem);
         public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
         public event EquipmentSetHandler EquipmentSet;
