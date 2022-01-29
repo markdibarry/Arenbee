@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cv0jb73rfg1kg"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="FontData" uid="uid://ungm2bp6hwxr" path="res://Assets/Fonts/m3x6.ttf" id="1_vhbo5"]
+[ext_resource type="FontData" path="res://Assets/GUI/Fonts/m3x6.ttf" id="1_vhbo5"]
 
 [sub_resource type="Font" id="Font_jmtlx"]
 spacing_top = -2

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Godot;
 
@@ -9,9 +11,13 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class SubMenu : Control
     {
-        public Cursor Cursor { get; set; }
+        [Export]
+        public bool PreventCancel { get; set; }
+        [Export]
+        public bool PreventCloseAll { get; set; }
         [Export]
         public NodePath[] OptionContainerPaths { get; set; }
+        public Cursor Cursor { get; set; }
         public OptionContainer CurrentContainer { get; set; }
         public List<OptionContainer> OptionContainers { get; set; }
         private bool _dim;
@@ -22,7 +28,7 @@ namespace Arenbee.Framework.GUI
             set
             {
                 if (value && !_dim)
-                    Modulate = Modulate.Darkened(0.1f);
+                    Modulate = Modulate.Darkened(0.3f);
                 else
                     Modulate = new Color(Colors.White);
                 _dim = value;
@@ -30,16 +36,39 @@ namespace Arenbee.Framework.GUI
         }
 
         public delegate void RequestedAddHandler(SubMenu subMenu);
-        public delegate void RequestedCloseHandler();
+        public delegate void RequestedRemoveSubMenuHandler();
         public delegate void RequestedCloseAllHandler();
         public event RequestedAddHandler RequestedAdd;
-        public event RequestedCloseHandler RequestedClose;
+        public event RequestedRemoveSubMenuHandler RequestedRemoveSubMenu;
         public event RequestedCloseAllHandler RequestedCloseAll;
 
         public override async void _Ready()
         {
-            OptionContainers = new List<OptionContainer>();
+            SetDefaultValues();
             SetNodeReferences();
+            await Init();
+        }
+
+        protected virtual void SetDefaultValues()
+        {
+            OptionContainers = new List<OptionContainer>();
+        }
+
+        private void SetNodeReferences()
+        {
+            Cursor = this.GetChildren<Cursor>().FirstOrDefault();
+            if (OptionContainerPaths.Length == 0)
+            {
+                GD.PrintErr(Name + " has no OptionContainer assigned.");
+            }
+            foreach (var path in OptionContainerPaths)
+            {
+                OptionContainers.Add(GetNode<OptionContainer>(path));
+            }
+        }
+
+        protected virtual async Task Init()
+        {
             foreach (var optionContainer in OptionContainers)
             {
                 optionContainer.ItemSelected += OnItemSelected;
@@ -50,38 +79,41 @@ namespace Arenbee.Framework.GUI
             FocusContainer(OptionContainers.FirstOrDefault());
         }
 
-        private void SetNodeReferences()
-        {
-            Cursor = GetNodeOrNull<Cursor>("HandCursor");
-            foreach (var path in OptionContainerPaths)
-            {
-                OptionContainers.Add(GetNode<OptionContainer>(path));
-            }
-        }
-
         public override void _PhysicsProcess(float delta)
         {
             if (Engine.IsEditorHint()) return;
 
-            if (GameRoot.MenuInput.Up.IsActionJustPressed)
+            var menuInput = GameRoot.MenuInput;
+
+            if (menuInput.Up.IsActionJustPressed)
             {
                 CurrentContainer.FocusUp();
             }
-            else if (GameRoot.MenuInput.Down.IsActionJustPressed)
+            else if (menuInput.Down.IsActionJustPressed)
             {
                 CurrentContainer.FocusDown();
             }
-            else if (GameRoot.MenuInput.Left.IsActionJustPressed)
+            else if (menuInput.Left.IsActionJustPressed)
             {
                 CurrentContainer.FocusLeft();
             }
-            else if (GameRoot.MenuInput.Right.IsActionJustPressed)
+            else if (menuInput.Right.IsActionJustPressed)
             {
                 CurrentContainer.FocusRight();
             }
-            else if (GameRoot.MenuInput.Enter.IsActionJustPressed)
+            else if (menuInput.Enter.IsActionJustPressed)
             {
                 CurrentContainer.SelectItem();
+            }
+            else if (menuInput.Cancel.IsActionJustPressed)
+            {
+                if (!PreventCancel)
+                    RaiseRequestedRemoveSubMenu();
+            }
+            else if (menuInput.Start.IsActionJustPressed)
+            {
+                if (!PreventCloseAll)
+                    RaiseRequestedCloseAll();
             }
         }
 
@@ -115,7 +147,17 @@ namespace Arenbee.Framework.GUI
 
         }
 
-        protected void RequestedCloseAllHelper()
+        protected void RaiseRequestedAddSubMenu(SubMenu subMenu)
+        {
+            RequestedAdd?.Invoke(subMenu);
+        }
+
+        protected void RaiseRequestedRemoveSubMenu()
+        {
+            RequestedRemoveSubMenu?.Invoke();
+        }
+
+        protected void RaiseRequestedCloseAll()
         {
             RequestedCloseAll?.Invoke();
         }

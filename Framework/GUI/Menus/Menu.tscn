@@ -1,14 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://bbb7ulop70vv8"]
 
 [ext_resource type="Script" path="res://Framework/GUI/Menus/Menu.cs" id="1_5rlu4"]
 
 [node name="Menu" type="CanvasLayer"]
 script = ExtResource( "1_5rlu4" )
-
-[node name="MenuBackground" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color(0, 0, 0, 1)
-__meta__ = {
-"_edit_use_anchors_": false
-}

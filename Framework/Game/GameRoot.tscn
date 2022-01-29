@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7kgygl2w5yga"]
+[gd_scene load_steps=3 format=3 uid="uid://c2gc31v2yhuoj"]
 
 [ext_resource type="Script" path="res://Framework/Game/GameRoot.cs" id="1_6aro1"]
-[ext_resource type="PackedScene" uid="uid://u0jj572fjp3w" path="res://Assets/GUI/TitleScreen/TitleScreen.tscn" id="2_7utft"]
 [ext_resource type="Script" path="res://Assets/Input/MenuInputHandler.cs" id="2_cpj4u"]
 
 [node name="GameRoot" type="Node"]
@@ -12,7 +11,5 @@ script = ExtResource( "1_6aro1" )
 script = ExtResource( "2_cpj4u" )
 
 [node name="TitleScreenContainer" type="Node" parent="."]
-
-[node name="TitleScreen" parent="TitleScreenContainer" instance=ExtResource( "2_7utft" )]
 
 [node name="CurrentGameContainer" type="Node" parent="."]

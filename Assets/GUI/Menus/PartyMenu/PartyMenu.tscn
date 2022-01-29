@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://fukb06uxrir1"]
+
+[ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_bno15"]
+[ext_resource type="PackedScene" uid="uid://ca8hr7uc4r6ic" path="res://Assets/GUI/Menus/PartyMenu/MainSubMenu.tscn" id="2_2iqbe"]
+[ext_resource type="Texture2D" uid="uid://260g1xdku6s2" path="res://Framework/GUI/Backgrounds/star.png" id="2_ytxot"]
+
+[node name="PartyMenu" instance=ExtResource( "1_bno15" )]
+
+[node name="TextureRect" type="TextureRect" parent="." index="0"]
+modulate = Color(0.803922, 0.376471, 0.576471, 0.698039)
+texture_filter = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( "2_ytxot" )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainSubMenu" parent="." index="1" instance=ExtResource( "2_2iqbe" )]

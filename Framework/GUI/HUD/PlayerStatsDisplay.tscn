@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5h4g1aj3ynt"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Font" uid="uid://bbuk4chu2svr2" path="res://Assets/Fonts/3x6.tres" id="1_hagkc"]
+[ext_resource type="Font" path="res://Assets/GUI/Fonts/3x6.tres" id="1_hagkc"]
 
 [sub_resource type="StyleBoxFlat" id="1"]
 bg_color = Color(0.6, 0.6, 0.6, 0)

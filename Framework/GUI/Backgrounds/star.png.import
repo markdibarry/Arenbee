@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://4imw1em37jp5"
-path="res://.godot/imported/Cursor.png-67ba6402c543e04adf04cee96b9cc0ff.stex"
+uid="uid://260g1xdku6s2"
+path="res://.godot/imported/star.png-04c299d88f80ff15103d28b83dab52a7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Framework/GUI/Cursor.png"
-dest_files=["res://.godot/imported/Cursor.png-67ba6402c543e04adf04cee96b9cc0ff.stex"]
+source_file="res://Framework/GUI/Backgrounds/star.png"
+dest_files=["res://.godot/imported/star.png-04c299d88f80ff15103d28b83dab52a7.stex"]
 
 [params]
 

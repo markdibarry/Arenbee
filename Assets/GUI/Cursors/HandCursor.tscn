@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw8dqc5uwtq37"]
-
-[ext_resource type="PackedScene" uid="uid://b2j3dw6tmnvrv" path="res://Framework/GUI/Cursor.tscn" id="1_bgw5r"]
-[ext_resource type="Script" path="res://Assets/GUI/Cursors/HandCursor.cs" id="2_34iwk"]
-
-[node name="HandCursor" instance=ExtResource( "1_bgw5r" )]
-script = ExtResource( "2_34iwk" )

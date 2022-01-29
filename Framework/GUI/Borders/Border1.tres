@@ -1,0 +1,11 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dpr1b8cydbn7v"]
+
+[ext_resource type="Texture2D" uid="uid://h3lpe6ahjhjd" path="res://Framework/GUI/Borders/border1.png" id="1_k0dco"]
+
+[resource]
+texture = ExtResource( "1_k0dco" )
+region_rect = Rect2(0, 0, 16, 16)
+margin_left = 5.0
+margin_right = 5.0
+margin_top = 5.0
+margin_bottom = 5.0

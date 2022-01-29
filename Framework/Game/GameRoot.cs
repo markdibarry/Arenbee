@@ -1,6 +1,7 @@
 using System;
-using Arenbee.Assets.GUI;
+using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
 using Godot;
 
@@ -10,11 +11,11 @@ namespace Arenbee.Framework.Game
     {
         public Node CurrentGameContainer { get; set; }
         public Node TitleScreenContainer { get; set; }
-        public TitleScreen TitleScreen { get; set; }
         public GameSession CurrentGame { get; set; }
         public static GUIInputHandler MenuInput { get; private set; }
         private static GameRoot s_instance;
         public static GameRoot Instance => s_instance;
+        private readonly PackedScene _titleScreenScene = GD.Load<PackedScene>(PathConstants.TitleScreenPath);
 
         public override void _Ready()
         {
@@ -27,13 +28,12 @@ namespace Arenbee.Framework.Game
         {
             MenuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
             TitleScreenContainer = GetNodeOrNull<Node>("TitleScreenContainer");
-            TitleScreen = TitleScreenContainer.GetChildOrNullButActually<TitleScreen>(0);
             CurrentGameContainer = GetNodeOrNull<Node>("CurrentGameContainer");
-            CurrentGame = CurrentGameContainer.GetChildOrNullButActually<GameSession>(0);
         }
 
         private void Init()
         {
+            ResetToTitleScreen();
         }
 
         public override void _PhysicsProcess(float delta)
@@ -52,6 +52,17 @@ namespace Arenbee.Framework.Game
             {
                 PrintStrayNodes();
             }
+        }
+
+        public void ResetToTitleScreen()
+        {
+            if (IsInstanceValid(CurrentGame))
+            {
+                CurrentGame.QueueFree();
+                CurrentGame = null;
+            }
+            var titleScreen = _titleScreenScene.Instantiate<Menu>();
+            TitleScreenContainer.AddChild(titleScreen);
         }
     }
 }

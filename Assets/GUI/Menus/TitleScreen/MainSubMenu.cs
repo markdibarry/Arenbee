@@ -1,21 +1,29 @@
 using Arenbee.Framework.Game;
+using Arenbee.Framework.GUI;
 using Arenbee.Framework.SaveData;
 using Godot;
 
-namespace Arenbee.Framework.GUI
+namespace Arenbee.Assets.GUI.Menus.TitleMenus
 {
     [Tool]
-    public partial class MainMenu : SubMenu
+    public partial class MainSubMenu : SubMenu
     {
+        protected override void SetDefaultValues()
+        {
+            base.SetDefaultValues();
+            PreventCancel = true;
+            PreventCloseAll = true;
+        }
+
         public override void OnItemSelected(OptionItem optionItem)
         {
             base.OnItemSelected(optionItem);
             switch (optionItem.Value)
             {
-                case 0:
+                case "Continue":
                     ContinueSavedGame();
                     break;
-                case 1:
+                case "NewGame":
                     StartNewGame();
                     break;
             }
@@ -26,7 +34,7 @@ namespace Arenbee.Framework.GUI
             var gameRoot = GameRoot.Instance;
             gameRoot.CurrentGame = new GameSession();
             gameRoot.CurrentGameContainer.AddChild(gameRoot.CurrentGame);
-            RequestedCloseAllHelper();
+            RaiseRequestedCloseAll();
         }
 
         private void ContinueSavedGame()
@@ -36,7 +44,7 @@ namespace Arenbee.Framework.GUI
             GameSave gameSave = SaveService.LoadGame();
             gameRoot.CurrentGame.ApplySaveData(gameSave);
             gameRoot.CurrentGameContainer.AddChild(gameRoot.CurrentGame);
-            RequestedCloseAllHelper();
+            RaiseRequestedCloseAll();
         }
     }
 }

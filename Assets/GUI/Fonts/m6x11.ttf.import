@@ -2,17 +2,17 @@
 
 importer="font_data_dynamic"
 type="FontData"
-uid="uid://ungm2bp6hwxr"
-path="res://.godot/imported/m3x6.ttf-2091198b5c2b61b4077727c383f79690.fontdata"
+uid="uid://bw18ci18yipxg"
+path="res://.godot/imported/m6x11.ttf-4e49525197730248ce748de3e8b539a4.fontdata"
 
 [deps]
 
-source_file="res://Assets/Fonts/m3x6.ttf"
-dest_files=["res://.godot/imported/m3x6.ttf-2091198b5c2b61b4077727c383f79690.fontdata"]
+source_file="res://Assets/GUI/Fonts/m6x11.ttf"
+dest_files=["res://.godot/imported/m6x11.ttf-4e49525197730248ce748de3e8b539a4.fontdata"]
 
 [params]
 
-antialiased=false
+antialiased=true
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48
@@ -20,8 +20,7 @@ force_autohinter=false
 hinting=1
 oversampling=0.0
 compress=true
-opentype_feature_overrides={
-}
+opentype_feature_overrides={}
 preload/char_ranges=PackedStringArray()
 preload/glyph_ranges=PackedStringArray()
 preload/configurations=PackedStringArray()

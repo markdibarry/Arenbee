@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Extensions;
@@ -8,7 +9,7 @@ namespace Arenbee.Framework.GUI
     public partial class Menu : CanvasLayer
     {
         public Stack<SubMenu> SubMenuStack { get; set; }
-        public ColorRect MenuBackground { get; set; }
+        public event EventHandler RootSubMenuClosed;
 
         public override void _Ready()
         {
@@ -18,7 +19,6 @@ namespace Arenbee.Framework.GUI
 
         public void SetNodeReferences()
         {
-            MenuBackground = GetNodeOrNull<ColorRect>("MenuBackground");
             SubMenu firstSubMenu = this.GetChildren<SubMenu>().FirstOrDefault();
             SubMenuStack.Push(firstSubMenu);
             SubscribeEvents(firstSubMenu);
@@ -27,16 +27,23 @@ namespace Arenbee.Framework.GUI
         public void SubscribeEvents(SubMenu subMenu)
         {
             subMenu.RequestedAdd += OnRequestedAdd;
-            subMenu.RequestedClose += OnRequestedClose;
+            subMenu.RequestedRemoveSubMenu += OnRequestedRemoveSubMenu;
             subMenu.RequestedCloseAll += OnRequestedCloseAll;
+        }
+
+        public void UnsubscribeEvents(SubMenu subMenu)
+        {
+            subMenu.RequestedAdd -= OnRequestedAdd;
+            subMenu.RequestedRemoveSubMenu -= OnRequestedRemoveSubMenu;
+            subMenu.RequestedCloseAll -= OnRequestedCloseAll;
         }
 
         public virtual void OnRequestedAdd(SubMenu subMenu)
         {
-
+            AddSubMenu(subMenu);
         }
 
-        public virtual void OnRequestedClose()
+        public virtual void OnRequestedRemoveSubMenu()
         {
             RemoveSubMenu();
         }
@@ -48,35 +55,39 @@ namespace Arenbee.Framework.GUI
 
         public void AddSubMenu(SubMenu subMenu)
         {
-            SubMenu currentSubMenu = SubMenuStack.Peek();
-            if (currentSubMenu != null)
+            if (SubMenuStack.Count > 0)
             {
                 SubMenuStack.Peek().Dim = true;
                 SubMenuStack.Peek().ProcessMode = ProcessModeEnum.Disabled;
             }
             SubMenuStack.Push(subMenu);
+            SubscribeEvents(subMenu);
             AddChild(subMenu);
         }
 
         public void RemoveSubMenu()
         {
-            SubMenuStack.Peek().QueueFree();
-            SubMenuStack.Pop();
-            SubMenu currentSubMenu = SubMenuStack.Peek();
-            if (currentSubMenu == null)
+            UnsubscribeEvents(SubMenuStack.Peek());
+            SubMenuStack.Pop().QueueFree();
+            if (SubMenuStack.Count > 0)
             {
-                CloseAllSubMenus();
+                var currentSubMenu = SubMenuStack.Peek();
+                currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
+                currentSubMenu.Dim = false;
             }
             else
             {
-                currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
-                currentSubMenu.Dim = false;
+                RootSubMenuClosed?.Invoke(this, EventArgs.Empty);
+                QueueFree();
             }
         }
 
         public void CloseAllSubMenus()
         {
-            QueueFree();
+            while (SubMenuStack.Count > 0)
+            {
+                RemoveSubMenu();
+            }
         }
     }
 }

@@ -1,10 +1,11 @@
+using System;
 using System.Linq;
 using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Items;
+using Arenbee.Framework.GUI;
 using Arenbee.Framework.SaveData;
 using Godot;
 
@@ -15,6 +16,8 @@ namespace Arenbee.Framework.Game
         public Party Party { get; set; }
         public AreaScene CurrentAreaScene { get; set; }
         public SessionState SessionState { get; set; }
+        private Menu _partyMenu;
+        private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(PathConstants.PartyMenuPath);
 
         public override void _Ready()
         {
@@ -52,6 +55,28 @@ namespace Arenbee.Framework.Game
             {
                 SaveService.SaveGame(this);
             }
+
+            if (GameRoot.MenuInput.Start.IsActionJustPressed)
+            {
+                OpenPartyMenu();
+            }
+        }
+
+        private void OpenPartyMenu()
+        {
+            if (!IsInstanceValid(_partyMenu))
+            {
+                CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+                _partyMenu = _partyMenuScene.Instantiate<Menu>();
+                _partyMenu.RootSubMenuClosed += OnPartyMenuRootClosed;
+                AddChild(_partyMenu);
+            }
+        }
+
+        private void OnPartyMenuRootClosed(object sender, EventArgs e)
+        {
+            _partyMenu.RootSubMenuClosed -= OnPartyMenuRootClosed;
+            CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
         }
 
         public void ApplySaveData(GameSave gameSave)
