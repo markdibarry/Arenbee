@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://c74byshxks8nv"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenu/Save/SaveConfirmSubMenu.cs" id="2_o5egm"]
@@ -8,7 +8,7 @@
 
 [node name="SaveConfirmSubMenu" instance=ExtResource( "1_8cyl3" )]
 script = ExtResource( "2_o5egm" )
-OptionContainerPaths = [NodePath("PanelContainer/SaveOptions")]
+_optionContainerPaths = [NodePath("PanelContainer/SaveOptions")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 anchor_left = 0.5
@@ -52,14 +52,14 @@ offset_bottom = 26.0
 [node name="Yes" parent="PanelContainer/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_af8ba" )]
 offset_right = 16.0
 offset_bottom = 13.0
-Value = "Yes"
+OptionValue = "Yes"
 LabelText = "Yes"
 
 [node name="No" parent="PanelContainer/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_af8ba" )]
 offset_top = 13.0
 offset_right = 16.0
 offset_bottom = 26.0
-Value = "No"
+OptionValue = "No"
 LabelText = "No"
 
 [node name="ArrowRight" parent="PanelContainer/SaveOptions/VBoxContainer/HBoxContainer" index="2"]

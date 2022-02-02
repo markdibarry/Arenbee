@@ -1,15 +1,15 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://deas6263rue2t"]
 
-[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_myi80"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_myi80"]
 [ext_resource type="StyleBox" uid="uid://dpr1b8cydbn7v" path="res://Framework/GUI/Borders/Border1.tres" id="2_itrbd"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenu/Save/SaveSuccessSubMenu.cs" id="2_o3y84"]
-[ext_resource type="Font" path="res://Framework/GUI/Fonts/3x6.tres" id="3_7wa1o"]
+[ext_resource type="Font" uid="uid://dk32ss3xnst4o" path="res://Framework/GUI/Fonts/3x6.tres" id="3_7wa1o"]
 
 [node name="SaveSuccessSubMenu" instance=ExtResource( "1_myi80" )]
 script = ExtResource( "2_o3y84" )
 PreventCancel = true
 PreventCloseAll = true
-Timer = 2.0
+_timeDuration = 1.0
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 anchor_left = 0.5

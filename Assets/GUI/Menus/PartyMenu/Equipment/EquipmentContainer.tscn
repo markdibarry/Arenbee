@@ -13,6 +13,7 @@ anchor_right = 1.0
 [node name="Weapon" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "2_32hni" )]
 offset_right = 180.0
 offset_bottom = 13.0
+OptionValue = "Weapon"
 KeyText = "Weapon:"
 ValueText = "Broad Sword"
 
@@ -34,6 +35,7 @@ text = "Broad Sword"
 offset_top = 13.0
 offset_right = 180.0
 offset_bottom = 26.0
+OptionValue = "Head"
 KeyText = "Head:"
 ValueText = "Skull Cap"
 

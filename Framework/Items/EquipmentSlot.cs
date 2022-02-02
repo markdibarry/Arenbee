@@ -1,5 +1,4 @@
-﻿using Arenbee.Framework.Actors;
-using Arenbee.Framework.Enums;
+﻿using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {

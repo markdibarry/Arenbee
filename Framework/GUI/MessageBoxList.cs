@@ -6,6 +6,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class MessageBoxList : VBoxContainer
     {
+        public static readonly string ScenePath = $"res://Framework/GUI/{nameof(MessageBox)}.tscn";
         public Vector2 MaxSize { get; set; }
         public bool IsReady { get; set; }
 

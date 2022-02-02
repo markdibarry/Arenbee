@@ -17,7 +17,7 @@ margin_bottom = 5.0
 
 [node name="MainSubMenu" instance=ExtResource( "1_el5n0" )]
 script = ExtResource( "2_21jpy" )
-OptionContainerPaths = [NodePath("PanelContainer/OptionContainer")]
+_optionContainerPaths = [NodePath("PanelContainer/OptionContainer")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 texture_filter = 1
@@ -59,42 +59,42 @@ offset_bottom = 78.0
 [node name="Stats" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_afdfe" )]
 offset_right = 40.0
 offset_bottom = 13.0
-Value = "Stats"
+OptionValue = "Stats"
 LabelText = "Stats"
 
 [node name="Inventory" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_afdfe" )]
 offset_top = 13.0
 offset_right = 40.0
 offset_bottom = 26.0
-Value = "Inventory"
+OptionValue = "Inventory"
 LabelText = "Inventory"
 
 [node name="Equipment" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_afdfe" )]
 offset_top = 26.0
 offset_right = 40.0
 offset_bottom = 39.0
-Value = "Equipment"
+OptionValue = "Equipment"
 LabelText = "Equipment"
 
 [node name="Options" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_afdfe" )]
 offset_top = 39.0
 offset_right = 40.0
 offset_bottom = 52.0
-Value = "Options"
+OptionValue = "Options"
 LabelText = "Options"
 
 [node name="Save" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="4" instance=ExtResource( "4_afdfe" )]
 offset_top = 52.0
 offset_right = 40.0
 offset_bottom = 65.0
-Value = "Save"
+OptionValue = "Save"
 LabelText = "Save"
 
 [node name="Quit" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="5" instance=ExtResource( "4_afdfe" )]
 offset_top = 65.0
 offset_right = 40.0
 offset_bottom = 78.0
-Value = "Quit"
+OptionValue = "Quit"
 LabelText = "Quit"
 
 [node name="ArrowRight" parent="PanelContainer/OptionContainer/VBoxContainer/HBoxContainer" index="2"]

@@ -5,7 +5,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class TextOption : OptionItem
     {
-        private string _labelText = string.Empty;
+        public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(TextOption)}.tscn";
         [Export(PropertyHint.MultilineText)]
         public string LabelText
         {
@@ -13,18 +13,19 @@ namespace Arenbee.Framework.GUI
             set
             {
                 _labelText = value;
-                if (Label != null)
+                if (_label != null)
                 {
-                    Label.Text = _labelText;
+                    _label.Text = _labelText;
                 }
             }
         }
-        private Label Label { get; set; }
+        private Label _label;
+        private string _labelText = string.Empty;
 
         public override void _Ready()
         {
-            Label = GetNodeOrNull<Label>("Label");
-            Label.Text = _labelText;
+            _label = GetNodeOrNull<Label>("Label");
+            _label.Text = _labelText;
         }
     }
 }

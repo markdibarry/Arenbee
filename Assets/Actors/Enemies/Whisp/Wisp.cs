@@ -14,6 +14,8 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
             Acceleration = 1000f;
         }
 
+        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Whisp/{nameof(Wisp)}.tscn";
+
         public override void Init()
         {
             base.Init();

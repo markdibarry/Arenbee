@@ -1,6 +1,6 @@
-﻿using Arenbee.Framework.Enums;
+﻿using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
-using Arenbee.Framework.Actors.Stats;
 using Godot;
 
 namespace Arenbee.Framework.Actors

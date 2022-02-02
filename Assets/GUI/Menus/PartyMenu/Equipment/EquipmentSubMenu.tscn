@@ -9,7 +9,7 @@
 
 [node name="EquipmentSubMenu" instance=ExtResource( "1_wamdw" )]
 script = ExtResource( "2_ovs5n" )
-OptionContainerPaths = [NodePath("PanelContainer/PartyList")]
+_optionContainerPaths = [NodePath("PanelContainer/PartyList")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 offset_left = 80.0
@@ -45,7 +45,6 @@ offset_bottom = 18.0
 [node name="Ady" parent="PanelContainer/PartyList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
 offset_right = 16.0
 offset_bottom = 13.0
-Value = "Ady"
 LabelText = "Ady"
 
 [node name="ArrowRight" parent="PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="2"]
@@ -76,5 +75,6 @@ offset_right = 147.0
 offset_bottom = 107.0
 
 [node name="HandCursor" parent="." index="2" instance=ExtResource( "3_qf2rb" )]
+position = Vector2(87, 25)
 
 [editable path="PanelContainer/PartyList"]

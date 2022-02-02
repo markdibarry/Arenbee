@@ -4,6 +4,7 @@ namespace Arenbee.Framework.GUI
 {
     public partial class Cursor : Node2D
     {
+        public static readonly string ScenePath = $"res://Framework/GUI/Cursors/{nameof(Cursor)}.tscn";
         public Sprite2D Sprite2D { get; set; }
 
         public override void _Ready()

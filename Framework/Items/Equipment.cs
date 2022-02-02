@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Enums;
-using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
 {
@@ -22,26 +20,32 @@ namespace Arenbee.Framework.Items
                 new EquipmentSlot(EquipmentSlotName.Accessory2, ItemType.Accessory),
             };
 
-            foreach (var slot in _slots)
-            {
-                slot.EquipmentSet += OnEquipmentSet;
-                slot.EquipmentRemoved += OnEquipmentRemoved;
-            }
+            SubscribeEvents();
         }
 
+        public Equipment(IEnumerable<EquipmentSlot> slots)
+        {
+            _slots = slots.ToList();
+            SubscribeEvents();
+        }
+
+        public IEnumerable<EquipmentSlot> Slots
+        {
+            get { return _slots.AsReadOnly(); }
+        }
+
+        private readonly List<EquipmentSlot> _slots;
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item newItem);
         public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
         public event EquipmentSetHandler EquipmentSet;
         public event EquipmentRemovedHandler EquipmentRemoved;
-        [JsonProperty]
-        private readonly ICollection<EquipmentSlot> _slots;
 
-        public ICollection<EquipmentSlot> GetAllSlots()
+        public IEnumerable<EquipmentSlot> GetAllSlots()
         {
-            return _slots;
+            return _slots.AsReadOnly();
         }
 
-        public ICollection<EquipmentSlot> GetSlotsByType(ItemType itemType)
+        public IEnumerable<EquipmentSlot> GetSlotsByType(ItemType itemType)
         {
             return _slots.Where(x => x.SlotType == itemType).ToList();
         }
@@ -51,14 +55,23 @@ namespace Arenbee.Framework.Items
             return _slots.First(x => x.SlotName.Equals(slotName));
         }
 
-        public void OnEquipmentSet(EquipmentSlot slot, Item newItem)
+        private void OnEquipmentSet(EquipmentSlot slot, Item newItem)
         {
             EquipmentSet?.Invoke(slot, newItem);
         }
 
-        public void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
+        private void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
         {
             EquipmentRemoved?.Invoke(slot, oldItem);
+        }
+
+        private void SubscribeEvents()
+        {
+            foreach (var slot in _slots)
+            {
+                slot.EquipmentSet += OnEquipmentSet;
+                slot.EquipmentRemoved += OnEquipmentRemoved;
+            }
         }
     }
 }

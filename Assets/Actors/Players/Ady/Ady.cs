@@ -5,6 +5,7 @@ namespace Arenbee.Assets.Actors.Players.AdyNS
 {
     public partial class Ady : Actor
     {
+        public static readonly string ScenePath = $"res://Assets/Actors/Players/Ady/{nameof(Ady)}.tscn";
         public override void Init()
         {
             base.Init();

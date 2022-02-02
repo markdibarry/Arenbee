@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Arenbee.Assets.Actors.Players.AdyNS;
 using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
@@ -19,9 +20,15 @@ namespace Arenbee.Framework.Game
             SessionState = new SessionState();
         }
 
-        public Party Party { get; set; }
-        public AreaScene CurrentAreaScene { get; set; }
-        public SessionState SessionState { get; set; }
+        public GameSession(GameSave gameSave)
+        {
+            Party = new Party(gameSave.ActorInfos, gameSave.Items);
+            SessionState = gameSave.SessionState;
+        }
+
+        public AreaScene CurrentAreaScene { get; private set; }
+        public Party Party { get; private set; }
+        public SessionState SessionState { get; private set; }
         private Menu _partyMenu;
         private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(PathConstants.PartyMenuPath);
 
@@ -56,6 +63,36 @@ namespace Arenbee.Framework.Game
             }
         }
 
+        private void InitHUD()
+        {
+            if (CurrentAreaScene.HUD != null)
+            {
+                var players = CurrentAreaScene.PlayersContainer
+                    .GetChildren<Actor>();
+                var enemies = CurrentAreaScene.EnemiesContainer
+                    .GetChildren<Actor>();
+                CurrentAreaScene.HUD.SubscribeEvents(players);
+                CurrentAreaScene.HUD.SubscribeEvents(enemies);
+            }
+        }
+
+        private void InitParty()
+        {
+            Actor player1 = Party.Actors.FirstOrDefault();
+            if (player1 == null)
+            {
+                var actorScene = GD.Load<PackedScene>(Ady.ScenePath);
+                player1 = actorScene.Instantiate<Actor>();
+                player1.Inventory = Party.Inventory;
+                Party.Actors.Add(player1);
+            }
+
+            player1.GlobalPosition = CurrentAreaScene.PlayerSpawnPoint.GlobalPosition;
+            player1.AddChild(new Player1InputHandler());
+            player1.AddChild(new Camera2D() { LimitLeft = 0, LimitBottom = 270, Current = true });
+            CurrentAreaScene.PlayersContainer.AddChild(player1);
+        }
+
         private void OpenPartyMenu()
         {
             if (!IsInstanceValid(_partyMenu))
@@ -71,52 +108,6 @@ namespace Arenbee.Framework.Game
         {
             _partyMenu.RootSubMenuClosed -= OnPartyMenuRootClosed;
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
-        }
-
-        public void ApplySaveData(GameSave gameSave)
-        {
-            if (gameSave == null) return;
-            Party = new Party() { Inventory = gameSave.Inventory };
-            SessionState = gameSave.SessionState;
-            foreach (var actorInfo in gameSave.ActorInfos)
-            {
-                var actorScene = GD.Load<PackedScene>(actorInfo.ActorPath);
-                var actor = actorScene.Instantiate<Actor>();
-                actor.Inventory = gameSave.Inventory;
-                actor.Equipment = actorInfo.Equipment;
-                actor.Stats = actorInfo.Stats;
-                Party.Actors.Add(actor);
-            }
-        }
-
-        private void InitParty()
-        {
-            Actor player1 = Party.Actors.FirstOrDefault();
-            if (player1 == null)
-            {
-                var actorScene = GD.Load<PackedScene>(PathConstants.AdyPath);
-                player1 = actorScene.Instantiate<Actor>();
-                player1.Inventory = Party.Inventory;
-                Party.Actors.Add(player1);
-            }
-
-            player1.GlobalPosition = CurrentAreaScene.PlayerSpawnPoint.GlobalPosition;
-            player1.AddChild(new Player1InputHandler());
-            player1.AddChild(new Camera2D() { LimitLeft = 0, LimitBottom = 270, Current = true });
-            CurrentAreaScene.PlayersContainer.AddChild(player1);
-        }
-
-        private void InitHUD()
-        {
-            if (CurrentAreaScene.HUD != null)
-            {
-                var players = CurrentAreaScene.PlayersContainer
-                    .GetChildren<Actor>();
-                var enemies = CurrentAreaScene.EnemiesContainer
-                    .GetChildren<Actor>();
-                CurrentAreaScene.HUD.SubscribeEvents(players);
-                CurrentAreaScene.HUD.SubscribeEvents(enemies);
-            }
         }
     }
 }

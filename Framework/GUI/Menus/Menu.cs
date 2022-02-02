@@ -10,10 +10,11 @@ namespace Arenbee.Framework.GUI
     {
         public Menu()
         {
-            SubMenuStack = new Stack<SubMenu>();
+            _subMenuStack = new Stack<SubMenu>();
         }
 
-        public Stack<SubMenu> SubMenuStack { get; set; }
+        public static readonly string ScenePath = $"res://Framework/GUI/Menus/{nameof(Menu)}.tscn";
+        private readonly Stack<SubMenu> _subMenuStack;
         public event EventHandler RootSubMenuClosed;
 
         public override void _Ready()
@@ -24,58 +25,44 @@ namespace Arenbee.Framework.GUI
         public void SetNodeReferences()
         {
             SubMenu firstSubMenu = this.GetChildren<SubMenu>().FirstOrDefault();
-            SubMenuStack.Push(firstSubMenu);
+            _subMenuStack.Push(firstSubMenu);
             SubscribeEvents(firstSubMenu);
         }
 
-        public void SubscribeEvents(SubMenu subMenu)
-        {
-            subMenu.RequestedAdd += OnRequestedAdd;
-            subMenu.SubMenuClosed += OnSubMenuClosed;
-            subMenu.RequestedCloseAll += OnRequestedCloseAll;
-        }
-
-        public void UnsubscribeEvents(SubMenu subMenu)
-        {
-            subMenu.RequestedAdd -= OnRequestedAdd;
-            subMenu.SubMenuClosed -= OnSubMenuClosed;
-            subMenu.RequestedCloseAll -= OnRequestedCloseAll;
-        }
-
-        public virtual void OnRequestedAdd(SubMenu subMenu)
+        protected virtual void OnRequestedAdd(SubMenu subMenu)
         {
             AddSubMenu(subMenu);
         }
 
-        public virtual void OnSubMenuClosed(string cascadeTo = null)
+        protected virtual void OnSubMenuClosed(string cascadeTo = null)
         {
             RemoveSubMenu(cascadeTo);
         }
 
-        public virtual void OnRequestedCloseAll()
+        protected virtual void OnRequestedCloseAll()
         {
             CloseAllSubMenus();
         }
 
-        public void AddSubMenu(SubMenu subMenu)
+        private void AddSubMenu(SubMenu subMenu)
         {
-            if (SubMenuStack.Count > 0)
+            if (_subMenuStack.Count > 0)
             {
-                SubMenuStack.Peek().Dim = true;
-                SubMenuStack.Peek().ProcessMode = ProcessModeEnum.Disabled;
+                _subMenuStack.Peek().Dim = true;
+                _subMenuStack.Peek().ProcessMode = ProcessModeEnum.Disabled;
             }
-            SubMenuStack.Push(subMenu);
+            _subMenuStack.Push(subMenu);
             SubscribeEvents(subMenu);
             AddChild(subMenu);
         }
 
-        public void RemoveSubMenu(string cascadeTo = null)
+        private void RemoveSubMenu(string cascadeTo = null)
         {
-            UnsubscribeEvents(SubMenuStack.Peek());
-            SubMenuStack.Pop();
-            if (SubMenuStack.Count > 0)
+            UnsubscribeEvents(_subMenuStack.Peek());
+            _subMenuStack.Pop();
+            if (_subMenuStack.Count > 0)
             {
-                var currentSubMenu = SubMenuStack.Peek();
+                var currentSubMenu = _subMenuStack.Peek();
                 currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
                 currentSubMenu.Dim = false;
                 if (cascadeTo != null && cascadeTo != currentSubMenu.GetType().Name)
@@ -88,12 +75,26 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        public void CloseAllSubMenus()
+        private void CloseAllSubMenus()
         {
-            while (SubMenuStack.Count > 0)
+            while (_subMenuStack.Count > 0)
             {
                 RemoveSubMenu();
             }
+        }
+
+        private void SubscribeEvents(SubMenu subMenu)
+        {
+            subMenu.RequestedAdd += OnRequestedAdd;
+            subMenu.SubMenuClosed += OnSubMenuClosed;
+            subMenu.RequestedCloseAll += OnRequestedCloseAll;
+        }
+
+        private void UnsubscribeEvents(SubMenu subMenu)
+        {
+            subMenu.RequestedAdd -= OnRequestedAdd;
+            subMenu.SubMenuClosed -= OnSubMenuClosed;
+            subMenu.RequestedCloseAll -= OnRequestedCloseAll;
         }
     }
 }

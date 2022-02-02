@@ -1,9 +1,8 @@
-﻿using Arenbee.Framework.Enums;
+﻿using Arenbee.Assets.Actors.Default.BaseStates;
 using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 using Godot;
-using Arenbee.Assets.Actors.Default.BaseStates;
-using Arenbee.Framework.Constants;
 
 namespace Arenbee.Framework.Actors
 {
@@ -28,7 +27,7 @@ namespace Arenbee.Framework.Actors
 
             StateController = new StateController(this);
             WeaponSlot.Init(this, Equipment.GetSlot(EquipmentSlotName.Weapon));
-            _enemyDeathEffectScene = GD.Load<PackedScene>(PathConstants.EnemyDeathEffect);
+            _enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.ScenePath);
         }
 
         private void OnHurtBoxEntered(Area2D area2D)

@@ -91,7 +91,7 @@ namespace Arenbee.Framework.Actors
 
         private void SetInitialEquipmentStats()
         {
-            foreach (var slot in Equipment.GetAllSlots())
+            foreach (var slot in Equipment.Slots)
             {
                 if (!string.IsNullOrEmpty(slot.ItemId))
                 {

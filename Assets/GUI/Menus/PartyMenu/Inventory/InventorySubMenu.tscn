@@ -8,7 +8,7 @@
 
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
 script = ExtResource( "2_funy4" )
-OptionContainerPaths = [NodePath("PanelContainer/InventoryList")]
+_optionContainerPaths = [NodePath("PanelContainer/InventoryList")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 offset_left = 80.0
@@ -24,7 +24,6 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 115.0
 offset_bottom = 251.0
-FillRight = true
 
 [node name="ArrowUp" parent="PanelContainer/InventoryList/VBoxContainer" index="0"]
 offset_left = 51.0

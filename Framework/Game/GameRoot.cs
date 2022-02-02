@@ -8,6 +8,10 @@ namespace Arenbee.Framework.Game
 {
     public partial class GameRoot : Node
     {
+        public GameRoot()
+        {
+            s_instance = this;
+        }
         public Node CurrentGameContainer { get; set; }
         public Node TitleScreenContainer { get; set; }
         public GameSession CurrentGame { get; set; }
@@ -18,7 +22,6 @@ namespace Arenbee.Framework.Game
 
         public override void _Ready()
         {
-            s_instance = this;
             SetNodeReferences();
             Init();
         }
@@ -37,11 +40,6 @@ namespace Arenbee.Framework.Game
 
         public override void _PhysicsProcess(float delta)
         {
-            if (Godot.Input.IsActionJustPressed("pause"))
-            {
-                GetTree().Paused = !GetTree().Paused;
-            }
-
             if (Godot.Input.IsActionJustPressed("collect"))
             {
                 GC.Collect();
@@ -69,18 +67,9 @@ namespace Arenbee.Framework.Game
             TitleScreenContainer.AddChild(titleScreen);
         }
 
-        public void HardReset()
+        private void HardReset()
         {
-            if (IsInstanceValid(CurrentGame))
-            {
-                CurrentGame.QueueFree();
-                CurrentGame = null;
-            }
-            else
-            {
-                CurrentGame = new GameSession();
-                CurrentGameContainer.AddChild(CurrentGame);
-            }
+            ResetToTitleScreen();
         }
     }
 }

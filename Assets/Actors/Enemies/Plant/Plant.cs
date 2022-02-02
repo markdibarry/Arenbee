@@ -6,6 +6,7 @@ namespace Arenbee.Assets.Actors.Enemies.PlantNS
 {
     public partial class Plant : Actor
     {
+        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Plant/{nameof(Plant)}.tscn";
         public override void Init()
         {
             base.Init();

@@ -1,9 +1,10 @@
-using Arenbee.Framework.GUI;
+﻿using Arenbee.Framework.GUI;
 using Godot;
+
 [Tool]
 public partial class KeyValueOption : OptionItem
 {
-    private string _keyText = string.Empty;
+    public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(KeyValueOption)}.tscn";
     [Export(PropertyHint.MultilineText)]
     public string KeyText
     {
@@ -11,14 +12,12 @@ public partial class KeyValueOption : OptionItem
         set
         {
             _keyText = value;
-            if (KeyLabel != null)
+            if (_keyLabel != null)
             {
-                KeyLabel.Text = _keyText;
+                _keyLabel.Text = _keyText;
             }
         }
     }
-    private Label KeyLabel { get; set; }
-    private string _valueText = string.Empty;
     [Export(PropertyHint.MultilineText)]
     public string ValueText
     {
@@ -26,19 +25,22 @@ public partial class KeyValueOption : OptionItem
         set
         {
             _valueText = value;
-            if (ValueLabel != null)
+            if (_valueLabel != null)
             {
-                ValueLabel.Text = _valueText;
+                _valueLabel.Text = _valueText;
             }
         }
     }
-    private Label ValueLabel { get; set; }
+    private Label _keyLabel;
+    private string _keyText = string.Empty;
+    private Label _valueLabel;
+    private string _valueText = string.Empty;
 
     public override void _Ready()
     {
-        KeyLabel = GetNodeOrNull<Label>("HBoxContainer/Key");
-        KeyLabel.Text = _keyText;
-        ValueLabel = GetNodeOrNull<Label>("HBoxContainer/Value");
-        ValueLabel.Text = _valueText;
+        _keyLabel = GetNodeOrNull<Label>("HBoxContainer/Key");
+        _keyLabel.Text = _keyText;
+        _valueLabel = GetNodeOrNull<Label>("HBoxContainer/Value");
+        _valueLabel.Text = _valueText;
     }
 }

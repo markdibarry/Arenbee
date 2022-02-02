@@ -1,5 +1,4 @@
-using System;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.Framework.Actors.Stats
 {

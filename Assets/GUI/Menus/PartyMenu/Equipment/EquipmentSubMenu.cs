@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Constants;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Godot;
@@ -11,12 +10,13 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     [Tool]
     public partial class EquipmentSubMenu : OptionSubMenu
     {
+        public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Equipment/{nameof(EquipmentSubMenu)}.tscn";
         protected override void OnItemFocused(OptionItem optionItem)
         {
             base.OnItemFocused(optionItem);
         }
 
-        public override void OnItemSelected(OptionItem optionItem)
+        protected override void OnItemSelected(OptionItem optionItem)
         {
             base.OnItemSelected(optionItem);
             OpenActorEquipmentSubMenu(optionItem);
@@ -29,14 +29,14 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
 
         private void AddPartyMembers()
         {
-            var textOptionScene = GD.Load<PackedScene>(PathConstants.TextOptionPath);
+            var textOptionScene = GD.Load<PackedScene>(TextOption.ScenePath);
             OptionContainer partyList = OptionContainers.Find(x => x.Name == "PartyList");
             Party party = GameRoot.Instance.CurrentGame.Party;
             var options = new List<TextOption>();
             foreach (var actor in party.Actors)
             {
                 var textOption = textOptionScene.Instantiate<TextOption>();
-                textOption.Value = actor.Name;
+                textOption.OptionValue = actor.Name;
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }
@@ -45,9 +45,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
 
         public void OpenActorEquipmentSubMenu(OptionItem optionItem)
         {
-            var actorEquipmentScene = GD.Load<PackedScene>(PathConstants.ActorEquipmentSubMenuPath);
+            var actorEquipmentScene = GD.Load<PackedScene>(ActorEquipmentSubMenu.ScenePath);
             ActorEquipmentSubMenu subMenu = actorEquipmentScene.Instantiate<ActorEquipmentSubMenu>();
-            subMenu.Actor = GameRoot.Instance.CurrentGame.Party.Actors.First(x => x.Name == optionItem.Value);
+            subMenu.Actor = GameRoot.Instance.CurrentGame.Party.Actors.First(x => x.Name == optionItem.OptionValue);
             RaiseRequestedAddSubMenu(subMenu);
         }
     }

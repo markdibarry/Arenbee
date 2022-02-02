@@ -10,6 +10,7 @@ namespace Arenbee.Framework.GUI
 {
     public partial class HUD : CanvasLayer
     {
+        public static readonly string ScenePath = $"res://Framework/GUI/HUD/{nameof(HUD)}.tscn";
         public MessageBoxList MessageBoxList { get; set; }
         public PackedScene TimedMessageBox { get; set; }
         public Label FPSDisplay { get; set; }
@@ -19,7 +20,7 @@ namespace Arenbee.Framework.GUI
         {
             base._Ready();
             MessageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-            TimedMessageBox = GD.Load<PackedScene>(PathConstants.TimedMessageBox);
+            TimedMessageBox = GD.Load<PackedScene>(GUI.TimedMessageBox.ScenePath);
             FPSDisplay = GetNode<Label>("FPSDisplay");
             PlayerStatsDisplay = GetNode<Label>("PlayerStatsDisplay/MarginWrapper/Panel/HP");
         }

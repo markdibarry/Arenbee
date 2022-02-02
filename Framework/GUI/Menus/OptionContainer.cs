@@ -1,9 +1,7 @@
-using System;
-using Arenbee.Framework.Extensions;
-using System.Linq;
-using Arenbee.Framework.Game;
-using Godot;
+﻿using System;
 using System.Collections.Generic;
+using Arenbee.Framework.Extensions;
+using Godot;
 
 namespace Arenbee.Framework.GUI
 {
@@ -13,20 +11,25 @@ namespace Arenbee.Framework.GUI
         public OptionContainer()
         {
             OptionItems = new List<OptionItem>();
+            _fillRight = false;
+            _fillBottom = false;
         }
 
+        public static readonly string ScenePath = $"res://Framework/GUI/Menus/{nameof(OptionContainer)}.tscn";
+#pragma warning disable IDE0044
         [Export]
-        private bool FillRight { get; set; }
+        private bool _fillRight;
         [Export]
-        private bool FillBottom { get; set; }
-        public List<OptionItem> OptionItems { get; set; }
+        private bool _fillBottom;
+#pragma warning restore IDE0044
         public int ItemIndex { get; set; }
-        private Control Control { get; set; }
+        public List<OptionItem> OptionItems { get; set; }
         public GridContainer GridContainer { get; set; }
-        private TextureRect ArrowUp { get; set; }
-        private TextureRect ArrowDown { get; set; }
-        private TextureRect ArrowLeft { get; set; }
-        private TextureRect ArrowRight { get; set; }
+        private Control _control;
+        private TextureRect _arrowUp;
+        private TextureRect _arrowDown;
+        private TextureRect _arrowLeft;
+        private TextureRect _arrowRight;
         public delegate void ItemFocusedHandler(OptionItem optionItem);
         public event ItemFocusedHandler ItemFocused;
         public delegate void ItemSelectedHandler(OptionItem optionItem);
@@ -41,22 +44,22 @@ namespace Arenbee.Framework.GUI
 
         protected virtual void SetNodeReferences()
         {
-            Control = GetNodeOrNull<Control>("VBoxContainer/HBoxContainer/Control");
-            GridContainer = Control.GetNodeOrNull<GridContainer>("GridContainer");
-            ArrowUp = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowUp");
-            ArrowDown = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowDown");
-            ArrowLeft = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowLeft");
-            ArrowRight = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowRight");
+            _control = GetNodeOrNull<Control>("VBoxContainer/HBoxContainer/Control");
+            GridContainer = _control.GetNodeOrNull<GridContainer>("GridContainer");
+            _arrowUp = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowUp");
+            _arrowDown = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowDown");
+            _arrowLeft = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowLeft");
+            _arrowRight = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowRight");
         }
 
-        public virtual void Init()
+        protected virtual void Init()
         {
-            if (FillRight)
+            if (_fillRight)
                 GridContainer.AnchorRight = 1;
             else
                 GridContainer.AnchorBottom = 0;
 
-            if (FillBottom)
+            if (_fillBottom)
                 GridContainer.AnchorBottom = 1;
             else
                 GridContainer.AnchorBottom = 0;
@@ -65,19 +68,18 @@ namespace Arenbee.Framework.GUI
                 Resized += OnResized;
             GridContainer.ItemRectChanged += OnGridRectChanged;
         }
-
-        public virtual void ReplaceItems(IEnumerable<OptionItem> optionItems)
-        {
-            GridContainer.RemoveAllChildren();
-            AddItems(optionItems);
-        }
-
         public virtual void AddItems(IEnumerable<OptionItem> optionItems)
         {
             foreach (var item in optionItems)
             {
                 GridContainer.AddChild(item);
             }
+        }
+
+        public virtual void ReplaceItems(IEnumerable<OptionItem> optionItems)
+        {
+            GridContainer.RemoveAllChildren();
+            AddItems(optionItems);
         }
 
         public void InitItems()
@@ -97,55 +99,9 @@ namespace Arenbee.Framework.GUI
             FocusItem(0);
         }
 
-        private void FocusItem(int index)
-        {
-            if (IsValidIndex(index))
-            {
-                ItemIndex = index;
-                FocusItem(OptionItems[index]);
-            }
-        }
-
-        private void FocusItem(OptionItem optionItem)
-        {
-            AdjustPosition(optionItem);
-            ItemFocused?.Invoke(optionItem);
-        }
-
         public void SelectItem()
         {
             ItemSelected?.Invoke(OptionItems[ItemIndex]);
-        }
-
-        private void AdjustPosition(OptionItem optionItem)
-        {
-            // Adjust Right
-            if (Control.RectGlobalPosition.x + Control.RectSize.x < optionItem.RectGlobalPosition.x + optionItem.RectSize.x)
-            {
-                var newXPos = optionItem.RectPosition.x + optionItem.RectSize.x - Control.RectSize.x;
-                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
-            }
-
-            // Adjust Down
-            if (Control.RectGlobalPosition.y + Control.RectSize.y < optionItem.RectGlobalPosition.y + optionItem.RectSize.y)
-            {
-                var newYPos = optionItem.RectPosition.y + optionItem.RectSize.y - Control.RectSize.y;
-                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
-            }
-
-            // Adjust Left
-            if (Control.RectGlobalPosition.x > optionItem.RectGlobalPosition.x)
-            {
-                var newXPos = optionItem.RectPosition.x;
-                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
-            }
-
-            // Adjust Up
-            if (Control.RectGlobalPosition.y > optionItem.RectGlobalPosition.y)
-            {
-                var newYPos = optionItem.RectPosition.y;
-                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
-            }
         }
 
         public void FocusUp()
@@ -170,16 +126,92 @@ namespace Arenbee.Framework.GUI
                 FocusItem(ItemIndex + 1);
         }
 
-        public void OnResized()
+        private void AdjustPosition(OptionItem optionItem)
         {
-            HandleHArrows();
-            HandleVArrows();
+            // Adjust Right
+            if (_control.RectGlobalPosition.x + _control.RectSize.x < optionItem.RectGlobalPosition.x + optionItem.RectSize.x)
+            {
+                var newXPos = optionItem.RectPosition.x + optionItem.RectSize.x - _control.RectSize.x;
+                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
+            }
+
+            // Adjust Down
+            if (_control.RectGlobalPosition.y + _control.RectSize.y < optionItem.RectGlobalPosition.y + optionItem.RectSize.y)
+            {
+                var newYPos = optionItem.RectPosition.y + optionItem.RectSize.y - _control.RectSize.y;
+                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
+            }
+
+            // Adjust Left
+            if (_control.RectGlobalPosition.x > optionItem.RectGlobalPosition.x)
+            {
+                var newXPos = optionItem.RectPosition.x;
+                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
+            }
+
+            // Adjust Up
+            if (_control.RectGlobalPosition.y > optionItem.RectGlobalPosition.y)
+            {
+                var newYPos = optionItem.RectPosition.y;
+                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
+            }
         }
 
-        public void OnGridRectChanged()
+        private void FocusItem(int index)
         {
-            HandleHArrows();
-            HandleVArrows();
+            if (IsValidIndex(index))
+            {
+                ItemIndex = index;
+                FocusItem(OptionItems[index]);
+            }
+        }
+
+        private void FocusItem(OptionItem optionItem)
+        {
+            AdjustPosition(optionItem);
+            ItemFocused?.Invoke(optionItem);
+        }
+
+        private void HandleHArrows()
+        {
+            if (GridContainer.RectSize.x > _control.RectSize.x)
+            {
+                if (GridContainer.RectPosition.x < 0)
+                    _arrowLeft.Modulate = new Color(1, 1, 1, 1);
+                else
+                    _arrowLeft.Modulate = new Color(1, 1, 1, 0);
+
+                if (GridContainer.RectSize.x + GridContainer.RectPosition.x > _control.RectSize.x)
+                    _arrowRight.Modulate = new Color(1, 1, 1, 1);
+                else
+                    _arrowRight.Modulate = new Color(1, 1, 1, 0);
+            }
+            else
+            {
+                _arrowLeft.Modulate = new Color(1, 1, 1, 0);
+                _arrowRight.Modulate = new Color(1, 1, 1, 0);
+            }
+        }
+
+        private void HandleVArrows()
+        {
+            if (GridContainer.RectSize.y > _control.RectSize.y)
+            {
+                if (GridContainer.RectPosition.y < 0)
+                    _arrowUp.Modulate = new Color(1, 1, 1, 1);
+                else
+                    _arrowUp.Modulate = new Color(1, 1, 1, 0);
+
+                if (GridContainer.RectSize.y + GridContainer.RectPosition.y > _control.RectSize.y)
+                    _arrowDown.Modulate = new Color(1, 1, 1, 1);
+                else
+                    _arrowDown.Modulate = new Color(1, 1, 1, 0);
+            }
+            else
+            {
+                _arrowUp.Modulate = new Color(1, 1, 1, 0);
+                _arrowDown.Modulate = new Color(1, 1, 1, 0);
+            }
         }
 
         private bool IsValidIndex(int index)
@@ -187,46 +219,16 @@ namespace Arenbee.Framework.GUI
             return -1 < index && index < OptionItems.Count;
         }
 
-        private void HandleHArrows()
+        private void OnResized()
         {
-            if (GridContainer.RectSize.x > Control.RectSize.x)
-            {
-                if (GridContainer.RectPosition.x < 0)
-                    ArrowLeft.Modulate = new Color(1, 1, 1, 1);
-                else
-                    ArrowLeft.Modulate = new Color(1, 1, 1, 0);
-
-                if (GridContainer.RectSize.x + GridContainer.RectPosition.x > Control.RectSize.x)
-                    ArrowRight.Modulate = new Color(1, 1, 1, 1);
-                else
-                    ArrowRight.Modulate = new Color(1, 1, 1, 0);
-            }
-            else
-            {
-                ArrowLeft.Modulate = new Color(1, 1, 1, 0);
-                ArrowRight.Modulate = new Color(1, 1, 1, 0);
-            }
+            HandleHArrows();
+            HandleVArrows();
         }
 
-        private void HandleVArrows()
+        private void OnGridRectChanged()
         {
-            if (GridContainer.RectSize.y > Control.RectSize.y)
-            {
-                if (GridContainer.RectPosition.y < 0)
-                    ArrowUp.Modulate = new Color(1, 1, 1, 1);
-                else
-                    ArrowUp.Modulate = new Color(1, 1, 1, 0);
-
-                if (GridContainer.RectSize.y + GridContainer.RectPosition.y > Control.RectSize.y)
-                    ArrowDown.Modulate = new Color(1, 1, 1, 1);
-                else
-                    ArrowDown.Modulate = new Color(1, 1, 1, 0);
-            }
-            else
-            {
-                ArrowUp.Modulate = new Color(1, 1, 1, 0);
-                ArrowDown.Modulate = new Color(1, 1, 1, 0);
-            }
+            HandleHArrows();
+            HandleVArrows();
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class HandCursor : Cursor
     {
+        public static new readonly string ScenePath = $"res://Framework/GUI/Cursors/{nameof(HandCursor)}.tscn";
         private readonly float _cursorTimerOut = 1.0f;
         private float _cursorTimer = 0;
 

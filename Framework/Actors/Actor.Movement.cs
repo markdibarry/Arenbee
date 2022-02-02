@@ -1,10 +1,10 @@
-using System;
-using Arenbee.Framework.Extensions;
+﻿using System;
+using System.Linq;
+using Arenbee.Assets.Input;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Input;
 using Godot;
-using Arenbee.Assets.Input;
-using System.Linq;
 
 namespace Arenbee.Framework.Actors
 {

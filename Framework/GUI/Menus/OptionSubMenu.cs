@@ -17,20 +17,22 @@ namespace Arenbee.Framework.GUI
             OptionContainers = new List<OptionContainer>();
         }
 
+#pragma warning disable IDE0044
         [Export]
-        public NodePath[] OptionContainerPaths { get; set; }
-        public Cursor Cursor { get; set; }
-        public OptionContainer CurrentContainer { get; set; }
-        public List<OptionContainer> OptionContainers { get; set; }
+        private NodePath[] _optionContainerPaths = new NodePath[0];
+#pragma warning restore IDE0044
+        public List<OptionContainer> OptionContainers { get; private set; }
+        private Cursor _cursor;
+        private OptionContainer _currentContainer;
 
         protected override void SetNodeReferences()
         {
-            Cursor = this.GetChildren<Cursor>().FirstOrDefault();
-            if (OptionContainerPaths.Length == 0)
+            _cursor = this.GetChildren<Cursor>().FirstOrDefault();
+            if (_optionContainerPaths.Length == 0)
             {
                 GD.PrintErr(Name + " has no OptionContainer assigned.");
             }
-            foreach (var path in OptionContainerPaths)
+            foreach (var path in _optionContainerPaths)
             {
                 OptionContainers.Add(GetNode<OptionContainer>(path));
             }
@@ -63,36 +65,27 @@ namespace Arenbee.Framework.GUI
 
             if (menuInput.Up.IsActionJustPressed)
             {
-                CurrentContainer.FocusUp();
+                _currentContainer.FocusUp();
             }
             else if (menuInput.Down.IsActionJustPressed)
             {
-                CurrentContainer.FocusDown();
+                _currentContainer.FocusDown();
             }
             else if (menuInput.Left.IsActionJustPressed)
             {
-                CurrentContainer.FocusLeft();
+                _currentContainer.FocusLeft();
             }
             else if (menuInput.Right.IsActionJustPressed)
             {
-                CurrentContainer.FocusRight();
+                _currentContainer.FocusRight();
             }
             else if (menuInput.Enter.IsActionJustPressed)
             {
-                CurrentContainer.SelectItem();
+                _currentContainer.SelectItem();
             }
         }
 
-        private void FocusContainer(OptionContainer optionContainer)
-        {
-            if (optionContainer != null)
-            {
-                CurrentContainer = optionContainer;
-                optionContainer.FocusContainer();
-            }
-        }
-
-        public virtual void OnItemSelected(OptionItem optionItem)
+        protected virtual void OnItemSelected(OptionItem optionItem)
         {
         }
 
@@ -101,11 +94,20 @@ namespace Arenbee.Framework.GUI
             MoveCursorToItem(optionItem);
         }
 
+        private void FocusContainer(OptionContainer optionContainer)
+        {
+            if (optionContainer != null)
+            {
+                _currentContainer = optionContainer;
+                optionContainer.FocusContainer();
+            }
+        }
+
         private void MoveCursorToItem(OptionItem optionItem)
         {
             float cursorX = optionItem.RectGlobalPosition.x - 4;
             float cursorY = (float)(optionItem.RectGlobalPosition.y + Math.Round(optionItem.RectSize.y * 0.5));
-            Cursor.GlobalPosition = new Vector2(cursorX, cursorY);
+            _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
         }
 
         private void OnFocusOOB()

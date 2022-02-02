@@ -1,6 +1,4 @@
-
-
-namespace Arenbee.Framework.Actors.Stats
+﻿namespace Arenbee.Framework.Actors.Stats
 {
     public class StatInfo
     {

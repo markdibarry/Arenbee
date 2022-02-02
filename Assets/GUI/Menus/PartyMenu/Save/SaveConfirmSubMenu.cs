@@ -1,4 +1,3 @@
-using Arenbee.Framework.Constants;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.SaveData;
@@ -9,10 +8,11 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     [Tool]
     public partial class SaveConfirmSubMenu : OptionSubMenu
     {
-        public override void OnItemSelected(OptionItem optionItem)
+        public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Save/{nameof(SaveConfirmSubMenu)}.tscn";
+        protected override void OnItemSelected(OptionItem optionItem)
         {
             base.OnItemSelected(optionItem);
-            switch (optionItem.Value)
+            switch (optionItem.OptionValue)
             {
                 case "Yes":
                     SaveGame();
@@ -25,10 +25,10 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             }
         }
 
-        public void SaveGame()
+        private void SaveGame()
         {
             SaveService.SaveGame(GameRoot.Instance.CurrentGame);
-            var saveSuccessScene = GD.Load<PackedScene>(PathConstants.SaveSuccessSubMenuPath);
+            var saveSuccessScene = GD.Load<PackedScene>(SaveSuccessSubMenu.ScenePath);
             RaiseRequestedAddSubMenu(saveSuccessScene.Instantiate<SubMenu>());
         }
     }

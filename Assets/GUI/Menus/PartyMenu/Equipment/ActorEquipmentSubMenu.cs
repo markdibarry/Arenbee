@@ -1,7 +1,6 @@
 using System.Linq;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.Items;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.PartyMenus
@@ -9,6 +8,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     [Tool]
     public partial class ActorEquipmentSubMenu : OptionSubMenu
     {
+        public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Equipment/{nameof(ActorEquipmentSubMenu)}.tscn";
         public Actor Actor { get; set; }
         public EquipmentContainer EquipmentOptions { get; set; }
         protected override void SetNodeReferences()
@@ -17,7 +17,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             EquipmentOptions = OptionContainers.OfType<EquipmentContainer>().FirstOrDefault();
         }
 
-        public override void OnItemSelected(OptionItem optionItem)
+        protected override void OnItemSelected(OptionItem optionItem)
         {
             base.OnItemSelected(optionItem);
         }

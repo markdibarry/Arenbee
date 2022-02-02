@@ -13,7 +13,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             PreventCancel = true;
         }
 
-        public override void OnTimeOut()
+        public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Save/{nameof(SaveSuccessSubMenu)}.tscn";
+
+        protected override void OnTimeOut()
         {
             base.OnTimeOut();
             CloseSubMenu(nameof(MainSubMenu));

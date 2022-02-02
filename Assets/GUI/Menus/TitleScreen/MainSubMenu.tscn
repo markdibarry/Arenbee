@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://7brcqa5elvfy"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_1huwg"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="2_0xt55"]
@@ -11,7 +11,7 @@
 script = ExtResource( "2_xyhra" )
 PreventCancel = true
 PreventCloseAll = true
-OptionContainerPaths = [NodePath("PanelContainer/MainOptions")]
+_optionContainerPaths = [NodePath("PanelContainer/MainOptions")]
 
 [node name="PanelContainer" type="PanelContainer" parent="." index="0"]
 anchor_left = 0.5
@@ -56,14 +56,14 @@ offset_bottom = 26.0
 [node name="Continue" parent="PanelContainer/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_j0vq4" )]
 offset_right = 41.0
 offset_bottom = 13.0
-Value = "Continue"
+OptionValue = "Continue"
 LabelText = "Continue"
 
 [node name="New Game" parent="PanelContainer/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_j0vq4" )]
 offset_top = 13.0
 offset_right = 41.0
 offset_bottom = 26.0
-Value = "NewGame"
+OptionValue = "NewGame"
 LabelText = "New Game"
 
 [node name="ArrowRight" parent="PanelContainer/MainOptions/VBoxContainer/HBoxContainer" index="2"]

@@ -8,12 +8,12 @@ namespace Arenbee.Framework.GUI
     public partial class PromptSubMenu : SubMenu
     {
         [Export]
-        protected float Timer { get; set; }
+        private float _timeDuration;
         private bool _timerEnabled;
 
         protected override Task Init()
         {
-            if (Timer > 0) _timerEnabled = true;
+            if (_timeDuration > 0) _timerEnabled = true;
             return Task.CompletedTask;
         }
 
@@ -31,20 +31,20 @@ namespace Arenbee.Framework.GUI
 
             if (_timerEnabled)
             {
-                if (Timer < 0)
+                if (_timeDuration < 0)
                 {
                     OnTimeOut();
                     _timerEnabled = false;
                 }
                 else
                 {
-                    Timer -= delta;
+                    _timeDuration -= delta;
                 }
             }
         }
 
-        public virtual void Confirm() { }
+        protected virtual void Confirm() { }
 
-        public virtual void OnTimeOut() { }
+        protected virtual void OnTimeOut() { }
     }
 }

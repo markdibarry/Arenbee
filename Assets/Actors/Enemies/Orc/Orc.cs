@@ -7,6 +7,7 @@ namespace Arenbee.Assets.Actors.Enemies.OrcNS
 {
     public partial class Orc : Actor
     {
+        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Orc/{nameof(Orc)}.tscn";
         public override void Init()
         {
             base.Init();

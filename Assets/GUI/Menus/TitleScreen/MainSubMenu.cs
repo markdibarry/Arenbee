@@ -15,10 +15,12 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
             PreventCloseAll = true;
         }
 
-        public override void OnItemSelected(OptionItem optionItem)
+        public static new readonly string ScenePath = $"res://Assets/GUI/Menus/TitleScreen/{nameof(MainSubMenu)}.tscn";
+
+        protected override void OnItemSelected(OptionItem optionItem)
         {
             base.OnItemSelected(optionItem);
-            switch (optionItem.Value)
+            switch (optionItem.OptionValue)
             {
                 case "Continue":
                     ContinueSavedGame();
@@ -40,9 +42,7 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
         private void ContinueSavedGame()
         {
             var gameRoot = GameRoot.Instance;
-            gameRoot.CurrentGame = new GameSession();
-            GameSave gameSave = SaveService.LoadGame();
-            gameRoot.CurrentGame.ApplySaveData(gameSave);
+            gameRoot.CurrentGame = new GameSession(SaveService.LoadGame());
             gameRoot.CurrentGameContainer.AddChild(gameRoot.CurrentGame);
             RaiseRequestedCloseAll();
         }

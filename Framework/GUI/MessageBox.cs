@@ -9,7 +9,7 @@ namespace Arenbee.Framework.GUI
         {
             BoxAlign = Enums.BoxAlign.Left;
         }
-
+        public static readonly string ScenePath = $"res://Framework/GUI/{nameof(MessageBox)}.tscn";
         private string _messageText = string.Empty;
         [Export(PropertyHint.MultilineText)]
         public string MessageText
