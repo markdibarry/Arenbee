@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Godot;
 
@@ -34,7 +35,8 @@ namespace Arenbee.Framework.GUI
         public event ItemFocusedHandler ItemFocused;
         public delegate void ItemSelectedHandler(OptionItem optionItem);
         public event ItemSelectedHandler ItemSelected;
-        public event EventHandler FocusOOB;
+        public delegate void FocusOOBHandler(OptionContainer container, Direction direction);
+        public event FocusOOBHandler FocusOOB;
 
         public override void _Ready()
         {
@@ -106,24 +108,67 @@ namespace Arenbee.Framework.GUI
 
         public void FocusUp()
         {
-            FocusItem(ItemIndex - GridContainer.Columns);
+            int nextIndex = ItemIndex - GridContainer.Columns;
+            if (IsValidIndex(nextIndex))
+                FocusItem(nextIndex);
+            else
+                FocusOOB?.Invoke(this, Direction.Up);
         }
 
         public void FocusDown()
         {
-            FocusItem(ItemIndex + GridContainer.Columns);
+            int nextIndex = ItemIndex + GridContainer.Columns;
+            if (IsValidIndex(nextIndex))
+                FocusItem(nextIndex);
+            else
+                FocusOOB?.Invoke(this, Direction.Down);
         }
 
         public void FocusLeft()
         {
-            if (ItemIndex % GridContainer.Columns != 0)
-                FocusItem(ItemIndex - 1);
+            int nextIndex = ItemIndex - 1;
+            if (ItemIndex % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
+                FocusItem(nextIndex);
+            else
+                FocusOOB?.Invoke(this, Direction.Left);
         }
 
         public void FocusRight()
         {
-            if ((ItemIndex + 1) % GridContainer.Columns != 0)
-                FocusItem(ItemIndex + 1);
+            int nextIndex = ItemIndex + 1;
+            if ((ItemIndex + 1) % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
+                FocusItem(nextIndex);
+            else
+                FocusOOB?.Invoke(this, Direction.Right);
+        }
+
+        public void FocusTopEnd()
+        {
+            int nextIndex = ItemIndex % GridContainer.Columns;
+            FocusItem(nextIndex);
+        }
+
+        public void FocusBottomEnd()
+        {
+            int bottomIndex = ItemIndex % GridContainer.Columns;
+            int lastIndex = OptionItems.Count - 1;
+            int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
+            int nextIndex = Math.Min(lastRowFirstIndex + bottomIndex, lastIndex);
+            FocusItem(nextIndex);
+        }
+
+        public void FocusLeftEnd()
+        {
+            int nextIndex = ItemIndex / GridContainer.Columns * GridContainer.Columns;
+            FocusItem(nextIndex);
+        }
+
+        public void FocusRightEnd()
+        {
+            int nextIndex = ((ItemIndex / GridContainer.Columns) + 1) * GridContainer.Columns - 1;
+            if (nextIndex >= OptionItems.Count)
+                nextIndex = OptionItems.Count - 1;
+            FocusItem(nextIndex);
         }
 
         private void AdjustPosition(OptionItem optionItem)

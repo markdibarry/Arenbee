@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Godot;
@@ -47,7 +48,7 @@ namespace Arenbee.Framework.GUI
                 optionContainer.InitItems();
                 optionContainer.ItemSelected += OnItemSelected;
                 optionContainer.ItemFocused += OnItemFocused;
-                //optionContainer.FocusOOB += OnFocusOOB;
+                optionContainer.FocusOOB += OnFocusOOB;
             }
             // To allow elements to adjust to correct positions
             await ToSignal(GetTree(), "process_frame");
@@ -94,7 +95,7 @@ namespace Arenbee.Framework.GUI
             MoveCursorToItem(optionItem);
         }
 
-        private void FocusContainer(OptionContainer optionContainer)
+        protected void FocusContainer(OptionContainer optionContainer)
         {
             if (optionContainer != null)
             {
@@ -110,9 +111,23 @@ namespace Arenbee.Framework.GUI
             _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
         }
 
-        private void OnFocusOOB()
+        protected virtual void OnFocusOOB(OptionContainer container, Direction direction)
         {
-
+            switch (direction)
+            {
+                case Direction.Up:
+                    container.FocusBottomEnd();
+                    break;
+                case Direction.Down:
+                    container.FocusTopEnd();
+                    break;
+                case Direction.Left:
+                    container.FocusRightEnd();
+                    break;
+                case Direction.Right:
+                    container.FocusLeftEnd();
+                    break;
+            }
         }
     }
 }
