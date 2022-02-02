@@ -8,11 +8,11 @@ namespace Arenbee.Framework.Items
     {
         public Inventory()
         {
-            _items = new List<ItemStack>();
+            Items = new List<ItemStack>();
         }
 
         [JsonProperty]
-        private readonly ICollection<ItemStack> _items;
+        public ICollection<ItemStack> Items { get; set; }
 
         /// <summary>
         /// Returns the matching ItemStack for Item Id provided. Returns null if no stack is found.
@@ -21,7 +21,7 @@ namespace Arenbee.Framework.Items
         /// <returns></returns>
         public ItemStack GetItemStack(string itemId)
         {
-            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(itemId));
+            return Items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(itemId));
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Arenbee.Framework.Items
         /// <returns></returns>
         public ItemStack GetItemStack(Item item)
         {
-            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
+            return Items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
         }
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace Arenbee.Framework.Items
             {
                 if (amount > item.MaxStack)
                 {
-                    _items.Add(new ItemStack(item.Id, item.MaxStack));
+                    Items.Add(new ItemStack(item.Id, item.MaxStack));
                     leftOver = amount - item.MaxStack;
                 }
                 else
                 {
-                    _items.Add(new ItemStack(item.Id, amount));
+                    Items.Add(new ItemStack(item.Id, amount));
                     leftOver = 0;
                 }
             }
@@ -82,7 +82,7 @@ namespace Arenbee.Framework.Items
                 itemStack.RemoveAmount(amount);
                 if (itemStack.Amount == 0)
                 {
-                    _items.Remove(itemStack);
+                    Items.Remove(itemStack);
                 }
                 return true;
             }

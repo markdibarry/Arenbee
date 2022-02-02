@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontData"
-uid="uid://bg7hh44q38104"
-path="res://.godot/imported/Poco.ttf-d0f6b43bb071d65e258c376c5fdf768c.fontdata"
+uid="uid://b57tbg0gty136"
+path="res://.godot/imported/m5x7.ttf-76274074fa355e78555053bd895c53f5.fontdata"
 
 [deps]
 
-source_file="res://Assets/GUI/Fonts/Poco.ttf"
-dest_files=["res://.godot/imported/Poco.ttf-d0f6b43bb071d65e258c376c5fdf768c.fontdata"]
+source_file="res://Framework/GUI/Fonts/m5x7.ttf"
+dest_files=["res://.godot/imported/m5x7.ttf-76274074fa355e78555053bd895c53f5.fontdata"]
 
 [params]
 

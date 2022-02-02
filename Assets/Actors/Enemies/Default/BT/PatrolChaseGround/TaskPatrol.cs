@@ -16,8 +16,8 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
             {
                 Actor.InputHandler.Right.Release();
                 Actor.InputHandler.Left.Release();
-                _waitCounter += delta;
-                if (_waitCounter >= _waitTime)
+                _waitCounter -= delta;
+                if (_waitCounter <= 0)
                 {
                     _waiting = false;
                     Actor.ChangeFacing();
@@ -30,7 +30,7 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
                     int direction = GetWallDirection();
                     if (direction == (int)Actor.Facing)
                     {
-                        _waitCounter = 0;
+                        _waitCounter = _waitTime;
                         _waiting = true;
                     }
                 }
@@ -53,16 +53,19 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
 
         private int GetWallDirection()
         {
+            //TODO remove dispose after memory leak fixed in godot
+            int result = 0;
             var count = Actor.GetSlideCollisionCount();
             for (int i = 0; i < count; i++)
             {
                 var collision = Actor.GetSlideCollision(i);
                 if (collision.GetNormal().x > 0)
-                    return -1;
+                    result = -1;
                 else if (collision.GetNormal().x < 0)
-                    return 1;
+                    result = 1;
+                collision.Dispose();
             }
-            return 0;
+            return result;
         }
     }
 }

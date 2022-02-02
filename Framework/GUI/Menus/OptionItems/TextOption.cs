@@ -19,7 +19,7 @@ namespace Arenbee.Framework.GUI
                 }
             }
         }
-        public Label Label { get; set; }
+        private Label Label { get; set; }
 
         public override void _Ready()
         {

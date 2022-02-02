@@ -7,9 +7,8 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
 {
     public partial class Wisp : Actor
     {
-        public override void SetDefaultValues()
+        public Wisp() : base()
         {
-            base.SetDefaultValues();
             IsFloater = true;
             Friction = 30f;
             Acceleration = 1000f;

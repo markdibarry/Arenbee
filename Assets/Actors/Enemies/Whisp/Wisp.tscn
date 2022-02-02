@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Wisp.cs" id="2_smssj"]
 [ext_resource type="Texture2D" uid="uid://0fus0um6v4bs" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
-[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_qs0xp"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_rptpj"]
 
 [sub_resource type="Animation" id="Animation_8v7pu"]
 resource_name = "Idle"
@@ -13,7 +13,7 @@ step = 0.0416667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BodySprite:frame")
+tracks/0/path = NodePath("Body/BodySprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -28,7 +28,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BodySprite:frame")
+tracks/0/path = NodePath("Body/BodySprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -38,11 +38,11 @@ tracks/0/keys = {
 "values": [1]
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fgba0"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nsvto"]
 resource_local_to_scene = true
-shader = ExtResource( "3_qs0xp" )
-shader_param/flash_color = Color(1, 1, 1, 1)
-shader_param/flash_mix = 0.0
+shader = ExtResource( "3_rptpj" )
+shader_param/flash_color = null
+shader_param/flash_mix = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
 size = Vector2(16, 18)
@@ -54,8 +54,8 @@ size = Vector2(14, 16)
 resource_local_to_scene = true
 size = Vector2(16, 18)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_j7q7d"]
-radius = 78.0064
+[sub_resource type="CircleShape2D" id="CircleShape2D_ip5ud"]
+radius = 78.0
 
 [node name="Wisp" instance=ExtResource( "1_0h21x" )]
 collision_layer = 1024
@@ -66,18 +66,22 @@ script = ExtResource( "2_smssj" )
 anims/Idle = SubResource( "Animation_8v7pu" )
 anims/RESET = SubResource( "Animation_cwund" )
 
-[node name="BodySprite" parent="." index="1"]
-material = SubResource( "ShaderMaterial_fgba0" )
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_nsvto" )
 scale = Vector2(-1, 1)
 texture = ExtResource( "3_gge5r" )
 hframes = 21
 frame = 1
 
-[node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
+[node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_r0tkl" )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BodySprite/HitBox" index="0"]
+[node name="HitBox" parent="Body/BodySprite" index="1"]
+collision_layer = 128
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBox" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_xujb8" )
 
@@ -86,9 +90,9 @@ position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_2djvb" )
 
 [node name="DetectTargetZone" type="Area2D" parent="." index="4"]
-position = Vector2(0, 6)
 collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectTargetZone" index="0"]
-shape = SubResource( "CircleShape2D_j7q7d" )
+position = Vector2(0, 6)
+shape = SubResource( "CircleShape2D_ip5ud" )

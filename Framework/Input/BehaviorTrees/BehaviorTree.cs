@@ -19,6 +19,11 @@ namespace Arenbee.Framework.Input
                 _root.Evaluate(delta);
         }
 
+        public void ClearBlackBoard()
+        {
+            _blackBoard.Clear();
+        }
+
         protected abstract BTNode SetupTree();
     }
 }

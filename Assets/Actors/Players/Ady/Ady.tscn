@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c3n3fmjf2qxh0"]
+[gd_scene load_steps=18 format=3 uid="uid://c3n3fmjf2qxh0"]
 
 [ext_resource type="PackedScene" uid="uid://bj28sv5vq5vnv" path="res://Framework/Actors/Player.tscn" id="1_n2y5e"]
 [ext_resource type="Script" path="res://Assets/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
@@ -12,13 +12,14 @@
 [ext_resource type="Animation" uid="uid://ckug8y3cgsnn1" path="res://Assets/Actors/Players/Ady/Animation/SpearWeakAttack1.tres" id="7_yp6gg"]
 [ext_resource type="Animation" uid="uid://2ik4a1kw6j1o" path="res://Assets/Actors/Players/Ady/Animation/SpearWeakAttack2.tres" id="8_jkh36"]
 [ext_resource type="Animation" uid="uid://cnxu11xftd3m2" path="res://Assets/Actors/Players/Ady/Animation/Stagger.tres" id="9_hv74u"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="12_jmvdf"]
 
 [sub_resource type="Animation" id="Animation_g0rvy"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BodySprite:frame")
+tracks/0/path = NodePath("Body/BodySprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -27,6 +28,12 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_35qwq"]
+resource_local_to_scene = true
+shader = ExtResource( "12_jmvdf" )
+shader_param/flash_color = null
+shader_param/flash_mix = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_niveh"]
 size = Vector2(14, 24)
@@ -50,13 +57,14 @@ anims/Stagger = ExtResource( "9_hv74u" )
 anims/UnarmedAttack = ExtResource( "6_sqe2g" )
 anims/Walk = ExtResource( "7_7ctrm" )
 
-[node name="BodySprite" parent="." index="1"]
+[node name="BodySprite" parent="Body" index="1"]
 modulate = Color(1, 1, 1, 1)
+material = SubResource( "ShaderMaterial_35qwq" )
 texture = ExtResource( "3_72rfu" )
 hframes = 6
 vframes = 9
 
-[node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
+[node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_niveh" )
 

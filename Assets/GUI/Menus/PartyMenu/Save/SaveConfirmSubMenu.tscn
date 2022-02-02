@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3cbbmcuvtsvq"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
-[ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenu/SaveConfirmSubMenu.cs" id="2_o5egm"]
-[ext_resource type="StyleBox" uid="uid://dpr1b8cydbn7v" path="res://Framework/GUI/Borders/Border1.tres" id="2_wvi60"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenu/Save/SaveConfirmSubMenu.cs" id="2_o5egm"]
 [ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
-[ext_resource type="PackedScene" uid="uid://ca374dgkimxg1" path="res://Framework/GUI/Menus/TextOption.tscn" id="4_af8ba"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_af8ba"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_glxy3"]
 
 [node name="SaveConfirmSubMenu" instance=ExtResource( "1_8cyl3" )]
@@ -16,11 +15,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -24.0
-offset_right = 20.0
-offset_bottom = 24.0
-theme_override_styles/panel = ExtResource( "2_wvi60" )
+offset_left = -168.0
+offset_top = -71.0
+offset_right = -128.0
+offset_bottom = -23.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -77,6 +75,6 @@ offset_right = 18.0
 offset_bottom = 38.0
 
 [node name="HandCursor" parent="." index="1" instance=ExtResource( "5_glxy3" )]
-position = Vector2(-4, 6)
+position = Vector2(79, 81)
 
 [editable path="PanelContainer/SaveOptions"]

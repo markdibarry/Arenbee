@@ -96,7 +96,7 @@ namespace Arenbee.Framework.Actors
         public void ChangeFacing()
         {
             Facing = (Facings)(-(int)Facing);
-            BodySprite.FlipScaleX();
+            Body.FlipScaleX();
         }
 
         public void Jump()
@@ -120,8 +120,7 @@ namespace Arenbee.Framework.Actors
 
         private void AttachInitialInputHandler()
         {
-            var attachedInputHandler = GetChildren()
-                .OfType<ActorInputHandler>()
+            var attachedInputHandler = this.GetChildren<ActorInputHandler>()
                 .FirstOrDefault();
             if (attachedInputHandler != null)
             {

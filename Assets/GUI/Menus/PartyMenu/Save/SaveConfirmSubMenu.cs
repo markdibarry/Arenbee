@@ -7,7 +7,7 @@ using Godot;
 namespace Arenbee.Assets.GUI.Menus.PartyMenus
 {
     [Tool]
-    public partial class SaveConfirmSubMenu : SubMenu
+    public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         public override void OnItemSelected(OptionItem optionItem)
         {
@@ -18,7 +18,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                     SaveGame();
                     break;
                 case "No":
-                    RaiseRequestedRemoveSubMenu();
+                    CloseSubMenu();
                     break;
                 default:
                     break;

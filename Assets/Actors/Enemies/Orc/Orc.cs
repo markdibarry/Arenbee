@@ -11,7 +11,7 @@ namespace Arenbee.Assets.Actors.Enemies.OrcNS
         {
             base.Init();
             StateController.Init(
-                new BaseStates.Walk(),
+                new BaseStates.Idle(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
             BehaviorTree = new PatrolChaseGroundBT(this);

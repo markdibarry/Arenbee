@@ -6,11 +6,11 @@ using Godot;
 namespace Arenbee.Assets.GUI.Menus.TitleMenus
 {
     [Tool]
-    public partial class MainSubMenu : SubMenu
+    public partial class MainSubMenu : OptionSubMenu
     {
-        protected override void SetDefaultValues()
+        public MainSubMenu()
+            : base()
         {
-            base.SetDefaultValues();
             PreventCancel = true;
             PreventCloseAll = true;
         }

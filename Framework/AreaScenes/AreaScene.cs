@@ -8,6 +8,7 @@ namespace Arenbee.Framework.AreaScenes
         public HUD HUD { get; set; }
         public Position2D PlayerSpawnPoint { get; set; }
         public Node2D PlayersContainer { get; set; }
+        public Node2D EnemiesContainer { get; set; }
 
         public override void _Ready()
         {
@@ -19,6 +20,7 @@ namespace Arenbee.Framework.AreaScenes
         {
             HUD = GetNodeOrNull<HUD>("HUD");
             PlayersContainer = GetNodeOrNull<Node2D>("Players");
+            EnemiesContainer = GetNodeOrNull<Node2D>("Enemies");
             PlayerSpawnPoint = GetNodeOrNull<Position2D>("PlayerSpawnPoint");
         }
 

@@ -90,11 +90,6 @@ p1_attack={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":67,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
 ]
 }
-Load={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":76,"unicode":0,"echo":false,"script":null)
-]
-}
 pause={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":80,"unicode":0,"echo":false,"script":null)
@@ -108,11 +103,6 @@ collect={
 print={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":84,"unicode":0,"echo":false,"script":null)
-]
-}
-intBool={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":73,"unicode":0,"echo":false,"script":null)
 ]
 }
 menu_up={
@@ -150,6 +140,11 @@ menu_start={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777221,"unicode":0,"echo":false,"script":null)
 ]
 }
+hardReset={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":0,"physical_keycode":82,"unicode":0,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
@@ -173,6 +168,7 @@ common/enable_pause_aware_picking=true
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
 2d/sdf/oversize=0
+textures/canvas_textures/default_texture_filter=0
 2d/options/use_nvidia_rect_flicker_workaround=true
 quality/intended_usage/framebuffer_allocation=0
 2d/snapping/use_gpu_pixel_snap=true

@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_artoe"]
 [ext_resource type="Texture2D" uid="uid://260g1xdku6s2" path="res://Framework/GUI/Backgrounds/star.png" id="2_aa7wu"]
-[ext_resource type="PackedScene" uid="uid://b4y6wep1kvpm5" path="res://Assets/GUI/Menus/TitleScreen/MainSubMenu.tscn" id="2_n23dr"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/TitleScreen/MainSubMenu.tscn" id="2_n23dr"]
 
 [node name="TitleScreen" instance=ExtResource( "1_artoe" )]
 
 [node name="TextureRect" type="TextureRect" parent="." index="0"]
-modulate = Color(0.803922, 0.207843, 0.654902, 1)
+modulate = Color(0.313726, 0.776471, 0.8, 1)
 texture_filter = 1
 anchor_right = 1.0
 anchor_bottom = 1.0

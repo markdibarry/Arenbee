@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://cjuu6ekrrfelc"]
 
 [ext_resource type="Script" path="res://Framework/GUI/Menus/SubMenu.cs" id="1_ehgu3"]
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_mx8xt"]
 
 [node name="SubMenu" type="Control"]
 texture_filter = 1
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( "1_mx8xt" )
 script = ExtResource( "1_ehgu3" )
 __meta__ = {
 "_edit_use_anchors_": false

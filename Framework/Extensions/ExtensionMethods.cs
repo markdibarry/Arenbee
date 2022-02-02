@@ -17,6 +17,16 @@ namespace Arenbee.Framework.Extensions
             node2D.Position = new Vector2(node2D.Position.x, val);
         }
 
+        public static void SetRectX(this Control control, float val)
+        {
+            control.RectSize = new Vector2(val, control.RectSize.y);
+        }
+
+        public static void SetRectY(this Control control, float val)
+        {
+            control.RectSize = new Vector2(control.RectSize.x, val);
+        }
+
         public static void FlipScaleX(this Node2D node2D)
         {
             node2D.Scale = new Vector2(-node2D.Scale.x, node2D.Scale.y);
@@ -87,7 +97,7 @@ namespace Arenbee.Framework.Extensions
                 var children = node.GetChildren().OfType<Node>();
                 foreach (var child in children)
                 {
-                    child.QueueFree();
+                    child.Free();
                 }
             }
         }

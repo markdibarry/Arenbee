@@ -1,11 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b4y6wep1kvpm5"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_1huwg"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_1huwg"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="2_0xt55"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/TitleScreen/MainSubMenu.cs" id="2_xyhra"]
 [ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_8pk1b"]
 [ext_resource type="StyleBox" uid="uid://dpr1b8cydbn7v" path="res://Framework/GUI/Borders/Border1.tres" id="3_k2o5c"]
-[ext_resource type="PackedScene" uid="uid://ca374dgkimxg1" path="res://Framework/GUI/Menus/TextOption.tscn" id="4_j0vq4"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_j0vq4"]
 
 [node name="MainSubMenu" instance=ExtResource( "1_1huwg" )]
 script = ExtResource( "2_xyhra" )

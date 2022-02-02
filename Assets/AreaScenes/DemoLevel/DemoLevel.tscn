@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=15 format=3 uid="uid://doxys06awjhh4"]
 
 [ext_resource type="Script" path="res://Framework/AreaScenes/AreaScene.cs" id="1_bd1yw"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/HUD/HUD.tscn" id="2_pf4nk"]
@@ -10,9 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://bacp6g8cce1b2" path="res://Assets/Scenery/Barrel/Barrel.tscn" id="8_t3855"]
 [ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="9_046i3"]
 [ext_resource type="Texture2D" uid="uid://bu1vrvwkfu6aw" path="res://Assets/Scenery/Spike.png" id="10_aik3m"]
-[ext_resource type="PackedScene" uid="uid://bgw7nate55esi" path="res://Assets/Actors/Enemies/Orc/Orc.tscn" id="11_6j7fb"]
-[ext_resource type="PackedScene" uid="uid://dlhf2h7gt57an" path="res://Assets/Actors/Enemies/Plant/Plant.tscn" id="12_0u6tj"]
-[ext_resource type="PackedScene" uid="uid://bf50wbn1thieg" path="res://Assets/Actors/Enemies/Whisp/Wisp.tscn" id="13_6vsy1"]
+[ext_resource type="PackedScene" uid="uid://bgw7nate55esi" path="res://Assets/Actors/Enemies/Orc/Orc.tscn" id="11_c4rcu"]
+[ext_resource type="PackedScene" uid="uid://bf50wbn1thieg" path="res://Assets/Actors/Enemies/Whisp/Wisp.tscn" id="12_k7fqd"]
+[ext_resource type="PackedScene" uid="uid://dlhf2h7gt57an" path="res://Assets/Actors/Enemies/Plant/Plant.tscn" id="13_0jost"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_osggw"]
 size = Vector2(16, 12)
@@ -143,14 +143,14 @@ texture = ExtResource( "10_aik3m" )
 [node name="Enemies" type="Node2D" parent="."]
 texture_filter = 1
 
-[node name="Orc" parent="Enemies" instance=ExtResource( "11_6j7fb" )]
-position = Vector2(496, 163)
+[node name="Orc" parent="Enemies" instance=ExtResource( "11_c4rcu" )]
+position = Vector2(544, 200)
 
-[node name="Plant" parent="Enemies" instance=ExtResource( "12_0u6tj" )]
-position = Vector2(362, 206)
+[node name="Wisp" parent="Enemies" instance=ExtResource( "12_k7fqd" )]
+position = Vector2(392, 40)
 
-[node name="Wisp" parent="Enemies" instance=ExtResource( "13_6vsy1" )]
-position = Vector2(178, 55)
+[node name="Plant" parent="Enemies" instance=ExtResource( "13_0jost" )]
+position = Vector2(360, 216)
 
 [node name="PlayerSpawnPoint" type="Position2D" parent="."]
 position = Vector2(67, 191)

@@ -2,14 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_kkfne"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Orc/Orc.cs" id="2_0isoc"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_8dqhh"]
 [ext_resource type="Texture2D" uid="uid://du7e0xw7padv2" path="res://Assets/Actors/Enemies/Orc/orc.png" id="3_cduir"]
-[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_vd3dt"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ymup"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6dpv"]
 resource_local_to_scene = true
-shader = ExtResource( "3_vd3dt" )
-shader_param/flash_color = Color(1, 1, 1, 1)
-shader_param/flash_mix = 0.0
+shader = ExtResource( "3_8dqhh" )
+shader_param/flash_color = null
+shader_param/flash_mix = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2755h"]
 size = Vector2(20, 28)
@@ -24,25 +24,27 @@ size = Vector2(18, 26)
 [node name="Orc" instance=ExtResource( "1_kkfne" )]
 script = ExtResource( "2_0isoc" )
 
-[node name="BodySprite" parent="." index="1"]
-material = SubResource( "ShaderMaterial_0ymup" )
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_o6dpv" )
 position = Vector2(1, 0)
 texture = ExtResource( "3_cduir" )
 
-[node name="HurtBox" parent="BodySprite" index="0"]
-collision_mask = 40
-
-[node name="BodyBox" type="CollisionShape2D" parent="BodySprite/HurtBox" index="0"]
+[node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
 position = Vector2(-1, 1)
 shape = SubResource( "RectangleShape2D_2755h" )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BodySprite/HitBox" index="0"]
+[node name="HitBox" parent="Body/BodySprite" index="1"]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBox" index="0"]
 position = Vector2(-1, 1)
 shape = SubResource( "RectangleShape2D_5cg6x" )
 
-[node name="RayCast2D" type="RayCast2D" parent="BodySprite" index="2"]
+[node name="RayCast2D" type="RayCast2D" parent="Body/BodySprite" index="2"]
 target_position = Vector2(100, 0)
+collision_mask = 21
 
 [node name="CollisionShape2D" parent="." index="3"]
+visible = false
 position = Vector2(0, 2)
 shape = SubResource( "RectangleShape2D_xe4kc" )

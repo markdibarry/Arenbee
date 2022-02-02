@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://04ed2cnm1m6c"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItem.cs" id="1_xluat"]
+[ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItems/OptionItem.cs" id="1_xluat"]
 
 [node name="OptionItem" type="MarginContainer"]
 texture_filter = 1

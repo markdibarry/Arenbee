@@ -1,6 +1,5 @@
 using System;
 using Arenbee.Framework.Constants;
-using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
 using Godot;
@@ -48,9 +47,14 @@ namespace Arenbee.Framework.Game
                 GC.Collect();
             }
 
+            if (Godot.Input.IsActionJustPressed("hardReset"))
+            {
+                HardReset();
+            }
+
             if (Godot.Input.IsActionJustPressed("print"))
             {
-                PrintStrayNodes();
+                //PrintStrayNodes();
             }
         }
 
@@ -63,6 +67,20 @@ namespace Arenbee.Framework.Game
             }
             var titleScreen = _titleScreenScene.Instantiate<Menu>();
             TitleScreenContainer.AddChild(titleScreen);
+        }
+
+        public void HardReset()
+        {
+            if (IsInstanceValid(CurrentGame))
+            {
+                CurrentGame.QueueFree();
+                CurrentGame = null;
+            }
+            else
+            {
+                CurrentGame = new GameSession();
+                CurrentGameContainer.AddChild(CurrentGame);
+            }
         }
     }
 }

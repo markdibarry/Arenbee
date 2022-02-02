@@ -13,6 +13,12 @@ namespace Arenbee.Framework.Game
 {
     public partial class GameSession : Node
     {
+        public GameSession()
+        {
+            Party = new Party();
+            SessionState = new SessionState();
+        }
+
         public Party Party { get; set; }
         public AreaScene CurrentAreaScene { get; set; }
         public SessionState SessionState { get; set; }
@@ -21,20 +27,13 @@ namespace Arenbee.Framework.Game
 
         public override void _Ready()
         {
-            SetDefaultValues();
             SetNodeReferences();
             Init();
         }
 
-        private void SetDefaultValues()
-        {
-            if (Party == null) Party = new Party();
-            if (SessionState == null) SessionState = new SessionState();
-        }
-
         private void SetNodeReferences()
         {
-            CurrentAreaScene = this.GetChildOrNullButActually<AreaScene>(0);
+            CurrentAreaScene = this.GetChildren<AreaScene>().FirstOrDefault();
         }
 
         private void Init()
@@ -51,11 +50,6 @@ namespace Arenbee.Framework.Game
 
         public override void _PhysicsProcess(float delta)
         {
-            if (Godot.Input.IsActionJustPressed("intBool"))
-            {
-                SaveService.SaveGame(this);
-            }
-
             if (GameRoot.MenuInput.Start.IsActionJustPressed)
             {
                 OpenPartyMenu();
@@ -82,7 +76,7 @@ namespace Arenbee.Framework.Game
         public void ApplySaveData(GameSave gameSave)
         {
             if (gameSave == null) return;
-            Party = new Party();
+            Party = new Party() { Inventory = gameSave.Inventory };
             SessionState = gameSave.SessionState;
             foreach (var actorInfo in gameSave.ActorInfos)
             {
@@ -103,8 +97,6 @@ namespace Arenbee.Framework.Game
                 var actorScene = GD.Load<PackedScene>(PathConstants.AdyPath);
                 player1 = actorScene.Instantiate<Actor>();
                 player1.Inventory = Party.Inventory;
-                //player1.Equipment = new Equipment();
-                //player1.Equipment.GetSlot(EquipmentSlotName.Weapon).SetItem(ItemDB.GetItem("HockeyStick"));
                 Party.Actors.Add(player1);
             }
 
@@ -119,9 +111,9 @@ namespace Arenbee.Framework.Game
             if (CurrentAreaScene.HUD != null)
             {
                 var players = CurrentAreaScene.PlayersContainer
-                    .GetChildren().OfType<Actor>();
-                var enemies = CurrentAreaScene.GetNodeOrNull<Node>("Enemies")
-                    .GetChildren().OfType<Actor>();
+                    .GetChildren<Actor>();
+                var enemies = CurrentAreaScene.EnemiesContainer
+                    .GetChildren<Actor>();
                 CurrentAreaScene.HUD.SubscribeEvents(players);
                 CurrentAreaScene.HUD.SubscribeEvents(enemies);
             }

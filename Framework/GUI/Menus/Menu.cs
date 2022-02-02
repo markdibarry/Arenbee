@@ -8,12 +8,16 @@ namespace Arenbee.Framework.GUI
 {
     public partial class Menu : CanvasLayer
     {
+        public Menu()
+        {
+            SubMenuStack = new Stack<SubMenu>();
+        }
+
         public Stack<SubMenu> SubMenuStack { get; set; }
         public event EventHandler RootSubMenuClosed;
 
         public override void _Ready()
         {
-            SubMenuStack = new Stack<SubMenu>();
             SetNodeReferences();
         }
 
@@ -27,14 +31,14 @@ namespace Arenbee.Framework.GUI
         public void SubscribeEvents(SubMenu subMenu)
         {
             subMenu.RequestedAdd += OnRequestedAdd;
-            subMenu.RequestedRemoveSubMenu += OnRequestedRemoveSubMenu;
+            subMenu.SubMenuClosed += OnSubMenuClosed;
             subMenu.RequestedCloseAll += OnRequestedCloseAll;
         }
 
         public void UnsubscribeEvents(SubMenu subMenu)
         {
             subMenu.RequestedAdd -= OnRequestedAdd;
-            subMenu.RequestedRemoveSubMenu -= OnRequestedRemoveSubMenu;
+            subMenu.SubMenuClosed -= OnSubMenuClosed;
             subMenu.RequestedCloseAll -= OnRequestedCloseAll;
         }
 
@@ -43,9 +47,9 @@ namespace Arenbee.Framework.GUI
             AddSubMenu(subMenu);
         }
 
-        public virtual void OnRequestedRemoveSubMenu()
+        public virtual void OnSubMenuClosed(string cascadeTo = null)
         {
-            RemoveSubMenu();
+            RemoveSubMenu(cascadeTo);
         }
 
         public virtual void OnRequestedCloseAll()
@@ -65,15 +69,17 @@ namespace Arenbee.Framework.GUI
             AddChild(subMenu);
         }
 
-        public void RemoveSubMenu()
+        public void RemoveSubMenu(string cascadeTo = null)
         {
             UnsubscribeEvents(SubMenuStack.Peek());
-            SubMenuStack.Pop().QueueFree();
+            SubMenuStack.Pop();
             if (SubMenuStack.Count > 0)
             {
                 var currentSubMenu = SubMenuStack.Peek();
                 currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
                 currentSubMenu.Dim = false;
+                if (cascadeTo != null && cascadeTo != currentSubMenu.GetType().Name)
+                    currentSubMenu.CloseSubMenu(cascadeTo);
             }
             else
             {

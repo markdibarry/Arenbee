@@ -1,117 +1,126 @@
-using Arenbee.Framework.Actors;
-using Arenbee.Framework.Actors.Stats;
 using Godot;
-using System;
 
-public partial class Blinker : Node
+namespace Arenbee.Framework.Actors
 {
-    private Timer _iFrameTimer;
-    private Timer _blinkSpeedTimer;
-    private Timer _flashTimer;
-    private ShaderMaterial _spriteShader;
-    private Actor _actor;
-    private float _iFrameDuration;
-    [Export]
-    public float IFrameDuration
+    public partial class Blinker : Node
     {
-        get => _iFrameDuration;
-        set
+        private Actor _actor;
+        private ShaderMaterial _spriteShader;
+
+        [Export]
+        public float IFrameDuration { get; set; } = 0.6f;
+        private float _iframeTimer;
+        private bool _iframeTimerEnabled;
+        [Export]
+        public float BlinkSpeed { get; set; } = 0.05f;
+        private float _blinkTimer;
+        private bool _blinkEnabled;
+        [Export]
+        public float FlashDuration { get; set; } = 0.1f;
+        private float _flashTimer;
+        private bool _flashTimerEnabled;
+
+        public override void _Ready()
         {
-            _iFrameDuration = value;
-            if (_iFrameTimer != null)
-                _iFrameTimer.WaitTime = _iFrameDuration;
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            base._PhysicsProcess(delta);
+            if (_iframeTimerEnabled)
+            {
+                if (_iframeTimer <= 0)
+                {
+                    _iframeTimerEnabled = false;
+                    OnIFrameTimerExpire();
+                }
+                else
+                    _iframeTimer -= delta;
+            }
+
+            if (_flashTimerEnabled)
+            {
+                if (_flashTimer <= 0)
+                {
+                    _flashTimerEnabled = false;
+                    OnFlashTimerExpire();
+                }
+                else
+                    _flashTimer -= delta;
+            }
+
+            if (_blinkEnabled)
+            {
+                if (_blinkTimer <= 0)
+                {
+                    _blinkTimer = BlinkSpeed;
+                    OnBlinkSpeedTimerExpire();
+                }
+                else
+                    _blinkTimer -= delta;
+            }
+        }
+
+        public void Init(Actor actor)
+        {
+            _actor = actor;
+            _spriteShader = (ShaderMaterial)_actor.BodySprite.Material;
+            if (_spriteShader == null) GD.PrintErr("ShaderMaterial not provided!");
+
+        }
+
+        public void Start(bool shouldBlink)
+        {
+            _actor.HurtBox.SetDeferred("monitoring", false);
+            _spriteShader.SetShaderParam("flash_mix", 1);
+            _flashTimer = FlashDuration;
+            _flashTimerEnabled = true;
+            _iframeTimer = IFrameDuration;
+            _iframeTimerEnabled = true;
+            if (shouldBlink)
+            {
+                _blinkTimer = BlinkSpeed;
+                _blinkEnabled = true;
+            }
+        }
+
+        public void Stop()
+        {
+            _spriteShader.SetShaderParam("flash_mix", 0);
+            _actor.HurtBox.SetDeferred("monitoring", true);
+            _iframeTimerEnabled = false;
+            _flashTimerEnabled = false;
+            _blinkEnabled = false;
+            _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 1);
+        }
+
+        private void OnBlinkSpeedTimerExpire()
+        {
+            if (_actor.BodySprite.Modulate.a > 0)
+            {
+                _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0);
+            }
+            else
+            {
+                _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0.75f);
+            }
+        }
+
+        private void OnFlashTimerExpire()
+        {
+            _spriteShader.SetShaderParam("flash_mix", 0);
+        }
+
+        private void OnIFrameTimerExpire()
+        {
+            Stop();
+        }
+
+        public override void _ExitTree()
+        {
+            base._ExitTree();
+            _spriteShader.Dispose();
         }
     }
 
-    private float _blinkSpeed;
-    [Export]
-    public float BlinkSpeed
-    {
-        get => _blinkSpeed;
-        set
-        {
-            _blinkSpeed = value;
-            if (_blinkSpeedTimer != null)
-                _blinkSpeedTimer.WaitTime = _blinkSpeed;
-        }
-    }
-
-    private float _flashDuration;
-    [Export]
-    public float FlashDuration
-    {
-        get => _flashDuration;
-        set
-        {
-            _flashDuration = value;
-            if (_flashTimer != null)
-                _flashTimer.WaitTime = _flashDuration;
-        }
-    }
-
-    public override void _Ready()
-    {
-        _iFrameTimer = GetNode<Timer>("IFrameTimer");
-        _iFrameTimer.Timeout += OnIFrameTimerExpire;
-        _blinkSpeedTimer = GetNode<Timer>("BlinkSpeedTimer");
-        _blinkSpeedTimer.Timeout += OnBlinkSpeedTimerExpire;
-        _flashTimer = GetNode<Timer>("FlashTimer");
-        _flashTimer.Timeout += OnFlashTimerExpire;
-    }
-
-    public void Init(Actor actor)
-    {
-        _actor = actor;
-        _spriteShader = (ShaderMaterial)_actor.BodySprite.Material;
-        if (_spriteShader == null) GD.PrintErr("ShaderMaterial not provided!");
-        UpdateExports();
-    }
-
-    public void Start(bool shouldBlink)
-    {
-        _actor.HurtBox.SetDeferred("monitoring", false);
-        _spriteShader.SetShaderParam("flash_mix", 1);
-        _flashTimer.Start();
-        _iFrameTimer.Start();
-        if (shouldBlink) _blinkSpeedTimer.Start();
-    }
-
-    public void Stop()
-    {
-        _spriteShader.SetShaderParam("flash_mix", 0);
-        _actor.HurtBox.SetDeferred("monitoring", true);
-        _blinkSpeedTimer.Stop();
-        _flashTimer.Stop();
-        _iFrameTimer.Stop();
-        _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 1);
-    }
-
-    private void UpdateExports()
-    {
-        _flashTimer.WaitTime = _flashDuration;
-        _blinkSpeedTimer.WaitTime = _blinkSpeed;
-        _iFrameTimer.WaitTime = _iFrameDuration;
-    }
-
-    private void OnBlinkSpeedTimerExpire()
-    {
-        if (_actor.BodySprite.Modulate.a > 0)
-        {
-            _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0);
-        }
-        else
-        {
-            _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0.75f);
-        }
-    }
-
-    private void OnFlashTimerExpire()
-    {
-        _spriteShader.SetShaderParam("flash_mix", 0);
-    }
-
-    private void OnIFrameTimerExpire()
-    {
-        Stop();
-    }
 }

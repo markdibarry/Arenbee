@@ -2,17 +2,17 @@
 
 importer="font_data_dynamic"
 type="FontData"
-uid="uid://b57tbg0gty136"
-path="res://.godot/imported/m5x7.ttf-3f4a84df2540cc44bf292b760f5e38a5.fontdata"
+uid="uid://ungm2bp6hwxr"
+path="res://.godot/imported/m3x6.ttf-3625871680a792b89abeb7007c76a45f.fontdata"
 
 [deps]
 
-source_file="res://Assets/GUI/Fonts/m5x7.ttf"
-dest_files=["res://.godot/imported/m5x7.ttf-3f4a84df2540cc44bf292b760f5e38a5.fontdata"]
+source_file="res://Framework/GUI/Fonts/m3x6.ttf"
+dest_files=["res://.godot/imported/m3x6.ttf-3625871680a792b89abeb7007c76a45f.fontdata"]
 
 [params]
 
-antialiased=true
+antialiased=false
 multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48
