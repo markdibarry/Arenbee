@@ -46,9 +46,7 @@ namespace Arenbee.Framework.GUI
             foreach (var optionContainer in OptionContainers)
             {
                 optionContainer.InitItems();
-                optionContainer.ItemSelected += OnItemSelected;
-                optionContainer.ItemFocused += OnItemFocused;
-                optionContainer.FocusOOB += OnFocusOOB;
+                SubscribeToEvents(optionContainer);
             }
             // To allow elements to adjust to correct positions
             await ToSignal(GetTree(), "process_frame");
@@ -86,11 +84,9 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        protected virtual void OnItemSelected(OptionItem optionItem)
-        {
-        }
+        protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem) { }
 
-        protected virtual void OnItemFocused(OptionItem optionItem)
+        protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             MoveCursorToItem(optionItem);
         }
@@ -128,6 +124,20 @@ namespace Arenbee.Framework.GUI
                     container.FocusLeftEnd();
                     break;
             }
+        }
+
+        protected void SubscribeToEvents(OptionContainer optionContainer)
+        {
+            optionContainer.ItemSelected += OnItemSelected;
+            optionContainer.ItemFocused += OnItemFocused;
+            optionContainer.FocusOOB += OnFocusOOB;
+        }
+
+        protected void UnsubscribeEvents(OptionContainer optionContainer)
+        {
+            optionContainer.ItemSelected -= OnItemSelected;
+            optionContainer.ItemFocused -= OnItemFocused;
+            optionContainer.FocusOOB -= OnFocusOOB;
         }
     }
 }

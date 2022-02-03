@@ -13,78 +13,98 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class InventorySubMenu : OptionSubMenu
     {
         public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Inventory/{nameof(InventorySubMenu)}.tscn";
-        private Label ItemInfoLabel { get; set; }
+        [Export]
+        private readonly NodePath _itemInfoLabelPath;
+        private Label _itemInfoLabel;
+        private string _inventoryListName;
+        private string _typeListName;
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            ItemInfoLabel = GetNode<Label>("ItemInfo/Control/MarginContainer/ItemInfoLabel");
-        }
-
-        protected override void OnItemSelected(OptionItem optionItem)
-        {
-            base.OnItemSelected(optionItem);
+            _inventoryListName = OptionContainers[0].Name;
+            _typeListName = OptionContainers[1].Name;
+            _itemInfoLabel = GetNode<Label>(_itemInfoLabelPath);
         }
 
         protected override void AddContainerItems()
         {
             AddInventoryTypes();
-            AddInventoryItems();
+            ReplaceInventoryItems(null);
         }
 
-        protected override void OnItemFocused(OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            base.OnItemFocused(optionItem);
-            if (optionItem is KeyValueOption)
+            base.OnItemSelected(optionContainer, optionItem);
+            if (optionContainer.Name == _inventoryListName)
+                HandleInventoryItemSelected(optionItem);
+            else
+                HandleTypeItemSelected(optionItem);
+        }
+
+        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        {
+            base.OnItemFocused(optionContainer, optionItem);
+            if (optionContainer.Name == _typeListName)
+            {
+                ItemType? itemType = null;
+                if (optionItem.OptionValue != "All")
+                    itemType = Enum.Parse<ItemType>(optionItem.OptionValue);
+                ReplaceInventoryItems(itemType);
+            }
+            else
             {
                 Item item = ItemDB.GetItem(optionItem.OptionValue);
                 if (item != null)
-                    ItemInfoLabel.Text = item.Description;
+                    _itemInfoLabel.Text = item.Description;
             }
         }
 
         protected override void OnFocusOOB(OptionContainer container, Direction direction)
         {
-            if (container.Name == "TypeList")
-            {
+            if (container.Name == _typeListName)
                 HandleTypeListOOB(container, direction);
-            }
             else
-            {
                 HandleInventoryListOOB(container, direction);
-            }
+        }
+
+        private void HandleInventoryItemSelected(OptionItem optionItem)
+        {
+
+        }
+
+        private void HandleTypeItemSelected(OptionItem optionItem)
+        {
         }
 
         private void HandleTypeListOOB(OptionContainer container, Direction direction)
         {
             if (direction == Direction.Down)
-            {
-                FocusContainer(OptionContainers.First(x => x.Name == "InventoryList"));
-            }
+                FocusContainer(OptionContainers.First(x => x.Name == _inventoryListName));
             else
-            {
                 base.OnFocusOOB(container, direction);
-            }
         }
 
         private void HandleInventoryListOOB(OptionContainer container, Direction direction)
         {
             if (direction == Direction.Up)
-            {
-                FocusContainer(OptionContainers.First(x => x.Name == "TypeList"));
-            }
+                FocusContainer(OptionContainers.First(x => x.Name == _typeListName));
             else
-            {
                 base.OnFocusOOB(container, direction);
-            }
         }
 
-        private void AddInventoryItems()
+        private void ReplaceInventoryItems(ItemType? itemType)
         {
             var keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.ScenePath);
             var options = new List<KeyValueOption>();
             Inventory inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
-            foreach (var item in inventory.Items)
+            List<ItemStack> items;
+            if (itemType == null)
+                items = inventory.Items.ToList();
+            else
+                items = inventory.GetItemsByType((ItemType)itemType).ToList();
+
+            foreach (var item in items)
             {
                 var option = keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = ItemDB.GetItem(item.ItemId).DisplayName;
@@ -95,6 +115,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             OptionContainer inventoryList = OptionContainers.Find(x => x.Name == "InventoryList");
 
             inventoryList.ReplaceItems(options);
+            inventoryList.InitItems();
         }
 
         private void AddInventoryTypes()

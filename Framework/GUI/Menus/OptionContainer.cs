@@ -31,9 +31,9 @@ namespace Arenbee.Framework.GUI
         private TextureRect _arrowDown;
         private TextureRect _arrowLeft;
         private TextureRect _arrowRight;
-        public delegate void ItemFocusedHandler(OptionItem optionItem);
+        public delegate void ItemFocusedHandler(OptionContainer optionContainer, OptionItem optionItem);
         public event ItemFocusedHandler ItemFocused;
-        public delegate void ItemSelectedHandler(OptionItem optionItem);
+        public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
         public event ItemSelectedHandler ItemSelected;
         public delegate void FocusOOBHandler(OptionContainer container, Direction direction);
         public event FocusOOBHandler FocusOOB;
@@ -70,6 +70,7 @@ namespace Arenbee.Framework.GUI
                 Resized += OnResized;
             GridContainer.ItemRectChanged += OnGridRectChanged;
         }
+
         public virtual void AddItems(IEnumerable<OptionItem> optionItems)
         {
             foreach (var item in optionItems)
@@ -80,6 +81,7 @@ namespace Arenbee.Framework.GUI
 
         public virtual void ReplaceItems(IEnumerable<OptionItem> optionItems)
         {
+            OptionItems.Clear();
             GridContainer.RemoveAllChildren();
             AddItems(optionItems);
         }
@@ -103,7 +105,7 @@ namespace Arenbee.Framework.GUI
 
         public void SelectItem()
         {
-            ItemSelected?.Invoke(OptionItems[ItemIndex]);
+            ItemSelected?.Invoke(this, OptionItems[ItemIndex]);
         }
 
         public void FocusUp()
@@ -214,7 +216,7 @@ namespace Arenbee.Framework.GUI
         private void FocusItem(OptionItem optionItem)
         {
             AdjustPosition(optionItem);
-            ItemFocused?.Invoke(optionItem);
+            ItemFocused?.Invoke(this, optionItem);
         }
 
         private void HandleHArrows()

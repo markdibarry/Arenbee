@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {
@@ -36,6 +37,11 @@ namespace Arenbee.Framework.Items
         public ItemStack GetItemStack(Item item)
         {
             return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
+        }
+
+        public ICollection<ItemStack> GetItemsByType(ItemType itemType)
+        {
+            return _items.Where(item => ItemDB.GetItem(item.ItemId).ItemType == itemType).ToList();
         }
 
         /// <summary>

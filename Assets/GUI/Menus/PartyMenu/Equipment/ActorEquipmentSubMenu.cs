@@ -17,19 +17,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             EquipmentOptions = OptionContainers.OfType<EquipmentContainer>().FirstOrDefault();
         }
 
-        protected override void OnItemSelected(OptionItem optionItem)
-        {
-            base.OnItemSelected(optionItem);
-        }
-
         protected override void AddContainerItems()
         {
             EquipmentOptions.UpdateEquipment(Actor);
-        }
-
-        protected override void OnItemFocused(OptionItem optionItem)
-        {
-            base.OnItemFocused(optionItem);
         }
     }
 }

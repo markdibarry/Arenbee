@@ -19,9 +19,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             StatsDisplayGrid = GetNode<GridContainer>("StatsDisplay/GridContainer");
         }
 
-        protected override void OnItemSelected(OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            base.OnItemSelected(optionItem);
+            base.OnItemSelected(optionContainer, optionItem);
         }
 
         protected override void AddContainerItems()
@@ -29,9 +29,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             AddPartyMembers();
         }
 
-        protected override void OnItemFocused(OptionItem optionItem)
+        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
-            base.OnItemFocused(optionItem);
+            base.OnItemFocused(optionContainer, optionItem);
             DisplayStats(optionItem.OptionValue);
         }
 

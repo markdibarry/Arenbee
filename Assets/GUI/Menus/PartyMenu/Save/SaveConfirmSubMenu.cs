@@ -9,9 +9,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Save/{nameof(SaveConfirmSubMenu)}.tscn";
-        protected override void OnItemSelected(OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            base.OnItemSelected(optionItem);
+            base.OnItemSelected(optionContainer, optionItem);
             switch (optionItem.OptionValue)
             {
                 case "Yes":

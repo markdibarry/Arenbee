@@ -18,6 +18,11 @@ namespace Arenbee.Framework.Items
             return s_items.FirstOrDefault(item => item.Id.Equals(id));
         }
 
+        public static IEnumerable<Item> GetItemsByType(ItemType itemType)
+        {
+            return s_items.Where(item => item.ItemType.Equals(itemType));
+        }
+
         private static void BuildDB()
         {
             s_items.Add(new Item()

@@ -8,9 +8,9 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class MainSubMenu : OptionSubMenu
     {
         public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/{nameof(MainSubMenu)}.tscn";
-        protected override void OnItemSelected(OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            base.OnItemSelected(optionItem);
+            base.OnItemSelected(optionContainer, optionItem);
             switch (optionItem.OptionValue)
             {
                 case "Stats":

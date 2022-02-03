@@ -10,6 +10,7 @@
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
 script = ExtResource( "2_funy4" )
 _optionContainerPaths = [NodePath("InventoryContainer/InventoryList"), NodePath("TypeContainer/TypeList")]
+_itemInfoLabelPath = NodePath("ItemInfo/Control/MarginContainer/ItemInfoLabel")
 
 [node name="TypeContainer" type="PanelContainer" parent="." index="0"]
 offset_left = 80.0
