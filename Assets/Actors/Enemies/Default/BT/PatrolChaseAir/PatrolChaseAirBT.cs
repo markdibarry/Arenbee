@@ -30,5 +30,4 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
             return root;
         }
     }
-
 }

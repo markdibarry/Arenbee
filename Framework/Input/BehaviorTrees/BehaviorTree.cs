@@ -4,7 +4,7 @@ namespace Arenbee.Framework.Input
 {
     public abstract class BehaviorTree
     {
-        public BehaviorTree(Actor actor)
+        protected BehaviorTree(Actor actor)
         {
             _root = SetupTree();
             _root.SetDependencies(actor, _blackBoard);
@@ -15,8 +15,7 @@ namespace Arenbee.Framework.Input
 
         public void Update(float delta)
         {
-            if (_root != null)
-                _root.Evaluate(delta);
+            _root?.Evaluate(delta);
         }
 
         public void ClearBlackBoard()

@@ -5,6 +5,10 @@ using Godot;
 public partial class KeyValueOption : OptionItem
 {
     public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(KeyValueOption)}.tscn";
+    private Label _keyLabel;
+    private string _keyText = string.Empty;
+    private Label _valueLabel;
+    private string _valueText = string.Empty;
     [Export(PropertyHint.MultilineText)]
     public string KeyText
     {
@@ -31,10 +35,6 @@ public partial class KeyValueOption : OptionItem
             }
         }
     }
-    private Label _keyLabel;
-    private string _keyText = string.Empty;
-    private Label _valueLabel;
-    private string _valueText = string.Empty;
 
     public override void _Ready()
     {

@@ -7,13 +7,13 @@ namespace Arenbee.Framework.GUI
     {
         public static new readonly string ScenePath = $"res://Framework/GUI/{nameof(TimedMessageBox)}.tscn";
         [Export]
-        public float TimeOut { get; set; } = 2.0f;
-        public bool _timerFinished;
+        private float _timeOut = 2.0f;
+        private bool _timerFinished;
 
         public override void _Ready()
         {
             base._Ready();
-            if (TimeOut <= 0)
+            if (_timeOut <= 0)
                 _timerFinished = true;
         }
 
@@ -23,9 +23,9 @@ namespace Arenbee.Framework.GUI
             base._PhysicsProcess(delta);
             if (!_timerFinished)
             {
-                if (TimeOut > 0)
+                if (_timeOut > 0)
                 {
-                    TimeOut -= delta;
+                    _timeOut -= delta;
                 }
                 else
                 {
@@ -33,7 +33,6 @@ namespace Arenbee.Framework.GUI
                     QueueFree();
                 }
             }
-
         }
     }
 }

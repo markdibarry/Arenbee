@@ -1,6 +1,5 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.Items;
 
 namespace Arenbee.Assets.GUI.Menus.PartyMenus
 {
@@ -20,9 +19,8 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 }
                 else
                 {
-                    Item item = ItemDB.GetItem(slot.ItemId);
                     option.OptionValue = slot.ItemId;
-                    option.ValueText = item.DisplayName;
+                    option.ValueText = slot.Item.DisplayName;
                 }
             }
         }

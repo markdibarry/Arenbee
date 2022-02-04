@@ -11,4 +11,3 @@ namespace Arenbee.Framework.Constants
         public const string Attack = "attack";
     }
 }
-

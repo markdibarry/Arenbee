@@ -27,6 +27,5 @@ namespace Arenbee.Assets.Items.HockeyStickNS
                 StateMachine.TransitionTo(new WeakAttack1());
             }
         }
-
     }
 }

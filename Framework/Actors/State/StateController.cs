@@ -163,7 +163,7 @@ namespace Arenbee.Framework.Actors
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");
             _actor.AddChild(stateDisplay);
             Vector2 frameSize = _actor.BodySprite.GetFrameSize();
-            stateDisplay.RectPosition = new Vector2(_actor.BodySprite.Position.x, frameSize.y / 2 * -1 - 10 + _actor.BodySprite.Position.y);
+            stateDisplay.RectPosition = new Vector2(_actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + _actor.BodySprite.Position.y);
         }
     }
 }

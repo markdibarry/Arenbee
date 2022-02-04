@@ -8,9 +8,15 @@ namespace Arenbee.Framework.GUI
         public MessageBox()
         {
             BoxAlign = Enums.BoxAlign.Left;
+            _messageText = string.Empty;
         }
         public static readonly string ScenePath = $"res://Framework/GUI/{nameof(MessageBox)}.tscn";
-        private string _messageText = string.Empty;
+        private string _messageText;
+        private HorizontalAlignment _messageAlign;
+        private Enums.BoxAlign _boxAlign;
+        private MarginContainer _boxWrapper;
+        private MarginContainer _messageMargin;
+        private Label _message;
         [Export(PropertyHint.MultilineText)]
         public string MessageText
         {
@@ -18,13 +24,12 @@ namespace Arenbee.Framework.GUI
             set
             {
                 _messageText = value;
-                if (Message != null)
+                if (_message != null)
                 {
-                    Message.Text = _messageText;
+                    _message.Text = _messageText;
                 }
             }
         }
-        private HorizontalAlignment _messageAlign;
         [Export(PropertyHint.Enum)]
         public HorizontalAlignment MessageAlign
         {
@@ -32,63 +37,58 @@ namespace Arenbee.Framework.GUI
             set
             {
                 _messageAlign = value;
-                if (Message != null)
+                if (_message != null)
                 {
-                    Message.HorizontalAlignment = _messageAlign;
+                    _message.HorizontalAlignment = _messageAlign;
                 }
             }
         }
-        private Enums.BoxAlign _boxAlign;
-        [Export(PropertyHint.Enum)]
         /// <summary>
         /// Godot doesn't contain an enum for none, so I made my own.
         /// </summary>
         /// <value></value>
+        [Export(PropertyHint.Enum)]
         public Enums.BoxAlign BoxAlign
         {
             get { return _boxAlign; }
             set
             {
                 _boxAlign = value;
-                if (Message?.AutowrapMode == Label.AutowrapModeEnum.Off)
+                if (_message?.AutowrapMode == Label.AutowrapModeEnum.Off)
                 {
-                    BoxWrapper.SizeFlagsHorizontal = (int)_boxAlign;
+                    _boxWrapper.SizeFlagsHorizontal = (int)_boxAlign;
                 }
             }
         }
-
-        public MarginContainer BoxWrapper { get; set; }
-        public MarginContainer MessageMargin { get; set; }
-        public Label Message { get; set; }
         public float MaxWidth { get; set; }
 
         public override void _Ready()
         {
-            BoxWrapper = GetNode<MarginContainer>("BoxWrapper");
-            MessageMargin = BoxWrapper.GetNode<MarginContainer>("MessageMargin");
-            Message = MessageMargin.GetNode<Label>("Message");
+            _boxWrapper = GetNode<MarginContainer>("BoxWrapper");
+            _messageMargin = _boxWrapper.GetNode<MarginContainer>("MessageMargin");
+            _message = _messageMargin.GetNode<Label>("Message");
             // if adding to an existing list
             var parent = GetParentOrNull<MessageBoxList>();
-            if (parent != null && parent.IsReady)
+            if (parent?.IsReady == true)
             {
                 MaxWidth = parent.MaxSize.x;
                 EnableAutoWrap();
                 UpdateMessageText();
             }
-            BoxWrapper.Resized += OnResized;
+            _boxWrapper.Resized += OnResized;
         }
 
         public void UpdateMessageText()
         {
-            Message.Text = MessageText;
+            _message.Text = MessageText;
         }
 
-        public void OnResized()
+        private void OnResized()
         {
             HandleResize();
         }
 
-        public void HandleResize()
+        private void HandleResize()
         {
             if (MaxWidth > 0)
             {
@@ -101,26 +101,26 @@ namespace Arenbee.Framework.GUI
 
         private bool ShouldEnableAutoWrap()
         {
-            return BoxWrapper.RectSize.x > MaxWidth || MessageMargin.RectSize.x > MaxWidth;
+            return _boxWrapper.RectSize.x > MaxWidth || _messageMargin.RectSize.x > MaxWidth;
         }
 
         private bool ShouldDisableAutoWrap()
         {
-            return Message.GetLineCount() <= 1;
+            return _message.GetLineCount() <= 1;
         }
 
-        public void EnableAutoWrap()
+        private void EnableAutoWrap()
         {
-            if (Message.AutowrapMode != Label.AutowrapModeEnum.Off) return;
-            Message.AutowrapMode = Label.AutowrapModeEnum.Word;
-            BoxWrapper.SizeFlagsHorizontal = (int)SizeFlags.Fill;
+            if (_message.AutowrapMode != Label.AutowrapModeEnum.Off) return;
+            _message.AutowrapMode = Label.AutowrapModeEnum.Word;
+            _boxWrapper.SizeFlagsHorizontal = (int)SizeFlags.Fill;
         }
 
         private void DisableAutoWrap()
         {
-            if (Message.AutowrapMode == Label.AutowrapModeEnum.Off) return;
-            Message.AutowrapMode = Label.AutowrapModeEnum.Off;
-            BoxWrapper.SizeFlagsHorizontal = (int)BoxAlign;
+            if (_message.AutowrapMode == Label.AutowrapModeEnum.Off) return;
+            _message.AutowrapMode = Label.AutowrapModeEnum.Off;
+            _boxWrapper.SizeFlagsHorizontal = (int)BoxAlign;
         }
     }
 }

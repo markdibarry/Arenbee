@@ -18,7 +18,6 @@ namespace Arenbee.Framework.Actors
                 SetInitialEquipmentStats();
 
             CalculateStats();
-
         }
 
         private void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
@@ -95,7 +94,7 @@ namespace Arenbee.Framework.Actors
             {
                 if (!string.IsNullOrEmpty(slot.ItemId))
                 {
-                    var item = ItemDB.GetItem(slot.ItemId);
+                    var item = slot.Item;
                     if (item != null)
                     {
                         ItemStack itemStack = Inventory.GetItemStack(item);

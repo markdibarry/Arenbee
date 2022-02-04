@@ -42,10 +42,8 @@ namespace Arenbee.Framework.Extensions
             Texture2D texture2D = sprite2D.Texture;
             if (texture2D == null) return new Vector2();
             Vector2 textureSize = sprite2D.Texture.GetSize();
-            if (textureSize == null) return new Vector2();
-            var frameSize = new Vector2(textureSize.x / sprite2D.Hframes, textureSize.y / sprite2D.Vframes);
-
-            return frameSize;
+            if (textureSize == default) return new Vector2();
+            return new Vector2(textureSize.x / sprite2D.Hframes, textureSize.y / sprite2D.Vframes);
         }
 
         public static float LerpClamp(this float val, float target, float maxMove)
@@ -100,6 +98,44 @@ namespace Arenbee.Framework.Extensions
                     child.Free();
                 }
             }
+        }
+
+        public static int GetClosestIndex(this Control control, IEnumerable<Control> controls)
+        {
+            int controlCount = controls.Count();
+            if (controlCount == 0) return -1;
+            if (controlCount == 1) return 0;
+            int nearestIndex = 0;
+            float nearestDistance = control.RectGlobalPosition.DistanceTo(controls.ElementAt(0).RectGlobalPosition);
+            for (int i = 1; i < controlCount; i++)
+            {
+                float newDistance = control.RectGlobalPosition.DistanceTo(controls.ElementAt(i).RectGlobalPosition);
+                if (newDistance < nearestDistance)
+                {
+                    nearestIndex = i;
+                    nearestDistance = newDistance;
+                }
+            }
+            return nearestIndex;
+        }
+
+        public static int GetClosestIndex(this Node2D control, IEnumerable<Node2D> nodes)
+        {
+            int nodeCount = nodes.Count();
+            if (nodeCount == 0) return -1;
+            if (nodeCount == 1) return 0;
+            int nearestIndex = 0;
+            float nearestDistance = control.GlobalPosition.DistanceTo(nodes.ElementAt(0).GlobalPosition);
+            for (int i = 1; i < nodeCount; i++)
+            {
+                float newDistance = control.GlobalPosition.DistanceTo(nodes.ElementAt(i).GlobalPosition);
+                if (newDistance < nearestDistance)
+                {
+                    nearestIndex = i;
+                    nearestDistance = newDistance;
+                }
+            }
+            return nearestIndex;
         }
     }
 }

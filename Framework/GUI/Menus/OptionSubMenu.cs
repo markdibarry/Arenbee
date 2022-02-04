@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Game;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -16,15 +15,25 @@ namespace Arenbee.Framework.GUI
             : base()
         {
             OptionContainers = new List<OptionContainer>();
+            _currentDirection = Direction.None;
         }
 
 #pragma warning disable IDE0044
         [Export]
         private NodePath[] _optionContainerPaths = new NodePath[0];
 #pragma warning restore IDE0044
-        public List<OptionContainer> OptionContainers { get; private set; }
         private Cursor _cursor;
         private OptionContainer _currentContainer;
+        public List<OptionContainer> OptionContainers { get; private set; }
+
+        public override void CloseSubMenu(string cascadeTo = null)
+        {
+            foreach (var container in OptionContainers)
+            {
+                UnsubscribeEvents(container);
+            }
+            base.CloseSubMenu(cascadeTo);
+        }
 
         protected override void SetNodeReferences()
         {
@@ -55,35 +64,6 @@ namespace Arenbee.Framework.GUI
 
         protected virtual void AddContainerItems() { }
 
-        public override void _PhysicsProcess(float delta)
-        {
-            if (Engine.IsEditorHint()) return;
-            base._PhysicsProcess(delta);
-
-            var menuInput = GameRoot.MenuInput;
-
-            if (menuInput.Up.IsActionJustPressed)
-            {
-                _currentContainer.FocusUp();
-            }
-            else if (menuInput.Down.IsActionJustPressed)
-            {
-                _currentContainer.FocusDown();
-            }
-            else if (menuInput.Left.IsActionJustPressed)
-            {
-                _currentContainer.FocusLeft();
-            }
-            else if (menuInput.Right.IsActionJustPressed)
-            {
-                _currentContainer.FocusRight();
-            }
-            else if (menuInput.Enter.IsActionJustPressed)
-            {
-                _currentContainer.SelectItem();
-            }
-        }
-
         protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem) { }
 
         protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
@@ -91,20 +71,25 @@ namespace Arenbee.Framework.GUI
             MoveCursorToItem(optionItem);
         }
 
-        protected void FocusContainer(OptionContainer optionContainer)
+        protected void FocusContainerPreviousItem(OptionContainer optionContainer)
         {
-            if (optionContainer != null)
-            {
-                _currentContainer = optionContainer;
-                optionContainer.FocusContainer();
-            }
+            int index = optionContainer.ItemIndex;
+            FocusContainer(optionContainer, index);
         }
 
-        private void MoveCursorToItem(OptionItem optionItem)
+        protected void FocusContainerClosestItem(OptionContainer optionContainer)
         {
-            float cursorX = optionItem.RectGlobalPosition.x - 4;
-            float cursorY = (float)(optionItem.RectGlobalPosition.y + Math.Round(optionItem.RectSize.y * 0.5));
-            _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
+            int index = _currentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
+            FocusContainer(optionContainer, index);
+        }
+
+        protected void FocusContainer(OptionContainer optionContainer, int index = 0)
+        {
+            if (optionContainer?.OptionItems.Count > 0)
+            {
+                _currentContainer = optionContainer;
+                optionContainer.FocusItem(index);
+            }
         }
 
         protected virtual void OnFocusOOB(OptionContainer container, Direction direction)
@@ -138,6 +123,13 @@ namespace Arenbee.Framework.GUI
             optionContainer.ItemSelected -= OnItemSelected;
             optionContainer.ItemFocused -= OnItemFocused;
             optionContainer.FocusOOB -= OnFocusOOB;
+        }
+
+        private void MoveCursorToItem(OptionItem optionItem)
+        {
+            float cursorX = optionItem.RectGlobalPosition.x - 4;
+            float cursorY = (float)(optionItem.RectGlobalPosition.y + Math.Round(optionItem.RectSize.y * 0.5));
+            _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
         }
     }
 }

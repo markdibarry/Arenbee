@@ -95,24 +95,22 @@ namespace Arenbee.Framework.GUI
 
         private string GetEffectivenessMessage(float elementMultiplier)
         {
-            string result;
             if (elementMultiplier > 1)
             {
-                result = "is weak to";
+                return "is weak to";
             }
             else if (0 < elementMultiplier && elementMultiplier < 1)
             {
-                result = "resists";
+                return "resists";
             }
             else if (elementMultiplier == 0)
             {
-                result = "nullifies";
+                return "nullifies";
             }
             else
             {
-                result = "absorbs";
+                return "absorbs";
             }
-            return result;
         }
     }
 }

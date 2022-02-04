@@ -6,6 +6,8 @@ namespace Arenbee.Framework.GUI
     public partial class TextOption : OptionItem
     {
         public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(TextOption)}.tscn";
+        private Label _label;
+        private string _labelText = string.Empty;
         [Export(PropertyHint.MultilineText)]
         public string LabelText
         {
@@ -19,8 +21,6 @@ namespace Arenbee.Framework.GUI
                 }
             }
         }
-        private Label _label;
-        private string _labelText = string.Empty;
 
         public override void _Ready()
         {

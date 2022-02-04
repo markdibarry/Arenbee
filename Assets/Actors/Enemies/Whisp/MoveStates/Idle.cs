@@ -32,7 +32,6 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS.BaseStates
                 {
                     StateMachine.TransitionTo(new Walk());
                 }
-
             }
         }
     }

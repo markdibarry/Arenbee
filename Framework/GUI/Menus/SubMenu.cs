@@ -8,6 +8,7 @@ namespace Arenbee.Framework.GUI
     public partial class SubMenu : Control
     {
         public static readonly string ScenePath = $"res://Framework/GUI/Menus/{nameof(SubMenu)}.tscn";
+        private bool _dim;
         [Export]
         protected bool PreventCancel { get; set; }
         [Export]
@@ -25,7 +26,6 @@ namespace Arenbee.Framework.GUI
                 _dim = value;
             }
         }
-        private bool _dim;
         public delegate void RequestedAddHandler(SubMenu subMenu);
         public delegate void SubMenuClosedHandler(string cascadeTo = null);
         public delegate void RequestedCloseAllHandler();
@@ -64,7 +64,7 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        public void CloseSubMenu(string cascadeTo = null)
+        public virtual void CloseSubMenu(string cascadeTo = null)
         {
             SubMenuClosed?.Invoke(cascadeTo);
             QueueFree();

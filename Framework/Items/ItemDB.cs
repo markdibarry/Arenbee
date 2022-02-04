@@ -15,7 +15,7 @@ namespace Arenbee.Framework.Items
 
         public static Item GetItem(string id)
         {
-            return s_items.FirstOrDefault(item => item.Id.Equals(id));
+            return s_items.Find(item => item.Id.Equals(id));
         }
 
         public static IEnumerable<Item> GetItemsByType(ItemType itemType)

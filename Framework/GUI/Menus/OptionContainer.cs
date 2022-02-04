@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Godot;
@@ -22,22 +23,28 @@ namespace Arenbee.Framework.GUI
         private bool _fillRight;
         [Export]
         private bool _fillBottom;
+        [Export]
+        private bool _dimItems;
+        [Export]
+        private bool _keepHighlightPosition;
 #pragma warning restore IDE0044
-        public int ItemIndex { get; set; }
-        public List<OptionItem> OptionItems { get; set; }
-        public GridContainer GridContainer { get; set; }
         private Control _control;
         private TextureRect _arrowUp;
         private TextureRect _arrowDown;
         private TextureRect _arrowLeft;
         private TextureRect _arrowRight;
+
         public delegate void ItemFocusedHandler(OptionContainer optionContainer, OptionItem optionItem);
-        public event ItemFocusedHandler ItemFocused;
         public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
-        public event ItemSelectedHandler ItemSelected;
         public delegate void FocusOOBHandler(OptionContainer container, Direction direction);
+        public event ItemFocusedHandler ItemFocused;
+        public event ItemSelectedHandler ItemSelected;
         public event FocusOOBHandler FocusOOB;
 
+        public int ItemIndex { get; set; }
+        public List<OptionItem> OptionItems { get; set; }
+        public GridContainer GridContainer { get; set; }
+        public OptionItem CurrentItem => OptionItems[ItemIndex];
         public override void _Ready()
         {
             SetNodeReferences();
@@ -88,19 +95,17 @@ namespace Arenbee.Framework.GUI
 
         public void InitItems()
         {
-            var children = GridContainer.GetChildren<OptionItem>();
+            var children = GridContainer.GetChildren<OptionItem>().ToList();
             foreach (var child in children)
             {
+                if (_dimItems) child.Dim = true;
                 OptionItems.Add(child);
             }
+            if (_dimItems && _keepHighlightPosition && children.Count > 0)
+                children[0].Dim = false;
 
             HandleHArrows();
             HandleVArrows();
-        }
-
-        public void FocusContainer()
-        {
-            FocusItem(0);
         }
 
         public void SelectItem()
@@ -114,7 +119,7 @@ namespace Arenbee.Framework.GUI
             if (IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                FocusOOB?.Invoke(this, Direction.Up);
+                LeaveFocus(Direction.Up);
         }
 
         public void FocusDown()
@@ -123,7 +128,7 @@ namespace Arenbee.Framework.GUI
             if (IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                FocusOOB?.Invoke(this, Direction.Down);
+                LeaveFocus(Direction.Down);
         }
 
         public void FocusLeft()
@@ -132,7 +137,7 @@ namespace Arenbee.Framework.GUI
             if (ItemIndex % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                FocusOOB?.Invoke(this, Direction.Left);
+                LeaveFocus(Direction.Left);
         }
 
         public void FocusRight()
@@ -141,7 +146,7 @@ namespace Arenbee.Framework.GUI
             if ((ItemIndex + 1) % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                FocusOOB?.Invoke(this, Direction.Right);
+                LeaveFocus(Direction.Right);
         }
 
         public void FocusTopEnd()
@@ -167,7 +172,7 @@ namespace Arenbee.Framework.GUI
 
         public void FocusRightEnd()
         {
-            int nextIndex = ((ItemIndex / GridContainer.Columns) + 1) * GridContainer.Columns - 1;
+            int nextIndex = (((ItemIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
             if (nextIndex >= OptionItems.Count)
                 nextIndex = OptionItems.Count - 1;
             FocusItem(nextIndex);
@@ -204,19 +209,32 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        private void FocusItem(int index)
+        public void FocusItem(int index)
         {
             if (IsValidIndex(index))
             {
+                if (_dimItems) CurrentItem.Dim = true;
                 ItemIndex = index;
                 FocusItem(OptionItems[index]);
+            }
+            else if (0 < OptionItems.Count && OptionItems.Count < index)
+            {
+                if (_dimItems) CurrentItem.Dim = true;
+                ItemIndex = OptionItems.Count - 1;
+                FocusItem(OptionItems[ItemIndex]);
             }
         }
 
         private void FocusItem(OptionItem optionItem)
         {
             AdjustPosition(optionItem);
+            if (_dimItems) CurrentItem.Dim = false;
             ItemFocused?.Invoke(this, optionItem);
+        }
+
+        private void LeaveFocus(Direction direction)
+        {
+            FocusOOB?.Invoke(this, direction);
         }
 
         private void HandleHArrows()

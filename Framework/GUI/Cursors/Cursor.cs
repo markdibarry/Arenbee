@@ -19,7 +19,6 @@ namespace Arenbee.Framework.GUI
 
         public virtual void HandleCursorAnimation(float delta)
         {
-
         }
     }
 }

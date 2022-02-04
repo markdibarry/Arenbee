@@ -11,10 +11,6 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class EquipmentSubMenu : OptionSubMenu
     {
         public static new readonly string ScenePath = $"res://Assets/GUI/Menus/PartyMenu/Equipment/{nameof(EquipmentSubMenu)}.tscn";
-        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
-        {
-            base.OnItemFocused(optionContainer, optionItem);
-        }
 
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {

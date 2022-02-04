@@ -12,4 +12,3 @@ namespace Arenbee.Framework.Constants
         public const string StateDisplay = "res://Framework/GUI/HUD/StateDisplay.tscn";
     }
 }
-

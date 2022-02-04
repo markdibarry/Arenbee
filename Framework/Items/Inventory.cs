@@ -8,25 +8,25 @@ namespace Arenbee.Framework.Items
     {
         public Inventory()
         {
-            _items = new List<ItemStack>();
+            _itemStacks = new List<ItemStack>();
         }
 
         public Inventory(ICollection<ItemStack> items)
         {
-            _items = items.ToList();
+            _itemStacks = items.ToList();
         }
 
-        public ICollection<ItemStack> Items { get { return _items.AsReadOnly(); } }
-        private readonly List<ItemStack> _items;
+        public ICollection<ItemStack> Items { get { return _itemStacks.AsReadOnly(); } }
+        private readonly List<ItemStack> _itemStacks;
 
         /// <summary>
         /// Returns the matching ItemStack for Item Id provided. Returns null if no stack is found.
         /// </summary>
         /// <param name="itemId"></param>
-        /// <returns></returns>
+        /// <returns>ItemStack</returns>
         public ItemStack GetItemStack(string itemId)
         {
-            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(itemId));
+            return _itemStacks.Find(itemSlot => itemSlot.ItemId.Equals(itemId));
         }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace Arenbee.Framework.Items
         /// <returns></returns>
         public ItemStack GetItemStack(Item item)
         {
-            return _items.FirstOrDefault(itemSlot => itemSlot.ItemId.Equals(item.Id));
+            return _itemStacks.Find(itemStack => itemStack.ItemId.Equals(item.Id));
         }
 
         public ICollection<ItemStack> GetItemsByType(ItemType itemType)
         {
-            return _items.Where(item => ItemDB.GetItem(item.ItemId).ItemType == itemType).ToList();
+            return _itemStacks.Where(itemStack => itemStack.Item.ItemType == itemType).ToList();
         }
 
         /// <summary>
@@ -58,12 +58,12 @@ namespace Arenbee.Framework.Items
             {
                 if (amount > item.MaxStack)
                 {
-                    _items.Add(new ItemStack(item.Id, item.MaxStack));
+                    _itemStacks.Add(new ItemStack(item.Id, item.MaxStack));
                     leftOver = amount - item.MaxStack;
                 }
                 else
                 {
-                    _items.Add(new ItemStack(item.Id, amount));
+                    _itemStacks.Add(new ItemStack(item.Id, amount));
                     leftOver = 0;
                 }
             }
@@ -92,7 +92,7 @@ namespace Arenbee.Framework.Items
                 itemStack.RemoveAmount(amount);
                 if (itemStack.Amount == 0)
                 {
-                    _items.Remove(itemStack);
+                    _itemStacks.Remove(itemStack);
                 }
                 return true;
             }

@@ -6,13 +6,13 @@ namespace Arenbee.Framework.SaveData
 {
     public static class SaveService
     {
-        private static readonly string s_savePath = "user://gamesave.json";
+        private const string SavePath = "user://gamesave.json";
         public static void SaveGame(GameSession gameSession)
         {
             var gameSave = new GameSave(gameSession);
             string saveString = JsonConvert.SerializeObject(gameSave, Formatting.Indented);
             var file = new File();
-            file.Open(s_savePath, File.ModeFlags.Write);
+            file.Open(SavePath, File.ModeFlags.Write);
             file.StoreString(saveString);
             file.Close();
         }
@@ -20,12 +20,11 @@ namespace Arenbee.Framework.SaveData
         public static GameSave LoadGame()
         {
             var file = new File();
-            if (!file.FileExists(s_savePath)) return null;
-            file.Open(s_savePath, File.ModeFlags.Read);
+            if (!file.FileExists(SavePath)) return null;
+            file.Open(SavePath, File.ModeFlags.Read);
             string content = file.GetAsText();
             file.Close();
-            GameSave gameSave = JsonConvert.DeserializeObject<GameSave>(content);
-            return gameSave;
+            return JsonConvert.DeserializeObject<GameSave>(content);
         }
     }
 }

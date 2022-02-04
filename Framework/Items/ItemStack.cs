@@ -12,10 +12,24 @@ namespace Arenbee.Framework.Items
             Amount = amount;
         }
 
-        public string ItemId { get; private set; }
+        public string ItemId { get; }
+        public Item Item
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ItemId))
+                {
+                    if (_item == null || _item.Id != ItemId)
+                        _item = ItemDB.GetItem(ItemId);
+                    return _item;
+                }
+                return null;
+            }
+        }
         public int Amount { get; private set; }
         [JsonIgnore]
         public ICollection<EquipmentSlot> Reservations { get; set; }
+        private Item _item;
 
         public void AddAmount(int num)
         {

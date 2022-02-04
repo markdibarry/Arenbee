@@ -28,6 +28,7 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 35.0
 offset_bottom = 43.0
+_dimItems = true
 
 [node name="ArrowUp" parent="PanelContainer/SaveOptions/VBoxContainer" index="0"]
 offset_left = 11.0

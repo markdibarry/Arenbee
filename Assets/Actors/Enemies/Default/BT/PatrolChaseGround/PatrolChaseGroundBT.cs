@@ -22,5 +22,4 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
             return root;
         }
     }
-
 }

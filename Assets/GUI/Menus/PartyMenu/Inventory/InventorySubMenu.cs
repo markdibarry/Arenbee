@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
@@ -16,71 +16,68 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
         [Export]
         private readonly NodePath _itemInfoLabelPath;
         private Label _itemInfoLabel;
-        private string _inventoryListName;
-        private string _typeListName;
+        private OptionContainer _inventoryList;
+        private OptionContainer _typeList;
+        private Inventory _inventory;
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _inventoryListName = OptionContainers[0].Name;
-            _typeListName = OptionContainers[1].Name;
+            _inventoryList = OptionContainers[0];
+            _typeList = OptionContainers[1];
             _itemInfoLabel = GetNode<Label>(_itemInfoLabelPath);
+        }
+
+        protected override Task Init()
+        {
+            _inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
+            return base.Init();
         }
 
         protected override void AddContainerItems()
         {
-            AddInventoryTypes();
-            ReplaceInventoryItems(null);
-        }
+            _inventoryList?.ReplaceItems(GetItemOptions(null));
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
-        {
-            base.OnItemSelected(optionContainer, optionItem);
-            if (optionContainer.Name == _inventoryListName)
-                HandleInventoryItemSelected(optionItem);
-            else
-                HandleTypeItemSelected(optionItem);
+            if (_typeList != null)
+            {
+                var typeOptions = GetItemTypeOptions();
+                _typeList.GridContainer.Columns = typeOptions.Count;
+                _typeList.ReplaceItems(typeOptions);
+            }
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemFocused(optionContainer, optionItem);
-            if (optionContainer.Name == _typeListName)
+            if (optionContainer == _typeList)
             {
                 ItemType? itemType = null;
                 if (optionItem.OptionValue != "All")
                     itemType = Enum.Parse<ItemType>(optionItem.OptionValue);
-                ReplaceInventoryItems(itemType);
+                var options = GetItemOptions(itemType);
+                _inventoryList.ReplaceItems(options);
+                _inventoryList.InitItems();
             }
             else
             {
-                Item item = ItemDB.GetItem(optionItem.OptionValue);
+                Item item = _inventory.GetItemStack(optionItem.OptionValue)?.Item;
                 if (item != null)
                     _itemInfoLabel.Text = item.Description;
             }
         }
 
-        protected override void OnFocusOOB(OptionContainer container, Direction direction)
+        protected override void OnFocusOOB(OptionContainer containerLeavingFocus, Direction direction)
         {
-            if (container.Name == _typeListName)
-                HandleTypeListOOB(container, direction);
+            if (containerLeavingFocus == _typeList)
+                HandleTypeListOOB(containerLeavingFocus, direction);
             else
-                HandleInventoryListOOB(container, direction);
-        }
-
-        private void HandleInventoryItemSelected(OptionItem optionItem)
-        {
-
-        }
-
-        private void HandleTypeItemSelected(OptionItem optionItem)
-        {
+                HandleInventoryListOOB(containerLeavingFocus, direction);
         }
 
         private void HandleTypeListOOB(OptionContainer container, Direction direction)
         {
             if (direction == Direction.Down)
-                FocusContainer(OptionContainers.First(x => x.Name == _inventoryListName));
+                FocusContainerPreviousItem(_inventoryList);
             else
                 base.OnFocusOOB(container, direction);
         }
@@ -88,37 +85,39 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
         private void HandleInventoryListOOB(OptionContainer container, Direction direction)
         {
             if (direction == Direction.Up)
-                FocusContainer(OptionContainers.First(x => x.Name == _typeListName));
+            {
+                _itemInfoLabel.Text = string.Empty;
+                FocusContainerPreviousItem(_typeList);
+            }
             else
+            {
                 base.OnFocusOOB(container, direction);
+            }
         }
 
-        private void ReplaceInventoryItems(ItemType? itemType)
+        private List<KeyValueOption> GetItemOptions(ItemType? itemType)
         {
             var keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.ScenePath);
             var options = new List<KeyValueOption>();
             Inventory inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
-            List<ItemStack> items;
+            ICollection<ItemStack> itemStacks;
             if (itemType == null)
-                items = inventory.Items.ToList();
+                itemStacks = inventory.Items;
             else
-                items = inventory.GetItemsByType((ItemType)itemType).ToList();
+                itemStacks = inventory.GetItemsByType((ItemType)itemType);
 
-            foreach (var item in items)
+            foreach (var itemStack in itemStacks)
             {
                 var option = keyValueOptionScene.Instantiate<KeyValueOption>();
-                option.KeyText = ItemDB.GetItem(item.ItemId).DisplayName;
-                option.ValueText = "x" + item.Amount.ToString();
-                option.OptionValue = item.ItemId;
+                option.KeyText = itemStack.Item.DisplayName;
+                option.ValueText = "x" + itemStack.Amount.ToString();
+                option.OptionValue = itemStack.ItemId;
                 options.Add(option);
             }
-            OptionContainer inventoryList = OptionContainers.Find(x => x.Name == "InventoryList");
-
-            inventoryList.ReplaceItems(options);
-            inventoryList.InitItems();
+            return options;
         }
 
-        private void AddInventoryTypes()
+        private List<TextOption> GetItemTypeOptions()
         {
             var textOptionScene = GD.Load<PackedScene>(TextOption.ScenePath);
             var allOption = textOptionScene.Instantiate<TextOption>();
@@ -132,10 +131,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 option.OptionValue = typeName;
                 options.Add(option);
             }
-
-            OptionContainer typeList = OptionContainers.Find(x => x.Name == "TypeList");
-            typeList.GridContainer.Columns = options.Count;
-            typeList.ReplaceItems(options);
+            return options;
         }
     }
 }

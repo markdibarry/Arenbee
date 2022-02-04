@@ -6,23 +6,18 @@ namespace Arenbee.Framework.Actors
     {
         private Actor _actor;
         private ShaderMaterial _spriteShader;
-
-        [Export]
-        public float IFrameDuration { get; set; } = 0.6f;
         private float _iframeTimer;
         private bool _iframeTimerEnabled;
-        [Export]
-        public float BlinkSpeed { get; set; } = 0.05f;
         private float _blinkTimer;
         private bool _blinkEnabled;
-        [Export]
-        public float FlashDuration { get; set; } = 0.1f;
         private float _flashTimer;
         private bool _flashTimerEnabled;
-
-        public override void _Ready()
-        {
-        }
+        [Export]
+        public float IFrameDuration { get; set; } = 0.6f;
+        [Export]
+        public float BlinkSpeed { get; set; } = 0.05f;
+        [Export]
+        public float FlashDuration { get; set; } = 0.1f;
 
         public override void _PhysicsProcess(float delta)
         {
@@ -35,7 +30,9 @@ namespace Arenbee.Framework.Actors
                     OnIFrameTimerExpire();
                 }
                 else
+                {
                     _iframeTimer -= delta;
+                }
             }
 
             if (_flashTimerEnabled)
@@ -46,7 +43,9 @@ namespace Arenbee.Framework.Actors
                     OnFlashTimerExpire();
                 }
                 else
+                {
                     _flashTimer -= delta;
+                }
             }
 
             if (_blinkEnabled)
@@ -57,7 +56,9 @@ namespace Arenbee.Framework.Actors
                     OnBlinkSpeedTimerExpire();
                 }
                 else
+                {
                     _blinkTimer -= delta;
+                }
             }
         }
 
@@ -66,7 +67,6 @@ namespace Arenbee.Framework.Actors
             _actor = actor;
             _spriteShader = (ShaderMaterial)_actor.BodySprite.Material;
             if (_spriteShader == null) GD.PrintErr("ShaderMaterial not provided!");
-
         }
 
         public void Start(bool shouldBlink)
@@ -94,6 +94,12 @@ namespace Arenbee.Framework.Actors
             _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 1);
         }
 
+        public override void _ExitTree()
+        {
+            base._ExitTree();
+            _spriteShader.Dispose();
+        }
+
         private void OnBlinkSpeedTimerExpire()
         {
             if (_actor.BodySprite.Modulate.a > 0)
@@ -115,12 +121,5 @@ namespace Arenbee.Framework.Actors
         {
             Stop();
         }
-
-        public override void _ExitTree()
-        {
-            base._ExitTree();
-            _spriteShader.Dispose();
-        }
     }
-
 }
