@@ -7,9 +7,20 @@
 process_mode = 3
 script = ExtResource( "1_6aro1" )
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0.54902, 1, 1)
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="MenuInputHandler" type="Node" parent="."]
 script = ExtResource( "2_cpj4u" )
 
-[node name="TitleScreenContainer" type="Node" parent="."]
+[node name="CurrentGameContainer" type="Node2D" parent="."]
 
-[node name="CurrentGameContainer" type="Node" parent="."]
+[node name="TitleScreenContainer" type="Node2D" parent="."]

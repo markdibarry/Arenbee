@@ -1,12 +1,13 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
 
-namespace Arenbee.Assets.Actors.Enemies.PlantNS
+namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Plant : Actor
     {
-        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Plant/{nameof(Plant)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         public override void Init()
         {
             base.Init();

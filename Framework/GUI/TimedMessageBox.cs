@@ -1,3 +1,4 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -5,7 +6,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class TimedMessageBox : MessageBox
     {
-        public static new readonly string ScenePath = $"res://Framework/GUI/{nameof(TimedMessageBox)}.tscn";
+        public static new string GetScenePath() => GDEx.GetScenePath();
         [Export]
         private float _timeOut = 2.0f;
         private bool _timerFinished;

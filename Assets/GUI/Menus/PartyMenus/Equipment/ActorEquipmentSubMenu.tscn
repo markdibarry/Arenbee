@@ -1,0 +1,156 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_nycks"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenus/Equipment/ActorEquipmentSubMenu.cs" id="2_d0kgc"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentContainer.tscn" id="3_04bb6"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="3_xqkw1"]
+
+[node name="ActorEquipmentSubMenu" instance=ExtResource( "1_nycks" )]
+script = ExtResource( "2_d0kgc" )
+_optionContainerPaths = [NodePath("Foreground/PanelContainer/EquipmentContainer")]
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
+offset_left = 80.0
+offset_top = 56.0
+offset_right = 232.0
+offset_bottom = 171.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EquipmentContainer" parent="Foreground/PanelContainer" index="0" instance=ExtResource( "3_04bb6" )]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 147.0
+offset_bottom = 110.0
+
+[node name="ArrowUp" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer" index="0"]
+offset_left = 67.0
+offset_right = 74.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer" index="1"]
+offset_right = 142.0
+offset_bottom = 99.0
+
+[node name="ArrowLeft" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 43.0
+offset_bottom = 50.0
+
+[node name="Control" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 136.0
+offset_bottom = 93.0
+
+[node name="Weapon" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="0"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Weapon" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Weapon/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Weapon/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Headgear" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="1"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Headgear" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Headgear/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Headgear/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Shirt" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="2"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Shirt" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Shirt/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Shirt/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Pants" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="3"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Pants" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Pants/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Pants/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Footwear" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="4"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Footwear" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Footwear/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Footwear/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Accessory1" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="5"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="Accessory2" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="6"]
+offset_right = 130.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2" index="0"]
+offset_right = 128.0
+
+[node name="Key" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2/HBoxContainer" index="0"]
+offset_right = 40.0
+
+[node name="Value" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2/HBoxContainer" index="1"]
+offset_left = 44.0
+offset_right = 126.0
+
+[node name="ArrowRight" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 136.0
+offset_top = 43.0
+offset_right = 142.0
+offset_bottom = 50.0
+
+[node name="ArrowDown" parent="Foreground/PanelContainer/EquipmentContainer/VBoxContainer" index="2"]
+offset_left = 67.0
+offset_top = 99.0
+offset_right = 74.0
+offset_bottom = 105.0
+
+[node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "3_xqkw1" )]
+position = Vector2(79, 89)
+
+[editable path="Foreground/PanelContainer/EquipmentContainer"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Weapon"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Headgear"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Shirt"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Pants"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Footwear"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1"]
+[editable path="Foreground/PanelContainer/EquipmentContainer/VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2"]

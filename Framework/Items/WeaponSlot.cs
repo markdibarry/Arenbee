@@ -27,8 +27,7 @@ namespace Arenbee.Framework.Items
         public void AttachWeapon(string itemId)
         {
             DetachWeapon();
-            var weaponScene = GD.Load<PackedScene>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
-            var weapon = weaponScene.Instantiate<Weapon>();
+            var weapon = GDEx.Instantiate<Weapon>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
             CurrentWeapon = weapon;
             weapon.Actor = _actor;
             AddChild(weapon);

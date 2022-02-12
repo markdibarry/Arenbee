@@ -1,3 +1,4 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -5,7 +6,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class TextOption : OptionItem
     {
-        public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(TextOption)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         private Label _label;
         private string _labelText = string.Empty;
         [Export(PropertyHint.MultilineText)]

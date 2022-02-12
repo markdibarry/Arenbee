@@ -157,7 +157,7 @@ namespace Arenbee.Framework.Actors
         private void CreateStateDisplay()
         {
             //Debug Only
-            var stateDisplay = GD.Load<PackedScene>(PathConstants.StateDisplay).Instantiate<Control>();
+            var stateDisplay = GDEx.Instantiate<Control>(PathConstants.StateDisplay);
             _jumpStateDisplay = stateDisplay.GetNode<Label>("JumpState");
             _moveStateDisplay = stateDisplay.GetNode<Label>("MoveState");
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");

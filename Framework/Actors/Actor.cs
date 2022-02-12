@@ -8,7 +8,7 @@ namespace Arenbee.Framework.Actors
     /// <summary>
     /// Base character object.
     /// </summary>
-    public abstract partial class Actor : CharacterBody2D
+    public partial class Actor : CharacterBody2D
     {
         protected Actor()
         {
@@ -19,6 +19,7 @@ namespace Arenbee.Framework.Actors
         }
 
         private Node2D _body;
+        private bool _readyCalled;
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
         public Inventory Inventory { get; set; }
@@ -31,6 +32,7 @@ namespace Arenbee.Framework.Actors
         {
             SetNodeReferences();
             Init();
+            _readyCalled = true;
         }
 
         private void SetNodeReferences()
@@ -72,10 +74,17 @@ namespace Arenbee.Framework.Actors
             InputHandler.Update();
         }
 
+        public override void _EnterTree()
+        {
+            if (_readyCalled) SubscribeEvents();
+        }
+
         public override void _ExitTree()
         {
-            base._ExitTree();
             BehaviorTree?.ClearBlackBoard();
+            UnsubscribeEvents();
+            ActorRemoved?.Invoke(this);
+            // TODO: Shader memory leak
         }
     }
 }

@@ -26,18 +26,19 @@ namespace Arenbee.Framework.GUI
         private OptionContainer _currentContainer;
         public List<OptionContainer> OptionContainers { get; private set; }
 
-        public override void CloseSubMenu(string cascadeTo = null)
+        public override async Task CloseSubMenu(string cascadeTo = null)
         {
             foreach (var container in OptionContainers)
             {
                 UnsubscribeEvents(container);
             }
-            base.CloseSubMenu(cascadeTo);
+            await base.CloseSubMenu(cascadeTo);
         }
 
         protected override void SetNodeReferences()
         {
-            _cursor = this.GetChildren<Cursor>().FirstOrDefault();
+            base.SetNodeReferences();
+            _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
             if (_optionContainerPaths.Length == 0)
             {
                 GD.PrintErr(Name + " has no OptionContainer assigned.");
@@ -62,6 +63,9 @@ namespace Arenbee.Framework.GUI
             FocusContainer(OptionContainers.FirstOrDefault());
         }
 
+        /// <summary>
+        /// Overrides the items that should display
+        /// </summary>
         protected virtual void AddContainerItems() { }
 
         protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem) { }

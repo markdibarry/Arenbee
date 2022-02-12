@@ -4,7 +4,6 @@ namespace Arenbee.Framework.GUI
 {
     public partial class OptionItem : MarginContainer
     {
-        public static readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(OptionItem)}.tscn";
         private bool _dim;
         [Export]
         public string OptionValue { get; set; } = string.Empty;
@@ -14,10 +13,7 @@ namespace Arenbee.Framework.GUI
             get { return _dim; }
             set
             {
-                if (value && !_dim)
-                    Modulate = Modulate.Darkened(0.3f);
-                else
-                    Modulate = new Color(Colors.White);
+                Modulate = value ? Colors.White.Darkened(0.3f) : Colors.White;
                 _dim = value;
             }
         }

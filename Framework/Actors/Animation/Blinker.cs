@@ -94,10 +94,12 @@ namespace Arenbee.Framework.Actors
             _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 1);
         }
 
-        public override void _ExitTree()
+        public override void _Notification(int what)
         {
-            base._ExitTree();
-            _spriteShader.Dispose();
+            if (what == NotificationPredelete)
+            {
+                _spriteShader.Dispose();
+            }
         }
 
         private void OnBlinkSpeedTimerExpire()

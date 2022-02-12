@@ -2,12 +2,14 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
+using Godot;
 
-namespace Arenbee.Assets.Actors.Enemies.OrcNS
+namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Orc : Actor
     {
-        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Orc/{nameof(Orc)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         public override void Init()
         {
             base.Init();

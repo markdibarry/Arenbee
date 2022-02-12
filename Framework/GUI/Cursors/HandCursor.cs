@@ -1,3 +1,4 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -5,7 +6,7 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class HandCursor : Cursor
     {
-        public static new readonly string ScenePath = $"res://Framework/GUI/Cursors/{nameof(HandCursor)}.tscn";
+        public static new string GetScenePath() => GDEx.GetScenePath();
         private readonly float _cursorTimerOut = 1.0f;
         private float _cursorTimer = 0;
 

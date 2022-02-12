@@ -1,31 +1,25 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://byn2061flwj1c"]
 
-[ext_resource type="Font" path="res://Framework/GUI/Fonts/3x6.tres" id="1_hagkc"]
+[ext_resource type="Font" uid="uid://dk32ss3xnst4o" path="res://Framework/GUI/Fonts/3x6.tres" id="1_hagkc"]
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_j5sar"]
 
-[sub_resource type="StyleBoxFlat" id="1"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 0.960784, 0.34902, 1)
-
-[node name="PlayerStatsDisplay" type="Panel"]
+[node name="PlayerStatsDisplay" type="PanelContainer"]
 texture_filter = 1
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 52.0
-offset_bottom = 27.0
-theme_override_styles/panel = SubResource( "1" )
+offset_right = 56.0
+offset_bottom = 40.0
+theme = ExtResource( "1_j5sar" )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MarginWrapper" type="MarginContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 46.0
+offset_bottom = 30.0
+rect_clip_content = true
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_left = 3
@@ -37,8 +31,8 @@ __meta__ = {
 [node name="Panel" type="Control" parent="MarginWrapper"]
 offset_left = 3.0
 offset_top = 3.0
-offset_right = 44.0
-offset_bottom = 19.0
+offset_right = 38.0
+offset_bottom = 22.0
 
 [node name="Name" type="Label" parent="MarginWrapper/Panel"]
 offset_right = 12.0

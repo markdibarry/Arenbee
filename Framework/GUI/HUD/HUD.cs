@@ -1,48 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Constants;
+using Arenbee.Framework.Extensions;
+
 using Godot;
 
 namespace Arenbee.Framework.GUI
 {
     public partial class HUD : CanvasLayer
     {
-        public static readonly string ScenePath = $"res://Framework/GUI/HUD/{nameof(HUD)}.tscn";
-        public MessageBoxList MessageBoxList { get; set; }
-        public PackedScene TimedMessageBox { get; set; }
-        public Label FPSDisplay { get; set; }
-        public Label PlayerStatsDisplay { get; set; }
+        public static string GetScenePath() => GDEx.GetScenePath();
+        private PackedScene _timedMessageBoxScene;
+        private MessageBoxList _messageBoxList;
+        private Label _fpsDisplay;
+        private Label _playerStatsDisplay;
 
         public override void _Ready()
         {
-            base._Ready();
-            MessageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-            TimedMessageBox = GD.Load<PackedScene>(GUI.TimedMessageBox.ScenePath);
-            FPSDisplay = GetNode<Label>("FPSDisplay");
-            PlayerStatsDisplay = GetNode<Label>("PlayerStatsDisplay/MarginWrapper/Panel/HP");
+            _messageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
+            _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
+            _fpsDisplay = GetNode<Label>("FPSDisplay");
+            _playerStatsDisplay = GetNode<Label>("PlayerStatsDisplay/MarginWrapper/Panel/HP");
         }
 
         public override void _PhysicsProcess(float delta)
         {
             base._PhysicsProcess(delta);
-            FPSDisplay.Text = Performance.GetMonitor(Performance.Monitor.TimeFps).ToString();
+            _fpsDisplay.Text = Performance.GetMonitor(Performance.Monitor.TimeFps).ToString();
         }
 
-        public void SubscribeEvents(IEnumerable<Actor> actors)
+        public void SubscribeAreaSceneEvents(AreaScene areaScene)
         {
+            var actors = areaScene.GetAllActors();
             foreach (Actor actor in actors)
             {
                 SubscribeActorEvents(actor);
             }
+            areaScene.ActorAdded += OnActorAddedToAreaScene;
         }
 
-        public void SubscribeActorEvents(Actor actor)
+        private void OnActorAddedToAreaScene(Actor actor)
+        {
+            SubscribeActorEvents(actor);
+        }
+
+        private void SubscribeActorEvents(Actor actor)
         {
             actor.HitBoxActionRecieved += OnHitBoxActionRecieved;
             actor.ActorDefeated += OnActorDefeated;
+            actor.ActorRemoved += OnActorRemoved;
             if (actor.ActorType == ActorType.Player)
             {
                 UpdatePlayerStatsDisplay(actor);
@@ -50,10 +58,11 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        public void UnsubscribeActorEvents(Actor actor)
+        private void UnsubscribeActorEvents(Actor actor)
         {
             actor.HitBoxActionRecieved -= OnHitBoxActionRecieved;
             actor.ActorDefeated -= OnActorDefeated;
+            actor.ActorRemoved -= OnActorRemoved;
             if (actor.ActorType == ActorType.Player)
             {
                 actor.StatsUpdated -= OnPlayerStatsUpdated;
@@ -65,31 +74,30 @@ namespace Arenbee.Framework.GUI
             UpdatePlayerStatsDisplay(actor);
         }
 
-        private void UpdatePlayerStatsDisplay(Actor actor)
-        {
-            PlayerStatsDisplay.Text = $"{actor.Stats[StatType.HP].DisplayValue}/{actor.Stats[StatType.MaxHP].DisplayValue}";
-        }
-
         private void OnHitBoxActionRecieved(HitBoxActionRecievedData data)
         {
             if (data.ElementMultiplier != 1)
             {
-                var effectiveMessage = TimedMessageBox.Instantiate() as TimedMessageBox;
+                var effectiveMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
                 string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
                 effectiveMessage.MessageText = $"{data.RecieverName} {effectiveness} {data.Element}!";
-                MessageBoxList.AddMessageToTop(effectiveMessage);
+                _messageBoxList.AddMessageToTop(effectiveMessage);
             }
-            var actionMessage = TimedMessageBox.Instantiate() as TimedMessageBox;
+            var actionMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
             string action = data.TotalDamage < 0 ? "healed" : "hurt";
             actionMessage.MessageText = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
-            MessageBoxList.AddMessageToTop(actionMessage);
+            _messageBoxList.AddMessageToTop(actionMessage);
         }
 
         private void OnActorDefeated(Actor actor)
         {
-            var defeatedMessage = TimedMessageBox.Instantiate() as TimedMessageBox;
+            var defeatedMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
             defeatedMessage.MessageText = $"{actor.Name} was defeated!";
-            MessageBoxList.AddMessageToTop(defeatedMessage);
+            _messageBoxList.AddMessageToTop(defeatedMessage);
+        }
+
+        private void OnActorRemoved(Actor actor)
+        {
             UnsubscribeActorEvents(actor);
         }
 
@@ -111,6 +119,11 @@ namespace Arenbee.Framework.GUI
             {
                 return "absorbs";
             }
+        }
+
+        private void UpdatePlayerStatsDisplay(Actor actor)
+        {
+            _playerStatsDisplay.Text = $"{actor.Stats[StatType.HP].DisplayValue}/{actor.Stats[StatType.MaxHP].DisplayValue}";
         }
     }
 }

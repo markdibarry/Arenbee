@@ -5,7 +5,7 @@ using Arenbee.Framework.Items;
 
 namespace Arenbee.Framework.Actors
 {
-    public abstract partial class Actor
+    public partial class Actor
     {
         private void InitEquipment()
         {

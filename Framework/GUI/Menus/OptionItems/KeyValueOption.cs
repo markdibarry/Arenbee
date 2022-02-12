@@ -1,10 +1,11 @@
-﻿using Arenbee.Framework.GUI;
+﻿using Arenbee.Framework.Extensions;
+using Arenbee.Framework.GUI;
 using Godot;
 
 [Tool]
 public partial class KeyValueOption : OptionItem
 {
-    public static new readonly string ScenePath = $"res://Framework/GUI/Menus/OptionItems/{nameof(KeyValueOption)}.tscn";
+    public static string GetScenePath() => GDEx.GetScenePath();
     private Label _keyLabel;
     private string _keyText = string.Empty;
     private Label _valueLabel;

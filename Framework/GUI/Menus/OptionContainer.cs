@@ -17,7 +17,6 @@ namespace Arenbee.Framework.GUI
             _fillBottom = false;
         }
 
-        public static readonly string ScenePath = $"res://Framework/GUI/Menus/{nameof(OptionContainer)}.tscn";
 #pragma warning disable IDE0044
         [Export]
         private bool _fillRight;
@@ -93,6 +92,9 @@ namespace Arenbee.Framework.GUI
             AddItems(optionItems);
         }
 
+        /// <summary>
+        /// Initialize the items that were added to the container
+        /// </summary>
         public void InitItems()
         {
             var children = GridContainer.GetChildren<OptionItem>().ToList();

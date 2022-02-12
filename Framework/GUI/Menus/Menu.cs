@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Arenbee.Framework.Extensions;
+
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -13,16 +15,20 @@ namespace Arenbee.Framework.GUI
             _subMenuStack = new Stack<SubMenu>();
         }
 
-        public static readonly string ScenePath = $"res://Framework/GUI/Menus/{nameof(Menu)}.tscn";
         private readonly Stack<SubMenu> _subMenuStack;
         public event EventHandler RootSubMenuClosed;
 
         public override void _Ready()
         {
             SetNodeReferences();
+            Init();
         }
 
-        public void SetNodeReferences()
+        private void SetNodeReferences()
+        {
+        }
+
+        private void Init()
         {
             SubMenu firstSubMenu = this.GetChildren<SubMenu>().FirstOrDefault();
             _subMenuStack.Push(firstSubMenu);
@@ -56,7 +62,7 @@ namespace Arenbee.Framework.GUI
             AddChild(subMenu);
         }
 
-        private void RemoveSubMenu(string cascadeTo = null)
+        private async void RemoveSubMenu(string cascadeTo = null)
         {
             UnsubscribeEvents(_subMenuStack.Peek());
             _subMenuStack.Pop();
@@ -66,20 +72,20 @@ namespace Arenbee.Framework.GUI
                 currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
                 currentSubMenu.Dim = false;
                 if (cascadeTo != null && cascadeTo != currentSubMenu.GetType().Name)
-                    currentSubMenu.CloseSubMenu(cascadeTo);
+                    await currentSubMenu.CloseSubMenu(cascadeTo);
             }
             else
             {
-                RootSubMenuClosed?.Invoke(this, EventArgs.Empty);
                 QueueFree();
+                RootSubMenuClosed?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        private void CloseAllSubMenus()
+        private async void CloseAllSubMenus()
         {
             while (_subMenuStack.Count > 0)
             {
-                RemoveSubMenu();
+                await _subMenuStack.Peek().CloseSubMenu();
             }
         }
 

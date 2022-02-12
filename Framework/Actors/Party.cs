@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.SaveData;
-using Godot;
 
 namespace Arenbee.Framework.Actors
 {
@@ -19,8 +19,7 @@ namespace Arenbee.Framework.Actors
             Inventory = new Inventory(items);
             foreach (var actorInfo in actorInfos)
             {
-                var actorScene = GD.Load<PackedScene>(actorInfo.ActorPath);
-                var actor = actorScene.Instantiate<Actor>();
+                var actor = GDEx.Instantiate<Actor>(actorInfo.ActorPath);
                 actor.Inventory = Inventory;
                 actor.Equipment = new Equipment(actorInfo.EquipmentSlots);
                 actor.Stats = actorInfo.Stats;
@@ -30,5 +29,13 @@ namespace Arenbee.Framework.Actors
 
         public List<Actor> Actors { get; set; }
         public Inventory Inventory { get; set; }
+
+        public void Free()
+        {
+            foreach (Actor actor in Actors)
+            {
+                actor.QueueFree();
+            }
+        }
     }
 }

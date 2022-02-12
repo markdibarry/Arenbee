@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://chirce6tsjgq3"]
+
+[ext_resource type="Script" path="res://Framework/Dialog/DialogText.cs" id="1_cmj1o"]
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_kso26"]
+
+[node name="RichTextLabel" type="RichTextLabel"]
+rect_clip_content = false
+offset_right = 65.0
+offset_bottom = 29.0
+theme = ExtResource( "1_kso26" )
+bbcode_enabled = true
+text = "sa 
+
+Here's text that should
+1
+wrap.
+There is a ton of stuff that could be written here and no one would ever know."
+scroll_active = false
+visible_characters = 111
+visible_characters_behavior = 1
+percent_visible = 0.965217
+script = ExtResource( "1_cmj1o" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_speed = 0.02

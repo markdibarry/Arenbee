@@ -1,4 +1,5 @@
 ﻿using Arenbee.Assets.Actors.Default.BaseStates;
+using Arenbee.Assets.Actors.Enemies.ActionStates;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
@@ -6,7 +7,7 @@ using Godot;
 
 namespace Arenbee.Framework.Actors
 {
-    public abstract partial class Actor
+    public partial class Actor
     {
         public bool IsAttackDisabled { get; set; }
         public bool IsWalkDisabled { get; set; }
@@ -19,7 +20,9 @@ namespace Arenbee.Framework.Actors
         private Blinker _blinker;
         private PackedScene _enemyDeathEffectScene;
         public delegate void ActorDefeatedHandler(Actor actor);
+        public delegate void ActorRemovedHandler(Actor actor);
         public event ActorDefeatedHandler ActorDefeated;
+        public event ActorRemovedHandler ActorRemoved;
 
         private void InitState()
         {
@@ -27,7 +30,7 @@ namespace Arenbee.Framework.Actors
 
             StateController = new StateController(this);
             WeaponSlot.Init(this, Equipment.GetSlot(EquipmentSlotName.Weapon));
-            _enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.ScenePath);
+            _enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.GetScenePath());
         }
 
         private void OnHurtBoxEntered(Area2D area2D)
@@ -77,12 +80,6 @@ namespace Arenbee.Framework.Actors
                 parent.AddChild(enemyDeathEffect);
                 enemyDeathEffect.Play();
             }
-        }
-
-        public void QueueFreeActor()
-        {
-            UnsubscribeEvents();
-            QueueFree();
         }
 
         public void SubscribeEvents()

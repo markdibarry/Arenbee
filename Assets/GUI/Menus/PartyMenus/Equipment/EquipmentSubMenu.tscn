@@ -1,0 +1,80 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_wamdw"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_ovs5n"]
+[ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0hfg8"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="3_qf2rb"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_7h0j8"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentContainer.tscn" id="5_iqx0k"]
+
+[node name="EquipmentSubMenu" instance=ExtResource( "1_wamdw" )]
+script = ExtResource( "2_ovs5n" )
+_optionContainerPaths = [NodePath("Foreground/PanelContainer/PartyList")]
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
+offset_left = 80.0
+offset_top = 8.0
+offset_right = 232.0
+offset_bottom = 48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PartyList" parent="Foreground/PanelContainer" index="0" instance=ExtResource( "3_0hfg8" )]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 147.0
+offset_bottom = 35.0
+
+[node name="ArrowUp" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="0"]
+offset_left = 67.0
+offset_right = 74.0
+
+[node name="HBoxContainer" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="1"]
+offset_right = 142.0
+offset_bottom = 24.0
+
+[node name="ArrowLeft" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 5.0
+offset_bottom = 12.0
+
+[node name="Control" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 136.0
+offset_bottom = 18.0
+
+[node name="Ady" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
+offset_right = 16.0
+offset_bottom = 13.0
+LabelText = "Ady"
+
+[node name="ArrowRight" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 136.0
+offset_top = 5.0
+offset_right = 142.0
+offset_bottom = 12.0
+
+[node name="ArrowDown" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="2"]
+offset_left = 67.0
+offset_top = 24.0
+offset_right = 74.0
+offset_bottom = 30.0
+
+[node name="PanelContainer2" type="PanelContainer" parent="Foreground" index="1"]
+offset_left = 80.0
+offset_top = 56.0
+offset_right = 232.0
+offset_bottom = 168.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EquipmentContainer" parent="Foreground/PanelContainer2" index="0" instance=ExtResource( "5_iqx0k" )]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 147.0
+offset_bottom = 107.0
+
+[node name="HandCursor" parent="Foreground" index="2" instance=ExtResource( "3_qf2rb" )]
+position = Vector2(87, 25)
+
+[editable path="Foreground/PanelContainer/PartyList"]

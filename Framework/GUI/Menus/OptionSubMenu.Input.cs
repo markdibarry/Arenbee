@@ -14,7 +14,7 @@ namespace Arenbee.Framework.GUI
 
         public override void _PhysicsProcess(float delta)
         {
-            if (Engine.IsEditorHint()) return;
+            if (Engine.IsEditorHint() || !IsActive) return;
             base._PhysicsProcess(delta);
 
             var menuInput = GameRoot.MenuInput;

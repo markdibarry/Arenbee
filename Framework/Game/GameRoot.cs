@@ -12,8 +12,8 @@ namespace Arenbee.Framework.Game
         {
             s_instance = this;
         }
-        public Node CurrentGameContainer { get; set; }
-        public Node TitleScreenContainer { get; set; }
+        public Node2D CurrentGameContainer { get; set; }
+        public Node2D TitleScreenContainer { get; set; }
         public GameSession CurrentGame { get; set; }
         public static GUIInputHandler MenuInput { get; private set; }
         private static GameRoot s_instance;
@@ -29,8 +29,8 @@ namespace Arenbee.Framework.Game
         private void SetNodeReferences()
         {
             MenuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
-            TitleScreenContainer = GetNodeOrNull<Node>("TitleScreenContainer");
-            CurrentGameContainer = GetNodeOrNull<Node>("CurrentGameContainer");
+            TitleScreenContainer = GetNodeOrNull<Node2D>("TitleScreenContainer");
+            CurrentGameContainer = GetNodeOrNull<Node2D>("CurrentGameContainer");
         }
 
         private void Init()
@@ -47,7 +47,7 @@ namespace Arenbee.Framework.Game
 
             if (Godot.Input.IsActionJustPressed("hardReset"))
             {
-                HardReset();
+                ResetToTitleScreen();
             }
 
             if (Godot.Input.IsActionJustPressed("print"))
@@ -58,18 +58,17 @@ namespace Arenbee.Framework.Game
 
         public void ResetToTitleScreen()
         {
+            var titleScreen = _titleScreenScene.Instantiate<Menu>();
+            TitleScreenContainer.AddChild(titleScreen);
+        }
+
+        public void EndCurrentgame()
+        {
             if (IsInstanceValid(CurrentGame))
             {
                 CurrentGame.QueueFree();
                 CurrentGame = null;
             }
-            var titleScreen = _titleScreenScene.Instantiate<Menu>();
-            TitleScreenContainer.AddChild(titleScreen);
-        }
-
-        private void HardReset()
-        {
-            ResetToTitleScreen();
         }
     }
 }

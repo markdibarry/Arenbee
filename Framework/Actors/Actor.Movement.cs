@@ -8,7 +8,7 @@ using Godot;
 
 namespace Arenbee.Framework.Actors
 {
-    public abstract partial class Actor
+    public partial class Actor
     {
         private bool _isPlayerControlled;
         private int _moveX;
@@ -91,6 +91,12 @@ namespace Arenbee.Framework.Actors
                 && InputHandler.Run.IsActionPressed;
         }
 
+        public void AttachInputHandler(ActorInputHandler inputHandler)
+        {
+            InputHandler = inputHandler;
+            AddChild(inputHandler);
+        }
+
         private void HandleMoveX(float delta)
         {
             if (_moveX != 0)
@@ -119,6 +125,7 @@ namespace Arenbee.Framework.Actors
 
         private void AttachInitialInputHandler()
         {
+            if (InputHandler != null) return;
             var attachedInputHandler = this.GetChildren<ActorInputHandler>()
                 .FirstOrDefault();
             if (attachedInputHandler != null)

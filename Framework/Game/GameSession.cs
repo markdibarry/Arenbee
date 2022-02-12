@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using Arenbee.Assets.Actors.Players.AdyNS;
-using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
@@ -12,7 +9,7 @@ using Godot;
 
 namespace Arenbee.Framework.Game
 {
-    public partial class GameSession : Node
+    public partial class GameSession : Node2D
     {
         public GameSession()
         {
@@ -20,39 +17,36 @@ namespace Arenbee.Framework.Game
             SessionState = new SessionState();
         }
 
-        public GameSession(GameSave gameSave)
-        {
-            Party = new Party(gameSave.ActorInfos, gameSave.Items);
-            SessionState = gameSave.SessionState;
-        }
-
+        public static string GetScenePath() => GDEx.GetScenePath();
+        private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(PathConstants.PartyMenuPath);
+        private Menu _partyMenu;
+        private Node2D _currentAreaContainer;
+        private HUD _hud;
         public AreaScene CurrentAreaScene { get; private set; }
         public Party Party { get; private set; }
         public SessionState SessionState { get; private set; }
-        private Menu _partyMenu;
-        private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(PathConstants.PartyMenuPath);
+        public TransitionFadeColor Transition { get; private set; }
 
         public override void _Ready()
         {
+            ProcessMode = ProcessModeEnum.Disabled;
             SetNodeReferences();
-            Init();
         }
 
-        private void SetNodeReferences()
+        public void SetNodeReferences()
         {
-            CurrentAreaScene = this.GetChildren<AreaScene>().FirstOrDefault();
+            _hud = GetNode<HUD>("HUD");
+            _currentAreaContainer = GetNode<Node2D>("CurrentAreaSceneContainer");
+            Transition = GetNode<TransitionFadeColor>("Transition/TransitionFadeColor");
         }
 
-        private void Init()
+        public void Init(GameSave gameSave)
         {
-            if (CurrentAreaScene == null)
-            {
-                PackedScene demoLevelScene = ResourceLoader.Load<PackedScene>(PathConstants.DemoLevel);
-                CurrentAreaScene = demoLevelScene.Instantiate<AreaScene>();
-                AddChild(CurrentAreaScene);
-            }
-            InitParty();
-            InitHUD();
+            Party = new Party(gameSave.ActorInfos, gameSave.Items);
+            SessionState = gameSave.SessionState;
+            InitAreaScene();
+            CurrentAreaScene.AddPlayer();
+            CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
         }
 
         public override void _PhysicsProcess(float delta)
@@ -63,34 +57,58 @@ namespace Arenbee.Framework.Game
             }
         }
 
-        private void InitHUD()
+        public override void _ExitTree()
         {
-            if (CurrentAreaScene.HUD != null)
+            Party.Free();
+        }
+
+        public void AddAreaScene(AreaScene areaScene)
+        {
+            if (!IsInstanceValid(CurrentAreaScene))
             {
-                var players = CurrentAreaScene.PlayersContainer
-                    .GetChildren<Actor>();
-                var enemies = CurrentAreaScene.EnemiesContainer
-                    .GetChildren<Actor>();
-                CurrentAreaScene.HUD.SubscribeEvents(players);
-                CurrentAreaScene.HUD.SubscribeEvents(enemies);
+                CurrentAreaScene = areaScene;
+                CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+                _currentAreaContainer.AddChild(areaScene);
+                _hud.SubscribeAreaSceneEvents(areaScene);
+            }
+            else
+            {
+                GD.PrintErr("AreaScene already active. Cannot add new AreaScene.");
             }
         }
 
-        private void InitParty()
+        public void RemoveAreaScene()
         {
-            Actor player1 = Party.Actors.FirstOrDefault();
-            if (player1 == null)
-            {
-                var actorScene = GD.Load<PackedScene>(Ady.ScenePath);
-                player1 = actorScene.Instantiate<Actor>();
-                player1.Inventory = Party.Inventory;
-                Party.Actors.Add(player1);
-            }
+            CurrentAreaScene?.RemovePlayer();
+            CurrentAreaScene?.QueueFree();
+            //CurrentAreaScene = null;
+        }
 
-            player1.GlobalPosition = CurrentAreaScene.PlayerSpawnPoint.GlobalPosition;
-            player1.AddChild(new Player1InputHandler());
-            player1.AddChild(new Camera2D() { LimitLeft = 0, LimitBottom = 270, Current = true });
-            CurrentAreaScene.PlayersContainer.AddChild(player1);
+        public async void ReplaceScene(AreaScene areaScene)
+        {
+            CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+            Transition.AnimationPlayer.Play("TransitionIn");
+            await ToSignal(Transition.AnimationPlayer, "animation_finished");
+            CallDeferred("RemoveAreaScene");
+            while (IsInstanceValid(CurrentAreaScene))
+            {
+                await ToSignal(GetTree(), "physics_frame");
+            }
+            AddAreaScene(areaScene);
+            areaScene.AddPlayer();
+            Transition.AnimationPlayer.Play("TransitionOut");
+            await ToSignal(Transition.AnimationPlayer, "animation_finished");
+            CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
+        }
+
+        private void InitAreaScene()
+        {
+            // TODO: Make game
+            if (CurrentAreaScene == null)
+            {
+                var demoAreaScene = GDEx.Instantiate<AreaScene>(PathConstants.DemoLevel1);
+                AddAreaScene(demoAreaScene);
+            }
         }
 
         private void OpenPartyMenu()

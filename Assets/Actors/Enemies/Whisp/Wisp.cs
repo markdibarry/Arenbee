@@ -2,8 +2,9 @@ using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
 
-namespace Arenbee.Assets.Actors.Enemies.WhispNS
+namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Wisp : Actor
     {
@@ -14,7 +15,7 @@ namespace Arenbee.Assets.Actors.Enemies.WhispNS
             Acceleration = 1000f;
         }
 
-        public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Whisp/{nameof(Wisp)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
 
         public override void Init()
         {

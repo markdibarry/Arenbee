@@ -1,11 +1,12 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
 
-namespace Arenbee.Assets.Actors.Players.AdyNS
+namespace Arenbee.Assets.Actors.Players
 {
     public partial class Ady : Actor
     {
-        public static readonly string ScenePath = $"res://Assets/Actors/Players/Ady/{nameof(Ady)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         public override void Init()
         {
             base.Init();

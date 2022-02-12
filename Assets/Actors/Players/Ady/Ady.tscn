@@ -57,7 +57,7 @@ anims/Stagger = ExtResource( "9_hv74u" )
 anims/UnarmedAttack = ExtResource( "6_sqe2g" )
 anims/Walk = ExtResource( "7_7ctrm" )
 
-[node name="BodySprite" parent="Body" index="1"]
+[node name="BodySprite" parent="Body" index="0"]
 modulate = Color(1, 1, 1, 1)
 material = SubResource( "ShaderMaterial_35qwq" )
 texture = ExtResource( "3_72rfu" )

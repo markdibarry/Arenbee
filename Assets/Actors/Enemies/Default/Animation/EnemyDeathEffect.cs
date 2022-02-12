@@ -1,16 +1,20 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
-public partial class EnemyDeathEffect : AnimatedSprite2D
+namespace Arenbee.Assets.Actors.Enemies.ActionStates
 {
-    public static readonly string ScenePath = $"res://Assets/Actors/Enemies/Default/Animation/{nameof(EnemyDeathEffect)}.tscn";
-    public override void _Ready()
+    public partial class EnemyDeathEffect : AnimatedSprite2D
     {
-        AnimationFinished += OnAnimationFinished;
-    }
+        public static string GetScenePath() => GDEx.GetScenePath();
+        public override void _Ready()
+        {
+            AnimationFinished += OnAnimationFinished;
+        }
 
-    private void OnAnimationFinished()
-    {
-        AnimationFinished -= OnAnimationFinished;
-        QueueFree();
+        private void OnAnimationFinished()
+        {
+            AnimationFinished -= OnAnimationFinished;
+            QueueFree();
+        }
     }
 }

@@ -1,10 +1,11 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI
 {
     public partial class Cursor : Node2D
     {
-        public static readonly string ScenePath = $"res://Framework/GUI/Cursors/{nameof(Cursor)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         public Sprite2D Sprite2D { get; set; }
 
         public override void _Ready()

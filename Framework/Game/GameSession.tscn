@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy4ikfjajypuu"]
+
+[ext_resource type="Script" path="res://Framework/Game/GameSession.cs" id="1_wqoak"]
+[ext_resource type="PackedScene" uid="uid://d1nv35d7dnwov" path="res://Framework/GUI/HUD/HUD.tscn" id="2_ii0go"]
+[ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="3_e220r"]
+
+[node name="GameSession" type="Node2D"]
+script = ExtResource( "1_wqoak" )
+
+[node name="CurrentAreaSceneContainer" type="Node2D" parent="."]
+
+[node name="Transition" type="CanvasLayer" parent="."]
+
+[node name="TransitionFadeColor" parent="Transition" instance=ExtResource( "3_e220r" )]
+
+[node name="HUD" parent="." instance=ExtResource( "2_ii0go" )]

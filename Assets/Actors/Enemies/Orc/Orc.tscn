@@ -34,7 +34,7 @@ position = Vector2(-1, 1)
 shape = SubResource( "RectangleShape2D_2755h" )
 
 [node name="HitBox" parent="Body/BodySprite" index="1"]
-collision_layer = 0
+monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBox" index="0"]
 position = Vector2(-1, 1)
@@ -45,6 +45,5 @@ target_position = Vector2(100, 0)
 collision_mask = 21
 
 [node name="CollisionShape2D" parent="." index="3"]
-visible = false
 position = Vector2(0, 2)
 shape = SubResource( "RectangleShape2D_xe4kc" )

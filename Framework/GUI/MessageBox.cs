@@ -1,3 +1,4 @@
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -10,7 +11,7 @@ namespace Arenbee.Framework.GUI
             BoxAlign = Enums.BoxAlign.Left;
             _messageText = string.Empty;
         }
-        public static readonly string ScenePath = $"res://Framework/GUI/{nameof(MessageBox)}.tscn";
+        public static string GetScenePath() => GDEx.GetScenePath();
         private string _messageText;
         private HorizontalAlignment _messageAlign;
         private Enums.BoxAlign _boxAlign;

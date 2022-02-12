@@ -1,0 +1,25 @@
+
+[
+    {
+        "name": "Renly",
+        "expression": "happy",
+        "text": "Hi my name is <pause> Renly!<end>"
+    },
+    {
+        "speaker": [{"name": "Danica", "expression": "happy"}],
+        "text": "<wave>Hi</wave> my name is <eventJump>Dani-<changeExp>"
+    },
+    {
+        "speaker": [
+            {
+                "name": "Ady",
+                "expression": "happy"
+            },
+            {
+                "name": "Dani",
+                "expression": "happy"
+            }
+        ],
+        "text": "And my name is Ady.<end>"
+    }
+]

@@ -6,7 +6,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Actors
 {
-    public abstract partial class Actor
+    public partial class Actor
     {
         public IDictionary<StatType, ActorStat> Stats { get; set; }
         protected ICollection<StatusEffectModifier> ActionStatusEffects { get; set; }
