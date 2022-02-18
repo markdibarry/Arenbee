@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using Godot;
 
 namespace Arenbee.Framework.Dialog
@@ -8,46 +11,57 @@ namespace Arenbee.Framework.Dialog
     {
         public DialogText()
         {
-            _pageBreakPositions = new List<int>();
+            CustomText = string.Empty;
+            Speed = 0.05f;
+            _counter = Speed;
+            _lineBreaks = new int[0];
+            ShouldWrite = false;
+            StopAt = -1;
+            BbcodeEnabled = true;
+            FitContentHeight = true;
+            ScrollActive = false;
+            VisibleCharacters = 0;
+            VisibleCharactersBehavior = VisibleCharactersBehaviorEnum.CharsAfterShaping;
         }
 
-        [Export]
-        private float _speed = 0.05f;
         private float _counter;
-        private bool _screenFull;
-        private List<int> _pageBreakPositions;
-        public override async void _Ready()
+        private int[] _lineBreaks;
+        private bool _shouldWrite;
+        [Export(PropertyHint.MultilineText)]
+        public string CustomText { get; set; }
+        [Export]
+        public bool ShouldWrite
         {
-            _screenFull = true;
-            VisibleCharacters = -1;
-            Modulate = Colors.Transparent;
-            await ToSignal(GetTree(), "process_frame");
-            GD.Print("Start:");
-            GD.Print("CurrentCharLine: " + GetCharacterLine(VisibleCharacters));
-            GD.Print("VisibleChar: " + VisibleCharacters);
-            GD.Print("VisibleLineCount: " + GetVisibleLineCount());
-            GD.Print("LineCount: " + GetLineCount());
-            GD.Print();
-            ParseText();
-            if (_speed > 0)
+            get { return _shouldWrite; }
+            set
             {
-                _screenFull = false;
-                VisibleCharacters = 1;
-                _counter = _speed;
+                if (_shouldWrite != value)
+                {
+                    _shouldWrite = value;
+                    if (!_shouldWrite)
+                        StoppedWriting?.Invoke(this, VisibleCharacters);
+                }
             }
-            Modulate = Colors.White;
         }
+        [Export]
+        public float Speed { get; set; }
+        public int StopAt { get; set; }
+        public ReadOnlyCollection<int> LineBreaks
+        {
+            get { return Array.AsReadOnly(_lineBreaks); }
+        }
+        public Dictionary<int, List<DialogEvent>> DialogEvents { get; set; }
+        public event EventHandler<int> StoppedWriting;
+        public event EventHandler<DialogEvent> EventTriggered;
 
         public override void _PhysicsProcess(float delta)
         {
-            if (_screenFull) return;
+            if (!ShouldWrite) return;
 
-            if (PercentVisible >= 1)
+            if (IsAtStop()
+                || PercentVisible >= 1)
             {
-                _screenFull = true;
-                GD.Print("END:");
-                GD.Print("CurrentCharLine: " + GetCharacterLine(VisibleCharacters));
-                GD.Print();
+                ShouldWrite = false;
                 return;
             }
 
@@ -57,33 +71,159 @@ namespace Arenbee.Framework.Dialog
             }
             else
             {
-                VisibleCharacters++;
-                _counter = _speed;
-                if (_pageBreakPositions.Contains(VisibleCharacters))
+                _counter = Speed;
+                if (DialogEvents.ContainsKey(VisibleCharacters))
                 {
-                    _screenFull = true;
+                    foreach (var dialogEvent in DialogEvents[VisibleCharacters])
+                    {
+                        EventTriggered?.Invoke(this, dialogEvent);
+                    }
                 }
+                VisibleCharacters++;
             }
         }
 
-        public void ParseText()
+        public void AddPause(float time)
         {
-            int visibleLines = GetVisibleLineCount();
+            _counter += time;
+        }
+
+        public void SetSpeed(float time)
+        {
+            Speed = time;
+            _counter = Speed;
+        }
+
+        public void UpdateLineBreaks()
+        {
+            _lineBreaks = GetLineBreaks();
+        }
+
+        public void MoveToLine(int line)
+        {
+            RectPosition = new Vector2(0, -GetLineOffsetOrEnd(line));
+            if (LineBreaks.Count > 0)
+                VisibleCharacters = LineBreaks[line];
+        }
+
+        public void ShowAllToStop()
+        {
+            VisibleCharacters = StopAt;
+        }
+
+        public bool IsAtStop()
+        {
+            return VisibleCharacters >= StopAt;
+        }
+
+        public void ExtractEventsFromText()
+        {
+            Text = CustomText;
+            string pText = GetParsedText();
+            string fText = Text;
+            var newTextBuilder = new StringBuilder();
+            int fTextAppendStart = 0;
+            var dialogEvents = new Dictionary<int, List<DialogEvent>>();
+            int pTextEventStart = 0;
+            bool inEvent = false;
+            int fTextI = 0;
+            int dTextI = 0;
+            int dTextEventStart = 0;
+            for (int pTextI = 0; pTextI < pText.Length; pTextI++)
+            {
+                // If Bbcode found
+                while (fTextI < fText.Length
+                    && fText[fTextI] != pText[pTextI])
+                {
+                    fTextI++;
+                }
+
+                if (inEvent)
+                {
+                    if (IsEventClose(pText, pTextI))
+                    {
+                        if (dialogEvents.ContainsKey(dTextEventStart))
+                        {
+                            dialogEvents[dTextEventStart].Add(new DialogEvent(pText[pTextEventStart..pTextI]));
+                        }
+                        else
+                        {
+                            dialogEvents.Add(dTextEventStart, new List<DialogEvent>()
+                                {
+                                    new DialogEvent(pText[pTextEventStart..pTextI])
+                                });
+                        }
+                        fTextAppendStart = fTextI + 2;
+                        inEvent = false;
+                        pTextI++;
+                        fTextI++;
+                    }
+                }
+                else if (IsEventOpen(pText, pTextI))
+                {
+                    if (pTextI - 1 > 0)
+                    {
+                        // Add non-event text
+                        newTextBuilder.Append(fText[fTextAppendStart..fTextI]);
+                    }
+                    pTextEventStart = pTextI + 2;
+                    dTextEventStart = dTextI;
+                    inEvent = true;
+                    pTextI++;
+                    fTextI++;
+                }
+                else if (pTextI == pText.Length - 1)
+                {
+                    // if last iteration, add remaining text
+                    newTextBuilder.Append(fText[fTextAppendStart..]);
+                }
+                else
+                {
+                    dTextI++;
+                }
+                fTextI++;
+            }
+            Text = newTextBuilder.ToString();
+            DialogEvents = dialogEvents;
+        }
+
+        private bool IsEventOpen(string text, int index)
+        {
+            return index + 1 < text.Length
+                && text[index] == '{'
+                && text[index + 1] == '{';
+        }
+
+        private bool IsEventClose(string text, int index)
+        {
+            return index + 1 < text.Length
+                && text[index] == '}'
+                && text[index + 1] == '}';
+        }
+
+        private int[] GetLineBreaks()
+        {
+            var lineBreaks = new List<int>();
             int totalCharacters = GetTotalCharacterCount();
-            int currentLine = 0;
+            int currentLine = -1;
             for (int i = 0; i < totalCharacters; i++)
             {
                 int line = GetCharacterLine(i);
-                if (line > currentLine && line % visibleLines == 0)
+                if (line > currentLine)
                 {
                     currentLine = line;
-                    _pageBreakPositions.Add(i - 1);
+                    lineBreaks.Add(i - 1);
                 }
             }
-            foreach (int pos in _pageBreakPositions)
-            {
-                GD.Print(pos);
-            }
+            return lineBreaks.ToArray();
+        }
+
+        private float GetLineOffsetOrEnd(int line)
+        {
+            if (line < GetLineCount())
+                return GetLineOffset(line);
+            else
+                return GetContentHeight();
         }
     }
 }

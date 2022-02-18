@@ -1,25 +1,29 @@
-
 [
-    {
-        "name": "Renly",
-        "expression": "happy",
-        "text": "Hi my name is <pause> Renly!<end>"
-    },
-    {
-        "speaker": [{"name": "Danica", "expression": "happy"}],
-        "text": "<wave>Hi</wave> my name is <eventJump>Dani-<changeExp>"
-    },
-    {
-        "speaker": [
-            {
-                "name": "Ady",
-                "expression": "happy"
-            },
-            {
-                "name": "Dani",
-                "expression": "happy"
-            }
-        ],
-        "text": "And my name is Ady.<end>"
-    }
+  {
+    "id": "000",
+    "speakers": [{"name":"Renly","expression":"neutral"}],
+    "text": "Hi my name is [pause time=2.0]Renly!"
+  },
+  {
+    "id": "001",
+    "speakers": [{"name":"Danica","expression":"neutral"}],
+    "text": "[wave]Hi[/wave] my name is {{custom value=jump}}Dani-{{expression value=annoyed}}"
+  },
+  {
+    "id": "002",
+    "speakers": [{"name":"Ady","expression":"neutral"}],
+    "text": "And my name is Ady."
+  },
+  {
+    "id": "003",
+    "speakers": [{"name":"Danica","expression":"annoyed"}],
+    "text": "Why do you always do that?"
+  },
+  {
+    "id": "004",
+    "choices": [
+      {"text":"Because I love you!","next":"005"},
+      {"text":"Because it was funny!","next":"006"}
+    ]
+  }
 ]

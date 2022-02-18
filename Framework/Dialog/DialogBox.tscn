@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://mp3cyruqtbbo"]
+
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_m4rai"]
+[ext_resource type="Script" path="res://Framework/Dialog/DialogText.cs" id="2_2cwr3"]
+[ext_resource type="Script" path="res://Framework/Dialog/DialogBox.cs" id="2_ydkuh"]
+
+[node name="DialogBox" type="MarginContainer"]
+rect_clip_content = true
+offset_right = 68.0
+offset_bottom = 86.0
+theme = ExtResource( "1_m4rai" )
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_bottom = 1
+script = ExtResource( "2_ydkuh" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+ShowAllToStop = true
+Speed = 0.1
+
+[node name="Control" type="Control" parent="."]
+offset_left = 1.0
+offset_right = 67.0
+offset_bottom = 85.0
+
+[node name="DialogText" type="RichTextLabel" parent="Control"]
+rect_clip_content = false
+anchor_right = 1.0
+offset_bottom = 40.0
+bbcode_enabled = true
+text = "Here [wave]is[/wave] some custom text ...
+And here's some more"
+fit_content_height = true
+scroll_active = false
+visible_characters = 49
+visible_characters_behavior = 1
+script = ExtResource( "2_2cwr3" )
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_anchors_": false,
+"_edit_use_custom_anchors": false
+}
+CustomText = "{{speed time=0.005}}Here [wave]is[/wave] some custom text{{pause time=4.0}}{{speed time=1.0}} ...
+{{speed time=0.1}}And here's some more"
+Speed = 0.1
