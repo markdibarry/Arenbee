@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://6wqc0ulfgjf0"
-path="res://.godot/imported/arrowDown.png-177dd55bdec29a5c6353be6183880ff9.stex"
+uid="uid://dluxdtt7pxuq0"
+path="res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Framework/GUI/arrowDown.png"
-dest_files=["res://.godot/imported/arrowDown.png-177dd55bdec29a5c6353be6183880ff9.stex"]
+source_file="res://Assets/GUI/Portraits/dani/dani_happy.png"
+dest_files=["res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.stex"]
 
 [params]
 
@@ -29,6 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1

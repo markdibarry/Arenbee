@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dprgaiq1mkp6g"]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://Framework/GUI/Menus/OptionContainer.cs" id="1_obuyk"]
-[ext_resource type="Texture2D" uid="uid://lctogtjgsu68" path="res://Framework/GUI/arrowDownSmall.png" id="2_l26g1"]
-[ext_resource type="Texture2D" uid="uid://dicjqwob1c8p5" path="res://Framework/GUI/arrowLeftSmall.png" id="3_vr4ld"]
+[ext_resource type="Texture2D" path="res://Framework/GUI/Cursors/arrowDownSmall.png" id="2_l26g1"]
+[ext_resource type="Texture2D" path="res://Framework/GUI/Cursors/arrowLeftSmall.png" id="3_vr4ld"]
 
 [node name="OptionContainer" type="Control"]
 offset_right = 192.0

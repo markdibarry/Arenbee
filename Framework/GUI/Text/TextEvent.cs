@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Arenbee.Framework.Dialog
+namespace Arenbee.Framework.GUI.Text
 {
-    public class DialogEvent
+    public class TextEvent
     {
-        public DialogEvent(string eventText)
+        public TextEvent(string eventText)
         {
             string[] eventParts = eventText.Split(' ');
             if (eventParts.Length > 0)

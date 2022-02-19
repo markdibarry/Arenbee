@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1nv35d7dnwov"]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Framework/GUI/HUD/HUD.cs" id="1"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/HUD/TestDisplay.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/MessageBoxList.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Text/MessageBoxList.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://byn2061flwj1c" path="res://Framework/GUI/HUD/PlayerStatsDisplay.tscn" id="4"]
 
 [node name="HUD" type="CanvasLayer"]

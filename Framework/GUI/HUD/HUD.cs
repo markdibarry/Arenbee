@@ -4,7 +4,7 @@ using Arenbee.Framework.Actors.Stats;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
-
+using Arenbee.Framework.GUI.Text;
 using Godot;
 
 namespace Arenbee.Framework.GUI

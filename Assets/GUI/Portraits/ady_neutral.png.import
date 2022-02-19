@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://ouhrfxvx3c6b"
-path="res://.godot/imported/arrowLeft.png-4cbd5d9a9827bb3c32ec07683988c18f.stex"
+uid="uid://cddwq0uoap3ho"
+path="res://.godot/imported/ady_neutral.png-39a8b3012b2d9b8397263f4ec9f48e62.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Framework/GUI/arrowLeft.png"
-dest_files=["res://.godot/imported/arrowLeft.png-4cbd5d9a9827bb3c32ec07683988c18f.stex"]
+source_file="res://Assets/GUI/Portraits/ady_neutral.png"
+dest_files=["res://.godot/imported/ady_neutral.png-39a8b3012b2d9b8397263f4ec9f48e62.stex"]
 
 [params]
 
@@ -29,6 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1

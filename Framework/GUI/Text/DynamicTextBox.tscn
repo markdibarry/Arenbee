@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=3 uid="uid://bnfvvhk6bvj0i"]
+
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_4sbwj"]
+[ext_resource type="Script" path="res://Framework/GUI/Text/DynamicTextBox.cs" id="2_4qnl8"]
+[ext_resource type="Script" path="res://Framework/GUI/Text/DynamicText.cs" id="3_2ehhg"]
+
+[node name="DynamicTextBox" type="MarginContainer"]
+rect_clip_content = true
+offset_right = 68.0
+offset_bottom = 36.0
+theme = ExtResource( "1_4sbwj" )
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_bottom = 1
+script = ExtResource( "2_4qnl8" )
+CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]
+(pause){{pause time=2}}
+{{speed time=0.5}}...{{speed time=0.05}}And here's the rest."
+ShowAllToStop = true
+Speed = 0.05
+_currentPage = 1
+
+[node name="Control" type="Control" parent="."]
+offset_left = 1.0
+offset_right = 67.0
+offset_bottom = 35.0
+
+[node name="DynamicText" type="RichTextLabel" parent="Control"]
+rect_clip_content = false
+anchor_right = 1.0
+offset_top = -30.0
+offset_bottom = 30.0
+bbcode_enabled = true
+text = "Good morning. Here's some [wave]text![/wave]
+(pause)
+...And here's the rest."
+fit_content_height = true
+scroll_active = false
+visible_characters = 63
+visible_characters_behavior = 1
+script = ExtResource( "3_2ehhg" )
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_anchors_": false,
+"_edit_use_custom_anchors": false
+}
+CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]
+(pause){{pause time=2}}
+{{speed time=0.5}}...{{speed time=0.05}}And here's the rest."

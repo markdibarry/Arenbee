@@ -1,43 +1,54 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 
-namespace Arenbee.Framework.Dialog
+namespace Arenbee.Framework.GUI.Text
 {
     [Tool]
-    public partial class DialogBox : Control
+    public partial class DynamicTextBox : Control
     {
-        public DialogBox()
+        public DynamicTextBox()
         {
             _currentPage = 0;
             _page = 0;
         }
 
+        private bool _isLoaded;
         private int _page;
-
-        private DialogText _dialogText;
-        private Control _dialogTextContainer;
+        private DynamicText _dynamicText;
+        private Control _dynamicTextContainer;
         private float _displayHeight;
         private int[] _pageBreaks;
+        [Export(PropertyHint.MultilineText)]
+        public string CustomText
+        {
+            get { return _dynamicText?.CustomText ?? string.Empty; }
+            set
+            {
+                if (_dynamicText != null)
+                    _dynamicText.CustomText = value;
+            }
+        }
         [Export]
         private int _currentPage;
         [Export]
         public bool ShouldWrite
         {
-            get { return _dialogText?.ShouldWrite ?? false; }
+            get { return _dynamicText?.ShouldWrite ?? false; }
             set
             {
-                if (_dialogText != null)
-                    _dialogText.ShouldWrite = value;
+                if (_dynamicText != null)
+                    _dynamicText.ShouldWrite = value;
             }
         }
         [Export]
         public bool ShowAllToStop
         {
-            get { return _dialogText?.IsAtStop() ?? false; }
+            get { return _dynamicText?.IsAtStop() ?? false; }
             set
             {
                 if (value)
-                    _dialogText?.ShowAllToStop();
+                    _dynamicText?.ShowAllToStop();
                 else
                     PageTo(_currentPage);
             }
@@ -46,63 +57,76 @@ namespace Arenbee.Framework.Dialog
         public bool ShouldReset
         {
             get { return false; }
-            set { if (value) UpdatePageBreaks(); }
+            set { if (value) Reset(); }
         }
         [Export]
         public float Speed
         {
-            get { return _dialogText?.Speed ?? 0f; }
-            set { _dialogText?.SetSpeed(value); }
+            get { return _dynamicText?.Speed ?? 0f; }
+            set { _dynamicText?.SetSpeed(value); }
         }
 
-        public override async void _Ready()
+        public override void _Ready()
         {
-            await ToSignal(GetTree(), "process_frame");
             SetNodeReferences();
-            UpdatePageBreaks();
+            Reset();
         }
 
         private void SetNodeReferences()
         {
-            _dialogTextContainer = GetNodeOrNull<Control>("Control");
-            _dialogText = _dialogTextContainer.GetNodeOrNull<DialogText>("DialogText");
-            _dialogText.EventTriggered += OnEventTriggered;
+            _dynamicTextContainer = GetNodeOrNull<Control>("Control");
+            _dynamicText = _dynamicTextContainer.GetNodeOrNull<DynamicText>("DynamicText");
+            if (_dynamicText == null) GD.PrintErr("No DynamicText provided");
+            _dynamicText.EventTriggered += OnEventTriggered;
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            if (_currentPage != _page)
+            if (Engine.IsEditorHint()
+                && _isLoaded
+                && _currentPage != _page)
             {
                 PageTo(_currentPage);
             }
         }
 
-        public async void UpdatePageBreaks()
+        public void PageNext()
         {
-            _displayHeight = _dialogTextContainer.RectSize.y;
-            _dialogText.ExtractEventsFromText();
-            await ToSignal(GetTree(), "process_frame");
-            _dialogText.UpdateLineBreaks();
-            _pageBreaks = GetPageBreaks();
-            PageTo(0);
+            if (_page + 1 < _pageBreaks.Length)
+                PageTo(_page + 1);
         }
 
-        private void PageTo(int newPage)
+        public void PageTo(int newPage)
         {
+            if (_dynamicText == null) return;
             newPage = GetAdjustedPageIndex(newPage);
             _currentPage = newPage;
             int newPageLine = GetPageLine(newPage);
-            _dialogText.MoveToLine(newPageLine);
-            _dialogText.StopAt = GetStopAt(newPage);
+            _dynamicText.MoveToLine(newPageLine);
+            _dynamicText.StopAt = GetStopAt(newPage);
             _page = newPage;
+        }
+
+        public void Reset()
+        {
+            UpdatePageBreaksAsync();
+        }
+
+        private async void UpdatePageBreaksAsync()
+        {
+            _displayHeight = _dynamicTextContainer.RectSize.y;
+            await _dynamicText.ResetAsync();
+            _pageBreaks = GetPageBreaks();
+            PageTo(0);
+            _isLoaded = true;
         }
 
         private int GetStopAt(int page)
         {
             if (page + 1 >= _pageBreaks.Length)
-                return _dialogText.GetTotalCharacterCount();
+                return _dynamicText.GetTotalCharacterCount();
             else
-                return _dialogText.LineBreaks[GetPageLine(page + 1)];
+                return _dynamicText.LineBreaks[GetPageLine(page + 1)];
         }
 
         private int GetAdjustedPageIndex(int page)
@@ -118,7 +142,7 @@ namespace Arenbee.Framework.Dialog
         private int GetPageLine(int page)
         {
             if (page < 0 || _pageBreaks.IsEmpty())
-                return _pageBreaks[0];
+                return 0;
             else if (page >= _pageBreaks.Length)
                 return _pageBreaks[^1];
             else
@@ -128,7 +152,7 @@ namespace Arenbee.Framework.Dialog
         private int[] GetPageBreaks()
         {
             var pageBreaks = new List<int>() { 0 };
-            int totalLines = _dialogText.GetLineCount();
+            int totalLines = _dynamicText.GetLineCount();
             float startLineOffset = 0;
             float currentLineOffset = 0;
             float nextLineOffset;
@@ -136,9 +160,9 @@ namespace Arenbee.Framework.Dialog
             for (int i = 0; i < totalLines; i++)
             {
                 if (i + 1 < totalLines)
-                    nextLineOffset = _dialogText.GetLineOffset(i + 1);
+                    nextLineOffset = _dynamicText.GetLineOffset(i + 1);
                 else
-                    nextLineOffset = _dialogText.GetContentHeight();
+                    nextLineOffset = _dynamicText.GetContentHeight();
 
                 newHeight = nextLineOffset - startLineOffset;
 
@@ -152,7 +176,7 @@ namespace Arenbee.Framework.Dialog
             return pageBreaks.ToArray();
         }
 
-        private void OnEventTriggered(object sender, DialogEvent dialogEvent)
+        private void OnEventTriggered(TextEvent dialogEvent)
         {
             switch (dialogEvent.Name)
             {
@@ -169,19 +193,19 @@ namespace Arenbee.Framework.Dialog
             }
         }
 
-        private void HandleSpeedEvent(DialogEvent dialogEvent)
+        private void HandleSpeedEvent(TextEvent dialogEvent)
         {
             if (dialogEvent.Options.ContainsKey("time"))
             {
-                _dialogText.SetSpeed(dialogEvent.Options["time"].ToFloat());
+                _dynamicText.SetSpeed(dialogEvent.Options["time"].ToFloat());
             }
         }
 
-        private void HandlePauseEvent(DialogEvent dialogEvent)
+        private void HandlePauseEvent(TextEvent dialogEvent)
         {
             if (dialogEvent.Options.ContainsKey("time"))
             {
-                _dialogText.AddPause(dialogEvent.Options["time"].ToFloat());
+                _dynamicText.SetPause(dialogEvent.Options["time"].ToFloat());
             }
         }
     }

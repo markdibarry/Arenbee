@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkuopi3sttrcu"]
+
+[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_40jil"]
+[ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogBox.cs" id="2_c18hx"]
+[ext_resource type="PackedScene" uid="uid://bnfvvhk6bvj0i" path="res://Framework/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
+
+[node name="DialogBox" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( "1_40jil" )
+script = ExtResource( "2_c18hx" )
+
+[node name="Portrait" type="AnimatedSprite2D" parent="."]
+position = Vector2(255, 111)
+centered = false
+
+[node name="DialogPanel" type="PanelContainer" parent="."]
+offset_left = 140.0
+offset_top = 192.0
+offset_right = 340.0
+offset_bottom = 264.0
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
+}
+
+[node name="DialogMargin" type="MarginContainer" parent="DialogPanel"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 195.0
+offset_bottom = 67.0
+theme_override_constants/margin_top = 5
+
+[node name="DynamicTextBox" parent="DialogPanel/DialogMargin" instance=ExtResource( "4_unl7n" )]
+offset_top = 5.0
+offset_right = 190.0
+offset_bottom = 62.0
+theme_override_constants/margin_top = 1
+ShowAllToStop = false
+_currentPage = 0
+
+[node name="NamePanel" type="PanelContainer" parent="."]
+layout_direction = 2
+offset_left = 148.0
+offset_top = 180.0
+offset_right = 170.0
+offset_bottom = 200.0
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
+}
+
+[node name="NameLabel" type="Label" parent="NamePanel"]
+offset_left = 5.0
+offset_top = 7.0
+offset_right = 6.0
+offset_bottom = 12.0
+size_flags_horizontal = 0

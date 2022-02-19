@@ -1,7 +1,7 @@
 using Arenbee.Framework.Extensions;
 using Godot;
 
-namespace Arenbee.Framework.GUI
+namespace Arenbee.Framework.GUI.Text
 {
     [Tool]
     public partial class TimedMessageBox : MessageBox

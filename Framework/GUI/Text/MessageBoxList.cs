@@ -2,7 +2,7 @@ using Arenbee.Framework.Extensions;
 using Godot;
 using System.Linq;
 
-namespace Arenbee.Framework.GUI
+namespace Arenbee.Framework.GUI.Text
 {
     [Tool]
     public partial class MessageBoxList : VBoxContainer

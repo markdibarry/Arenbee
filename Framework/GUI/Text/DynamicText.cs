@@ -2,26 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using Godot;
 
-namespace Arenbee.Framework.Dialog
+namespace Arenbee.Framework.GUI.Text
 {
     [Tool]
-    public partial class DialogText : RichTextLabel
+    public partial class DynamicText : RichTextLabel
     {
-        public DialogText()
+        public DynamicText()
         {
-            CustomText = string.Empty;
-            Speed = 0.05f;
-            _counter = Speed;
-            _lineBreaks = new int[0];
-            ShouldWrite = false;
-            StopAt = -1;
             BbcodeEnabled = true;
+            CustomText = string.Empty;
             FitContentHeight = true;
             ScrollActive = false;
+            ShouldWrite = false;
+            Speed = 0.05f;
+            StopAt = -1;
             VisibleCharacters = 0;
             VisibleCharactersBehavior = VisibleCharactersBehaviorEnum.CharsAfterShaping;
+            _counter = Speed;
+            _lineBreaks = new int[0];
         }
 
         private float _counter;
@@ -44,15 +45,22 @@ namespace Arenbee.Framework.Dialog
             }
         }
         [Export]
+        public bool ShouldReset
+        {
+            get { return false; }
+            set { if (value) Reset(); }
+        }
+        [Export]
         public float Speed { get; set; }
-        public int StopAt { get; set; }
+        public Dictionary<int, List<TextEvent>> DialogEvents { get; set; }
         public ReadOnlyCollection<int> LineBreaks
         {
             get { return Array.AsReadOnly(_lineBreaks); }
         }
-        public Dictionary<int, List<DialogEvent>> DialogEvents { get; set; }
+        public int StopAt { get; set; }
+        public delegate void EventTriggeredHandler(TextEvent dialogEvent);
+        public event EventTriggeredHandler EventTriggered;
         public event EventHandler<int> StoppedWriting;
-        public event EventHandler<DialogEvent> EventTriggered;
 
         public override void _PhysicsProcess(float delta)
         {
@@ -76,14 +84,38 @@ namespace Arenbee.Framework.Dialog
                 {
                     foreach (var dialogEvent in DialogEvents[VisibleCharacters])
                     {
-                        EventTriggered?.Invoke(this, dialogEvent);
+                        EventTriggered?.Invoke(dialogEvent);
                     }
                 }
                 VisibleCharacters++;
             }
         }
 
-        public void AddPause(float time)
+        public bool IsAtStop()
+        {
+            return VisibleCharacters >= StopAt;
+        }
+
+        public void MoveToLine(int line)
+        {
+            RectPosition = new Vector2(0, -GetLineOffsetOrEnd(line));
+            if (LineBreaks.Count > 0)
+                VisibleCharacters = LineBreaks[line];
+        }
+
+        public async void Reset()
+        {
+            await ResetAsync();
+        }
+
+        public async Task ResetAsync()
+        {
+            ExtractEventsFromText();
+            await ToSignal(GetTree(), "process_frame");
+            ResetLineBreaks();
+        }
+
+        public void SetPause(float time)
         {
             _counter += time;
         }
@@ -94,36 +126,19 @@ namespace Arenbee.Framework.Dialog
             _counter = Speed;
         }
 
-        public void UpdateLineBreaks()
-        {
-            _lineBreaks = GetLineBreaks();
-        }
-
-        public void MoveToLine(int line)
-        {
-            RectPosition = new Vector2(0, -GetLineOffsetOrEnd(line));
-            if (LineBreaks.Count > 0)
-                VisibleCharacters = LineBreaks[line];
-        }
-
         public void ShowAllToStop()
         {
             VisibleCharacters = StopAt;
         }
 
-        public bool IsAtStop()
-        {
-            return VisibleCharacters >= StopAt;
-        }
-
-        public void ExtractEventsFromText()
+        private void ExtractEventsFromText()
         {
             Text = CustomText;
             string pText = GetParsedText();
             string fText = Text;
             var newTextBuilder = new StringBuilder();
             int fTextAppendStart = 0;
-            var dialogEvents = new Dictionary<int, List<DialogEvent>>();
+            var dialogEvents = new Dictionary<int, List<TextEvent>>();
             int pTextEventStart = 0;
             bool inEvent = false;
             int fTextI = 0;
@@ -144,13 +159,13 @@ namespace Arenbee.Framework.Dialog
                     {
                         if (dialogEvents.ContainsKey(dTextEventStart))
                         {
-                            dialogEvents[dTextEventStart].Add(new DialogEvent(pText[pTextEventStart..pTextI]));
+                            dialogEvents[dTextEventStart].Add(new TextEvent(pText[pTextEventStart..pTextI]));
                         }
                         else
                         {
-                            dialogEvents.Add(dTextEventStart, new List<DialogEvent>()
+                            dialogEvents.Add(dTextEventStart, new List<TextEvent>()
                                 {
-                                    new DialogEvent(pText[pTextEventStart..pTextI])
+                                    new TextEvent(pText[pTextEventStart..pTextI])
                                 });
                         }
                         fTextAppendStart = fTextI + 2;
@@ -187,20 +202,6 @@ namespace Arenbee.Framework.Dialog
             DialogEvents = dialogEvents;
         }
 
-        private bool IsEventOpen(string text, int index)
-        {
-            return index + 1 < text.Length
-                && text[index] == '{'
-                && text[index + 1] == '{';
-        }
-
-        private bool IsEventClose(string text, int index)
-        {
-            return index + 1 < text.Length
-                && text[index] == '}'
-                && text[index + 1] == '}';
-        }
-
         private int[] GetLineBreaks()
         {
             var lineBreaks = new List<int>();
@@ -224,6 +225,25 @@ namespace Arenbee.Framework.Dialog
                 return GetLineOffset(line);
             else
                 return GetContentHeight();
+        }
+
+        private bool IsEventOpen(string text, int index)
+        {
+            return index + 1 < text.Length
+                && text[index] == '{'
+                && text[index + 1] == '{';
+        }
+
+        private bool IsEventClose(string text, int index)
+        {
+            return index + 1 < text.Length
+                && text[index] == '}'
+                && text[index + 1] == '}';
+        }
+
+        private void ResetLineBreaks()
+        {
+            _lineBreaks = GetLineBreaks();
         }
     }
 }

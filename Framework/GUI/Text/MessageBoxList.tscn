@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://Framework/GUI/MessageBoxList.cs" id="2"]
+[ext_resource type="Script" path="res://Framework/GUI/Text/MessageBoxList.cs" id="2"]
 
 [node name="MessageList" type="VBoxContainer"]
 offset_right = 100.0
