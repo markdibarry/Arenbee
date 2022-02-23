@@ -11,10 +11,10 @@ namespace Arenbee.Framework.GUI
         private float _timeDuration;
         private bool _timerEnabled;
 
-        protected override Task Init()
+        public override async Task CustomSubMenuInit()
         {
             if (_timeDuration > 0) _timerEnabled = true;
-            return Task.CompletedTask;
+            await base.CustomSubMenuInit();
         }
 
         public override void _PhysicsProcess(float delta)

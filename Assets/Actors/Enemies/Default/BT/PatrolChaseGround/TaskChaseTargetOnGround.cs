@@ -16,9 +16,9 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
             {
                 if (distance > _maxChaseDistance)
                 {
-                    Actor.InputHandler.Right.Release();
-                    Actor.InputHandler.Left.Release();
-                    Actor.InputHandler.Run.Release();
+                    Actor.InputHandler.Right.SimulateRelease();
+                    Actor.InputHandler.Left.SimulateRelease();
+                    Actor.InputHandler.Run.SimulateRelease();
                     ClearData("Target");
                     State = NodeState.Failure;
                     return State;
@@ -26,22 +26,22 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
                 Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
                 if (direction.x > 0)
                 {
-                    Actor.InputHandler.Left.Release();
-                    Actor.InputHandler.Right.Press();
-                    Actor.InputHandler.Run.Press();
+                    Actor.InputHandler.Left.SimulateRelease();
+                    Actor.InputHandler.Right.SimulatePress();
+                    Actor.InputHandler.Run.SimulatePress();
                 }
                 else if (direction.x < 0)
                 {
-                    Actor.InputHandler.Right.Release();
-                    Actor.InputHandler.Left.Press();
-                    Actor.InputHandler.Run.Press();
+                    Actor.InputHandler.Right.SimulateRelease();
+                    Actor.InputHandler.Left.SimulatePress();
+                    Actor.InputHandler.Run.SimulatePress();
                 }
             }
             else
             {
-                Actor.InputHandler.Right.Release();
-                Actor.InputHandler.Left.Release();
-                Actor.InputHandler.Run.Release();
+                Actor.InputHandler.Right.SimulateRelease();
+                Actor.InputHandler.Left.SimulateRelease();
+                Actor.InputHandler.Run.SimulateRelease();
             }
 
             State = NodeState.Running;

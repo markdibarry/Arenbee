@@ -12,7 +12,7 @@ namespace Arenbee.Assets.Actors.Enemies
         {
             base.Init();
             StateController.Init(
-                new BaseStates.Idle(),
+                new PlantNS.BaseStates.Idle(),
                 new JumpStates.Grounded(),
                 new ActionStates.NotAttacking());
         }

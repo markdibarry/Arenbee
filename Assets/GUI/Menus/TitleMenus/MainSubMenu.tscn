@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://kt3dpnywe8gm"]
+[gd_scene load_steps=8 format=3 uid="uid://kt3dpnywe8gm"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_g7lyy"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/TitleMenus/MainSubMenu.cs" id="2_cyvws"]
 [ext_resource type="Texture2D" uid="uid://260g1xdku6s2" path="res://Framework/GUI/Backgrounds/star.png" id="3_skmhy"]
-[ext_resource type="StyleBox" uid="uid://dpr1b8cydbn7v" path="res://Framework/GUI/Borders/Border1.tres" id="4_fcqy2"]
-[ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="5_w46as"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="5_w46as"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="6_had5t"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="7_t11ag"]
 [ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="8_267v6"]
@@ -13,7 +12,7 @@
 script = ExtResource( "2_cyvws" )
 PreventCancel = true
 PreventCloseAll = true
-_optionContainerPaths = [NodePath("Foreground/PanelContainer/MainOptions")]
+OptionContainerPaths = [NodePath("Foreground/MainOptions")]
 
 [node name="TextureRect" type="TextureRect" parent="Background" index="0"]
 modulate = Color(0.415686, 0.8, 1, 1)
@@ -30,78 +29,79 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
+[node name="MainOptions" parent="Foreground" index="0" instance=ExtResource( "5_w46as" )]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -33.0
-offset_top = -24.0
-offset_right = 33.0
-offset_bottom = 24.0
-theme_override_styles/panel = ExtResource( "4_fcqy2" )
+offset_left = -31.5
+offset_top = -25.0
+offset_right = 31.5
+offset_bottom = 25.0
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
 }
+DimItems = true
 
-[node name="MainOptions" parent="Foreground/PanelContainer" index="0" instance=ExtResource( "5_w46as" )]
+[node name="VBoxContainer" parent="Foreground/MainOptions" index="0"]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 61.0
-offset_bottom = 43.0
-_dimItems = true
+offset_right = 58.0
+offset_bottom = 45.0
 
-[node name="ArrowUp" parent="Foreground/PanelContainer/MainOptions/VBoxContainer" index="0"]
-offset_left = 24.0
-offset_right = 31.0
+[node name="ArrowUp" parent="Foreground/MainOptions/VBoxContainer" index="0"]
+offset_left = 23.0
+offset_right = 30.0
 
-[node name="HBoxContainer" parent="Foreground/PanelContainer/MainOptions/VBoxContainer" index="1"]
-offset_right = 56.0
-offset_bottom = 32.0
+[node name="HBoxContainer" parent="Foreground/MainOptions/VBoxContainer" index="1"]
+offset_right = 53.0
+offset_bottom = 34.0
 
-[node name="ArrowLeft" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 9.0
-offset_bottom = 16.0
+[node name="ArrowLeft" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 10.0
+offset_bottom = 17.0
 
-[node name="Control" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 50.0
-offset_bottom = 26.0
+[node name="Control" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 47.0
+offset_bottom = 28.0
 
-[node name="GridContainer" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control" index="0"]
 offset_right = 41.0
 offset_bottom = 26.0
 
-[node name="Continue" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "6_had5t" )]
+[node name="Continue" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "6_had5t" )]
 offset_right = 41.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "Continue"
 LabelText = "Continue"
 
-[node name="New Game" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "6_had5t" )]
+[node name="New Game" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "6_had5t" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
-offset_top = 13.0
+offset_top = 14.0
 offset_right = 41.0
-offset_bottom = 26.0
+offset_bottom = 28.0
 OptionValue = "NewGame"
 Dim = true
 LabelText = "New Game"
 
-[node name="ArrowRight" parent="Foreground/PanelContainer/MainOptions/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 50.0
-offset_top = 9.0
-offset_right = 56.0
-offset_bottom = 16.0
+[node name="ArrowRight" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 47.0
+offset_top = 10.0
+offset_right = 53.0
+offset_bottom = 17.0
 
-[node name="ArrowDown" parent="Foreground/PanelContainer/MainOptions/VBoxContainer" index="2"]
-offset_left = 24.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 38.0
+[node name="ArrowDown" parent="Foreground/MainOptions/VBoxContainer" index="2"]
+offset_left = 23.0
+offset_top = 34.0
+offset_right = 30.0
+offset_bottom = 40.0
 
 [node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "7_t11ag" )]
-position = Vector2(214, 128)
+position = Vector2(215.5, 128)
 
 [node name="TransitionFadeColor" parent="." index="2" instance=ExtResource( "8_267v6" )]
 
-[editable path="Foreground/PanelContainer/MainOptions"]
+[editable path="Foreground/MainOptions"]
 [editable path="TransitionFadeColor"]

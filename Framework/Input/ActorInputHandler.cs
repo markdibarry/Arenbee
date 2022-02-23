@@ -1,5 +1,3 @@
-using Godot;
-
 namespace Arenbee.Framework.Input
 {
     public abstract partial class ActorInputHandler : InputHandler
@@ -14,6 +12,14 @@ namespace Arenbee.Framework.Input
             Jump.ClearOneTimeActions();
             Attack.ClearOneTimeActions();
             Run.ClearOneTimeActions();
+        }
+
+        protected override void DisableUserInput(bool disable)
+        {
+            base.DisableUserInput(disable);
+            Jump.UserInputDisabled = disable;
+            Attack.UserInputDisabled = disable;
+            Run.UserInputDisabled = disable;
         }
     }
 }

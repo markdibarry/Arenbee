@@ -1,83 +1,75 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://d03nemufxgyet"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenus/Save/SaveConfirmSubMenu.cs" id="2_o5egm"]
-[ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_af8ba"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_glxy3"]
 
 [node name="SaveConfirmSubMenu" instance=ExtResource( "1_8cyl3" )]
 script = ExtResource( "2_o5egm" )
-_optionContainerPaths = [NodePath("Foreground/PanelContainer/SaveOptions")]
+OptionContainerPaths = [NodePath("Foreground/SaveOptions")]
 
-[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -168.0
-offset_top = -71.0
-offset_right = -128.0
-offset_bottom = -23.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="SaveOptions" parent="Foreground" index="0" instance=ExtResource( "3_7nijv" )]
+offset_left = 77.0
+offset_top = 69.0
+offset_right = 115.0
+offset_bottom = 119.0
 
-[node name="SaveOptions" parent="Foreground/PanelContainer" index="0" instance=ExtResource( "3_7nijv" )]
+[node name="VBoxContainer" parent="Foreground/SaveOptions" index="0"]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 35.0
-offset_bottom = 43.0
-_dimItems = true
+offset_right = 33.0
+offset_bottom = 45.0
 
-[node name="ArrowUp" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer" index="0"]
-offset_left = 11.0
-offset_right = 18.0
+[node name="ArrowUp" parent="Foreground/SaveOptions/VBoxContainer" index="0"]
+offset_left = 10.0
+offset_right = 17.0
 
-[node name="HBoxContainer" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer" index="1"]
-offset_right = 30.0
-offset_bottom = 32.0
+[node name="HBoxContainer" parent="Foreground/SaveOptions/VBoxContainer" index="1"]
+offset_right = 28.0
+offset_bottom = 34.0
 
-[node name="ArrowLeft" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 9.0
-offset_bottom = 16.0
+[node name="ArrowLeft" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 10.0
+offset_bottom = 17.0
 
-[node name="Control" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 24.0
-offset_bottom = 26.0
+[node name="Control" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 22.0
+offset_bottom = 28.0
 
-[node name="GridContainer" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer/Control" index="0"]
 offset_right = 16.0
-offset_bottom = 26.0
+offset_bottom = 28.0
 
-[node name="Yes" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_af8ba" )]
+[node name="Yes" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_af8ba" )]
 offset_right = 16.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "Yes"
 LabelText = "Yes"
 
-[node name="No" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_af8ba" )]
+[node name="No" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_af8ba" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
-offset_top = 13.0
+offset_top = 14.0
 offset_right = 16.0
-offset_bottom = 26.0
+offset_bottom = 28.0
 OptionValue = "No"
 Dim = true
 LabelText = "No"
 
-[node name="ArrowRight" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 24.0
-offset_top = 9.0
-offset_right = 30.0
-offset_bottom = 16.0
+[node name="ArrowRight" parent="Foreground/SaveOptions/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 22.0
+offset_top = 10.0
+offset_right = 28.0
+offset_bottom = 17.0
 
-[node name="ArrowDown" parent="Foreground/PanelContainer/SaveOptions/VBoxContainer" index="2"]
-offset_left = 11.0
-offset_top = 32.0
-offset_right = 18.0
-offset_bottom = 38.0
+[node name="ArrowDown" parent="Foreground/SaveOptions/VBoxContainer" index="2"]
+offset_left = 10.0
+offset_top = 34.0
+offset_right = 17.0
+offset_bottom = 40.0
 
 [node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "5_glxy3" )]
-position = Vector2(79, 81)
+position = Vector2(84, 87)
 
-[editable path="Foreground/PanelContainer/SaveOptions"]
+[editable path="Foreground/SaveOptions"]

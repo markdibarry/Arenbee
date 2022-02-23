@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Arenbee.Framework.Extensions;
 
 using Godot;
@@ -21,14 +21,13 @@ namespace Arenbee.Framework.GUI
         public override void _Ready()
         {
             SetNodeReferences();
-            Init();
         }
 
         private void SetNodeReferences()
         {
         }
 
-        private void Init()
+        public void Init()
         {
             SubMenu firstSubMenu = this.GetChildren<SubMenu>().FirstOrDefault();
             _subMenuStack.Push(firstSubMenu);
@@ -40,9 +39,9 @@ namespace Arenbee.Framework.GUI
             AddSubMenu(subMenu);
         }
 
-        protected virtual void OnSubMenuClosed(string cascadeTo = null)
+        protected virtual async void OnSubMenuClosed(string cascadeTo = null)
         {
-            RemoveSubMenu(cascadeTo);
+            await RemoveSubMenuAsync(cascadeTo);
         }
 
         protected virtual void OnRequestedCloseAll()
@@ -62,7 +61,7 @@ namespace Arenbee.Framework.GUI
             AddChild(subMenu);
         }
 
-        private async void RemoveSubMenu(string cascadeTo = null)
+        private async Task RemoveSubMenuAsync(string cascadeTo = null)
         {
             UnsubscribeEvents(_subMenuStack.Peek());
             _subMenuStack.Pop();
@@ -72,7 +71,7 @@ namespace Arenbee.Framework.GUI
                 currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
                 currentSubMenu.Dim = false;
                 if (cascadeTo != null && cascadeTo != currentSubMenu.GetType().Name)
-                    await currentSubMenu.CloseSubMenu(cascadeTo);
+                    await currentSubMenu.CloseSubMenuAsync(cascadeTo);
             }
             else
             {
@@ -85,7 +84,7 @@ namespace Arenbee.Framework.GUI
         {
             while (_subMenuStack.Count > 0)
             {
-                await _subMenuStack.Peek().CloseSubMenu();
+                await _subMenuStack.Peek().CloseSubMenuAsync();
             }
         }
 

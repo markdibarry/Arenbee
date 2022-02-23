@@ -19,7 +19,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                     SaveGame();
                     break;
                 case "No":
-                    await CloseSubMenu();
+                    await CloseSubMenuAsync();
                     break;
             }
         }

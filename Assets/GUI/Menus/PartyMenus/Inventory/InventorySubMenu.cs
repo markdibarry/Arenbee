@@ -24,15 +24,15 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _inventoryList = OptionContainers[0];
-            _typeList = OptionContainers[1];
+            _typeList = OptionContainers[0];
+            _inventoryList = OptionContainers[1];
             _itemInfoLabel = GetNode<Label>(_itemInfoLabelPath);
         }
 
-        protected override Task Init()
+        public override async Task CustomSubMenuInit()
         {
             _inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
-            return base.Init();
+            await base.CustomSubMenuInit();
         }
 
         protected override void AddContainerItems()

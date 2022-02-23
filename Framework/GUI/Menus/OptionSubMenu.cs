@@ -14,44 +14,31 @@ namespace Arenbee.Framework.GUI
         public OptionSubMenu()
             : base()
         {
+            OptionContainerPaths = new NodePath[0];
             OptionContainers = new List<OptionContainer>();
             _currentDirection = Direction.None;
         }
 
-#pragma warning disable IDE0044
         [Export]
-        private NodePath[] _optionContainerPaths = new NodePath[0];
-#pragma warning restore IDE0044
+        public NodePath[] OptionContainerPaths { get; set; }
         private Cursor _cursor;
-        private OptionContainer _currentContainer;
+        public OptionContainer CurrentContainer { get; private set; }
         public List<OptionContainer> OptionContainers { get; private set; }
+        public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
+        public event ItemSelectedHandler ItemSelected;
 
-        public override async Task CloseSubMenu(string cascadeTo = null)
+        public override async Task CloseSubMenuAsync(string cascadeTo = null)
         {
             foreach (var container in OptionContainers)
             {
                 UnsubscribeEvents(container);
             }
-            await base.CloseSubMenu(cascadeTo);
+            await base.CloseSubMenuAsync(cascadeTo);
         }
 
-        protected override void SetNodeReferences()
+        public override async Task InitAsync()
         {
-            base.SetNodeReferences();
-            _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
-            if (_optionContainerPaths.Length == 0)
-            {
-                GD.PrintErr(Name + " has no OptionContainer assigned.");
-            }
-            foreach (var path in _optionContainerPaths)
-            {
-                OptionContainers.Add(GetNode<OptionContainer>(path));
-            }
-        }
-
-        protected override async Task Init()
-        {
-            if (!Engine.IsEditorHint())
+            if (!this.IsSceneRoot())
                 AddContainerItems();
             foreach (var optionContainer in OptionContainers)
             {
@@ -61,19 +48,13 @@ namespace Arenbee.Framework.GUI
             // To allow elements to adjust to correct positions
             await ToSignal(GetTree(), "process_frame");
             FocusContainer(OptionContainers.FirstOrDefault());
+            await base.InitAsync();
         }
 
         /// <summary>
         /// Overrides the items that should display
         /// </summary>
         protected virtual void AddContainerItems() { }
-
-        protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem) { }
-
-        protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
-        {
-            MoveCursorToItem(optionItem);
-        }
 
         protected void FocusContainerPreviousItem(OptionContainer optionContainer)
         {
@@ -83,7 +64,7 @@ namespace Arenbee.Framework.GUI
 
         protected void FocusContainerClosestItem(OptionContainer optionContainer)
         {
-            int index = _currentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
+            int index = CurrentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
             FocusContainer(optionContainer, index);
         }
 
@@ -91,7 +72,7 @@ namespace Arenbee.Framework.GUI
         {
             if (optionContainer?.OptionItems.Count > 0)
             {
-                _currentContainer = optionContainer;
+                CurrentContainer = optionContainer;
                 optionContainer.FocusItem(index);
             }
         }
@@ -115,11 +96,39 @@ namespace Arenbee.Framework.GUI
             }
         }
 
+        protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        {
+            ItemSelected?.Invoke(optionContainer, optionItem);
+        }
+
+        protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        {
+            MoveCursorToItem(optionItem);
+        }
+
+        protected override void SetNodeReferences()
+        {
+            base.SetNodeReferences();
+            _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
+            if (OptionContainerPaths.Length == 0)
+            {
+                GD.PrintErr(Name + " has no OptionContainer assigned.");
+            }
+            foreach (var path in OptionContainerPaths)
+            {
+                OptionContainers.Add(GetNode<OptionContainer>(path));
+            }
+        }
+
         protected void SubscribeToEvents(OptionContainer optionContainer)
         {
-            optionContainer.ItemSelected += OnItemSelected;
-            optionContainer.ItemFocused += OnItemFocused;
-            optionContainer.FocusOOB += OnFocusOOB;
+            if (!this.IsSceneRoot())
+            {
+                optionContainer.ItemSelected += OnItemSelected;
+                optionContainer.ItemFocused += OnItemFocused;
+                optionContainer.FocusOOB += OnFocusOOB;
+            }
+            optionContainer.ContainerUpdated += OnContainerChanged;
         }
 
         protected void UnsubscribeEvents(OptionContainer optionContainer)
@@ -127,6 +136,7 @@ namespace Arenbee.Framework.GUI
             optionContainer.ItemSelected -= OnItemSelected;
             optionContainer.ItemFocused -= OnItemFocused;
             optionContainer.FocusOOB -= OnFocusOOB;
+            optionContainer.ContainerUpdated -= OnContainerChanged;
         }
 
         private void MoveCursorToItem(OptionItem optionItem)
@@ -134,6 +144,12 @@ namespace Arenbee.Framework.GUI
             float cursorX = optionItem.RectGlobalPosition.x - 4;
             float cursorY = (float)(optionItem.RectGlobalPosition.y + Math.Round(optionItem.RectSize.y * 0.5));
             _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
+        }
+
+        private void OnContainerChanged(OptionContainer optionContainer)
+        {
+            if (CurrentContainer == optionContainer)
+                MoveCursorToItem(optionContainer.CurrentItem);
         }
     }
 }

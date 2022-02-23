@@ -4,10 +4,16 @@ namespace Arenbee.Framework.Input
 {
     public abstract partial class InputHandler : Node
     {
+        private bool _userInputDisabled;
         public InputAction Up { get; protected set; }
         public InputAction Down { get; protected set; }
         public InputAction Left { get; protected set; }
         public InputAction Right { get; protected set; }
+        public bool UserInputDisabled
+        {
+            get { return _userInputDisabled; }
+            set { DisableUserInput(value); }
+        }
 
         public Vector2 GetLeftAxis()
         {
@@ -41,6 +47,15 @@ namespace Arenbee.Framework.Input
             Down.ClearOneTimeActions();
             Left.ClearOneTimeActions();
             Right.ClearOneTimeActions();
+        }
+
+        protected virtual void DisableUserInput(bool disable)
+        {
+            _userInputDisabled = disable;
+            Up.UserInputDisabled = disable;
+            Down.UserInputDisabled = disable;
+            Left.UserInputDisabled = disable;
+            Right.UserInputDisabled = disable;
         }
     }
 }

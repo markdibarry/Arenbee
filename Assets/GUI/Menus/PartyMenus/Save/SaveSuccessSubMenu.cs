@@ -19,7 +19,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
         protected override async void OnTimeOut()
         {
             base.OnTimeOut();
-            await CloseSubMenu(nameof(MainSubMenu));
+            await CloseSubMenuAsync(nameof(MainSubMenu));
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Arenbee.Framework.GUI
             }
             else if (menuInput.Enter.IsActionJustPressed)
             {
-                _currentContainer.SelectItem();
+                CurrentContainer.SelectItem();
             }
 
             HandleRapidScroll(delta, newDirection);
@@ -82,16 +82,16 @@ namespace Arenbee.Framework.GUI
             switch (direction)
             {
                 case Direction.Up:
-                    _currentContainer.FocusUp();
+                    CurrentContainer.FocusUp();
                     break;
                 case Direction.Down:
-                    _currentContainer.FocusDown();
+                    CurrentContainer.FocusDown();
                     break;
                 case Direction.Left:
-                    _currentContainer.FocusLeft();
+                    CurrentContainer.FocusLeft();
                     break;
                 case Direction.Right:
-                    _currentContainer.FocusRight();
+                    CurrentContainer.FocusRight();
                     break;
             }
         }

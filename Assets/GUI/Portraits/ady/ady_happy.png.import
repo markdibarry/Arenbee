@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://cddwq0uoap3ho"
-path="res://.godot/imported/ady_neutral.png-39a8b3012b2d9b8397263f4ec9f48e62.stex"
+uid="uid://dyl5iemchlo5v"
+path="res://.godot/imported/ady_happy.png-ee55d642e5265969f4f9a99551315d6d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Portraits/ady_neutral.png"
-dest_files=["res://.godot/imported/ady_neutral.png-39a8b3012b2d9b8397263f4ec9f48e62.stex"]
+source_file="res://Assets/GUI/Portraits/ady/ady_happy.png"
+dest_files=["res://.godot/imported/ady_happy.png-ee55d642e5265969f4f9a99551315d6d.stex"]
 
 [params]
 

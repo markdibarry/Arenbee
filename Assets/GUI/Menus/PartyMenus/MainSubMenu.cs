@@ -17,7 +17,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             AnimationPlayer = GetNode<AnimationPlayer>("TransitionFadeColor/AnimationPlayer");
         }
 
-        protected override async Task TransitionIn()
+        protected override async Task TransitionInAsync()
         {
             Foreground.Modulate = Colors.Transparent;
             Background.Modulate = Colors.Transparent;
@@ -30,7 +30,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             await ToSignal(AnimationPlayer, "animation_finished");
         }
 
-        protected override async Task TransitionOut()
+        protected override async Task TransitionOutAsync()
         {
             AnimationPlayer.Play("TransitionIn");
             await ToSignal(AnimationPlayer, "animation_finished");

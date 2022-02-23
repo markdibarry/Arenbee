@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://wctfq8er1rfq"]
+[gd_scene load_steps=16 format=3 uid="uid://wctfq8er1rfq"]
 
 [ext_resource type="PackedScene" uid="uid://bjnp5nvoddno6" path="res://Framework/AreaScenes/AreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://dnbas3hk0lkoa" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://bu1vrvwkfu6aw" path="res://Assets/Scenery/Spike.png" id="9_bgkj2"]
 [ext_resource type="PackedScene" uid="uid://bgw7nate55esi" path="res://Assets/Actors/Enemies/Orc/Orc.tscn" id="10_xf0m5"]
+[ext_resource type="PackedScene" uid="uid://b4yg6h77ht11s" path="res://Framework/Events/DialogArea.tscn" id="11_ll7qf"]
 [ext_resource type="PackedScene" uid="uid://bf50wbn1thieg" path="res://Assets/Actors/Enemies/Whisp/Wisp.tscn" id="11_mxxem"]
 [ext_resource type="Script" path="res://Framework/Events/ChangeScene.cs" id="12_vgakd"]
 
@@ -152,9 +153,12 @@ offset_left = -16.0
 offset_top = -8.0
 offset_right = 4.0
 offset_bottom = 24.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+color = Color(0.188235, 0.188235, 0.188235, 1)
+
+[node name="DialogArea" parent="Events" index="1" instance=ExtResource( "11_ll7qf" )]
+position = Vector2(96, 80)
+DialogPath = "example"
+Hint = true
 
 [node name="Orc" parent="Enemies" index="0" instance=ExtResource( "10_xf0m5" )]
 position = Vector2(544, 200)

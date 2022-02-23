@@ -9,6 +9,7 @@ namespace Arenbee.Framework.Input
         }
 
         public string Alias { get; set; }
+        public bool UserInputDisabled { get; set; }
         private bool _simulatedPress;
         private bool _simulatedJustPressed;
         private bool _simulatedJustReleased;
@@ -17,8 +18,8 @@ namespace Arenbee.Framework.Input
         {
             get
             {
-                if (_simulatedPress) return true;
-                if (string.IsNullOrEmpty(Alias))
+                if (_simulatedPress || _simulatedJustPressed) return true;
+                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
                     return false;
                 return Godot.Input.IsActionPressed(Alias);
             }
@@ -29,7 +30,7 @@ namespace Arenbee.Framework.Input
             get
             {
                 if (_simulatedJustPressed) return true;
-                if (string.IsNullOrEmpty(Alias))
+                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
                     return false;
                 return Godot.Input.IsActionJustPressed(Alias);
             }
@@ -40,7 +41,7 @@ namespace Arenbee.Framework.Input
             get
             {
                 if (_simulatedJustReleased) return true;
-                if (string.IsNullOrEmpty(Alias))
+                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
                     return false;
                 return Godot.Input.IsActionJustReleased(Alias);
             }
@@ -54,13 +55,13 @@ namespace Arenbee.Framework.Input
                     return _simulatedStrength;
                 if (IsActionPressed)
                     return 1;
-                if (string.IsNullOrEmpty(Alias))
+                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
                     return 0;
                 return Godot.Input.GetActionStrength(Alias);
             }
         }
 
-        public void Press()
+        public void SimulatePress()
         {
             if (!_simulatedPress)
             {
@@ -69,7 +70,7 @@ namespace Arenbee.Framework.Input
             }
         }
 
-        public void Release()
+        public void SimulateRelease()
         {
             if (_simulatedPress)
             {

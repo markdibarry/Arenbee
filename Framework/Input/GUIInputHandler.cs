@@ -13,5 +13,13 @@ namespace Arenbee.Framework.Input
             Cancel.ClearOneTimeActions();
             Start.ClearOneTimeActions();
         }
+
+        protected override void DisableUserInput(bool disable)
+        {
+            base.DisableUserInput(disable);
+            Enter.UserInputDisabled = disable;
+            Cancel.UserInputDisabled = disable;
+            Start.UserInputDisabled = disable;
+        }
     }
 }

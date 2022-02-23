@@ -36,37 +36,15 @@ namespace Arenbee.Framework.GUI
         public event SubMenuClosedHandler SubMenuClosed;
         public event RequestedCloseAllHandler RequestedCloseAll;
 
-        public override async void _Ready()
-        {
-            if (!Engine.IsEditorHint())
-                Modulate = Colors.Transparent;
-            SetNodeReferences();
-            await Init();
-            await TransitionIn();
-            IsActive = true;
-        }
-
-        protected virtual void SetNodeReferences()
-        {
-            Foreground = GetNode<Control>("Foreground");
-            Background = GetNode<Control>("Background");
-        }
-
-        protected virtual Task Init()
-        {
-            return Task.CompletedTask;
-        }
-
-        public override async void _PhysicsProcess(float delta)
+        public override async void _Process(float delta)
         {
             if (Engine.IsEditorHint() || !IsActive) return;
-
             var menuInput = GameRoot.MenuInput;
 
             if (menuInput.Cancel.IsActionJustPressed)
             {
                 if (!PreventCancel)
-                    await CloseSubMenu();
+                    await CloseSubMenuAsync();
             }
             else if (menuInput.Start.IsActionJustPressed)
             {
@@ -75,23 +53,35 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        public virtual async Task CloseSubMenu(string cascadeTo = null)
+        public override async void _Ready()
+        {
+            Modulate = Colors.Transparent;
+            SetNodeReferences();
+
+            if (!this.IsSceneRoot())
+            {
+                await CustomSubMenuInit();
+            }
+            await InitAsync();
+        }
+
+        public virtual async Task CloseSubMenuAsync(string cascadeTo = null)
         {
             IsActive = false;
-            await TransitionOut();
+            await TransitionOutAsync();
             QueueFree();
             SubMenuClosed?.Invoke(cascadeTo);
         }
 
-        protected virtual Task TransitionIn()
+        public virtual Task CustomSubMenuInit()
         {
-            Modulate = Colors.White;
             return Task.CompletedTask;
         }
 
-        protected virtual Task TransitionOut()
+        public virtual async Task InitAsync()
         {
-            return Task.CompletedTask;
+            await TransitionInAsync();
+            IsActive = true;
         }
 
         protected void RaiseRequestedAddSubMenu(SubMenu subMenu)
@@ -102,6 +92,23 @@ namespace Arenbee.Framework.GUI
         protected void RaiseRequestedCloseAll()
         {
             RequestedCloseAll?.Invoke();
+        }
+
+        protected virtual void SetNodeReferences()
+        {
+            Foreground = GetNode<Control>("Foreground");
+            Background = GetNode<Control>("Background");
+        }
+
+        protected virtual Task TransitionInAsync()
+        {
+            Modulate = Colors.White;
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task TransitionOutAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
             AnimationPlayer = GetNode<AnimationPlayer>("TransitionFadeColor/AnimationPlayer");
         }
 
-        protected override async Task TransitionIn()
+        protected override async Task TransitionInAsync()
         {
             Foreground.Modulate = Colors.Transparent;
             Background.Modulate = Colors.Transparent;
@@ -40,7 +40,7 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
             await ToSignal(AnimationPlayer, "animation_finished");
         }
 
-        protected override async Task TransitionOut()
+        protected override async Task TransitionOutAsync()
         {
             AnimationPlayer.Play("TransitionIn");
             await ToSignal(AnimationPlayer, "animation_finished");
@@ -81,7 +81,7 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
             gameRoot.CurrentGame = GDEx.Instantiate<GameSession>(GameSession.GetScenePath());
             gameRoot.CurrentGameContainer.AddChild(gameRoot.CurrentGame);
             gameRoot.CurrentGame.Init(gameSave);
-            await CloseSubMenu();
+            await CloseSubMenuAsync();
             gameRoot.CurrentGame.ProcessMode = ProcessModeEnum.Inherit;
         }
     }

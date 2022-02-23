@@ -6,9 +6,9 @@
 
 [resource]
 animations = [{
-"frames": [ExtResource( "1_7imkx" )],
+"frames": [ExtResource( "3_x24gi" )],
 "loop": true,
-"name": &"netural",
+"name": &"annoyed",
 "speed": 5.0
 }, {
 "frames": [ExtResource( "2_iun6d" )],
@@ -16,8 +16,8 @@ animations = [{
 "name": &"happy",
 "speed": 5.0
 }, {
-"frames": [ExtResource( "3_x24gi" )],
+"frames": [ExtResource( "1_7imkx" )],
 "loop": true,
-"name": &"annoyed",
+"name": &"neutral",
 "speed": 5.0
 }]

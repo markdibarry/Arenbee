@@ -21,7 +21,7 @@ namespace Arenbee.Assets.Actors.Enemies
         {
             base.Init();
             StateController.Init(
-                new BaseStates.Idle(),
+                new WhispNS.BaseStates.Idle(),
                 new JumpStates.Float(),
                 new ActionStates.NotAttacking());
             BehaviorTree = new PatrolChaseAirBT(this);

@@ -1,80 +1,68 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://cgfya2uh721rn"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_wamdw"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_ovs5n"]
-[ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0hfg8"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0hfg8"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="3_qf2rb"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_7h0j8"]
-[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentContainer.tscn" id="5_iqx0k"]
+[ext_resource type="PackedScene" uid="uid://bh8oe0x8q5okw" path="res://Assets/GUI/Menus/PartyMenus/Equipment/EquipmentContainer.tscn" id="5_iqx0k"]
 
 [node name="EquipmentSubMenu" instance=ExtResource( "1_wamdw" )]
 script = ExtResource( "2_ovs5n" )
-_optionContainerPaths = [NodePath("Foreground/PanelContainer/PartyList")]
+OptionContainerPaths = [NodePath("Foreground/PartyList")]
 
-[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
-offset_left = 80.0
-offset_top = 8.0
-offset_right = 232.0
-offset_bottom = 48.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="PartyList" parent="Foreground" index="0" instance=ExtResource( "3_0hfg8" )]
+offset_left = 85.0
+offset_top = 13.0
+offset_right = 123.0
+offset_bottom = 49.0
 
-[node name="PartyList" parent="Foreground/PanelContainer" index="0" instance=ExtResource( "3_0hfg8" )]
+[node name="VBoxContainer" parent="Foreground/PartyList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 147.0
-offset_bottom = 35.0
+offset_right = 33.0
+offset_bottom = 31.0
 
-[node name="ArrowUp" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="0"]
-offset_left = 67.0
-offset_right = 74.0
+[node name="ArrowUp" parent="Foreground/PartyList/VBoxContainer" index="0"]
+offset_left = 10.0
+offset_right = 17.0
 
-[node name="HBoxContainer" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="1"]
-offset_right = 142.0
-offset_bottom = 24.0
+[node name="HBoxContainer" parent="Foreground/PartyList/VBoxContainer" index="1"]
+offset_right = 28.0
+offset_bottom = 20.0
 
-[node name="ArrowLeft" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 5.0
-offset_bottom = 12.0
+[node name="ArrowLeft" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 3.0
+offset_bottom = 10.0
 
-[node name="Control" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 136.0
-offset_bottom = 18.0
+[node name="Control" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 22.0
+offset_bottom = 14.0
 
-[node name="Ady" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
+[node name="Ady" parent="Foreground/PartyList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
 offset_right = 16.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 LabelText = "Ady"
 
-[node name="ArrowRight" parent="Foreground/PanelContainer/PartyList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 136.0
-offset_top = 5.0
-offset_right = 142.0
-offset_bottom = 12.0
+[node name="ArrowRight" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 22.0
+offset_top = 3.0
+offset_right = 28.0
+offset_bottom = 10.0
 
-[node name="ArrowDown" parent="Foreground/PanelContainer/PartyList/VBoxContainer" index="2"]
-offset_left = 67.0
-offset_top = 24.0
-offset_right = 74.0
-offset_bottom = 30.0
+[node name="ArrowDown" parent="Foreground/PartyList/VBoxContainer" index="2"]
+offset_left = 10.0
+offset_top = 20.0
+offset_right = 17.0
+offset_bottom = 26.0
 
-[node name="PanelContainer2" type="PanelContainer" parent="Foreground" index="1"]
-offset_left = 80.0
-offset_top = 56.0
-offset_right = 232.0
-offset_bottom = 168.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="EquipmentContainer" parent="Foreground/PanelContainer2" index="0" instance=ExtResource( "5_iqx0k" )]
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 147.0
-offset_bottom = 107.0
+[node name="EquipmentContainer" parent="Foreground" index="1" instance=ExtResource( "5_iqx0k" )]
+offset_left = 85.0
+offset_top = 61.0
+offset_right = 227.0
+offset_bottom = 163.0
 
 [node name="HandCursor" parent="Foreground" index="2" instance=ExtResource( "3_qf2rb" )]
-position = Vector2(87, 25)
+position = Vector2(92, 31)
 
-[editable path="Foreground/PanelContainer/PartyList"]
+[editable path="Foreground/PartyList"]

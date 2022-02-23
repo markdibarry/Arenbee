@@ -1,0 +1,82 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxukt6n1a77n4"]
+
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_yh25b"]
+[ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogOptionSubMenu.cs" id="2_rm6dj"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_rf88b"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_t7dly"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_fljr7"]
+
+[node name="DialogOptionSubMenu" instance=ExtResource( "1_yh25b" )]
+script = ExtResource( "2_rm6dj" )
+OptionContainerPaths = [NodePath("Foreground/OptionContainer")]
+
+[node name="OptionContainer" parent="Foreground" index="0" instance=ExtResource( "3_rf88b" )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -55.5
+offset_top = -25.0
+offset_right = 55.5
+offset_bottom = 25.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
+}
+
+[node name="VBoxContainer" parent="Foreground/OptionContainer" index="0"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 106.0
+offset_bottom = 45.0
+
+[node name="ArrowUp" parent="Foreground/OptionContainer/VBoxContainer" index="0"]
+offset_left = 47.0
+offset_right = 54.0
+
+[node name="HBoxContainer" parent="Foreground/OptionContainer/VBoxContainer" index="1"]
+offset_right = 101.0
+offset_bottom = 34.0
+
+[node name="ArrowLeft" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 10.0
+offset_bottom = 17.0
+
+[node name="Control" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 95.0
+offset_bottom = 28.0
+
+[node name="GridContainer" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control" index="0"]
+offset_right = 56.0
+offset_bottom = 28.0
+
+[node name="Yes" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_t7dly" )]
+offset_right = 89.0
+offset_bottom = 14.0
+OptionValue = "Yes"
+LabelText = "Because it was funny!"
+
+[node name="No" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_t7dly" )]
+offset_top = 14.0
+offset_right = 89.0
+offset_bottom = 28.0
+OptionValue = "No"
+LabelText = "Because I love you!"
+
+[node name="ArrowRight" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 95.0
+offset_top = 10.0
+offset_right = 101.0
+offset_bottom = 17.0
+
+[node name="ArrowDown" parent="Foreground/OptionContainer/VBoxContainer" index="2"]
+offset_left = 47.0
+offset_top = 34.0
+offset_right = 54.0
+offset_bottom = 40.0
+
+[node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "5_fljr7" )]
+position = Vector2(191.5, 128)
+
+[editable path="Foreground/OptionContainer"]

@@ -1,201 +1,199 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://cdmre05w68ks1"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_funy4"]
-[ext_resource type="PackedScene" uid="uid://dprgaiq1mkp6g" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_ipg3o"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_iv8vo"]
 [ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_vg75a"]
 
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
 script = ExtResource( "2_funy4" )
-_optionContainerPaths = [NodePath("Foreground/InventoryContainer/InventoryList"), NodePath("Foreground/TypeContainer/TypeList")]
+OptionContainerPaths = [NodePath("Foreground/TypeList"), NodePath("Foreground/InventoryList")]
 _itemInfoLabelPath = NodePath("Foreground/ItemInfo/Control/MarginContainer/ItemInfoLabel")
 
-[node name="Foreground" parent="." index="1"]
+[node name="TypeList" parent="Foreground" index="0" instance=ExtResource( "3_0xw2g" )]
+offset_left = 85.0
+offset_top = 13.0
+offset_right = 204.0
+offset_bottom = 49.0
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
 }
+DimItems = true
+KeepHighlightPosition = true
 
-[node name="TypeContainer" type="PanelContainer" parent="Foreground" index="0"]
-offset_left = 80.0
-offset_top = 8.0
-offset_right = 200.0
-offset_bottom = 43.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TypeList" parent="Foreground/TypeContainer" index="0" instance=ExtResource( "3_0xw2g" )]
+[node name="VBoxContainer" parent="Foreground/TypeList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 115.0
-offset_bottom = 30.0
-_dimItems = true
-_keepHighlightPosition = true
+offset_right = 114.0
+offset_bottom = 31.0
 
-[node name="ArrowUp" parent="Foreground/TypeContainer/TypeList/VBoxContainer" index="0"]
+[node name="ArrowUp" parent="Foreground/TypeList/VBoxContainer" index="0"]
 offset_left = 51.0
 offset_right = 58.0
 
-[node name="HBoxContainer" parent="Foreground/TypeContainer/TypeList/VBoxContainer" index="1"]
-offset_right = 110.0
-offset_bottom = 19.0
+[node name="HBoxContainer" parent="Foreground/TypeList/VBoxContainer" index="1"]
+offset_right = 109.0
+offset_bottom = 20.0
 
-[node name="ArrowLeft" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer" index="0"]
+[node name="ArrowLeft" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="0"]
 offset_top = 3.0
 offset_bottom = 10.0
 
-[node name="Control" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 104.0
-offset_bottom = 13.0
+[node name="Control" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 103.0
+offset_bottom = 14.0
 
-[node name="GridContainer" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control" index="0"]
+offset_right = 97.0
+offset_bottom = 14.0
 columns = 4
 
-[node name="All" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_iv8vo" )]
+[node name="All" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_iv8vo" )]
 offset_right = 14.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "All"
 LabelText = "All"
 
-[node name="Restorative" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_iv8vo" )]
+[node name="Restorative" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_iv8vo" )]
 offset_left = 14.0
 offset_right = 60.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "Restorative"
 LabelText = "Restorative"
 
-[node name="Field" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_iv8vo" )]
+[node name="Field" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_iv8vo" )]
 offset_left = 60.0
 offset_right = 81.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "Field"
 LabelText = "Field"
 
-[node name="Key" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_iv8vo" )]
+[node name="Key" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_iv8vo" )]
 offset_left = 81.0
 offset_right = 97.0
-offset_bottom = 13.0
+offset_bottom = 14.0
 OptionValue = "Key"
 LabelText = "Key"
 
-[node name="ArrowRight" parent="Foreground/TypeContainer/TypeList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 104.0
+[node name="ArrowRight" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 103.0
 offset_top = 3.0
-offset_right = 110.0
+offset_right = 109.0
 offset_bottom = 10.0
 
-[node name="ArrowDown" parent="Foreground/TypeContainer/TypeList/VBoxContainer" index="2"]
+[node name="ArrowDown" parent="Foreground/TypeList/VBoxContainer" index="2"]
 offset_left = 51.0
-offset_top = 19.0
+offset_top = 20.0
 offset_right = 58.0
-offset_bottom = 25.0
+offset_bottom = 26.0
 
-[node name="InventoryContainer" type="PanelContainer" parent="Foreground" index="1"]
-offset_left = 80.0
-offset_top = 47.0
-offset_right = 200.0
+[node name="InventoryList" parent="Foreground" index="1" instance=ExtResource( "3_0xw2g" )]
+offset_left = 85.0
+offset_top = 52.0
+offset_right = 203.0
 offset_bottom = 264.0
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
 }
+DimItems = true
 
-[node name="InventoryList" parent="Foreground/InventoryContainer" index="0" instance=ExtResource( "3_0xw2g" )]
+[node name="VBoxContainer" parent="Foreground/InventoryList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 115.0
-offset_bottom = 212.0
-_dimItems = true
+offset_right = 113.0
+offset_bottom = 207.0
 
-[node name="ArrowUp" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer" index="0"]
-offset_left = 51.0
-offset_right = 58.0
+[node name="ArrowUp" parent="Foreground/InventoryList/VBoxContainer" index="0"]
+offset_left = 50.0
+offset_right = 57.0
 
-[node name="HBoxContainer" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer" index="1"]
-offset_right = 110.0
-offset_bottom = 201.0
+[node name="HBoxContainer" parent="Foreground/InventoryList/VBoxContainer" index="1"]
+offset_right = 108.0
+offset_bottom = 196.0
 
-[node name="ArrowLeft" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 94.0
-offset_bottom = 101.0
+[node name="ArrowLeft" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="0"]
+offset_top = 91.0
+offset_bottom = 98.0
 
-[node name="Control" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 104.0
-offset_bottom = 195.0
+[node name="Control" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="1"]
+offset_right = 102.0
+offset_bottom = 190.0
 
-[node name="GridContainer" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control" index="0"]
-anchor_right = 1.0
-
-[node name="Potion" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ipg3o" )]
-offset_right = 98.0
-offset_bottom = 13.0
+[node name="Potion" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ipg3o" )]
+offset_right = 45.0
+offset_bottom = 14.0
 OptionValue = "Potion"
 KeyText = "Potion"
 
-[node name="HBoxContainer" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion" index="0"]
-offset_right = 96.0
+[node name="HBoxContainer" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion" index="0"]
+offset_right = 43.0
+offset_bottom = 12.0
 
-[node name="Key" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="0"]
-offset_right = 82.0
+[node name="Key" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="0"]
+offset_right = 29.0
+offset_bottom = 10.0
 text = "Potion"
 
-[node name="Value" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="1"]
-offset_left = 86.0
-offset_right = 94.0
+[node name="Value" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="1"]
+offset_left = 33.0
+offset_right = 41.0
+offset_bottom = 10.0
 
-[node name="Banana" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_ipg3o" )]
-offset_top = 13.0
-offset_right = 98.0
-offset_bottom = 26.0
+[node name="Banana" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_ipg3o" )]
+offset_top = 14.0
+offset_right = 45.0
+offset_bottom = 28.0
 OptionValue = "Banana"
 KeyText = "Banana"
 ValueText = "x2"
 
-[node name="Gas Cap" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_ipg3o" )]
-offset_top = 26.0
-offset_right = 98.0
-offset_bottom = 39.0
+[node name="Gas Cap" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_ipg3o" )]
+offset_top = 28.0
+offset_right = 45.0
+offset_bottom = 42.0
 OptionValue = "GasCap"
 KeyText = "Gas Cap"
 ValueText = "x1"
 
-[node name="Rock" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_ipg3o" )]
-offset_top = 39.0
-offset_right = 98.0
-offset_bottom = 52.0
+[node name="Rock" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_ipg3o" )]
+offset_top = 42.0
+offset_right = 45.0
+offset_bottom = 56.0
 OptionValue = "Rock"
 KeyText = "Rock"
 ValueText = "x500"
 
-[node name="ArrowRight" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 104.0
-offset_top = 94.0
-offset_right = 110.0
-offset_bottom = 101.0
+[node name="ArrowRight" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="2"]
+offset_left = 102.0
+offset_top = 91.0
+offset_right = 108.0
+offset_bottom = 98.0
 
-[node name="ArrowDown" parent="Foreground/InventoryContainer/InventoryList/VBoxContainer" index="2"]
-offset_left = 51.0
-offset_top = 201.0
-offset_right = 58.0
-offset_bottom = 207.0
+[node name="ArrowDown" parent="Foreground/InventoryList/VBoxContainer" index="2"]
+offset_left = 50.0
+offset_top = 196.0
+offset_right = 57.0
+offset_bottom = 202.0
 
 [node name="ItemInfo" type="PanelContainer" parent="Foreground" index="2"]
+rect_clip_content = true
 offset_left = 208.0
 offset_top = 192.0
 offset_right = 472.0
 offset_bottom = 264.0
-rect_clip_content = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Control" type="Control" parent="Foreground/ItemInfo" index="0"]
+rect_clip_content = true
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 259.0
 offset_bottom = 67.0
-rect_clip_content = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Foreground/ItemInfo/Control" index="0"]
 anchor_right = 1.0
@@ -212,7 +210,7 @@ __meta__ = {
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 253.0
-offset_bottom = 10.0
+offset_bottom = 11.0
 size_flags_vertical = 0
 text = "Perfect for slap-shots."
 autowrap_mode = 3
@@ -223,6 +221,6 @@ __meta__ = {
 [node name="HandCursor" parent="Foreground" index="3" instance=ExtResource( "5_vg75a" )]
 position = Vector2(87, 64)
 
-[editable path="Foreground/TypeContainer/TypeList"]
-[editable path="Foreground/InventoryContainer/InventoryList"]
-[editable path="Foreground/InventoryContainer/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion"]
+[editable path="Foreground/TypeList"]
+[editable path="Foreground/InventoryList"]
+[editable path="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion"]

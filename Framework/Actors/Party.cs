@@ -30,6 +30,14 @@ namespace Arenbee.Framework.Actors
         public List<Actor> Actors { get; set; }
         public Inventory Inventory { get; set; }
 
+        public void DisableUserInput(bool disable)
+        {
+            foreach (var actor in Actors)
+            {
+                actor.InputHandler.UserInputDisabled = disable;
+            }
+        }
+
         public void Free()
         {
             foreach (Actor actor in Actors)

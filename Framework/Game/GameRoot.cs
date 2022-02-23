@@ -60,6 +60,7 @@ namespace Arenbee.Framework.Game
         {
             var titleScreen = _titleScreenScene.Instantiate<Menu>();
             TitleScreenContainer.AddChild(titleScreen);
+            titleScreen.Init();
         }
 
         public void EndCurrentgame()

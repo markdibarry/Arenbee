@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using System.Threading.Tasks;
+using Arenbee.Framework.Extensions;
 using Godot;
 
 namespace Arenbee.Framework.GUI.Text
@@ -14,6 +14,7 @@ namespace Arenbee.Framework.GUI.Text
         {
             BbcodeEnabled = true;
             CustomText = string.Empty;
+            TextEvents = new Dictionary<int, List<TextEvent>>();
             FitContentHeight = true;
             ScrollActive = false;
             ShouldWrite = false;
@@ -26,50 +27,63 @@ namespace Arenbee.Framework.GUI.Text
         }
 
         private float _counter;
+        private int _currentLine;
+        private bool _isTextDirty;
         private int[] _lineBreaks;
+        private int _lineCount;
         private bool _shouldWrite;
+        [Export]
+        public int CurrentLine
+        {
+            get { return _currentLine; }
+            set { MoveToLine(value); }
+        }
+        /// <summary>
+        /// The custom text to use for display. Use UpdateText() to update the display.
+        /// </summary>
+        /// <value></value>
         [Export(PropertyHint.MultilineText)]
         public string CustomText { get; set; }
+        [Export]
+        public bool ShouldShowAllToStop
+        {
+            get { return IsAtStop(); }
+            set { ShowAllToStop(value); }
+        }
+        [Export]
+        public bool ShouldUpdateText
+        {
+            get { return false; }
+            set { if (value) UpdateText(); }
+        }
         [Export]
         public bool ShouldWrite
         {
             get { return _shouldWrite; }
-            set
-            {
-                if (_shouldWrite != value)
-                {
-                    _shouldWrite = value;
-                    if (!_shouldWrite)
-                        StoppedWriting?.Invoke(this, VisibleCharacters);
-                }
-            }
-        }
-        [Export]
-        public bool ShouldReset
-        {
-            get { return false; }
-            set { if (value) Reset(); }
+            set { Write(value); }
         }
         [Export]
         public float Speed { get; set; }
-        public Dictionary<int, List<TextEvent>> DialogEvents { get; set; }
         public ReadOnlyCollection<int> LineBreaks
         {
             get { return Array.AsReadOnly(_lineBreaks); }
         }
         public int StopAt { get; set; }
-        public delegate void EventTriggeredHandler(TextEvent dialogEvent);
-        public event EventTriggeredHandler EventTriggered;
-        public event EventHandler<int> StoppedWriting;
+        public Dictionary<int, List<TextEvent>> TextEvents { get; set; }
+        public delegate void EventTriggeredHandler(ITextEvent textEvent);
+        public event EventHandler StoppedWriting;
+        public event EventTriggeredHandler TextEventTriggered;
+        public event EventHandler TextLoaded;
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
+            if (_isTextDirty) UpdateTextInfo();
             if (!ShouldWrite) return;
-
-            if (IsAtStop()
-                || PercentVisible >= 1)
+            if (IsAtStop())
             {
                 ShouldWrite = false;
+                InvokeTextEvents(VisibleCharacters);
+                StoppedWriting?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -80,39 +94,30 @@ namespace Arenbee.Framework.GUI.Text
             else
             {
                 _counter = Speed;
-                if (DialogEvents.ContainsKey(VisibleCharacters))
-                {
-                    foreach (var dialogEvent in DialogEvents[VisibleCharacters])
-                    {
-                        EventTriggered?.Invoke(dialogEvent);
-                    }
-                }
+                InvokeTextEvents(VisibleCharacters);
                 VisibleCharacters++;
             }
         }
 
+        public override void _Ready()
+        {
+            Init();
+        }
+
         public bool IsAtStop()
         {
+            if (PercentVisible >= 1) return true;
+            if (StopAt < 0) return false;
             return VisibleCharacters >= StopAt;
         }
 
         public void MoveToLine(int line)
         {
+            line = GetValidLine(line);
             RectPosition = new Vector2(0, -GetLineOffsetOrEnd(line));
-            if (LineBreaks.Count > 0)
+            _currentLine = line;
+            if (line < LineBreaks.Count)
                 VisibleCharacters = LineBreaks[line];
-        }
-
-        public async void Reset()
-        {
-            await ResetAsync();
-        }
-
-        public async Task ResetAsync()
-        {
-            ExtractEventsFromText();
-            await ToSignal(GetTree(), "process_frame");
-            ResetLineBreaks();
         }
 
         public void SetPause(float time)
@@ -126,9 +131,26 @@ namespace Arenbee.Framework.GUI.Text
             _counter = Speed;
         }
 
-        public void ShowAllToStop()
+        public void ShowAllToStop(bool show)
         {
-            VisibleCharacters = StopAt;
+            VisibleCharacters = show ? StopAt : 0;
+        }
+
+        public void UpdateText(string text)
+        {
+            CustomText = text;
+            UpdateText();
+        }
+
+        public void UpdateText()
+        {
+            ExtractEventsFromText();
+            _isTextDirty = true;
+        }
+
+        public void Write(bool shouldWrite)
+        {
+            _shouldWrite = shouldWrite;
         }
 
         private void ExtractEventsFromText()
@@ -157,17 +179,12 @@ namespace Arenbee.Framework.GUI.Text
                 {
                     if (IsEventClose(pText, pTextI))
                     {
-                        if (dialogEvents.ContainsKey(dTextEventStart))
+                        if (!dialogEvents.ContainsKey(dTextEventStart))
                         {
-                            dialogEvents[dTextEventStart].Add(new TextEvent(pText[pTextEventStart..pTextI]));
+                            dialogEvents.Add(dTextEventStart, new List<TextEvent>());
                         }
-                        else
-                        {
-                            dialogEvents.Add(dTextEventStart, new List<TextEvent>()
-                                {
-                                    new TextEvent(pText[pTextEventStart..pTextI])
-                                });
-                        }
+                        var newEvent = TextEvent.Parse(pText[pTextEventStart..pTextI]);
+                        dialogEvents[dTextEventStart].Add(newEvent);
                         fTextAppendStart = fTextI + 2;
                         inEvent = false;
                         pTextI++;
@@ -199,7 +216,12 @@ namespace Arenbee.Framework.GUI.Text
                 fTextI++;
             }
             Text = newTextBuilder.ToString();
-            DialogEvents = dialogEvents;
+            TextEvents = dialogEvents;
+        }
+
+        private int GetValidLine(int line)
+        {
+            return line < 0 ? 0 : line >= _lineCount ? _lineCount - 1 : line;
         }
 
         private int[] GetLineBreaks()
@@ -221,10 +243,32 @@ namespace Arenbee.Framework.GUI.Text
 
         private float GetLineOffsetOrEnd(int line)
         {
-            if (line < GetLineCount())
+            if (line < _lineCount)
                 return GetLineOffset(line);
             else
                 return GetContentHeight();
+        }
+
+        private void HandleTextEvent(ITextEvent textEvent)
+        {
+            if (!textEvent.HandleEvent(this))
+                TextEventTriggered?.Invoke(textEvent);
+        }
+
+        private void Init()
+        {
+            SetDefault();
+        }
+
+        private void InvokeTextEvents(int character)
+        {
+            if (TextEvents.ContainsKey(character))
+            {
+                foreach (var textEvent in TextEvents[character])
+                {
+                    HandleTextEvent(textEvent);
+                }
+            }
         }
 
         private bool IsEventOpen(string text, int index)
@@ -241,9 +285,30 @@ namespace Arenbee.Framework.GUI.Text
                 && text[index + 1] == '}';
         }
 
-        private void ResetLineBreaks()
+        private void SetDefault()
+        {
+            if (this.IsSceneRoot())
+            {
+                const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
+                UpdateText(DefaultText);
+                ShouldWrite = true;
+            }
+        }
+
+        private void UpdateLineBreaks()
         {
             _lineBreaks = GetLineBreaks();
+            VisibleCharacters = 0;
+            if (GetTotalCharacterCount() > 0)
+                PercentVisible = 0;
+        }
+
+        private void UpdateTextInfo()
+        {
+            _lineCount = GetLineCount();
+            UpdateLineBreaks();
+            _isTextDirty = false;
+            TextLoaded?.Invoke(this, EventArgs.Empty);
         }
     }
 }

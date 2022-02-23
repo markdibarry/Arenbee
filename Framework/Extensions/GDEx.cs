@@ -199,5 +199,18 @@ namespace Arenbee.Framework.Extensions
                 return fallback;
             }
         }
+
+        /// <summary>
+        /// Returns if the Node is the scene's root.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static bool IsSceneRoot(this Node node)
+        {
+            if (Engine.IsEditorHint())
+                return node == node.GetTree().EditedSceneRoot;
+            else
+                return node == node.GetTree().CurrentScene;
+        }
     }
 }

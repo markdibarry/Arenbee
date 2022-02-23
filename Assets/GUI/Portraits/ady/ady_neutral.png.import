@@ -2,16 +2,16 @@
 
 importer="texture"
 type="StreamTexture2D"
-uid="uid://dpytudak4nwa7"
-path="res://.godot/imported/renly_neutral.png-585ebc28dec9b2092534ce2c2103216e.stex"
+uid="uid://cddwq0uoap3ho"
+path="res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/GUI/Portraits/renly_neutral.png"
-dest_files=["res://.godot/imported/renly_neutral.png-585ebc28dec9b2092534ce2c2103216e.stex"]
+source_file="res://Assets/GUI/Portraits/ady/ady_neutral.png"
+dest_files=["res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.stex"]
 
 [params]
 
