@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="8_4mjf0"]
 
 [node name="MainSubMenu" instance=ExtResource( "1_el5n0" )]
+modulate = Color(1, 1, 1, 0)
 script = ExtResource( "2_21jpy" )
-OptionContainerPaths = [NodePath("Foreground/OptionContainer")]
 
 [node name="TextureRect" type="TextureRect" parent="Background" index="0"]
 modulate = Color(0.807843, 0.486275, 0.662745, 0.905882)
@@ -18,9 +18,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( "3_06twx" )
 stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Foreground" parent="." index="1"]
 __meta__ = {
@@ -39,89 +36,92 @@ __meta__ = {
 }
 DimItems = true
 
-[node name="VBoxContainer" parent="Foreground/OptionContainer" index="0"]
+[node name="MarginContainer" parent="Foreground/OptionContainer" index="0"]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 57.0
 offset_bottom = 101.0
 
-[node name="ArrowUp" parent="Foreground/OptionContainer/VBoxContainer" index="0"]
-offset_left = 22.0
-offset_right = 29.0
-
-[node name="HBoxContainer" parent="Foreground/OptionContainer/VBoxContainer" index="1"]
-offset_right = 52.0
+[node name="Control" parent="Foreground/OptionContainer/MarginContainer" index="0"]
+offset_right = 46.0
 offset_bottom = 90.0
 
-[node name="ArrowLeft" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 38.0
-offset_bottom = 45.0
-
-[node name="Control" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 46.0
-offset_bottom = 84.0
-
-[node name="GridContainer" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control" index="0"]
-offset_right = 40.0
-offset_bottom = 78.0
-__meta__ = {
-"_edit_layout_mode": 0,
-"_edit_use_anchors_": false,
-"_edit_use_custom_anchors": false
-}
-
-[node name="Stats" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_afdfe" )]
+[node name="Stats" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_afdfe" )]
 offset_right = 40.0
 offset_bottom = 14.0
 OptionValue = "Stats"
 LabelText = "Stats"
 
-[node name="Inventory" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_afdfe" )]
+[node name="Inventory" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_afdfe" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 14.0
 offset_right = 40.0
 offset_bottom = 28.0
 OptionValue = "Inventory"
+Dim = true
 LabelText = "Inventory"
 
-[node name="Equipment" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_afdfe" )]
+[node name="Equipment" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "4_afdfe" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 28.0
 offset_right = 40.0
 offset_bottom = 42.0
 OptionValue = "Equipment"
+Dim = true
 LabelText = "Equipment"
 
-[node name="Options" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_afdfe" )]
+[node name="Options" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_afdfe" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 42.0
 offset_right = 40.0
 offset_bottom = 56.0
 OptionValue = "Options"
+Dim = true
 LabelText = "Options"
 
-[node name="Save" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="4" instance=ExtResource( "4_afdfe" )]
+[node name="Save" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "4_afdfe" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 56.0
 offset_right = 40.0
 offset_bottom = 70.0
 OptionValue = "Save"
+Dim = true
 LabelText = "Save"
 
-[node name="Quit" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer/Control/GridContainer" index="5" instance=ExtResource( "4_afdfe" )]
+[node name="Quit" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="5" instance=ExtResource( "4_afdfe" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 70.0
 offset_right = 40.0
 offset_bottom = 84.0
 OptionValue = "Quit"
+Dim = true
 LabelText = "Quit"
 
-[node name="ArrowRight" parent="Foreground/OptionContainer/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 46.0
-offset_top = 38.0
-offset_right = 52.0
-offset_bottom = 45.0
+[node name="Arrows" parent="Foreground/OptionContainer" index="1"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 57.0
+offset_bottom = 101.0
 
-[node name="ArrowDown" parent="Foreground/OptionContainer/VBoxContainer" index="2"]
+[node name="ArrowUp" parent="Foreground/OptionContainer/Arrows" index="0"]
+offset_left = 22.0
+offset_right = 29.0
+
+[node name="ArrowLeft" parent="Foreground/OptionContainer/Arrows" index="1"]
+offset_top = 44.0
+offset_bottom = 51.0
+
+[node name="ArrowDown" parent="Foreground/OptionContainer/Arrows" index="2"]
 offset_left = 22.0
 offset_top = 90.0
 offset_right = 29.0
 offset_bottom = 96.0
+
+[node name="ArrowRight" parent="Foreground/OptionContainer/Arrows" index="3"]
+offset_left = 46.0
+offset_top = 44.0
+offset_right = 52.0
+offset_bottom = 51.0
 
 [node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "4_icivj" )]
 position = Vector2(23, 34)

@@ -46,58 +46,56 @@ __meta__ = {
 }
 DimItems = true
 
-[node name="VBoxContainer" parent="Foreground/MainOptions" index="0"]
+[node name="MarginContainer" parent="Foreground/MainOptions" index="0"]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 58.0
 offset_bottom = 45.0
 
-[node name="ArrowUp" parent="Foreground/MainOptions/VBoxContainer" index="0"]
-offset_left = 23.0
-offset_right = 30.0
-
-[node name="HBoxContainer" parent="Foreground/MainOptions/VBoxContainer" index="1"]
-offset_right = 53.0
+[node name="Control" parent="Foreground/MainOptions/MarginContainer" index="0"]
+offset_right = 47.0
 offset_bottom = 34.0
 
-[node name="ArrowLeft" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 10.0
-offset_bottom = 17.0
-
-[node name="Control" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 47.0
-offset_bottom = 28.0
-
-[node name="GridContainer" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control" index="0"]
-offset_right = 41.0
-offset_bottom = 26.0
-
-[node name="Continue" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "6_had5t" )]
-offset_right = 41.0
+[node name="Continue" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "6_had5t" )]
+offset_right = 34.0
 offset_bottom = 14.0
 OptionValue = "Continue"
 LabelText = "Continue"
 
-[node name="New Game" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "6_had5t" )]
+[node name="Start" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "6_had5t" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 14.0
-offset_right = 41.0
+offset_right = 34.0
 offset_bottom = 28.0
-OptionValue = "NewGame"
+OptionValue = "Start"
 Dim = true
-LabelText = "New Game"
+LabelText = "Start"
 
-[node name="ArrowRight" parent="Foreground/MainOptions/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 47.0
-offset_top = 10.0
-offset_right = 53.0
-offset_bottom = 17.0
+[node name="Arrows" parent="Foreground/MainOptions" index="1"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 58.0
+offset_bottom = 45.0
 
-[node name="ArrowDown" parent="Foreground/MainOptions/VBoxContainer" index="2"]
+[node name="ArrowUp" parent="Foreground/MainOptions/Arrows" index="0"]
+offset_left = 23.0
+offset_right = 30.0
+
+[node name="ArrowLeft" parent="Foreground/MainOptions/Arrows" index="1"]
+offset_top = 16.0
+offset_bottom = 23.0
+
+[node name="ArrowDown" parent="Foreground/MainOptions/Arrows" index="2"]
 offset_left = 23.0
 offset_top = 34.0
 offset_right = 30.0
 offset_bottom = 40.0
+
+[node name="ArrowRight" parent="Foreground/MainOptions/Arrows" index="3"]
+offset_left = 47.0
+offset_top = 16.0
+offset_right = 53.0
+offset_bottom = 23.0
 
 [node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "7_t11ag" )]
 position = Vector2(215.5, 128)

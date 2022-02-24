@@ -9,7 +9,6 @@
 
 [node name="EquipmentSubMenu" instance=ExtResource( "1_wamdw" )]
 script = ExtResource( "2_ovs5n" )
-OptionContainerPaths = [NodePath("Foreground/PartyList")]
 
 [node name="PartyList" parent="Foreground" index="0" instance=ExtResource( "3_0hfg8" )]
 offset_left = 85.0
@@ -17,44 +16,46 @@ offset_top = 13.0
 offset_right = 123.0
 offset_bottom = 49.0
 
-[node name="VBoxContainer" parent="Foreground/PartyList" index="0"]
+[node name="MarginContainer" parent="Foreground/PartyList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 33.0
 offset_bottom = 31.0
 
-[node name="ArrowUp" parent="Foreground/PartyList/VBoxContainer" index="0"]
-offset_left = 10.0
-offset_right = 17.0
-
-[node name="HBoxContainer" parent="Foreground/PartyList/VBoxContainer" index="1"]
-offset_right = 28.0
+[node name="Control" parent="Foreground/PartyList/MarginContainer" index="0"]
+offset_right = 22.0
 offset_bottom = 20.0
 
-[node name="ArrowLeft" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 3.0
-offset_bottom = 10.0
-
-[node name="Control" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 22.0
-offset_bottom = 14.0
-
-[node name="Ady" parent="Foreground/PartyList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
+[node name="TextOption" parent="Foreground/PartyList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_7h0j8" )]
 offset_right = 16.0
 offset_bottom = 14.0
 LabelText = "Ady"
 
-[node name="ArrowRight" parent="Foreground/PartyList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 22.0
-offset_top = 3.0
-offset_right = 28.0
-offset_bottom = 10.0
+[node name="Arrows" parent="Foreground/PartyList" index="1"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 33.0
+offset_bottom = 31.0
 
-[node name="ArrowDown" parent="Foreground/PartyList/VBoxContainer" index="2"]
+[node name="ArrowUp" parent="Foreground/PartyList/Arrows" index="0"]
+offset_left = 10.0
+offset_right = 17.0
+
+[node name="ArrowLeft" parent="Foreground/PartyList/Arrows" index="1"]
+offset_top = 9.0
+offset_bottom = 16.0
+
+[node name="ArrowDown" parent="Foreground/PartyList/Arrows" index="2"]
 offset_left = 10.0
 offset_top = 20.0
 offset_right = 17.0
 offset_bottom = 26.0
+
+[node name="ArrowRight" parent="Foreground/PartyList/Arrows" index="3"]
+offset_left = 22.0
+offset_top = 9.0
+offset_right = 28.0
+offset_bottom = 16.0
 
 [node name="EquipmentContainer" parent="Foreground" index="1" instance=ExtResource( "5_iqx0k" )]
 offset_left = 85.0

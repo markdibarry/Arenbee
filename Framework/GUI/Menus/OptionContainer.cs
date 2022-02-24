@@ -37,6 +37,9 @@ namespace Arenbee.Framework.GUI
             get { return false; }
             set { if (value) ResizeToContent(); }
         }
+        public bool AutoResize { get; set; }
+        public SizeFlags HResize { get; set; }
+        public SizeFlags VResize { get; set; }
         public OptionItem CurrentItem => OptionItems[ItemIndex];
         public GridContainer GridContainer { get; set; }
         public int ItemIndex { get; set; }
@@ -188,7 +191,7 @@ namespace Arenbee.Framework.GUI
             ResizeToContent(Vector2.Zero);
         }
 
-        public void ResizeToContent(Vector2 max, bool left = false, bool up = false)
+        public void ResizeToContent(Vector2 max)
         {
             Vector2 oldSize = RectSize;
             Vector2 padding = GetPadding(GridContainer);
@@ -196,10 +199,16 @@ namespace Arenbee.Framework.GUI
             Vector2 newPos = RectPosition;
             if (max != Vector2.Zero)
                 newSize = new Vector2(Math.Min(newSize.x, max.x), Math.Min(newSize.y, max.x));
-            if (left)
+
+            if (HResize == SizeFlags.ShrinkEnd)
                 newPos = new Vector2(newPos.x - newSize.x - oldSize.x, newPos.y);
-            if (up)
+            else if (HResize == SizeFlags.ShrinkCenter)
+                newPos = new Vector2((int)Math.Floor(newPos.x - ((newSize.x - oldSize.x) * 0.5)), newPos.y);
+
+            if (VResize == SizeFlags.ShrinkEnd)
                 newPos = new Vector2(newPos.x, newPos.y - newSize.y - oldSize.y);
+            else if (VResize == SizeFlags.ShrinkCenter)
+                newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
             RectSize = newSize;
             RectPosition = newPos;
             _changesDirty = true;
@@ -333,12 +342,12 @@ namespace Arenbee.Framework.GUI
 
         private void SetNodeReferences()
         {
-            _control = GetNodeOrNull<Control>("VBoxContainer/HBoxContainer/Control");
+            _control = GetNodeOrNull<Control>("MarginContainer/Control");
             GridContainer = _control.GetNodeOrNull<GridContainer>("GridContainer");
-            _arrowUp = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowUp");
-            _arrowDown = GetNodeOrNull<TextureRect>("VBoxContainer/ArrowDown");
-            _arrowLeft = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowLeft");
-            _arrowRight = GetNodeOrNull<TextureRect>("VBoxContainer/HBoxContainer/ArrowRight");
+            _arrowUp = GetNodeOrNull<TextureRect>("Arrows/ArrowUp");
+            _arrowDown = GetNodeOrNull<TextureRect>("Arrows/ArrowDown");
+            _arrowLeft = GetNodeOrNull<TextureRect>("Arrows/ArrowLeft");
+            _arrowRight = GetNodeOrNull<TextureRect>("Arrows/ArrowRight");
         }
 
         private void SubscribeEvents()

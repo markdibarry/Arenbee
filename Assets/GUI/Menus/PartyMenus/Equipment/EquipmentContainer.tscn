@@ -7,182 +7,179 @@
 [node name="EquipmentContainer" instance=ExtResource( "1_pk3g8" )]
 script = ExtResource( "2_cxe6t" )
 
-[node name="GridContainer" parent="VBoxContainer/HBoxContainer/Control" index="0"]
-anchor_right = 1.0
-
-[node name="Weapon" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "2_32hni" )]
-offset_right = 180.0
+[node name="Weapon" parent="MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "2_32hni" )]
+offset_right = 91.0
 offset_bottom = 14.0
 OptionValue = "Weapon"
 KeyText = "Weapon:"
 ValueText = "Broad Sword"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Weapon" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Weapon" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Weapon/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="0"]
+offset_right = 28.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Weapon:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Weapon/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="1"]
+offset_left = 32.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Broad Sword"
 
-[node name="Headgear" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "2_32hni" )]
+[node name="Headgear" parent="MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "2_32hni" )]
 offset_top = 14.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 28.0
 OptionValue = "Head"
 KeyText = "Head:"
 ValueText = "Skull Cap"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Headgear" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Headgear" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Headgear/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Headgear/HBoxContainer" index="0"]
+offset_right = 27.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Head:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Headgear/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Headgear/HBoxContainer" index="1"]
+offset_left = 31.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Skull Cap"
 
-[node name="Shirt" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "2_32hni" )]
+[node name="Shirt" parent="MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "2_32hni" )]
 offset_top = 28.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 42.0
 KeyText = "Shirt:"
 ValueText = "Olive Garden Tee"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Shirt" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Shirt" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Shirt/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="0"]
+offset_right = 20.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Shirt:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Shirt/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="1"]
+offset_left = 24.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Olive Garden Tee"
 
-[node name="Pants" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "2_32hni" )]
+[node name="Pants" parent="MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "2_32hni" )]
 offset_top = 42.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 56.0
 KeyText = "Pants:"
 ValueText = "Slacks"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Pants" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Pants" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Pants/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="0"]
+offset_right = 27.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Pants:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Pants/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="1"]
+offset_left = 31.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Slacks"
 
-[node name="Footwear" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="4" instance=ExtResource( "2_32hni" )]
+[node name="Footwear" parent="MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "2_32hni" )]
 offset_top = 56.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 70.0
 KeyText = "Foot:"
 ValueText = "Vibrams"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Footwear" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Footwear" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Footwear/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Footwear/HBoxContainer" index="0"]
+offset_right = 27.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Foot:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Footwear/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Footwear/HBoxContainer" index="1"]
+offset_left = 31.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Vibrams"
 
-[node name="Accessory1" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="5" instance=ExtResource( "2_32hni" )]
+[node name="Accessory1" parent="MarginContainer/Control/GridContainer" index="5" instance=ExtResource( "2_32hni" )]
 offset_top = 70.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 84.0
 KeyText = "Accs 1:"
 ValueText = "Walkman"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Accessory1" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Accessory1/HBoxContainer" index="0"]
+offset_right = 27.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Accs 1:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Accessory1/HBoxContainer" index="1"]
+offset_left = 31.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Walkman"
 
-[node name="Accessory2" parent="VBoxContainer/HBoxContainer/Control/GridContainer" index="6" instance=ExtResource( "2_32hni" )]
+[node name="Accessory2" parent="MarginContainer/Control/GridContainer" index="6" instance=ExtResource( "2_32hni" )]
 offset_top = 84.0
-offset_right = 180.0
+offset_right = 91.0
 offset_bottom = 98.0
 KeyText = "Accs 2:"
 ValueText = "Mood Ring"
 
-[node name="HBoxContainer" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2" index="0"]
-offset_right = 178.0
+[node name="HBoxContainer" parent="MarginContainer/Control/GridContainer/Accessory2" index="0"]
+offset_right = 89.0
 offset_bottom = 12.0
 
-[node name="Key" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2/HBoxContainer" index="0"]
-offset_right = 57.0
+[node name="Key" parent="MarginContainer/Control/GridContainer/Accessory2/HBoxContainer" index="0"]
+offset_right = 27.0
 offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Accs 2:"
 
-[node name="Value" parent="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2/HBoxContainer" index="1"]
-offset_left = 61.0
-offset_right = 176.0
+[node name="Value" parent="MarginContainer/Control/GridContainer/Accessory2/HBoxContainer" index="1"]
+offset_left = 31.0
+offset_right = 87.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Mood Ring"
 
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Weapon"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Headgear"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Shirt"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Pants"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Footwear"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory1"]
-[editable path="VBoxContainer/HBoxContainer/Control/GridContainer/Accessory2"]
+[editable path="MarginContainer/Control/GridContainer/Weapon"]
+[editable path="MarginContainer/Control/GridContainer/Headgear"]
+[editable path="MarginContainer/Control/GridContainer/Shirt"]
+[editable path="MarginContainer/Control/GridContainer/Pants"]
+[editable path="MarginContainer/Control/GridContainer/Footwear"]
+[editable path="MarginContainer/Control/GridContainer/Accessory1"]
+[editable path="MarginContainer/Control/GridContainer/Accessory2"]

@@ -9,8 +9,6 @@
 
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
 script = ExtResource( "2_funy4" )
-OptionContainerPaths = [NodePath("Foreground/TypeList"), NodePath("Foreground/InventoryList")]
-_itemInfoLabelPath = NodePath("Foreground/ItemInfo/Control/MarginContainer/ItemInfoLabel")
 
 [node name="TypeList" parent="Foreground" index="0" instance=ExtResource( "3_0xw2g" )]
 offset_left = 85.0
@@ -25,71 +23,77 @@ __meta__ = {
 DimItems = true
 KeepHighlightPosition = true
 
-[node name="VBoxContainer" parent="Foreground/TypeList" index="0"]
+[node name="MarginContainer" parent="Foreground/TypeList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 114.0
 offset_bottom = 31.0
 
-[node name="ArrowUp" parent="Foreground/TypeList/VBoxContainer" index="0"]
-offset_left = 51.0
-offset_right = 58.0
-
-[node name="HBoxContainer" parent="Foreground/TypeList/VBoxContainer" index="1"]
-offset_right = 109.0
+[node name="Control" parent="Foreground/TypeList/MarginContainer" index="0"]
+offset_right = 103.0
 offset_bottom = 20.0
 
-[node name="ArrowLeft" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 3.0
-offset_bottom = 10.0
-
-[node name="Control" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 103.0
-offset_bottom = 14.0
-
-[node name="GridContainer" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control" index="0"]
-offset_right = 97.0
-offset_bottom = 14.0
+[node name="GridContainer" parent="Foreground/TypeList/MarginContainer/Control" index="0"]
 columns = 4
 
-[node name="All" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_iv8vo" )]
+[node name="All" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_iv8vo" )]
 offset_right = 14.0
 offset_bottom = 14.0
 OptionValue = "All"
 LabelText = "All"
 
-[node name="Restorative" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_iv8vo" )]
+[node name="Restorative" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_iv8vo" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_left = 14.0
 offset_right = 60.0
 offset_bottom = 14.0
 OptionValue = "Restorative"
+Dim = true
 LabelText = "Restorative"
 
-[node name="Field" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_iv8vo" )]
+[node name="Field" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "4_iv8vo" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_left = 60.0
 offset_right = 81.0
 offset_bottom = 14.0
 OptionValue = "Field"
+Dim = true
 LabelText = "Field"
 
-[node name="Key" parent="Foreground/TypeList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_iv8vo" )]
+[node name="Key" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_iv8vo" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_left = 81.0
 offset_right = 97.0
 offset_bottom = 14.0
 OptionValue = "Key"
+Dim = true
 LabelText = "Key"
 
-[node name="ArrowRight" parent="Foreground/TypeList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 103.0
-offset_top = 3.0
-offset_right = 109.0
-offset_bottom = 10.0
+[node name="Arrows" parent="Foreground/TypeList" index="1"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 114.0
+offset_bottom = 31.0
 
-[node name="ArrowDown" parent="Foreground/TypeList/VBoxContainer" index="2"]
+[node name="ArrowUp" parent="Foreground/TypeList/Arrows" index="0"]
+offset_left = 51.0
+offset_right = 58.0
+
+[node name="ArrowLeft" parent="Foreground/TypeList/Arrows" index="1"]
+offset_top = 9.0
+offset_bottom = 16.0
+
+[node name="ArrowDown" parent="Foreground/TypeList/Arrows" index="2"]
 offset_left = 51.0
 offset_top = 20.0
 offset_right = 58.0
 offset_bottom = 26.0
+
+[node name="ArrowRight" parent="Foreground/TypeList/Arrows" index="3"]
+offset_left = 103.0
+offset_top = 9.0
+offset_right = 109.0
+offset_bottom = 16.0
 
 [node name="InventoryList" parent="Foreground" index="1" instance=ExtResource( "3_0xw2g" )]
 offset_left = 85.0
@@ -102,84 +106,98 @@ __meta__ = {
 "_edit_use_custom_anchors": false
 }
 DimItems = true
+FillRight = true
 
-[node name="VBoxContainer" parent="Foreground/InventoryList" index="0"]
+[node name="MarginContainer" parent="Foreground/InventoryList" index="0"]
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 113.0
 offset_bottom = 207.0
 
-[node name="ArrowUp" parent="Foreground/InventoryList/VBoxContainer" index="0"]
-offset_left = 50.0
-offset_right = 57.0
-
-[node name="HBoxContainer" parent="Foreground/InventoryList/VBoxContainer" index="1"]
-offset_right = 108.0
+[node name="Control" parent="Foreground/InventoryList/MarginContainer" index="0"]
+offset_right = 102.0
 offset_bottom = 196.0
 
-[node name="ArrowLeft" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="0"]
-offset_top = 91.0
-offset_bottom = 98.0
+[node name="GridContainer" parent="Foreground/InventoryList/MarginContainer/Control" index="0"]
+anchor_right = 1.0
 
-[node name="Control" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="1"]
-offset_right = 102.0
-offset_bottom = 190.0
-
-[node name="Potion" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ipg3o" )]
-offset_right = 45.0
+[node name="Potion" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ipg3o" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_right = 96.0
 offset_bottom = 14.0
 OptionValue = "Potion"
+Dim = true
 KeyText = "Potion"
 
-[node name="HBoxContainer" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion" index="0"]
-offset_right = 43.0
+[node name="HBoxContainer" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion" index="0"]
+offset_right = 94.0
 offset_bottom = 12.0
 
-[node name="Key" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="0"]
-offset_right = 29.0
+[node name="Key" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion/HBoxContainer" index="0"]
+offset_right = 80.0
 offset_bottom = 10.0
 text = "Potion"
 
-[node name="Value" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion/HBoxContainer" index="1"]
-offset_left = 33.0
-offset_right = 41.0
+[node name="Value" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion/HBoxContainer" index="1"]
+offset_left = 84.0
+offset_right = 92.0
 offset_bottom = 10.0
 
-[node name="Banana" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="1" instance=ExtResource( "4_ipg3o" )]
+[node name="Banana" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_ipg3o" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 14.0
-offset_right = 45.0
+offset_right = 96.0
 offset_bottom = 28.0
 OptionValue = "Banana"
+Dim = true
 KeyText = "Banana"
 ValueText = "x2"
 
-[node name="Gas Cap" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="2" instance=ExtResource( "4_ipg3o" )]
+[node name="Gas Cap" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "4_ipg3o" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 28.0
-offset_right = 45.0
+offset_right = 96.0
 offset_bottom = 42.0
 OptionValue = "GasCap"
+Dim = true
 KeyText = "Gas Cap"
 ValueText = "x1"
 
-[node name="Rock" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer" index="3" instance=ExtResource( "4_ipg3o" )]
+[node name="Rock" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_ipg3o" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 42.0
-offset_right = 45.0
+offset_right = 96.0
 offset_bottom = 56.0
 OptionValue = "Rock"
+Dim = true
 KeyText = "Rock"
 ValueText = "x500"
 
-[node name="ArrowRight" parent="Foreground/InventoryList/VBoxContainer/HBoxContainer" index="2"]
-offset_left = 102.0
-offset_top = 91.0
-offset_right = 108.0
-offset_bottom = 98.0
+[node name="Arrows" parent="Foreground/InventoryList" index="1"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 113.0
+offset_bottom = 207.0
 
-[node name="ArrowDown" parent="Foreground/InventoryList/VBoxContainer" index="2"]
+[node name="ArrowUp" parent="Foreground/InventoryList/Arrows" index="0"]
+offset_left = 50.0
+offset_right = 57.0
+
+[node name="ArrowLeft" parent="Foreground/InventoryList/Arrows" index="1"]
+offset_top = 97.0
+offset_bottom = 104.0
+
+[node name="ArrowDown" parent="Foreground/InventoryList/Arrows" index="2"]
 offset_left = 50.0
 offset_top = 196.0
 offset_right = 57.0
 offset_bottom = 202.0
+
+[node name="ArrowRight" parent="Foreground/InventoryList/Arrows" index="3"]
+offset_left = 102.0
+offset_top = 97.0
+offset_right = 108.0
+offset_bottom = 104.0
 
 [node name="ItemInfo" type="PanelContainer" parent="Foreground" index="2"]
 rect_clip_content = true
@@ -219,8 +237,8 @@ __meta__ = {
 }
 
 [node name="HandCursor" parent="Foreground" index="3" instance=ExtResource( "5_vg75a" )]
-position = Vector2(87, 64)
+position = Vector2(92, 31)
 
 [editable path="Foreground/TypeList"]
 [editable path="Foreground/InventoryList"]
-[editable path="Foreground/InventoryList/VBoxContainer/HBoxContainer/Control/GridContainer/Potion"]
+[editable path="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion"]

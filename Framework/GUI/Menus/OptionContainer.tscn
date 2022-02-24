@@ -12,19 +12,32 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-texture_filter = 1
-rect_clip_content = true
+[node name="MarginContainer" type="MarginContainer" parent="."]
 offset_right = 192.0
 offset_bottom = 104.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_bottom = 6
 
-[node name="ArrowUp" type="TextureRect" parent="VBoxContainer"]
+[node name="Control" type="Control" parent="MarginContainer"]
+rect_clip_content = true
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 186.0
+offset_bottom = 98.0
+size_flags_horizontal = 3
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/Control"]
+size_flags_horizontal = 3
+theme_override_constants/vseparation = 0
+theme_override_constants/hseparation = 0
+
+[node name="Arrows" type="MarginContainer" parent="."]
+offset_right = 192.0
+offset_bottom = 104.0
+
+[node name="ArrowUp" type="TextureRect" parent="Arrows"]
 modulate = Color(1, 1, 1, 0)
 offset_left = 92.0
 offset_right = 99.0
@@ -38,64 +51,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 6.0
-offset_right = 192.0
-offset_bottom = 98.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ArrowLeft" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+[node name="ArrowLeft" type="TextureRect" parent="Arrows"]
 modulate = Color(1, 1, 1, 0)
-offset_top = 42.0
+offset_top = 48.0
 offset_right = 6.0
-offset_bottom = 49.0
+offset_bottom = 55.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 texture = ExtResource( "3_vr4ld" )
 stretch_mode = 2
 
-[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
-rect_clip_content = true
-offset_left = 6.0
-offset_right = 186.0
-offset_bottom = 92.0
-size_flags_horizontal = 3
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/Control"]
-size_flags_horizontal = 3
-theme_override_constants/vseparation = 0
-theme_override_constants/hseparation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ArrowRight" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
-modulate = Color(1, 1, 1, 0)
-offset_left = 186.0
-offset_top = 42.0
-offset_right = 192.0
-offset_bottom = 49.0
-size_flags_horizontal = 0
-size_flags_vertical = 4
-texture = ExtResource( "3_vr4ld" )
-stretch_mode = 2
-flip_h = true
-
-[node name="ArrowDown" type="TextureRect" parent="VBoxContainer"]
+[node name="ArrowDown" type="TextureRect" parent="Arrows"]
 modulate = Color(1, 1, 1, 0)
 offset_left = 92.0
 offset_top = 98.0
 offset_right = 99.0
 offset_bottom = 104.0
 size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 8
 texture = ExtResource( "2_l26g1" )
 stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ArrowRight" type="TextureRect" parent="Arrows"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 186.0
+offset_top = 48.0
+offset_right = 192.0
+offset_bottom = 55.0
+size_flags_horizontal = 8
+size_flags_vertical = 4
+texture = ExtResource( "3_vr4ld" )
+stretch_mode = 2
+flip_h = true

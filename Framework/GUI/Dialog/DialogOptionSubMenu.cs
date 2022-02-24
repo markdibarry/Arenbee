@@ -27,8 +27,10 @@ namespace Arenbee.Framework.GUI.Dialog
                 }
                 _options.ReplaceItems(options);
             }
+            _options.AutoResize = true;
+            _options.HResize = SizeFlags.ShrinkCenter;
+            _options.VResize = SizeFlags.ShrinkCenter;
             await base.CustomSubMenuSetup();
-            _options.ResizeToContent();
         }
 
         protected override void SetNodeReferences()

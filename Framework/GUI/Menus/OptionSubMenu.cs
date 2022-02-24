@@ -45,6 +45,12 @@ namespace Arenbee.Framework.GUI
                 }
                 // To allow elements to adjust to correct positions
                 await ToSignal(GetTree(), "process_frame");
+
+                foreach (var optionContainer in OptionContainers)
+                {
+                    if (optionContainer.AutoResize)
+                        optionContainer.ResizeToContent();
+                }
                 FocusContainer(OptionContainers.FirstOrDefault());
             }
             await base.SetupAsync();
