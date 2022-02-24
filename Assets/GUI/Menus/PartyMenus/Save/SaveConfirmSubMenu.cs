@@ -10,6 +10,8 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+        private OptionContainer _saveOptions;
+
         protected override async void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
@@ -22,6 +24,13 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                     await CloseSubMenuAsync();
                     break;
             }
+        }
+
+        protected override void SetNodeReferences()
+        {
+            base.SetNodeReferences();
+            _saveOptions = Foreground.GetNode<OptionContainer>("SaveOptions");
+            OptionContainers.Add(_saveOptions);
         }
 
         private void SaveGame()

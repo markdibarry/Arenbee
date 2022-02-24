@@ -1,91 +1,73 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Arenbee.Framework.Extensions;
-
 using Godot;
 
 namespace Arenbee.Framework.GUI
 {
+    [Tool]
     public partial class Menu : CanvasLayer
     {
-        public Menu()
-        {
-            _subMenuStack = new Stack<SubMenu>();
-        }
-
-        private readonly Stack<SubMenu> _subMenuStack;
+        private SubMenu _currentSubMenu;
         public event EventHandler RootSubMenuClosed;
 
-        public override void _Ready()
+        public async void AddSubMenu(SubMenu subMenu)
         {
-            SetNodeReferences();
+            if (_currentSubMenu != null)
+            {
+                _currentSubMenu.Dim = true;
+                _currentSubMenu.ProcessMode = ProcessModeEnum.Disabled;
+            }
+            _currentSubMenu = subMenu;
+            SubscribeEvents(_currentSubMenu);
+            AddChild(_currentSubMenu);
+            await _currentSubMenu.InitAsync();
         }
 
-        private void SetNodeReferences()
+        private async void CloseAllSubMenusAsync()
         {
+            while (GetChildCount() > 0)
+            {
+                await CloseCurrentSubMenu();
+            }
         }
 
-        public void Init()
+        private async Task CloseCurrentSubMenu()
         {
-            SubMenu firstSubMenu = this.GetChildren<SubMenu>().FirstOrDefault();
-            _subMenuStack.Push(firstSubMenu);
-            SubscribeEvents(firstSubMenu);
+            await _currentSubMenu.CloseSubMenuAsync();
         }
 
-        protected virtual void OnRequestedAdd(SubMenu subMenu)
+        private void OnRequestedAdd(SubMenu subMenu)
         {
             AddSubMenu(subMenu);
         }
 
-        protected virtual async void OnSubMenuClosed(string cascadeTo = null)
+        private void OnRequestedCloseAll()
         {
-            await RemoveSubMenuAsync(cascadeTo);
+            CloseAllSubMenusAsync();
         }
 
-        protected virtual void OnRequestedCloseAll()
+        private async void OnSubMenuClosed(SubMenu subMenu, string cascadeTo = null)
         {
-            CloseAllSubMenus();
-        }
-
-        private void AddSubMenu(SubMenu subMenu)
-        {
-            if (_subMenuStack.Count > 0)
+            _currentSubMenu = null;
+            RemoveChild(subMenu);
+            UnsubscribeEvents(subMenu);
+            if (GetChildCount() > 0)
             {
-                _subMenuStack.Peek().Dim = true;
-                _subMenuStack.Peek().ProcessMode = ProcessModeEnum.Disabled;
-            }
-            _subMenuStack.Push(subMenu);
-            SubscribeEvents(subMenu);
-            AddChild(subMenu);
-        }
-
-        private async Task RemoveSubMenuAsync(string cascadeTo = null)
-        {
-            UnsubscribeEvents(_subMenuStack.Peek());
-            _subMenuStack.Pop();
-            if (_subMenuStack.Count > 0)
-            {
-                var currentSubMenu = _subMenuStack.Peek();
-                currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
-                currentSubMenu.Dim = false;
-                if (cascadeTo != null && cascadeTo != currentSubMenu.GetType().Name)
-                    await currentSubMenu.CloseSubMenuAsync(cascadeTo);
+                SetCurrentSubMenu();
+                if (cascadeTo != null && cascadeTo != _currentSubMenu.GetType().Name)
+                    await _currentSubMenu.CloseSubMenuAsync(cascadeTo);
             }
             else
             {
-                QueueFree();
                 RootSubMenuClosed?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        private async void CloseAllSubMenus()
+        private void SetCurrentSubMenu()
         {
-            while (_subMenuStack.Count > 0)
-            {
-                await _subMenuStack.Peek().CloseSubMenuAsync();
-            }
+            _currentSubMenu = GetChild<SubMenu>(GetChildCount() - 1);
+            _currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
+            _currentSubMenu.Dim = false;
         }
 
         private void SubscribeEvents(SubMenu subMenu)

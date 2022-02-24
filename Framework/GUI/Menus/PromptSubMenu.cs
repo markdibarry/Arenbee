@@ -11,23 +11,19 @@ namespace Arenbee.Framework.GUI
         private float _timeDuration;
         private bool _timerEnabled;
 
-        public override async Task CustomSubMenuInit()
+        public override async Task CustomSubMenuSetup()
         {
             if (_timeDuration > 0) _timerEnabled = true;
-            await base.CustomSubMenuInit();
+            await base.CustomSubMenuSetup();
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
             if (Engine.IsEditorHint()) return;
-            base._PhysicsProcess(delta);
+            base._Process(delta);
 
-            var menuInput = GameRoot.MenuInput;
-
-            if (menuInput.Enter.IsActionJustPressed)
-            {
+            if (GameRoot.MenuInput.Enter.IsActionJustPressed)
                 Confirm();
-            }
 
             if (_timerEnabled)
             {

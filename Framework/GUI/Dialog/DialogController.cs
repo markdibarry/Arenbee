@@ -28,6 +28,8 @@ namespace Arenbee.Framework.GUI.Dialog
 
             if (GameRoot.MenuInput.Enter.IsActionJustPressed)
                 Proceed();
+            else if (GameRoot.MenuInput.Enter.IsActionPressed)
+                SpeedUpText();
         }
 
         public override void _Ready()
@@ -121,6 +123,7 @@ namespace Arenbee.Framework.GUI.Dialog
         {
             if (CanProceed && FocusedBox.IsAtPageEnd())
             {
+                FocusedBox.NextArrow.Hide();
                 if (FocusedBox.IsAtLastPage())
                 {
                     if (FocusedBox.CurrentDialogPart.Next != null)
@@ -201,21 +204,28 @@ namespace Arenbee.Framework.GUI.Dialog
                 if (FocusedBox.IsAtLastPage()
                     && FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
                 {
-                    OpenOptionBox();
+                    OpenOptionBoxAsync();
                 }
                 else
                 {
+                    FocusedBox.NextArrow.Show();
                     CanProceed = true;
                 }
             }
         }
 
-        private void OpenOptionBox()
+        private async void OpenOptionBoxAsync()
         {
             _dialogOptionSubMenu = _dialogOptionSubMenuScene.Instantiate<DialogOptionSubMenu>();
             _dialogOptionSubMenu.ItemSelected += OnOptionItemSelected;
             _dialogOptionSubMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
             AddChild(_dialogOptionSubMenu);
+            await _dialogOptionSubMenu.InitAsync();
+        }
+
+        private void SpeedUpText()
+        {
+            FocusedBox.SpeedUpText = true;
         }
     }
 }

@@ -14,13 +14,9 @@ namespace Arenbee.Framework.GUI
         public OptionSubMenu()
             : base()
         {
-            OptionContainerPaths = new NodePath[0];
             OptionContainers = new List<OptionContainer>();
             _currentDirection = Direction.None;
         }
-
-        [Export]
-        public NodePath[] OptionContainerPaths { get; set; }
         private Cursor _cursor;
         public OptionContainer CurrentContainer { get; private set; }
         public List<OptionContainer> OptionContainers { get; private set; }
@@ -36,25 +32,28 @@ namespace Arenbee.Framework.GUI
             await base.CloseSubMenuAsync(cascadeTo);
         }
 
-        public override async Task InitAsync()
+        public override async Task SetupAsync()
         {
-            if (!this.IsSceneRoot())
-                AddContainerItems();
-            foreach (var optionContainer in OptionContainers)
+            if (!this.IsToolDebugMode())
+                CustomOptionsSetup();
+            if (OptionContainers.Count > 0)
             {
-                optionContainer.InitItems();
-                SubscribeToEvents(optionContainer);
+                foreach (var optionContainer in OptionContainers)
+                {
+                    optionContainer.InitItems();
+                    SubscribeToEvents(optionContainer);
+                }
+                // To allow elements to adjust to correct positions
+                await ToSignal(GetTree(), "process_frame");
+                FocusContainer(OptionContainers.FirstOrDefault());
             }
-            // To allow elements to adjust to correct positions
-            await ToSignal(GetTree(), "process_frame");
-            FocusContainer(OptionContainers.FirstOrDefault());
-            await base.InitAsync();
+            await base.SetupAsync();
         }
 
         /// <summary>
         /// Overrides the items that should display
         /// </summary>
-        protected virtual void AddContainerItems() { }
+        protected virtual void CustomOptionsSetup() { }
 
         protected void FocusContainerPreviousItem(OptionContainer optionContainer)
         {
@@ -110,19 +109,11 @@ namespace Arenbee.Framework.GUI
         {
             base.SetNodeReferences();
             _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
-            if (OptionContainerPaths.Length == 0)
-            {
-                GD.PrintErr(Name + " has no OptionContainer assigned.");
-            }
-            foreach (var path in OptionContainerPaths)
-            {
-                OptionContainers.Add(GetNode<OptionContainer>(path));
-            }
         }
 
         protected void SubscribeToEvents(OptionContainer optionContainer)
         {
-            if (!this.IsSceneRoot())
+            if (!this.IsToolDebugMode())
             {
                 optionContainer.ItemSelected += OnItemSelected;
                 optionContainer.ItemFocused += OnItemFocused;

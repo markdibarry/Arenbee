@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3]
-
-[ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_artoe"]
-[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/TitleMenus/MainSubMenu.tscn" id="2_n23dr"]
-
-[node name="TitleScreen" instance=ExtResource( "1_artoe" )]
-layer = 10
-
-[node name="MainSubMenu" parent="." index="0" instance=ExtResource( "2_n23dr" )]

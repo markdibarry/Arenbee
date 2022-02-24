@@ -7,7 +7,7 @@ namespace Arenbee.Assets.Actors.Enemies.JumpStates
     {
         public override void Enter()
         {
-            Actor.MotionVelocityY = Actor.GroundedGravity;
+            Actor.VelocityY = Actor.GroundedGravity;
             StateController.PlayFallbackAnimation();
         }
 

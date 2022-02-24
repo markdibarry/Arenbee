@@ -1,5 +1,5 @@
 using System;
-using Arenbee.Framework.Constants;
+using Arenbee.Assets.GUI.Menus.TitleMenus;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
 using Godot;
@@ -13,12 +13,12 @@ namespace Arenbee.Framework.Game
             s_instance = this;
         }
         public Node2D CurrentGameContainer { get; set; }
-        public Node2D TitleScreenContainer { get; set; }
+        public Menu TitleScreenMenu { get; set; }
         public GameSession CurrentGame { get; set; }
         public static GUIInputHandler MenuInput { get; private set; }
         private static GameRoot s_instance;
         public static GameRoot Instance => s_instance;
-        private readonly PackedScene _titleScreenScene = GD.Load<PackedScene>(PathConstants.TitleScreenPath);
+        private readonly PackedScene _titleScreenScene = GD.Load<PackedScene>(MainSubMenu.GetScenePath());
 
         public override void _Ready()
         {
@@ -29,7 +29,7 @@ namespace Arenbee.Framework.Game
         private void SetNodeReferences()
         {
             MenuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
-            TitleScreenContainer = GetNodeOrNull<Node2D>("TitleScreenContainer");
+            TitleScreenMenu = GetNodeOrNull<Menu>("TitleScreen");
             CurrentGameContainer = GetNodeOrNull<Node2D>("CurrentGameContainer");
         }
 
@@ -58,9 +58,11 @@ namespace Arenbee.Framework.Game
 
         public void ResetToTitleScreen()
         {
-            var titleScreen = _titleScreenScene.Instantiate<Menu>();
-            TitleScreenContainer.AddChild(titleScreen);
-            titleScreen.Init();
+            if (TitleScreenMenu.GetChildCount() == 0)
+            {
+                var titleScreen = _titleScreenScene.Instantiate<SubMenu>();
+                TitleScreenMenu.AddSubMenu(titleScreen);
+            }
         }
 
         public void EndCurrentgame()

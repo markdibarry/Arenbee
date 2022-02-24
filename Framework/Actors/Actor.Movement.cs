@@ -21,15 +21,15 @@ namespace Arenbee.Framework.Actors
         public int WalkSpeed { get; protected set; }
         public float GroundedGravity => 0.05f;
         public int MaxSpeed { get; set; }
-        public float MotionVelocityX
+        public float VelocityX
         {
-            get { return MotionVelocity.x; }
-            set { MotionVelocity = new Vector2(value, MotionVelocity.y); }
+            get { return Velocity.x; }
+            set { Velocity = new Vector2(value, Velocity.y); }
         }
-        public float MotionVelocityY
+        public float VelocityY
         {
-            get { return MotionVelocity.y; }
-            set { MotionVelocity = new Vector2(MotionVelocity.x, value); }
+            get { return Velocity.y; }
+            set { Velocity = new Vector2(Velocity.x, value); }
         }
         public float JumpVelocity { get; protected set; }
         public float JumpGravity { get; protected set; }
@@ -75,7 +75,7 @@ namespace Arenbee.Framework.Actors
 
         public void Jump()
         {
-            MotionVelocityY = JumpVelocity;
+            VelocityY = JumpVelocity;
         }
 
         public bool ShouldWalk()
@@ -101,11 +101,11 @@ namespace Arenbee.Framework.Actors
         {
             if (_moveX != 0)
             {
-                MotionVelocityX = MotionVelocity.x.LerpClamp(_moveX * MaxSpeed, Acceleration * delta);
+                VelocityX = Velocity.x.LerpClamp(_moveX * MaxSpeed, Acceleration * delta);
             }
             else
             {
-                MotionVelocityX = MotionVelocity.x.LerpClamp(0, Friction * delta);
+                VelocityX = Velocity.x.LerpClamp(0, Friction * delta);
             }
         }
 
@@ -113,13 +113,13 @@ namespace Arenbee.Framework.Actors
         {
             if (_moveXY != Vector2.Zero)
             {
-                MotionVelocityX = MotionVelocity.x.LerpClamp(_moveXY.x * MaxSpeed, Acceleration * delta);
-                MotionVelocityY = MotionVelocity.y.LerpClamp(_moveXY.y * MaxSpeed, Acceleration * delta);
+                VelocityX = Velocity.x.LerpClamp(_moveXY.x * MaxSpeed, Acceleration * delta);
+                VelocityY = Velocity.y.LerpClamp(_moveXY.y * MaxSpeed, Acceleration * delta);
             }
             else
             {
-                MotionVelocityX = MotionVelocity.x.LerpClamp(0, Friction * delta);
-                MotionVelocityY = MotionVelocity.y.LerpClamp(0, Friction * delta);
+                VelocityX = Velocity.x.LerpClamp(0, Friction * delta);
+                VelocityY = Velocity.y.LerpClamp(0, Friction * delta);
             }
         }
 

@@ -9,10 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="8_267v6"]
 
 [node name="MainSubMenu" instance=ExtResource( "1_g7lyy" )]
+offset_top = 1.0
+offset_bottom = 1.0
 script = ExtResource( "2_cyvws" )
 PreventCancel = true
 PreventCloseAll = true
-OptionContainerPaths = [NodePath("Foreground/MainOptions")]
 
 [node name="TextureRect" type="TextureRect" parent="Background" index="0"]
 modulate = Color(0.415686, 0.8, 1, 1)

@@ -8,7 +8,7 @@ namespace Arenbee.Assets.Actors.Enemies.BaseStates
     {
         public override void Enter()
         {
-            Actor.MotionVelocity = new Vector2(0, 0);
+            Actor.Velocity = new Vector2(0, 0);
             Actor.QueueFree();
             Actor.CreateDeathEffect();
         }

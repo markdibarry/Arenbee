@@ -232,7 +232,7 @@ position = Vector2(54, 200)
 position = Vector2(470, 200)
 monitorable = false
 script = ExtResource( "7_ftrnt" )
-_packedScenePath = "res://Assets/AreaScenes/DemoLevel/DemoLevel1.tscn"
+PackedScenePath = "res://Assets/AreaScenes/DemoLevel/DemoLevel1.tscn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Events/Teleport" index="0"]
 position = Vector2(-6, 8.5)

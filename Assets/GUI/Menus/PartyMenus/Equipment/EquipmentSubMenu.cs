@@ -12,6 +12,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class EquipmentSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+        private OptionContainer _partyList;
 
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
@@ -19,15 +20,21 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             OpenActorEquipmentSubMenu(optionItem);
         }
 
-        protected override void AddContainerItems()
+        protected override void CustomOptionsSetup()
         {
             AddPartyMembers();
+        }
+
+        protected override void SetNodeReferences()
+        {
+            base.SetNodeReferences();
+            _partyList = Foreground.GetNode<OptionContainer>("PartyList");
+            OptionContainers.Add(_partyList);
         }
 
         private void AddPartyMembers()
         {
             var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            OptionContainer partyList = OptionContainers.Find(x => x.Name == "PartyList");
             Party party = GameRoot.Instance.CurrentGame.Party;
             var options = new List<TextOption>();
             foreach (var actor in party.Actors)
@@ -37,7 +44,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }
-            partyList.ReplaceItems(options);
+            _partyList.ReplaceItems(options);
         }
 
         public void OpenActorEquipmentSubMenu(OptionItem optionItem)

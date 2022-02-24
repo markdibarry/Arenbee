@@ -12,15 +12,18 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class StatsSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private GridContainer StatsDisplayGrid { get; set; }
+        private GridContainer _statsDisplayGrid;
+        private OptionContainer _partyList;
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            StatsDisplayGrid = Foreground.GetNode<GridContainer>("StatsDisplay/GridContainer");
+            _partyList = Foreground.GetNode<OptionContainer>("PartyList");
+            OptionContainers.Add(_partyList);
+            _statsDisplayGrid = Foreground.GetNode<GridContainer>("StatsDisplay/GridContainer");
         }
 
-        protected override void AddContainerItems()
+        protected override void CustomOptionsSetup()
         {
             AddPartyMembers();
         }
@@ -34,7 +37,6 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
         private void AddPartyMembers()
         {
             var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            OptionContainer partyList = OptionContainers.Find(x => x.Name == "PartyList");
             Party party = GameRoot.Instance.CurrentGame.Party;
             var options = new List<TextOption>();
             foreach (var actor in party.Actors)
@@ -44,7 +46,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }
-            partyList.ReplaceItems(options);
+            _partyList.ReplaceItems(options);
         }
 
         private void DisplayStats(string actorName)
@@ -53,7 +55,7 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
             Actor actor = party.Actors.First(x => x.Name == actorName);
             foreach (var statPair in actor.Stats)
             {
-                var node = StatsDisplayGrid.GetNodeOrNull<MarginContainer>(statPair.Key.ToString());
+                var node = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(statPair.Key.ToString());
                 if (node != null)
                 {
                     node.GetNode<Label>("HBoxContainer/Value").Text = statPair.Value.BaseValue.ToString();

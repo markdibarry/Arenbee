@@ -15,8 +15,8 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
         public override void Update(float delta)
         {
             if (InputHandler.Jump.IsActionJustReleased)
-                Actor.MotionVelocityY = Actor.MotionVelocity.y * 0.5f;
-            Actor.MotionVelocityY = Actor.MotionVelocity.y + (Actor.JumpGravity * delta);
+                Actor.VelocityY = Actor.Velocity.y * 0.5f;
+            Actor.VelocityY = Actor.Velocity.y + (Actor.JumpGravity * delta);
 
             CheckForTransitions();
         }
@@ -31,7 +31,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
             {
                 StateMachine.TransitionTo(new Grounded());
             }
-            else if (Actor.MotionVelocity.y >= 0)
+            else if (Actor.Velocity.y >= 0)
             {
                 StateMachine.TransitionTo(new Fall());
             }

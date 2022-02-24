@@ -55,6 +55,11 @@ namespace Arenbee.Framework.GUI.Text
             get { return _dynamicText?.Speed ?? 0f; }
             set { _dynamicText?.SetSpeed(value); }
         }
+        public bool SpeedUpText
+        {
+            get { return _dynamicText?.SpeedUpText ?? false; }
+            set { if (_dynamicText != null) _dynamicText.SpeedUpText = value; }
+        }
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
         public event TextEventTriggeredHandler TextEventTriggered;
         public event EventHandler StoppedWriting;

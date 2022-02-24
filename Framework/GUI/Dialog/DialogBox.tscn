@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dkuopi3sttrcu"]
+[gd_scene load_steps=6 format=3 uid="uid://dkuopi3sttrcu"]
 
 [ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_40jil"]
 [ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogBox.cs" id="2_c18hx"]
 [ext_resource type="SpriteFrames" uid="uid://c0wqy08338pii" path="res://Assets/GUI/Portraits/dani/portraits.tres" id="3_uipmn"]
 [ext_resource type="PackedScene" uid="uid://bnfvvhk6bvj0i" path="res://Framework/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
+[ext_resource type="Texture2D" uid="uid://lctogtjgsu68" path="res://Framework/GUI/Cursors/arrowDownSmall.png" id="5_x5jni"]
 
 [node name="DialogBox" type="Control"]
 layout_direction = 2
@@ -12,7 +13,7 @@ anchor_bottom = 1.0
 theme = ExtResource( "1_40jil" )
 script = ExtResource( "2_c18hx" )
 CustomText = "Hi!
-My name is{{speed time=0.5}}... {{speed time=default}}{{mood value=happy}}[wave]Dani![/wave]"
+My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
 Speed = 0.05
 
 [node name="PortraitContainer" type="Control" parent="."]
@@ -47,15 +48,35 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 184.0
 offset_bottom = 68.0
-theme_override_constants/margin_top = 5
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 5
 
 [node name="DynamicTextBox" parent="DialogPanel/DialogMargin" instance=ExtResource( "4_unl7n" )]
-offset_top = 5.0
+offset_top = 4.0
 offset_right = 179.0
-offset_bottom = 63.0
+offset_bottom = 58.0
 theme_override_constants/margin_top = 1
 CustomText = "Hi!
-My name is{{speed time=0.5}}... {{speed time=default}}{{mood value=happy}}[wave]Dani![/wave]"
+My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
+
+[node name="ArrowMargin" type="MarginContainer" parent="DialogPanel"]
+layout_direction = 2
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 184.0
+offset_bottom = 68.0
+theme_override_constants/margin_right = 5
+
+[node name="NextArrow" type="TextureRect" parent="DialogPanel/ArrowMargin"]
+visible = false
+offset_left = 167.0
+offset_top = 57.0
+offset_right = 174.0
+offset_bottom = 63.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+texture = ExtResource( "5_x5jni" )
+stretch_mode = 2
 
 [node name="NamePanel" type="PanelContainer" parent="."]
 layout_direction = 2

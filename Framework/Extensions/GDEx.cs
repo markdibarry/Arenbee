@@ -201,6 +201,17 @@ namespace Arenbee.Framework.Extensions
         }
 
         /// <summary>
+        /// Returns if in debug context.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static bool IsToolDebugMode(this Node node)
+        {
+            if (Engine.IsEditorHint()) return true;
+            else return node == node.GetTree().CurrentScene;
+        }
+
+        /// <summary>
         /// Returns if the Node is the scene's root.
         /// </summary>
         /// <param name="node"></param>

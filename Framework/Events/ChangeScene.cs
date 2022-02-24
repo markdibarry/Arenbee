@@ -9,17 +9,17 @@ namespace Arenbee.Framework.Events
     public partial class ChangeScene : Area2D
     {
         [Export(PropertyHint.File)]
-        private string _packedScenePath;
+        public string PackedScenePath { get; set; }
         public override void _Ready()
         {
             BodyEntered += OnBodyEntered;
         }
         public void OnBodyEntered(Node body)
         {
-            if (_packedScenePath == null) return;
+            if (PackedScenePath == null) return;
             if (body is Actor actor && actor.ActorType == ActorType.Player)
             {
-                AreaScene newScene = GD.Load<PackedScene>(_packedScenePath).Instantiate<AreaScene>();
+                AreaScene newScene = GD.Load<PackedScene>(PackedScenePath).Instantiate<AreaScene>();
                 GameRoot.Instance.CurrentGame.ReplaceScene(newScene);
             }
         }

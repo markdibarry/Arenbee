@@ -68,6 +68,7 @@ namespace Arenbee.Framework.GUI.Text
         {
             get { return Array.AsReadOnly(_lineBreaks); }
         }
+        public bool SpeedUpText { get; set; }
         public int StopAt { get; set; }
         public Dictionary<int, List<TextEvent>> TextEvents { get; set; }
         public delegate void EventTriggeredHandler(ITextEvent textEvent);
@@ -95,6 +96,9 @@ namespace Arenbee.Framework.GUI.Text
             {
                 _counter = Speed;
                 InvokeTextEvents(VisibleCharacters);
+                if (SpeedUpText)
+                    _counter = 0;
+                SpeedUpText = false;
                 VisibleCharacters++;
             }
         }

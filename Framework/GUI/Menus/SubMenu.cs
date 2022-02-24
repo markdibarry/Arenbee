@@ -30,7 +30,7 @@ namespace Arenbee.Framework.GUI
         protected Control Foreground { get; set; }
         protected Control Background { get; set; }
         public delegate void RequestedAddHandler(SubMenu subMenu);
-        public delegate void SubMenuClosedHandler(string cascadeTo = null);
+        public delegate void SubMenuClosedHandler(SubMenu subMenu, string cascadeTo = null);
         public delegate void RequestedCloseAllHandler();
         public event RequestedAddHandler RequestedAdd;
         public event SubMenuClosedHandler SubMenuClosed;
@@ -57,12 +57,8 @@ namespace Arenbee.Framework.GUI
         {
             Modulate = Colors.Transparent;
             SetNodeReferences();
-
-            if (!this.IsSceneRoot())
-            {
-                await CustomSubMenuInit();
-            }
-            await InitAsync();
+            if (this.IsSceneRoot())
+                await InitAsync();
         }
 
         public virtual async Task CloseSubMenuAsync(string cascadeTo = null)
@@ -70,15 +66,22 @@ namespace Arenbee.Framework.GUI
             IsActive = false;
             await TransitionOutAsync();
             QueueFree();
-            SubMenuClosed?.Invoke(cascadeTo);
+            SubMenuClosed?.Invoke(this, cascadeTo);
         }
 
-        public virtual Task CustomSubMenuInit()
+        public virtual Task CustomSubMenuSetup()
         {
             return Task.CompletedTask;
         }
 
-        public virtual async Task InitAsync()
+        public async Task InitAsync()
+        {
+            if (!this.IsToolDebugMode())
+                await CustomSubMenuSetup();
+            await SetupAsync();
+        }
+
+        public virtual async Task SetupAsync()
         {
             await TransitionInAsync();
             IsActive = true;

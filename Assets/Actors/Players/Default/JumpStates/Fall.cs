@@ -16,7 +16,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-            Actor.MotionVelocityY = Actor.MotionVelocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
+            Actor.VelocityY = Actor.Velocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
             if (_jumpGraceTimer > 0)
                 _jumpGraceTimer -= delta;
 

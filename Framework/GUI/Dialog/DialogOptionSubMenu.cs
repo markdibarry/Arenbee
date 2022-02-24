@@ -11,7 +11,8 @@ namespace Arenbee.Framework.GUI.Dialog
         public static string GetScenePath() => GDEx.GetScenePath();
         public DialogChoice[] DialogChoices { get; set; }
         private PackedScene _textOptionScene;
-        public override async Task CustomSubMenuInit()
+        private OptionContainer _options;
+        public override async Task CustomSubMenuSetup()
         {
             if (DialogChoices?.Length > 0)
             {
@@ -24,10 +25,17 @@ namespace Arenbee.Framework.GUI.Dialog
                     textOption.LabelText = choice.Text;
                     options.Add(textOption);
                 }
-                OptionContainers[0].ReplaceItems(options);
+                _options.ReplaceItems(options);
             }
-            await base.CustomSubMenuInit();
-            OptionContainers[0].ResizeToContent();
+            await base.CustomSubMenuSetup();
+            _options.ResizeToContent();
+        }
+
+        protected override void SetNodeReferences()
+        {
+            base.SetNodeReferences();
+            _options = Foreground.GetNode<OptionContainer>("OptionContainer");
+            OptionContainers.Add(_options);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Arenbee.Framework.Actors
         private void HandleKnockBack(Vector2 hitPosition)
         {
             Vector2 direction = hitPosition.DirectionTo(GlobalPosition);
-            MotionVelocity = direction * -JumpVelocity;
+            Velocity = direction * -JumpVelocity;
         }
 
         private void HandleHPDepleted()

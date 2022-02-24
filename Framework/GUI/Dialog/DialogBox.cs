@@ -1,6 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
@@ -11,44 +9,51 @@ namespace Arenbee.Framework.GUI.Dialog
     public partial class DialogBox : Control
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+
+        private MarginContainer _dialogMargin;
+        private PanelContainer _dialogPanel;
+        private DynamicTextBox _dynamicTextBox;
+        private Label _nameLabel;
+        private PanelContainer _namePanel;
+        private Control _portraitContainer;
         [Export]
         public int CurrentPage
         {
-            get { return DynamicTextBox?.CurrentPage ?? 0; }
+            get { return _dynamicTextBox?.CurrentPage ?? 0; }
             set
             {
-                if (DynamicTextBox != null)
-                    DynamicTextBox.CurrentPage = value;
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.CurrentPage = value;
             }
         }
         [Export(PropertyHint.MultilineText)]
         public string CustomText
         {
-            get { return DynamicTextBox?.CustomText ?? string.Empty; }
+            get { return _dynamicTextBox?.CustomText ?? string.Empty; }
             set
             {
-                if (DynamicTextBox != null)
-                    DynamicTextBox.CustomText = value;
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.CustomText = value;
             }
         }
         [Export]
         public bool ShouldWrite
         {
-            get { return DynamicTextBox?.ShouldWrite ?? false; }
+            get { return _dynamicTextBox?.ShouldWrite ?? false; }
             set
             {
-                if (DynamicTextBox != null)
-                    DynamicTextBox.ShouldWrite = value;
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.ShouldWrite = value;
             }
         }
         [Export]
         public bool ShouldShowAllToStop
         {
-            get { return DynamicTextBox?.ShouldShowAllPage ?? false; }
+            get { return _dynamicTextBox?.ShouldShowAllPage ?? false; }
             set
             {
-                if (DynamicTextBox != null)
-                    DynamicTextBox.ShouldShowAllPage = value;
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.ShouldShowAllPage = value;
             }
         }
         [Export]
@@ -60,22 +65,21 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export]
         public float Speed
         {
-            get { return DynamicTextBox?.Speed ?? 0f; }
+            get { return _dynamicTextBox?.Speed ?? 0f; }
             set
             {
-                if (DynamicTextBox != null)
-                    DynamicTextBox.Speed = value;
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.Speed = value;
             }
         }
-        public bool CanProceed { get; set; }
         public DialogPart CurrentDialogPart { get; set; }
-        public MarginContainer DialogMargin { get; set; }
-        public PanelContainer DialogPanel { get; set; }
-        public DynamicTextBox DynamicTextBox { get; set; }
-        public Label NameLabel { get; set; }
-        public PanelContainer NamePanel { get; set; }
-        public Control PortraitContainer { get; set; }
+        public TextureRect NextArrow { get; set; }
         public bool ReverseDisplay { get; set; }
+        public bool SpeedUpText
+        {
+            get { return _dynamicTextBox?.SpeedUpText ?? false; }
+            set { if (_dynamicTextBox != null) _dynamicTextBox.SpeedUpText = value; }
+        }
         public delegate void DialogBoxLoadedHandler(DialogBox dialogBox);
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
         public event DialogBoxLoadedHandler DialogBoxLoaded;
@@ -95,9 +99,9 @@ namespace Arenbee.Framework.GUI.Dialog
 
         public void ChangeMood(string newMood)
         {
-            if (PortraitContainer.GetChildCount() == 1)
+            if (_portraitContainer.GetChildCount() == 1)
             {
-                var portrait = PortraitContainer.GetChild<AnimatedSprite2D>(0);
+                var portrait = _portraitContainer.GetChild<AnimatedSprite2D>(0);
                 ChangeMood(newMood, portrait);
             }
         }
@@ -119,54 +123,54 @@ namespace Arenbee.Framework.GUI.Dialog
         public AnimatedSprite2D GetPortrait(string character)
         {
             if (string.IsNullOrEmpty(character)) return null;
-            return PortraitContainer.GetNodeOrNull<AnimatedSprite2D>(character.Capitalize());
+            return _portraitContainer.GetNodeOrNull<AnimatedSprite2D>(character.Capitalize());
         }
 
         public bool IsAtLastPage()
         {
-            return DynamicTextBox?.IsAtLastPage() ?? false;
+            return _dynamicTextBox?.IsAtLastPage() ?? false;
         }
 
         public bool IsAtPageEnd()
         {
-            return DynamicTextBox?.IsAtPageEnd() ?? false;
+            return _dynamicTextBox?.IsAtPageEnd() ?? false;
         }
 
         public void NextPage()
         {
-            DynamicTextBox?.NextPage();
+            _dynamicTextBox?.NextPage();
         }
 
         public void SetPortraits()
         {
             int shiftBase = 30;
-            PortraitContainer.RemoveAllChildren();
-            NameLabel.Text = string.Empty;
+            _portraitContainer.RemoveAllChildren();
+            _nameLabel.Text = string.Empty;
             if (ReverseDisplay)
             {
                 shiftBase *= -1;
-                PortraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
-                DialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
+                _portraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
+                _dialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
             }
             foreach (Speaker speaker in CurrentDialogPart.Speakers.OrEmpty())
             {
-                float shiftAmount = shiftBase * PortraitContainer.GetChildCount();
+                float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
                 AnimatedSprite2D portrait = speaker.GetPortrait(shiftAmount, ReverseDisplay);
                 if (portrait != null)
                 {
-                    PortraitContainer.AddChild(portrait);
-                    PortraitContainer.MoveChild(portrait, 0);
+                    _portraitContainer.AddChild(portrait);
+                    _portraitContainer.MoveChild(portrait, 0);
                     if (Engine.IsEditorHint()) portrait.Owner = GetTree().EditedSceneRoot;
                 }
                 if (speaker.DisplayName != null)
                 {
                     if (ReverseDisplay)
-                        NamePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
-                    if (string.IsNullOrEmpty(NameLabel.Text))
-                        NameLabel.Text = speaker.DisplayName;
+                        _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
+                    if (string.IsNullOrEmpty(_nameLabel.Text))
+                        _nameLabel.Text = speaker.DisplayName;
                     else
-                        NameLabel.Text += " & " + speaker.DisplayName;
-                    NameLabel.Show();
+                        _nameLabel.Text += " & " + speaker.DisplayName;
+                    _nameLabel.Show();
                 }
             }
         }
@@ -183,20 +187,20 @@ namespace Arenbee.Framework.GUI.Dialog
 
             if (CurrentDialogPart.Text != null)
             {
-                DynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;
-                DynamicTextBox.CustomText = CurrentDialogPart.Text;
-                DynamicTextBox.UpdateText();
+                _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;
+                _dynamicTextBox.CustomText = CurrentDialogPart.Text;
+                _dynamicTextBox.UpdateText();
             }
         }
 
         public void UpdateText()
         {
-            DynamicTextBox.UpdateText();
+            _dynamicTextBox.UpdateText();
         }
 
         public void WritePage(bool shouldWrite)
         {
-            DynamicTextBox?.WritePage(shouldWrite);
+            _dynamicTextBox?.WritePage(shouldWrite);
         }
 
         private void Init()
@@ -227,26 +231,27 @@ namespace Arenbee.Framework.GUI.Dialog
 
         private void SetNodeReferences()
         {
-            PortraitContainer = GetNodeOrNull<Control>("PortraitContainer");
-            DialogPanel = GetNodeOrNull<PanelContainer>("DialogPanel");
-            DialogMargin = DialogPanel.GetNodeOrNull<MarginContainer>("DialogMargin");
-            DynamicTextBox = DialogMargin.GetNodeOrNull<DynamicTextBox>("DynamicTextBox");
-            NamePanel = GetNodeOrNull<PanelContainer>("NamePanel");
-            NameLabel = NamePanel.GetNodeOrNull<Label>("NameLabel");
+            _portraitContainer = GetNodeOrNull<Control>("PortraitContainer");
+            _dialogPanel = GetNodeOrNull<PanelContainer>("DialogPanel");
+            _dialogMargin = _dialogPanel.GetNodeOrNull<MarginContainer>("DialogMargin");
+            _dynamicTextBox = _dialogMargin.GetNodeOrNull<DynamicTextBox>("DynamicTextBox");
+            _namePanel = GetNodeOrNull<PanelContainer>("NamePanel");
+            _nameLabel = _namePanel.GetNodeOrNull<Label>("NameLabel");
+            NextArrow = _dialogPanel.GetNodeOrNull<TextureRect>("ArrowMargin/NextArrow");
         }
 
         private void SubscribeEvents()
         {
-            DynamicTextBox.TextLoaded += OnTextLoaded;
-            DynamicTextBox.TextEventTriggered += OnTextEventTriggered;
-            DynamicTextBox.StoppedWriting += OnStoppedWriting;
+            _dynamicTextBox.TextLoaded += OnTextLoaded;
+            _dynamicTextBox.TextEventTriggered += OnTextEventTriggered;
+            _dynamicTextBox.StoppedWriting += OnStoppedWriting;
         }
 
         private void UnsubscribeEvents()
         {
-            DynamicTextBox.TextLoaded -= OnTextLoaded;
-            DynamicTextBox.TextEventTriggered -= OnTextEventTriggered;
-            DynamicTextBox.StoppedWriting -= OnStoppedWriting;
+            _dynamicTextBox.TextLoaded -= OnTextLoaded;
+            _dynamicTextBox.TextEventTriggered -= OnTextEventTriggered;
+            _dynamicTextBox.StoppedWriting -= OnStoppedWriting;
         }
     }
 }

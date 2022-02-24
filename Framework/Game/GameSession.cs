@@ -4,6 +4,7 @@ using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
+using Arenbee.Assets.GUI.Menus.PartyMenus;
 using Arenbee.Framework.GUI.Dialog;
 using Arenbee.Framework.SaveData;
 using Godot;
@@ -19,7 +20,7 @@ namespace Arenbee.Framework.Game
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
-        private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(PathConstants.PartyMenuPath);
+        private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(MainSubMenu.GetScenePath());
         private Menu _partyMenu;
         private Node2D _currentAreaContainer;
         private HUD _hud;
@@ -40,6 +41,7 @@ namespace Arenbee.Framework.Game
         {
             _hud = GetNode<HUD>("HUD");
             _currentAreaContainer = GetNode<Node2D>("CurrentAreaSceneContainer");
+            _partyMenu = GetNode<Menu>("Menu");
             Transition = GetNode<TransitionFadeColor>("Transition/TransitionFadeColor");
             DialogController = GetNode<DialogController>("DialogController");
         }
@@ -117,19 +119,17 @@ namespace Arenbee.Framework.Game
 
         private void OpenPartyMenu()
         {
-            if (!IsInstanceValid(_partyMenu))
+            if (_partyMenu.GetChildCount() == 0)
             {
                 CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
-                _partyMenu = _partyMenuScene.Instantiate<Menu>();
-                _partyMenu.RootSubMenuClosed += OnPartyMenuRootClosed;
-                AddChild(_partyMenu);
-                _partyMenu.Init();
+                var partySubMenu = _partyMenuScene.Instantiate<SubMenu>();
+                _partyMenu.AddSubMenu(partySubMenu);
             }
         }
 
         public void OpenDialog(string path)
         {
-            if (!IsInstanceValid(_partyMenu))
+            if (_partyMenu.GetChildCount() == 0)
             {
                 DialogController.StartDialog(path);
             }
@@ -147,7 +147,6 @@ namespace Arenbee.Framework.Game
 
         private void OnPartyMenuRootClosed(object sender, EventArgs e)
         {
-            _partyMenu.RootSubMenuClosed -= OnPartyMenuRootClosed;
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
         }
 
@@ -155,10 +154,12 @@ namespace Arenbee.Framework.Game
         {
             DialogController.DialogStarted += OnDialogStarted;
             DialogController.DialogEnded += OnDialogEnded;
+            _partyMenu.RootSubMenuClosed += OnPartyMenuRootClosed;
         }
 
         private void UnsubscribeEvents()
         {
+            _partyMenu.RootSubMenuClosed -= OnPartyMenuRootClosed;
             DialogController.DialogStarted -= OnDialogStarted;
             DialogController.DialogEnded -= OnDialogEnded;
         }

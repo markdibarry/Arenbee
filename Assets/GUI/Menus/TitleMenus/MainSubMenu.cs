@@ -19,11 +19,14 @@ namespace Arenbee.Assets.GUI.Menus.TitleMenus
 
         public static string GetScenePath() => GDEx.GetScenePath();
         public AnimationPlayer AnimationPlayer { get; set; }
+        private OptionContainer _optionContainer;
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
             AnimationPlayer = GetNode<AnimationPlayer>("TransitionFadeColor/AnimationPlayer");
+            _optionContainer = Foreground.GetNode<OptionContainer>("MainOptions");
+            OptionContainers.Add(_optionContainer);
         }
 
         protected override async Task TransitionInAsync()

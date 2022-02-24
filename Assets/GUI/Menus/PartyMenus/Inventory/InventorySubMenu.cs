@@ -14,28 +14,18 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
     public partial class InventorySubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        [Export]
-        private readonly NodePath _itemInfoLabelPath;
         private Label _itemInfoLabel;
         private OptionContainer _inventoryList;
         private OptionContainer _typeList;
         private Inventory _inventory;
 
-        protected override void SetNodeReferences()
-        {
-            base.SetNodeReferences();
-            _typeList = OptionContainers[0];
-            _inventoryList = OptionContainers[1];
-            _itemInfoLabel = GetNode<Label>(_itemInfoLabelPath);
-        }
-
-        public override async Task CustomSubMenuInit()
+        public override async Task CustomSubMenuSetup()
         {
             _inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
-            await base.CustomSubMenuInit();
+            await base.CustomSubMenuSetup();
         }
 
-        protected override void AddContainerItems()
+        protected override void CustomOptionsSetup()
         {
             _inventoryList?.ReplaceItems(GetItemOptions(null));
 
@@ -75,25 +65,14 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 HandleInventoryListOOB(containerLeavingFocus, direction);
         }
 
-        private void HandleTypeListOOB(OptionContainer container, Direction direction)
+        protected override void SetNodeReferences()
         {
-            if (direction == Direction.Down)
-                FocusContainerPreviousItem(_inventoryList);
-            else
-                base.OnFocusOOB(container, direction);
-        }
-
-        private void HandleInventoryListOOB(OptionContainer container, Direction direction)
-        {
-            if (direction == Direction.Up)
-            {
-                _itemInfoLabel.Text = string.Empty;
-                FocusContainerPreviousItem(_typeList);
-            }
-            else
-            {
-                base.OnFocusOOB(container, direction);
-            }
+            base.SetNodeReferences();
+            _typeList = Foreground.GetNode<OptionContainer>("TypeList");
+            OptionContainers.Add(_typeList);
+            _inventoryList = Foreground.GetNode<OptionContainer>("InventoryList");
+            OptionContainers.Add(_inventoryList);
+            _itemInfoLabel = Foreground.GetNode<Label>("ItemInfo/Control/MarginContainer/ItemInfoLabel");
         }
 
         private List<KeyValueOption> GetItemOptions(ItemType? itemType)
@@ -133,6 +112,27 @@ namespace Arenbee.Assets.GUI.Menus.PartyMenus
                 options.Add(option);
             }
             return options;
+        }
+
+        private void HandleTypeListOOB(OptionContainer container, Direction direction)
+        {
+            if (direction == Direction.Down)
+                FocusContainerPreviousItem(_inventoryList);
+            else
+                base.OnFocusOOB(container, direction);
+        }
+
+        private void HandleInventoryListOOB(OptionContainer container, Direction direction)
+        {
+            if (direction == Direction.Up)
+            {
+                _itemInfoLabel.Text = string.Empty;
+                FocusContainerPreviousItem(_typeList);
+            }
+            else
+            {
+                base.OnFocusOOB(container, direction);
+            }
         }
     }
 }

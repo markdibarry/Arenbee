@@ -8,7 +8,6 @@
 
 [node name="DialogOptionSubMenu" instance=ExtResource( "1_yh25b" )]
 script = ExtResource( "2_rm6dj" )
-OptionContainerPaths = [NodePath("Foreground/OptionContainer")]
 
 [node name="OptionContainer" parent="Foreground" index="0" instance=ExtResource( "3_rf88b" )]
 anchor_left = 0.5
