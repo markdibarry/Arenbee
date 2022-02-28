@@ -1,7 +1,7 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Game;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.Events
@@ -20,7 +20,7 @@ namespace Arenbee.Framework.Events
             if (body is Actor actor && actor.ActorType == ActorType.Player)
             {
                 AreaScene newScene = GD.Load<PackedScene>(PackedScenePath).Instantiate<AreaScene>();
-                GameRoot.Instance.CurrentGame.ReplaceScene(newScene);
+                Locator.GetCurrentGame().ReplaceScene(newScene);
             }
         }
     }

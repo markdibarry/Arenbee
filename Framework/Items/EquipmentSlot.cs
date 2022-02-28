@@ -1,4 +1,5 @@
 ﻿using Arenbee.Framework.Enums;
+using Arenbee.Framework.Utility;
 using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
@@ -9,11 +10,10 @@ namespace Arenbee.Framework.Items
         {
             SlotName = slotName;
             SlotType = slotType;
+            _itemDB = Locator.GetItemDB();
         }
-
-        public EquipmentSlotName SlotName { get; }
-        public ItemType SlotType { get; }
-        public string ItemId { get; set; }
+        private readonly IItemDB _itemDB;
+        private Item _item;
         [JsonIgnore]
         public Item Item
         {
@@ -22,13 +22,15 @@ namespace Arenbee.Framework.Items
                 if (!string.IsNullOrEmpty(ItemId))
                 {
                     if (_item == null || _item.Id != ItemId)
-                        _item = ItemDB.GetItem(ItemId);
+                        _item = _itemDB.GetItem(ItemId);
                     return _item;
                 }
                 return null;
             }
         }
-        private Item _item;
+        public string ItemId { get; set; }
+        public EquipmentSlotName SlotName { get; }
+        public ItemType SlotType { get; }
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;
 

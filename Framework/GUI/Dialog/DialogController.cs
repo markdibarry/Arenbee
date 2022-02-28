@@ -1,14 +1,21 @@
 using System;
 using System.Threading.Tasks;
-using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI.Text;
+using Arenbee.Framework.Input;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.GUI.Dialog
 {
     public partial class DialogController : CanvasLayer
     {
+        public DialogController()
+        {
+            _menuInput = Locator.GetMenuInput();
+        }
+
         private int _currentPart;
+        private readonly GUIInputHandler _menuInput;
         public bool CanProceed { get; set; }
         public bool DialogActive { get; set; }
         public DialogPart[] DialogParts { get; set; }
@@ -26,9 +33,9 @@ namespace Arenbee.Framework.GUI.Dialog
         {
             if (!DialogActive) return;
 
-            if (GameRoot.MenuInput.Enter.IsActionJustPressed)
+            if (_menuInput.Enter.IsActionJustPressed)
                 Proceed();
-            else if (GameRoot.MenuInput.Enter.IsActionPressed)
+            else if (_menuInput.Enter.IsActionPressed)
                 SpeedUpText();
         }
 

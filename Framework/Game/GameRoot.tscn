@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2gc31v2yhuoj"]
 
 [ext_resource type="Script" path="res://Framework/Game/GameRoot.cs" id="1_6aro1"]
-[ext_resource type="Script" path="res://Assets/Input/MenuInputHandler.cs" id="2_cpj4u"]
+[ext_resource type="Script" path="res://Assets/Input/MenuInputHandler.cs" id="2_103x3"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/Menu.cs" id="3_fq7kg"]
 
 [node name="GameRoot" type="Node"]
@@ -17,7 +17,7 @@ anchor_bottom = 1.0
 color = Color(0, 0.54902, 1, 1)
 
 [node name="MenuInputHandler" type="Node" parent="."]
-script = ExtResource( "2_cpj4u" )
+script = ExtResource( "2_103x3" )
 
 [node name="CurrentGameContainer" type="Node2D" parent="."]
 

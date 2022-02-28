@@ -6,6 +6,7 @@ using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Party.Equipment
@@ -16,14 +17,14 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         public static string GetScenePath() => GDEx.GetScenePath();
         private OptionContainer _partyOptions;
         private OptionContainer _equipmentOptions;
-        private PlayerParty _party;
+        private IPlayerParty _playerParty;
         private PackedScene _keyValueOptionScene;
         private PackedScene _textOptionScene;
 
         public override void _Process(float delta)
         {
             if (this.IsToolDebugMode() || !IsActive) return;
-            if (GameRoot.MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
+            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
                 FocusContainer(_partyOptions);
             else
                 base._Process(delta);
@@ -37,7 +38,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         protected override void CustomOptionsSetup()
         {
-            _party = GameRoot.Instance.CurrentGame.Party;
+            _playerParty = Locator.GetParty();
             _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             AddPartyMembers();
@@ -72,7 +73,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private void AddPartyMembers()
         {
             var options = new List<TextOption>();
-            foreach (var actor in _party.Actors)
+            foreach (var actor in _playerParty.Actors)
             {
                 var textOption = _textOptionScene.Instantiate<TextOption>();
                 textOption.OptionData.Add("actorName", actor.Name);
@@ -89,7 +90,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             if (optionItem == null) return options;
             if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
                 return options;
-            Actor actor = _party.GetPlayerByName(actorName);
+            Actor actor = _playerParty.GetPlayerByName(actorName);
             if (actor == null) return options;
             foreach (var slot in actor.Equipment.Slots)
             {
@@ -106,7 +107,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         {
             if (!_partyOptions.CurrentItem.OptionData.TryGetValue("actorName", out string actorName))
                 return;
-            Actor actor = _party.GetPlayerByName(actorName);
+            Actor actor = _playerParty.GetPlayerByName(actorName);
             if (actor == null)
                 return;
             if (!optionItem.OptionData.TryGetValue("slotName", out string slotName))

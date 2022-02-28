@@ -3,6 +3,7 @@ using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Game.SaveData;
 using Godot;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Assets.GUI.Menus.Party
 {
@@ -10,7 +11,14 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+        private GameSessionBase _currentGame;
         private OptionContainer _saveOptions;
+
+        protected override void CustomOptionsSetup()
+        {
+            base.CustomOptionsSetup();
+            _currentGame = Locator.GetCurrentGame();
+        }
 
         protected override async void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
@@ -37,7 +45,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void SaveGame()
         {
-            SaveService.SaveGame(GameRoot.Instance.CurrentGame);
+            SaveService.SaveGame(_currentGame);
             RaiseRequestedAddSubMenu(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
         }
     }

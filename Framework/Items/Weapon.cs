@@ -1,11 +1,18 @@
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 using Godot;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Framework.Items
 {
     public abstract partial class Weapon : Node2D
     {
+        protected Weapon()
+        {
+            _itemDB = Locator.GetItemDB();
+        }
+
+        private readonly IItemDB _itemDB;
         private Item _item;
         public AnimationPlayer AnimationPlayer { get; set; }
         public HitBox HitBox { get; set; }
@@ -17,7 +24,7 @@ namespace Arenbee.Framework.Items
                 if (!string.IsNullOrEmpty(ItemId))
                 {
                     if (_item == null || _item.Id != ItemId)
-                        _item = ItemDB.GetItem(ItemId);
+                        _item = _itemDB.GetItem(ItemId);
                     return _item;
                 }
                 return null;

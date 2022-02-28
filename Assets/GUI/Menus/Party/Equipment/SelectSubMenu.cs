@@ -6,6 +6,7 @@ using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Party.Equipment
@@ -14,16 +15,18 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
     public partial class SelectSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private PlayerParty _party;
+        private IItemDB _itemDB;
+        private IPlayerParty _playerParty;
         private OptionContainer _equipOptions;
         private GridContainer _statsDisplayGrid;
         private PackedScene _keyValueOptionScene;
-        public EquipmentSlot Slot { get; set; }
         public Actor Actor { get; set; }
+        public EquipmentSlot Slot { get; set; }
 
         protected override void CustomOptionsSetup()
         {
-            _party = GameRoot.Instance.CurrentGame.Party;
+            _itemDB = Locator.GetItemDB();
+            _playerParty = Locator.GetParty();
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             AddItemOptions();
             base.CustomOptionsSetup();
@@ -55,7 +58,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             }
             else if (bool.Parse(canSelect))
             {
-                slot.SetItem(ItemDB.GetItem(itemId));
+                slot.SetItem(_itemDB.GetItem(itemId));
                 return true;
             }
             return false;
@@ -111,7 +114,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             unequipOption.OptionData.Add("itemId", "Unequip");
             unequipOption.OptionData.Add("canSelect", true.ToString());
             options.Add(unequipOption);
-            ICollection<ItemStack> itemStacks = _party.Inventory.GetItemsByType(Slot.SlotType);
+            ICollection<ItemStack> itemStacks = _playerParty.Inventory.GetItemsByType(Slot.SlotType);
             foreach (var itemStack in itemStacks)
             {
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();

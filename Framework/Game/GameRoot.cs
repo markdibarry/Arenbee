@@ -2,6 +2,8 @@ using System;
 using Arenbee.Assets.GUI.Menus.Title;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
+using Arenbee.Framework.Items;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.Game
@@ -12,13 +14,17 @@ namespace Arenbee.Framework.Game
         {
             s_instance = this;
         }
+        private readonly PackedScene _titleScreenScene = GD.Load<PackedScene>(MainSubMenu.GetScenePath());
+        private static GameRoot s_instance;
+        private GUIInputHandler _menuInput;
+        public static GameRoot Instance => s_instance;
         public Node2D CurrentGameContainer { get; set; }
         public Menu TitleScreenMenu { get; set; }
-        public GameSession CurrentGame { get; set; }
-        public static GUIInputHandler MenuInput { get; private set; }
-        private static GameRoot s_instance;
-        public static GameRoot Instance => s_instance;
-        private readonly PackedScene _titleScreenScene = GD.Load<PackedScene>(MainSubMenu.GetScenePath());
+        public GameSessionBase CurrentGame
+        {
+            get { return Locator.GetCurrentGame(); }
+            set { Locator.ProvideCurrentGame(value); }
+        }
 
         public override void _Ready()
         {
@@ -28,32 +34,25 @@ namespace Arenbee.Framework.Game
 
         private void SetNodeReferences()
         {
-            MenuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
             TitleScreenMenu = GetNodeOrNull<Menu>("TitleScreen");
             CurrentGameContainer = GetNodeOrNull<Node2D>("CurrentGameContainer");
         }
 
         private void Init()
         {
+            Locator.ProvideItemDB(new ItemDB());
+            _menuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
+            Locator.ProvideMenuInput(_menuInput);
             ResetToTitleScreen();
         }
 
         public override void _PhysicsProcess(float delta)
         {
+            _menuInput.Update();
             if (Godot.Input.IsActionJustPressed("collect"))
-            {
                 GC.Collect();
-            }
-
-            if (Godot.Input.IsActionJustPressed("hardReset"))
-            {
+            else if (Godot.Input.IsActionJustPressed("hardReset"))
                 ResetToTitleScreen();
-            }
-
-            if (Godot.Input.IsActionJustPressed("print"))
-            {
-                //PrintStrayNodes();
-            }
         }
 
         public void ResetToTitleScreen()

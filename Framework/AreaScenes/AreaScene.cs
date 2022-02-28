@@ -4,12 +4,19 @@ using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.AreaScenes
 {
     public partial class AreaScene : Node2D
     {
+        public AreaScene()
+        {
+            _playerParty = Locator.GetParty();
+        }
+
+        private readonly IPlayerParty _playerParty;
         public Camera2D Camera { get; set; }
         public Node2D PlayersContainer { get; set; }
         public Node2D EnemiesContainer { get; set; }
@@ -41,11 +48,11 @@ namespace Arenbee.Framework.AreaScenes
 
         public void AddPlayer()
         {
-            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
-            Actor actor = party.Actors.ElementAt(0);
+            Actor actor = _playerParty.Actors.ElementAt(0);
 
             actor.GlobalPosition = SpawnPointContainer.GetChild<Position2D>(0).GlobalPosition;
-            actor.AttachInputHandler(new Player1InputHandler());
+            var handler = new Player1InputHandler();
+            actor.AttachInputHandler(handler);
             RemoveChild(Camera);
             actor.AddChild(Camera);
             PlayersContainer.AddChild(actor);
@@ -54,8 +61,7 @@ namespace Arenbee.Framework.AreaScenes
 
         public void RemovePlayer()
         {
-            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
-            Actor actor = party.Actors.ElementAt(0);
+            Actor actor = _playerParty.Actors.ElementAt(0);
             actor.InputHandler.QueueFree();
             actor.RemoveChild(Camera);
             AddChild(Camera);

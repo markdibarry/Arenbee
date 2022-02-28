@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Game;
+using Arenbee.Framework.Input;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -8,7 +9,13 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class SubMenu : Control
     {
+        public SubMenu()
+        {
+            MenuInput = Locator.GetMenuInput();
+        }
+
         private bool _dim;
+        protected readonly GUIInputHandler MenuInput;
         [Export]
         public bool Dim
         {
@@ -39,14 +46,13 @@ namespace Arenbee.Framework.GUI
         public override async void _Process(float delta)
         {
             if (this.IsToolDebugMode() || !IsActive) return;
-            var menuInput = GameRoot.MenuInput;
 
-            if (menuInput.Cancel.IsActionJustPressed)
+            if (MenuInput.Cancel.IsActionJustPressed)
             {
                 if (!PreventCancel)
                     await CloseSubMenuAsync();
             }
-            else if (menuInput.Start.IsActionJustPressed)
+            else if (MenuInput.Start.IsActionJustPressed)
             {
                 if (!PreventCloseAll)
                     RaiseRequestedCloseAll();

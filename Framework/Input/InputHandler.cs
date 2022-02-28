@@ -4,11 +4,25 @@ namespace Arenbee.Framework.Input
 {
     public abstract partial class InputHandler : Node
     {
+        protected InputHandler()
+        {
+            Up = new InputAction();
+            Down = new InputAction();
+            Left = new InputAction();
+            Right = new InputAction();
+        }
+
         private bool _userInputDisabled;
         public InputAction Up { get; protected set; }
         public InputAction Down { get; protected set; }
         public InputAction Left { get; protected set; }
         public InputAction Right { get; protected set; }
+
+        public override void _Ready()
+        {
+            SetInputActions();
+        }
+
         public bool UserInputDisabled
         {
             get { return _userInputDisabled; }
@@ -57,5 +71,7 @@ namespace Arenbee.Framework.Input
             Left.UserInputDisabled = disable;
             Right.UserInputDisabled = disable;
         }
+
+        protected virtual void SetInputActions() { }
     }
 }

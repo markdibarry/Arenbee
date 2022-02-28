@@ -1,4 +1,3 @@
-using Arenbee.Framework.Game;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -15,7 +14,7 @@ namespace Arenbee.Framework.GUI
             if (Engine.IsEditorHint()) return;
             base._Process(delta);
 
-            if (GameRoot.MenuInput.Enter.IsActionJustPressed)
+            if (MenuInput.Enter.IsActionJustPressed)
                 Confirm();
 
             if (_timerEnabled)

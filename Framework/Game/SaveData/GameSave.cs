@@ -11,11 +11,11 @@ namespace Arenbee.Framework.Game.SaveData
             ActorInfos = new List<ActorInfo>();
         }
 
-        public GameSave(GameSession gameSession) : this()
+        public GameSave(GameSessionBase gameSession) : this()
         {
-            Items = gameSession.Party.Inventory.Items;
+            Items = gameSession.Party?.Inventory?.Items;
             SessionState = gameSession.SessionState;
-            foreach (Actor actor in gameSession.Party.Actors)
+            foreach (Actor actor in gameSession.Party?.Actors)
             {
                 ActorInfos.Add(new ActorInfo(actor));
             }

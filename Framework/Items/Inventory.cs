@@ -4,7 +4,7 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {
-    public class Inventory
+    public class Inventory : IInventory
     {
         public Inventory()
         {

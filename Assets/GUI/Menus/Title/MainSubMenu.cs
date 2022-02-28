@@ -84,7 +84,7 @@ namespace Arenbee.Assets.GUI.Menus.Title
         {
             var gameRoot = GameRoot.Instance;
             gameRoot.CurrentGame = GDEx.Instantiate<GameSession>(GameSession.GetScenePath());
-            gameRoot.CurrentGameContainer.AddChild(gameRoot.CurrentGame);
+            gameRoot.CurrentGameContainer.AddChild((Node)gameRoot.CurrentGame);
             gameRoot.CurrentGame.Init(gameSave);
             await CloseSubMenuAsync();
             gameRoot.CurrentGame.ProcessMode = ProcessModeEnum.Inherit;

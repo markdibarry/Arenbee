@@ -5,27 +5,28 @@ using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {
-    public static class ItemDB
+    public class ItemDB : IItemDB
     {
-        static ItemDB()
+        public ItemDB()
         {
             BuildDB();
         }
-        private static readonly List<Item> s_items = new List<Item>();
 
-        public static Item GetItem(string id)
+        private readonly List<Item> _items = new List<Item>();
+
+        public Item GetItem(string id)
         {
-            return s_items.Find(item => item.Id.Equals(id));
+            return _items.Find(item => item.Id.Equals(id));
         }
 
-        public static IEnumerable<Item> GetItemsByType(ItemType itemType)
+        public IEnumerable<Item> GetItemsByType(ItemType itemType)
         {
-            return s_items.Where(item => item.ItemType.Equals(itemType));
+            return _items.Where(item => item.ItemType.Equals(itemType));
         }
 
-        private static void BuildDB()
+        private void BuildDB()
         {
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "HockeyStick",
                 DisplayName = "Hockey Stick",
@@ -52,7 +53,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "ClemsonHoodie",
                 DisplayName = "Clemson Hoodie",
@@ -84,7 +85,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "FriendshipBracelet",
                 DisplayName = "Friendship Bracelet",
@@ -110,7 +111,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "MoodRing",
                 DisplayName = "Mood Ring",
@@ -136,7 +137,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Vibrams",
                 DisplayName = "Vibrams",
@@ -162,7 +163,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "JNCOJeans",
                 DisplayName = "JNCO Jeans",
@@ -188,7 +189,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "MotleyCrueTee",
                 DisplayName = "Motley Crue Tshirt",
@@ -214,7 +215,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "CheeseHat",
                 DisplayName = "Cheese Hat",
@@ -240,7 +241,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Uggs",
                 DisplayName = "Uggs",
@@ -272,7 +273,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "RamenBoushi",
                 DisplayName = "Ramen Boushi",
@@ -298,7 +299,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "FingerlessGloves",
                 DisplayName = "Fingerless Gloves",
@@ -324,7 +325,7 @@ namespace Arenbee.Framework.Items
                 }
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Potion",
                 DisplayName = "Potion",
@@ -338,7 +339,7 @@ namespace Arenbee.Framework.Items
                 Price = 10,
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "GeneSupreme",
                 DisplayName = "Gene Supreme",
@@ -352,7 +353,7 @@ namespace Arenbee.Framework.Items
                 Price = 30,
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "SuperDonut",
                 DisplayName = "Super Donut",
@@ -366,7 +367,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "TurboEther",
                 DisplayName = "Turbo Ether",
@@ -380,7 +381,7 @@ namespace Arenbee.Framework.Items
                 Price = 30
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Elixer",
                 DisplayName = "Elixer",
@@ -394,7 +395,7 @@ namespace Arenbee.Framework.Items
                 Price = 90
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Antidote",
                 DisplayName = "Antidote",
@@ -408,7 +409,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "Aloe",
                 DisplayName = "Aloe",
@@ -422,7 +423,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "LifeAlert",
                 DisplayName = "Life Alert",
@@ -436,7 +437,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "EscapeRope",
                 DisplayName = "Escape Rope",
@@ -450,7 +451,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "EyeDrops",
                 DisplayName = "Eye Drops",
@@ -464,7 +465,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "ThroatSpray",
                 DisplayName = "Throat Spray",
@@ -478,7 +479,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "SubwaySandwich",
                 DisplayName = "Subway Sandwich",
@@ -492,7 +493,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "IPA",
                 DisplayName = "IPA",
@@ -506,7 +507,7 @@ namespace Arenbee.Framework.Items
                 Price = 10
             });
 
-            s_items.Add(new Item()
+            _items.Add(new Item()
             {
                 Id = "BunnyNugget",
                 DisplayName = "Bunny Nugget",

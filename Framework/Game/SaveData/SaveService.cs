@@ -29,7 +29,7 @@ namespace Arenbee.Framework.Game.SaveData
             return JsonConvert.DeserializeObject<GameSave>(content);
         }
 
-        public static void SaveGame(GameSession gameSession)
+        public static void SaveGame(GameSessionBase gameSession)
         {
             var gameSave = new GameSave(gameSession);
             string saveString = JsonConvert.SerializeObject(gameSave, Formatting.Indented);

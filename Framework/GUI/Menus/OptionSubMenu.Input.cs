@@ -1,6 +1,5 @@
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Game;
 
 namespace Arenbee.Framework.GUI
 {
@@ -17,18 +16,17 @@ namespace Arenbee.Framework.GUI
             if (this.IsToolDebugMode() || !IsActive) return;
             base._Process(delta);
 
-            var menuInput = GameRoot.MenuInput;
             var newDirection = Direction.None;
 
-            if (menuInput.Up.IsActionPressed)
+            if (MenuInput.Up.IsActionPressed)
                 newDirection = Direction.Up;
-            else if (menuInput.Down.IsActionPressed)
+            else if (MenuInput.Down.IsActionPressed)
                 newDirection = Direction.Down;
-            else if (menuInput.Left.IsActionPressed)
+            else if (MenuInput.Left.IsActionPressed)
                 newDirection = Direction.Left;
-            else if (menuInput.Right.IsActionPressed)
+            else if (MenuInput.Right.IsActionPressed)
                 newDirection = Direction.Right;
-            else if (menuInput.Enter.IsActionJustPressed)
+            else if (MenuInput.Enter.IsActionJustPressed)
                 CurrentContainer.SelectItem();
 
             HandleRapidScroll(delta, newDirection);

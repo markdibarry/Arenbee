@@ -4,7 +4,7 @@ namespace Arenbee.Assets.Input
 {
     public partial class Player1InputHandler : ActorInputHandler
     {
-        public Player1InputHandler()
+        protected override void SetInputActions()
         {
             Jump = new InputAction("p1_jump");
             Attack = new InputAction("p1_attack");

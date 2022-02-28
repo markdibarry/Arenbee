@@ -2,7 +2,7 @@ namespace Arenbee.Framework.Input
 {
     public partial class MenuInputHandler : GUIInputHandler
     {
-        public MenuInputHandler()
+        protected override void SetInputActions()
         {
             Start = new InputAction("menu_start");
             Enter = new InputAction("menu_enter");

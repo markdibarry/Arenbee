@@ -2,6 +2,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.Events
@@ -9,10 +10,16 @@ namespace Arenbee.Framework.Events
     [Tool]
     public partial class DialogArea : Area2D
     {
+        public DialogArea()
+        {
+            _currentGame = Locator.GetCurrentGame();
+        }
+
         public static string GetScenePath() => GDEx.GetScenePath();
-        public Actor _actor;
-        public bool _canTrigger;
-        public ColorRect _colorRect;
+        private Actor _actor;
+        private readonly GameSessionBase _currentGame;
+        private bool _canTrigger;
+        private ColorRect _colorRect;
         [Export]
         public string DialogPath { get; set; }
         [Export]
@@ -61,9 +68,7 @@ namespace Arenbee.Framework.Events
                 if (IsInstanceValid(_actor))
                 {
                     if (_actor.InputHandler.Attack.IsActionJustPressed)
-                    {
-                        GameRoot.Instance.CurrentGame.OpenDialog(DialogPath);
-                    }
+                        _currentGame.OpenDialog(DialogPath);
                 }
                 else
                 {

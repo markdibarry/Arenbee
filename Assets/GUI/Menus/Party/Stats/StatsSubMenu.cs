@@ -4,6 +4,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Party
@@ -12,6 +13,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class StatsSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+        private IPlayerParty _playerParty;
         private GridContainer _statsDisplayGrid;
         private OptionContainer _partyList;
 
@@ -25,6 +27,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         protected override void CustomOptionsSetup()
         {
+            _playerParty = Locator.GetParty();
             AddPartyMembers();
             base.CustomOptionsSetup();
         }
@@ -40,9 +43,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private void AddPartyMembers()
         {
             var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
             var options = new List<TextOption>();
-            foreach (var actor in party.Actors)
+            foreach (var actor in _playerParty.Actors)
             {
                 var textOption = textOptionScene.Instantiate<TextOption>();
                 textOption.OptionData.Add("actorName", actor.Name);
@@ -54,8 +56,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void DisplayStats(string actorName)
         {
-            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
-            Actor actor = party.Actors.First(x => x.Name == actorName);
+            Actor actor = _playerParty.Actors.First(x => x.Name == actorName);
             foreach (var attributePair in actor.Stats.Attributes)
             {
                 var node = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attributePair.Key.ToString());

@@ -7,27 +7,38 @@ using Arenbee.Assets.GUI.Menus.Party;
 using Arenbee.Framework.GUI.Dialog;
 using Godot;
 using Arenbee.Framework.Game.SaveData;
+using Arenbee.Framework.Input;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Framework.Game
 {
-    public partial class GameSession : Node2D
+    public partial class GameSession : GameSessionBase
     {
         public GameSession()
         {
-            Party = new PlayerParty();
+            Locator.ProvidePlayerParty(null);
+            Party = Locator.GetParty();
             SessionState = new SessionState();
+            _menuInput = Locator.GetMenuInput();
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
+        private readonly GUIInputHandler _menuInput;
         private readonly PackedScene _partyMenuScene = GD.Load<PackedScene>(MainSubMenu.GetScenePath());
-        private Menu _partyMenu;
         private Node2D _currentAreaContainer;
         private HUD _hud;
-        public AreaScene CurrentAreaScene { get; private set; }
-        public DialogController DialogController { get; private set; }
-        public PlayerParty Party { get; private set; }
-        public SessionState SessionState { get; private set; }
-        public TransitionFadeColor Transition { get; private set; }
+        private Menu _partyMenu;
+
+        public override void _ExitTree()
+        {
+            Party.Free();
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            if (_menuInput.Start.IsActionJustPressed)
+                OpenPartyMenu();
+        }
 
         public override void _Ready()
         {
@@ -36,60 +47,43 @@ namespace Arenbee.Framework.Game
             SubscribeEvents();
         }
 
-        public void SetNodeReferences()
+        public override void AddAreaScene(AreaScene areaScene)
         {
-            _hud = GetNode<HUD>("HUD");
-            _currentAreaContainer = GetNode<Node2D>("CurrentAreaSceneContainer");
-            _partyMenu = GetNode<Menu>("Menu");
-            Transition = GetNode<TransitionFadeColor>("Transition/TransitionFadeColor");
-            DialogController = GetNode<DialogController>("DialogController");
+            if (IsInstanceValid(CurrentAreaScene))
+            {
+                GD.PrintErr("AreaScene already active. Cannot add new AreaScene.");
+                return;
+            }
+            CurrentAreaScene = areaScene;
+            CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+            _currentAreaContainer.AddChild(areaScene);
+            _hud.SubscribeAreaSceneEvents(areaScene);
         }
 
-        public void Init(GameSave gameSave)
+        public override void Init(GameSave gameSave)
         {
-            Party = new PlayerParty(gameSave.ActorInfos, gameSave.Items);
+            Locator.ProvidePlayerParty(new PlayerParty(gameSave.ActorInfos, gameSave.Items));
+            Party = Locator.GetParty();
             SessionState = gameSave.SessionState;
             InitAreaScene();
             CurrentAreaScene.AddPlayer();
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void OpenDialog(string path)
         {
-            if (GameRoot.MenuInput.Start.IsActionJustPressed)
-            {
-                OpenPartyMenu();
-            }
+            if (_partyMenu.GetChildCount() == 0)
+                DialogController.StartDialog(path);
         }
 
-        public override void _ExitTree()
-        {
-            Party.Free();
-        }
-
-        public void AddAreaScene(AreaScene areaScene)
-        {
-            if (!IsInstanceValid(CurrentAreaScene))
-            {
-                CurrentAreaScene = areaScene;
-                CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
-                _currentAreaContainer.AddChild(areaScene);
-                _hud.SubscribeAreaSceneEvents(areaScene);
-            }
-            else
-            {
-                GD.PrintErr("AreaScene already active. Cannot add new AreaScene.");
-            }
-        }
-
-        public void RemoveAreaScene()
+        public override void RemoveAreaScene()
         {
             CurrentAreaScene?.RemovePlayer();
             CurrentAreaScene?.QueueFree();
             //CurrentAreaScene = null;
         }
 
-        public async void ReplaceScene(AreaScene areaScene)
+        public override async void ReplaceScene(AreaScene areaScene)
         {
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
             Transition.AnimationPlayer.Play("TransitionIn");
@@ -116,24 +110,6 @@ namespace Arenbee.Framework.Game
             }
         }
 
-        private void OpenPartyMenu()
-        {
-            if (_partyMenu.GetChildCount() == 0)
-            {
-                CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
-                var partySubMenu = _partyMenuScene.Instantiate<SubMenu>();
-                _partyMenu.AddSubMenu(partySubMenu);
-            }
-        }
-
-        public void OpenDialog(string path)
-        {
-            if (_partyMenu.GetChildCount() == 0)
-            {
-                DialogController.StartDialog(path);
-            }
-        }
-
         private void OnDialogStarted()
         {
             Party.DisableUserInput(true);
@@ -147,6 +123,25 @@ namespace Arenbee.Framework.Game
         private void OnPartyMenuRootClosed(object sender, EventArgs e)
         {
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
+        }
+
+        private void OpenPartyMenu()
+        {
+            if (_partyMenu.GetChildCount() == 0)
+            {
+                CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+                var partySubMenu = _partyMenuScene.Instantiate<SubMenu>();
+                _partyMenu.AddSubMenu(partySubMenu);
+            }
+        }
+
+        private void SetNodeReferences()
+        {
+            _hud = GetNode<HUD>("HUD");
+            _currentAreaContainer = GetNode<Node2D>("CurrentAreaSceneContainer");
+            _partyMenu = GetNode<Menu>("Menu");
+            Transition = GetNode<TransitionFadeColor>("Transition/TransitionFadeColor");
+            DialogController = GetNode<DialogController>("DialogController");
         }
 
         private void SubscribeEvents()

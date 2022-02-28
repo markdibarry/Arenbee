@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Party
@@ -13,14 +13,14 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class InventorySubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private DynamicTextContainer _itemInfo;
-        private OptionContainer _inventoryList;
-        private OptionContainer _typeList;
         private Inventory _inventory;
+        private OptionContainer _inventoryList;
+        private DynamicTextContainer _itemInfo;
+        private OptionContainer _typeList;
 
         protected override void CustomOptionsSetup()
         {
-            _inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
+            _inventory = Locator.GetParty().Inventory;
             _inventoryList?.ReplaceChildren(GetItemOptions(null));
 
             if (_typeList != null)
@@ -83,12 +83,11 @@ namespace Arenbee.Assets.GUI.Menus.Party
         {
             var keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             var options = new List<KeyValueOption>();
-            Inventory inventory = GameRoot.Instance.CurrentGame.Party.Inventory;
             ICollection<ItemStack> itemStacks;
             if (itemType == null)
-                itemStacks = inventory.Items;
+                itemStacks = _inventory.Items;
             else
-                itemStacks = inventory.GetItemsByType((ItemType)itemType);
+                itemStacks = _inventory.GetItemsByType((ItemType)itemType);
 
             foreach (var itemStack in itemStacks)
             {
