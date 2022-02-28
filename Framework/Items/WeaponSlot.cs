@@ -1,40 +1,59 @@
 ﻿using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Framework.Items
 {
     public partial class WeaponSlot : Node2D
     {
-        private Actor _actor;
+        private StateController _stateController;
+        private Stats _stats;
+        private Node2D _holder;
         public Weapon CurrentWeapon { get; private set; }
 
-        public void Init(Actor actor, EquipmentSlot equippedWeapon)
+        public void Init(Node2D holder, Stats stats, StateController stateController)
         {
-            _actor = actor;
-            if (!string.IsNullOrEmpty(equippedWeapon.ItemId))
+            _holder = holder;
+            _stats = stats;
+            _stateController = stateController;
+        }
+
+        public void SetWeapon(Item item)
+        {
+            if (item == null)
             {
-                AttachWeapon(equippedWeapon.ItemId);
+                DetachWeapon();
+                return;
             }
+            SetWeapon(item.Id);
         }
 
-        public void AttachWeapon(Item item)
+        public void SetWeapon(string itemId)
         {
-            AttachWeapon(item.Id);
+            DetachWeapon();
+            if (string.IsNullOrEmpty(itemId))
+                return;
+            AttachWeapon(itemId);
         }
 
-        public void AttachWeapon(string itemId)
+        private void AttachWeapon(string itemId)
         {
             DetachWeapon();
             var weapon = GDEx.Instantiate<Weapon>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
+            if (weapon == null)
+            {
+                GD.PrintErr("No weapon at provided location!");
+                return;
+            }
+            weapon.Init(_holder, _stats);
             CurrentWeapon = weapon;
-            weapon.Actor = _actor;
             AddChild(weapon);
-            _actor.StateController.ActionStateMachine.Init(weapon.InitialState);
+            _stateController.ActionStateMachine.Init(weapon.InitialState);
         }
 
-        public void DetachWeapon()
+        private void DetachWeapon()
         {
             Weapon weapon = this.GetChildOrNullButActually<Weapon>(0);
             if (weapon != null)
@@ -42,7 +61,7 @@ namespace Arenbee.Framework.Items
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;
-                _actor.StateController.ActionStateMachine.Init(_actor.StateController.UnarmedInitialState);
+                _stateController.ActionStateMachine.Init(_stateController.UnarmedInitialState);
             }
         }
     }

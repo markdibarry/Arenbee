@@ -1,4 +1,4 @@
-﻿using Arenbee.Framework.Actors.Stats;
+﻿using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Godot;
@@ -15,6 +15,10 @@ namespace Arenbee.Framework.Actors
             Acceleration = 1000f;
             Friction = 1000f;
             Facing = Facings.Right;
+            Stats = new Stats();
+            SetDefaultStats();
+            Inventory = new Inventory();
+            Equipment = new Equipment();
             UpDirection = Vector2.Up;
         }
 
@@ -51,9 +55,8 @@ namespace Arenbee.Framework.Actors
         public virtual void Init()
         {
             InitMovement();
-            InitStats();
-            InitEquipment();
             InitState();
+            InitEquipment();
             SubscribeEvents();
         }
 
@@ -85,6 +88,24 @@ namespace Arenbee.Framework.Actors
             UnsubscribeEvents();
             ActorRemoved?.Invoke(this);
             // TODO: Shader memory leak
+        }
+
+        public void SubscribeEvents()
+        {
+            HurtBox.AreaEntered += Stats.OnHurtBoxEntered;
+            Equipment.EquipmentSet += OnEquipmentSet;
+            Stats.DamageRecieved += OnDamageRecieved;
+            Stats.HPDepleted += OnHPDepleted;
+            Stats.StatsUpdated += OnStatsUpdated;
+        }
+
+        public void UnsubscribeEvents()
+        {
+            HurtBox.AreaEntered -= Stats.OnHurtBoxEntered;
+            Equipment.EquipmentSet -= OnEquipmentSet;
+            Stats.DamageRecieved += OnDamageRecieved;
+            Stats.HPDepleted += OnHPDepleted;
+            Stats.StatsUpdated += OnStatsUpdated;
         }
     }
 }

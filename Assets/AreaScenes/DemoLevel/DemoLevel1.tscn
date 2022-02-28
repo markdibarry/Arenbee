@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://wctfq8er1rfq"]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bjnp5nvoddno6" path="res://Framework/AreaScenes/AreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://dnbas3hk0lkoa" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -7,11 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://dakh8nw6p5pn8" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/1 - Foreground_scenery.png" id="5_up4wo"]
 [ext_resource type="TileSet" uid="uid://ls47we5pcnrr" path="res://Assets/Scenery/DemoTiles.tres" id="6_uemtd"]
 [ext_resource type="PackedScene" uid="uid://bacp6g8cce1b2" path="res://Assets/Scenery/Barrel/Barrel.tscn" id="7_3y5rn"]
-[ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="8_1uhok"]
+[ext_resource type="PackedScene" path="res://Framework/Statistics/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://bu1vrvwkfu6aw" path="res://Assets/Scenery/Spike.png" id="9_bgkj2"]
 [ext_resource type="PackedScene" uid="uid://bgw7nate55esi" path="res://Assets/Actors/Enemies/Orc/Orc.tscn" id="10_xf0m5"]
 [ext_resource type="PackedScene" uid="uid://b4yg6h77ht11s" path="res://Framework/Events/DialogArea.tscn" id="11_ll7qf"]
-[ext_resource type="PackedScene" uid="uid://bf50wbn1thieg" path="res://Assets/Actors/Enemies/Whisp/Wisp.tscn" id="11_mxxem"]
+[ext_resource type="PackedScene" uid="uid://3tu1uhllhg11" path="res://Assets/Actors/Enemies/Whisp/Whisp.tscn" id="11_mxxem"]
 [ext_resource type="Script" path="res://Framework/Events/ChangeScene.cs" id="12_vgakd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]

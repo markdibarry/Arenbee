@@ -9,8 +9,8 @@ namespace Arenbee.Assets.Items.HockeyStickNS
         public WeakAttack2() { AnimationName = "WeakAttack2"; }
         public override void Enter()
         {
-            StateMachine.PlayAnimation(AnimationName);
-            Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
+            PlayAnimation(AnimationName);
+            SubscribeAnimation();
         }
 
         public override void Update(float delta)
@@ -20,11 +20,12 @@ namespace Arenbee.Assets.Items.HockeyStickNS
 
         public override void Exit()
         {
-            Actor.AnimationPlayer.AnimationFinished -= OnAnimationFinished;
+            UnsubscribeAnimation();
         }
 
-        public void OnAnimationFinished(StringName animationName)
+        protected override void OnAnimationFinished(StringName animationName)
         {
+            UnsubscribeAnimation();
             StateMachine.TransitionTo(new NotAttacking());
             StateController.PlayFallbackAnimation();
         }

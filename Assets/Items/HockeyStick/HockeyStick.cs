@@ -1,5 +1,4 @@
-using Arenbee.Framework.Actors;
-using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
@@ -18,11 +17,11 @@ namespace Arenbee.Assets.Items.HockeyStickNS
 
         public override void UpdateHitBoxAction()
         {
-            HitBox.HitBoxAction = new HitBoxAction(HitBox, Actor)
+            HitBox.HitBoxAction = new HitBoxAction(HitBox, Holder)
             {
                 ActionType = ActionType.Melee,
                 Element = Element.Earth,
-                Value = Actor.Stats[StatType.Attack].ModifiedValue
+                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
             };
         }
     }

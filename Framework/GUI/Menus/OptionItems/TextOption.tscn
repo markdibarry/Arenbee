@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://dhgb0pn80xr64"]
 
 [ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/OptionItem.tscn" id="1_2rali"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItems/TextOption.cs" id="2_dhbjj"]
@@ -8,8 +8,6 @@ script = ExtResource( "2_dhbjj" )
 LabelText = ""
 
 [node name="Label" type="Label" parent="." index="0"]
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 3.0
-offset_bottom = 25.0
+offset_right = 4.0
+offset_bottom = 23.0
 size_flags_vertical = 0

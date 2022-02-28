@@ -13,6 +13,6 @@ namespace Arenbee.Framework.Actors
         void TransitionTo(IState newState);
         void Reset();
         void Init(IState initialState);
-        void PlayAnimation(string animationName, bool force = false);
+        bool PlayAnimation(IState state, string animationName, bool force = false);
     }
 }

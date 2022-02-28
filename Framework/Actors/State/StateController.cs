@@ -55,62 +55,66 @@ namespace Arenbee.Framework.Actors
             ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
         }
 
-        public void PlayAnimation(string animationName, StateMachineType stateMachineType, bool force = false)
+        public bool PlayAnimation(IStateMachine stateMachine, IState state, string animationName, bool force = false)
         {
             if (force)
             {
-                PlayIfAvailable(animationName);
-                AnimationOverride = true;
-                return;
+                if (PlayIfAvailable(animationName))
+                {
+                    AnimationOverride = true;
+                    return true;
+                }
+
+                return false;
             }
 
-            if (AnimationOverride) return;
+            if (AnimationOverride) return false;
 
-            switch (stateMachineType)
+            return stateMachine.StateMachineType switch
             {
-                case StateMachineType.Action:
-                    PlayActionAnimation(animationName);
-                    break;
-                case StateMachineType.Jump:
-                    PlayJumpAnimation(animationName);
-                    break;
-                case StateMachineType.Base:
-                    PlayBaseAnimation(animationName);
-                    break;
-            }
+                StateMachineType.Action => PlayActionAnimation(animationName),
+                StateMachineType.Jump => PlayJumpAnimation(animationName),
+                StateMachineType.Base => PlayBaseAnimation(animationName),
+                _ => false,
+            };
         }
 
-        public void PlayActionAnimation(string animationName)
+        public bool PlayActionAnimation(string animationName)
         {
             if (CurrentWeapon != null)
             {
                 CurrentWeapon.UpdateHitBoxAction();
                 ActorAnimationPlayer.Stop();
-                PlayIfAvailable(CurrentWeapon.WeaponTypeName + animationName);
                 CurrentWeapon.AnimationPlayer.Stop();
-                CurrentWeapon.AnimationPlayer.Play(animationName);
+                if (ActorAnimationPlayer.HasAnimation(CurrentWeapon.WeaponTypeName + animationName)
+                    && CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
+                {
+                    PlayIfAvailable(CurrentWeapon.WeaponTypeName + animationName);
+                    CurrentWeapon.AnimationPlayer.Play(animationName);
+                    return true;
+                }
+
+                return false;
             }
-            else
-            {
-                PlayIfAvailable(animationName);
-            }
+
+            return PlayIfAvailable(animationName);
         }
 
-        public void PlayJumpAnimation(string animationName)
+        public bool PlayJumpAnimation(string animationName)
         {
             if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
-            {
-                PlayIfAvailable(animationName);
-            }
+                return PlayIfAvailable(animationName);
+            return false;
         }
 
-        public void PlayBaseAnimation(string animationName)
+        public bool PlayBaseAnimation(string animationName)
         {
             if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName)
                 && string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
             {
-                PlayIfAvailable(animationName);
+                return PlayIfAvailable(animationName);
             }
+            return false;
         }
 
         // public void PlaySubWeaponAttack(string animationName)
@@ -118,30 +122,27 @@ namespace Arenbee.Framework.Actors
 
         // }
 
-        public void PlayIfAvailable(string animationName)
+        public bool PlayIfAvailable(string animationName)
         {
-            if (ActorAnimationPlayer.HasAnimation(animationName))
-            {
-                ActorAnimationPlayer.Play(animationName);
-            }
+            if (!ActorAnimationPlayer.HasAnimation(animationName))
+                return false;
+            ActorAnimationPlayer.Play(animationName);
+            return true;
         }
 
-        public void PlayFallbackAnimation()
+        public bool PlayFallbackAnimation()
         {
             string animation = null;
             if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
-            {
                 animation = ActionStateMachine.State.AnimationName;
-            }
             else if (!string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
-            {
                 animation = JumpStateMachine.State.AnimationName;
-            }
             else if (!string.IsNullOrEmpty(BaseStateMachine.State.AnimationName))
-            {
                 animation = BaseStateMachine.State.AnimationName;
-            }
-            if (animation != null) PlayIfAvailable(animation);
+
+            if (animation != null)
+                return PlayIfAvailable(animation);
+            return false;
         }
 
         public void UpdateStates(float delta)

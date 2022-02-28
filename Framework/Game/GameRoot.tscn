@@ -15,9 +15,6 @@ layer = -100
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0.54902, 1, 1)
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MenuInputHandler" type="Node" parent="."]
 script = ExtResource( "2_cpj4u" )

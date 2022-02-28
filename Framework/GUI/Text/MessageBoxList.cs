@@ -10,9 +10,10 @@ namespace Arenbee.Framework.GUI.Text
         public static string GetScenePath() => GDEx.GetScenePath();
         public Vector2 MaxSize { get; set; }
         public bool IsReady { get; set; }
-
+        private PackedScene _timedMessageBoxScene;
         public override void _Ready()
         {
+            _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
             MaxSize = GetParentOrNull<Control>().RectSize;
             // if loading prepopulated messages
             var messageBoxes = GetChildren().OfType<MessageBox>();
@@ -22,6 +23,13 @@ namespace Arenbee.Framework.GUI.Text
                 messageBox.UpdateMessageText();
             }
             IsReady = true;
+        }
+
+        public void AddMessageToTop(string message)
+        {
+            var newMessage = _timedMessageBoxScene.Instantiate<TimedMessageBox>();
+            newMessage.MessageText = message;
+            AddMessageToTop(newMessage);
         }
 
         public void AddMessageToTop(MessageBox messageBox)

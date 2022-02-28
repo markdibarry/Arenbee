@@ -1,0 +1,328 @@
+[gd_scene load_steps=7 format=3 uid="uid://5hlxqydf0kdn"]
+
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_qqjb6"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/EquipmentSubMenu.cs" id="2_wyy0h"]
+[ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_l5pbf"]
+[ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_ieu0a"]
+[ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="5_p7smi"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="6_mpso2"]
+
+[node name="EquipmentSubMenu" instance=ExtResource( "1_qqjb6" )]
+script = ExtResource( "2_wyy0h" )
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+__meta__ = {
+"_edit_layout_mode": 1,
+"_edit_use_custom_anchors": false
+}
+
+[node name="PartyOptions" parent="Foreground" index="0" instance=ExtResource( "3_l5pbf" )]
+offset_left = 88.0
+offset_top = 16.0
+offset_right = 225.0
+offset_bottom = 46.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
+}
+
+[node name="MarginContainer" parent="Foreground/PartyOptions" index="0"]
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 130.0
+offset_bottom = 23.0
+
+[node name="Control" parent="Foreground/PartyOptions/MarginContainer" index="0"]
+offset_right = 121.0
+offset_bottom = 14.0
+
+[node name="GridContainer" parent="Foreground/PartyOptions/MarginContainer/Control" index="0"]
+offset_right = 14.0
+offset_bottom = 12.0
+
+[node name="TextOption" parent="Foreground/PartyOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ieu0a" )]
+offset_right = 14.0
+offset_bottom = 12.0
+LabelText = "Ady"
+
+[node name="Arrows" parent="Foreground/PartyOptions" index="1"]
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 130.0
+offset_bottom = 23.0
+
+[node name="ArrowUp" parent="Foreground/PartyOptions/Arrows" index="0"]
+offset_left = 58.0
+offset_right = 65.0
+
+[node name="ArrowLeft" parent="Foreground/PartyOptions/Arrows" index="1"]
+offset_top = 4.0
+offset_bottom = 11.0
+
+[node name="ArrowDown" parent="Foreground/PartyOptions/Arrows" index="2"]
+offset_left = 58.0
+offset_top = 13.0
+offset_right = 65.0
+offset_bottom = 19.0
+
+[node name="ArrowRight" parent="Foreground/PartyOptions/Arrows" index="3"]
+offset_left = 120.0
+offset_top = 4.0
+offset_right = 126.0
+offset_bottom = 11.0
+
+[node name="EquipmentOptions" parent="Foreground" index="1" instance=ExtResource( "3_l5pbf" )]
+offset_left = 88.0
+offset_top = 52.0
+offset_right = 225.0
+offset_bottom = 160.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_layout_mode": 0,
+"_edit_use_custom_anchors": false
+}
+DimItems = true
+
+[node name="MarginContainer" parent="Foreground/EquipmentOptions" index="0"]
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 130.0
+offset_bottom = 101.0
+
+[node name="Control" parent="Foreground/EquipmentOptions/MarginContainer" index="0"]
+offset_right = 121.0
+offset_bottom = 92.0
+
+[node name="GridContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control" index="0"]
+anchor_right = 1.0
+offset_bottom = 84.0
+
+[node name="Weapon" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_right = 119.0
+offset_bottom = 12.0
+Dim = true
+KeyText = "Weapon:"
+ValueText = "Broad sword"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Weapon:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Broad sword"
+
+[node name="Head" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 13.0
+offset_right = 119.0
+offset_bottom = 25.0
+Dim = true
+KeyText = "Head:"
+ValueText = "Skull Cap"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Head:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Skull Cap"
+
+[node name="Shirt" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 26.0
+offset_right = 119.0
+offset_bottom = 38.0
+Dim = true
+KeyText = "Shirt:"
+ValueText = "Olive Garden"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Shirt:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Olive Garden"
+
+[node name="Pants" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 39.0
+offset_right = 119.0
+offset_bottom = 51.0
+Dim = true
+KeyText = "Pants:"
+ValueText = "Slacks"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Pants:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Slacks"
+
+[node name="Foot" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 52.0
+offset_right = 119.0
+offset_bottom = 64.0
+Dim = true
+KeyText = "Foot:"
+ValueText = "Vibrams"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Foot:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Vibrams"
+
+[node name="Acc1" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="5" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 65.0
+offset_right = 119.0
+offset_bottom = 77.0
+Dim = true
+KeyText = "Acc 1:"
+ValueText = "Walkman"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Acc 1:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Walkman"
+
+[node name="Acc2" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="6" instance=ExtResource( "5_p7smi" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_top = 78.0
+offset_right = 119.0
+offset_bottom = 90.0
+Dim = true
+KeyText = "Acc 2:"
+ValueText = "Mood Ring"
+
+[node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2" index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 118.0
+
+[node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2/HBoxContainer" index="0"]
+offset_right = 37.0
+offset_bottom = 10.0
+size_flags_stretch_ratio = 0.5
+text = "Acc 2:"
+
+[node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2/HBoxContainer" index="1"]
+offset_left = 41.0
+offset_right = 117.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+text = "Mood Ring"
+
+[node name="Arrows" parent="Foreground/EquipmentOptions" index="1"]
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 130.0
+offset_bottom = 101.0
+
+[node name="ArrowUp" parent="Foreground/EquipmentOptions/Arrows" index="0"]
+offset_left = 58.0
+offset_right = 65.0
+
+[node name="ArrowLeft" parent="Foreground/EquipmentOptions/Arrows" index="1"]
+offset_top = 43.0
+offset_bottom = 50.0
+
+[node name="ArrowDown" parent="Foreground/EquipmentOptions/Arrows" index="2"]
+offset_left = 58.0
+offset_top = 91.0
+offset_right = 65.0
+offset_bottom = 97.0
+
+[node name="ArrowRight" parent="Foreground/EquipmentOptions/Arrows" index="3"]
+offset_left = 120.0
+offset_top = 43.0
+offset_right = 126.0
+offset_bottom = 50.0
+
+[node name="HandCursor" parent="Foreground" index="2" instance=ExtResource( "6_mpso2" )]
+position = Vector2(93, 31)
+
+[editable path="Foreground/PartyOptions"]
+[editable path="Foreground/EquipmentOptions"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1"]
+[editable path="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2"]

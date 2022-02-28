@@ -36,7 +36,7 @@ namespace Arenbee.Framework.Items
         /// <returns></returns>
         public ItemStack GetItemStack(Item item)
         {
-            return _itemStacks.Find(itemStack => itemStack.ItemId.Equals(item.Id));
+            return _itemStacks.Find(itemStack => itemStack.ItemId.Equals(item?.Id));
         }
 
         public ICollection<ItemStack> GetItemsByType(ItemType itemType)
@@ -99,16 +99,20 @@ namespace Arenbee.Framework.Items
             return false;
         }
 
-        public void SetReservation(EquipmentSlot slot, Item newItem)
+        public bool SetReservation(EquipmentSlot slot, Item newItem)
         {
-            ItemStack stack = GetItemStack(newItem);
-            stack.AddReservation(slot);
+            ItemStack oldStack = _itemStacks.Find(x => x.Reservations.Contains(slot));
+            oldStack?.RemoveReservation(slot);
+            ItemStack newStack = GetItemStack(newItem);
+            if (newStack == null) return false;
+            return newStack.AddReservation(slot);
         }
 
-        public void RemoveReservation(EquipmentSlot slot, Item oldItem)
+        public bool RemoveReservation(EquipmentSlot slot, Item oldItem)
         {
             ItemStack stack = GetItemStack(oldItem);
-            stack.RemoveReservation(slot);
+            if (stack == null) return false;
+            return stack.RemoveReservation(slot);
         }
     }
 }

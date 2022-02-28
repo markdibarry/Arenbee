@@ -1,5 +1,4 @@
-using Arenbee.Framework.Actors;
-using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 using Godot;
 
@@ -7,7 +6,10 @@ namespace Arenbee.Framework.Items
 {
     public abstract partial class Weapon : Node2D
     {
-        public string ItemId { get; set; }
+        private Item _item;
+        public AnimationPlayer AnimationPlayer { get; set; }
+        public HitBox HitBox { get; set; }
+        public IState InitialState { get; set; }
         public Item Item
         {
             get
@@ -21,13 +23,11 @@ namespace Arenbee.Framework.Items
                 return null;
             }
         }
-        public AnimationPlayer AnimationPlayer { get; set; }
+        public string ItemId { get; set; }
         public Sprite2D Sprite { get; set; }
-        public Actor Actor { get; set; }
-        public HitBox HitBox { get; set; }
         public string WeaponTypeName { get; set; }
-        public IState InitialState { get; set; }
-        private Item _item;
+        protected Node2D Holder { get; set; }
+        protected Stats Stats { get; set; }
 
         public override void _Ready()
         {
@@ -35,11 +35,10 @@ namespace Arenbee.Framework.Items
             SetNodeReferences();
         }
 
-        private void SetNodeReferences()
+        public void Init(Node2D holder, Stats stats)
         {
-            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-            Sprite = GetNode<Sprite2D>("Sprite");
-            HitBox = GetNode<HitBox>("HitBox");
+            Holder = holder;
+            Stats = stats;
         }
 
         public virtual void UpdateHitBoxAction()
@@ -47,8 +46,15 @@ namespace Arenbee.Framework.Items
             HitBox.HitBoxAction = new HitBoxAction(HitBox, this)
             {
                 ActionType = ActionType.Melee,
-                Value = Actor.Stats[StatType.Attack].ModifiedValue
+                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
             };
+        }
+
+        private void SetNodeReferences()
+        {
+            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+            Sprite = GetNode<Sprite2D>("Sprite");
+            HitBox = GetNode<HitBox>("HitBox");
         }
     }
 }

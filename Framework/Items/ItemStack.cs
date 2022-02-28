@@ -13,6 +13,7 @@ namespace Arenbee.Framework.Items
         }
 
         public string ItemId { get; }
+        [JsonIgnore]
         public Item Item
         {
             get
@@ -36,6 +37,11 @@ namespace Arenbee.Framework.Items
             Amount += num;
         }
 
+        public bool CanReserve()
+        {
+            return Reservations.Count < Amount;
+        }
+
         public void RemoveAmount(int num)
         {
             if (Amount > num)
@@ -46,7 +52,7 @@ namespace Arenbee.Framework.Items
 
         public bool AddReservation(EquipmentSlot slot)
         {
-            if (!Reservations.Contains(slot) && Reservations.Count < Amount)
+            if (!Reservations.Contains(slot) && CanReserve())
             {
                 Reservations.Add(slot);
                 return true;

@@ -14,6 +14,7 @@ theme = ExtResource( "1_40jil" )
 script = ExtResource( "2_c18hx" )
 CustomText = "Hi!
 My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
+ShouldShowAllToStop = true
 Speed = 0.05
 
 [node name="PortraitContainer" type="Control" parent="."]
@@ -29,7 +30,7 @@ __meta__ = {
 
 [node name="Dani" type="AnimatedSprite2D" parent="PortraitContainer"]
 frames = ExtResource( "3_uipmn" )
-animation = &"neutral"
+animation = &"happy"
 playing = true
 
 [node name="DialogPanel" type="PanelContainer" parent="."]
@@ -44,35 +45,36 @@ __meta__ = {
 }
 
 [node name="DialogMargin" type="MarginContainer" parent="DialogPanel"]
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 184.0
-offset_bottom = 68.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 182.0
+offset_bottom = 66.0
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_bottom = 5
 
 [node name="DynamicTextBox" parent="DialogPanel/DialogMargin" instance=ExtResource( "4_unl7n" )]
 offset_top = 4.0
-offset_right = 179.0
-offset_bottom = 58.0
+offset_right = 175.0
+offset_bottom = 54.0
 theme_override_constants/margin_top = 1
 CustomText = "Hi!
 My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
+ShouldShowAllPage = true
 
 [node name="ArrowMargin" type="MarginContainer" parent="DialogPanel"]
 layout_direction = 2
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 184.0
-offset_bottom = 68.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 182.0
+offset_bottom = 66.0
 theme_override_constants/margin_right = 5
 
 [node name="NextArrow" type="TextureRect" parent="DialogPanel/ArrowMargin"]
 visible = false
-offset_left = 167.0
-offset_top = 57.0
-offset_right = 174.0
-offset_bottom = 63.0
+offset_left = 163.0
+offset_top = 53.0
+offset_right = 170.0
+offset_bottom = 59.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 texture = ExtResource( "5_x5jni" )
@@ -81,18 +83,18 @@ stretch_mode = 2
 [node name="NamePanel" type="PanelContainer" parent="."]
 layout_direction = 2
 offset_left = 128.0
-offset_top = 180.0
-offset_right = 152.0
-offset_bottom = 200.0
+offset_top = 177.0
+offset_right = 156.0
+offset_bottom = 201.0
 __meta__ = {
 "_edit_layout_mode": 0,
 "_edit_use_custom_anchors": false
 }
 
 [node name="NameLabel" type="Label" parent="NamePanel"]
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 19.0
-offset_bottom = 15.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 21.0
+offset_bottom = 17.0
 size_flags_horizontal = 0
 text = "Dani"

@@ -13,7 +13,7 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             Actor.IsRunDisabled = true;
             Actor.IsAttackDisabled = true;
             Actor.IsJumpDisabled = true;
-            StateMachine.PlayAnimation(AnimationName, true);
+            PlayAnimation(AnimationName, true);
         }
 
         public override void Update(float delta)

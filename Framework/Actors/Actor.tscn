@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://qxn8inqies2j"]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://Framework/Items/WeaponSlot.cs" id="1"]
-[ext_resource type="PackedScene" uid="uid://dj0tycf31xs3q" path="res://Framework/Actors/Stats/HurtBox.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://Framework/Statistics/HurtBox.tscn" id="2"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="2_gfi1y"]
 [ext_resource type="Script" path="res://Framework/Actors/Actor.cs" id="3"]
-[ext_resource type="PackedScene" uid="uid://bp7onxgqet02i" path="res://Framework/Actors/Stats/HitBox.tscn" id="4_vgqdp"]
+[ext_resource type="PackedScene" path="res://Framework/Statistics/HitBox.tscn" id="4_vgqdp"]
 [ext_resource type="PackedScene" uid="uid://d4at3vj6l08gv" path="res://Framework/Actors/Animation/Blinker.tscn" id="8_ddi1u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4xqgv"]

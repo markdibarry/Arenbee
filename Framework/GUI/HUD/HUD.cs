@@ -1,6 +1,6 @@
 ﻿using System;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
@@ -12,17 +12,15 @@ namespace Arenbee.Framework.GUI
     public partial class HUD : CanvasLayer
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private PackedScene _timedMessageBoxScene;
         private MessageBoxList _messageBoxList;
         private Label _fpsDisplay;
-        private Label _playerStatsDisplay;
+        private Label _hpDisplay;
 
         public override void _Ready()
         {
             _messageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-            _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
             _fpsDisplay = GetNode<Label>("FPSDisplay");
-            _playerStatsDisplay = GetNode<Label>("PlayerStatsDisplay/MarginWrapper/Panel/HP");
+            _hpDisplay = GetNode<Label>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HBoxContainer/HP");
         }
 
         public override void _PhysicsProcess(float delta)
@@ -48,7 +46,7 @@ namespace Arenbee.Framework.GUI
 
         private void SubscribeActorEvents(Actor actor)
         {
-            actor.HitBoxActionRecieved += OnHitBoxActionRecieved;
+            actor.DamageRecieved += OnDamageRecieved;
             actor.ActorDefeated += OnActorDefeated;
             actor.ActorRemoved += OnActorRemoved;
             if (actor.ActorType == ActorType.Player)
@@ -60,7 +58,7 @@ namespace Arenbee.Framework.GUI
 
         private void UnsubscribeActorEvents(Actor actor)
         {
-            actor.HitBoxActionRecieved -= OnHitBoxActionRecieved;
+            actor.DamageRecieved -= OnDamageRecieved;
             actor.ActorDefeated -= OnActorDefeated;
             actor.ActorRemoved -= OnActorRemoved;
             if (actor.ActorType == ActorType.Player)
@@ -74,25 +72,22 @@ namespace Arenbee.Framework.GUI
             UpdatePlayerStatsDisplay(actor);
         }
 
-        private void OnHitBoxActionRecieved(HitBoxActionRecievedData data)
+        private void OnDamageRecieved(DamageRecievedData data)
         {
             if (data.ElementMultiplier != 1)
             {
-                var effectiveMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
                 string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
-                effectiveMessage.MessageText = $"{data.RecieverName} {effectiveness} {data.Element}!";
+                string effectiveMessage = $"{data.RecieverName} {effectiveness} {data.Element}!";
                 _messageBoxList.AddMessageToTop(effectiveMessage);
             }
-            var actionMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
             string action = data.TotalDamage < 0 ? "healed" : "hurt";
-            actionMessage.MessageText = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
+            string actionMessage = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
             _messageBoxList.AddMessageToTop(actionMessage);
         }
 
         private void OnActorDefeated(Actor actor)
         {
-            var defeatedMessage = _timedMessageBoxScene.Instantiate() as TimedMessageBox;
-            defeatedMessage.MessageText = $"{actor.Name} was defeated!";
+            string defeatedMessage = $"{actor.Name} was defeated!";
             _messageBoxList.AddMessageToTop(defeatedMessage);
         }
 
@@ -104,26 +99,20 @@ namespace Arenbee.Framework.GUI
         private string GetEffectivenessMessage(float elementMultiplier)
         {
             if (elementMultiplier > 1)
-            {
                 return "is weak to";
-            }
             else if (0 < elementMultiplier && elementMultiplier < 1)
-            {
                 return "resists";
-            }
             else if (elementMultiplier == 0)
-            {
                 return "nullifies";
-            }
             else
-            {
                 return "absorbs";
-            }
         }
 
         private void UpdatePlayerStatsDisplay(Actor actor)
         {
-            _playerStatsDisplay.Text = $"{actor.Stats[StatType.HP].DisplayValue}/{actor.Stats[StatType.MaxHP].DisplayValue}";
+            int hp = actor.Stats.Attributes[AttributeType.HP].DisplayValue;
+            int maxHP = actor.Stats.Attributes[AttributeType.MaxHP].DisplayValue;
+            _hpDisplay.Text = $"{hp}/{maxHP}";
         }
     }
 }

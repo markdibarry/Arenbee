@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
@@ -40,8 +41,8 @@ namespace Arenbee.Framework.AreaScenes
 
         public void AddPlayer()
         {
-            Party party = GameRoot.Instance.CurrentGame.Party;
-            Actor actor = party.Actors[0];
+            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
+            Actor actor = party.Actors.ElementAt(0);
 
             actor.GlobalPosition = SpawnPointContainer.GetChild<Position2D>(0).GlobalPosition;
             actor.AttachInputHandler(new Player1InputHandler());
@@ -53,8 +54,8 @@ namespace Arenbee.Framework.AreaScenes
 
         public void RemovePlayer()
         {
-            Party party = GameRoot.Instance.CurrentGame.Party;
-            Actor actor = party.Actors[0];
+            PlayerParty party = GameRoot.Instance.CurrentGame.Party;
+            Actor actor = party.Actors.ElementAt(0);
             actor.InputHandler.QueueFree();
             actor.RemoveChild(Camera);
             AddChild(Camera);

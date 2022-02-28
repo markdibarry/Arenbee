@@ -18,18 +18,18 @@ namespace Arenbee.Assets.Actors.Players
 
         protected override void SetDefaultStats()
         {
-            SetStat(StatType.Level, 1);
-            SetStat(StatType.MaxHP, 12);
-            SetStat(StatType.HP, 12);
-            SetStat(StatType.MaxMP, 1);
-            SetStat(StatType.MP, 1);
-            SetStat(StatType.Attack, 0);
-            SetStat(StatType.Defense, 0);
-            SetStat(StatType.MagicAttack, 1);
-            SetStat(StatType.MagicDefense, 1);
-            SetStat(StatType.Luck, 1);
-            SetStat(StatType.Evade, 1);
-            SetStat(StatType.Speed, 1);
+            Stats.SetAttribute(AttributeType.Level, 1);
+            Stats.SetAttribute(AttributeType.MaxHP, 12);
+            Stats.SetAttribute(AttributeType.HP, 12);
+            Stats.SetAttribute(AttributeType.MaxMP, 1);
+            Stats.SetAttribute(AttributeType.MP, 1);
+            Stats.SetAttribute(AttributeType.Attack, 0);
+            Stats.SetAttribute(AttributeType.Defense, 0);
+            Stats.SetAttribute(AttributeType.MagicAttack, 1);
+            Stats.SetAttribute(AttributeType.MagicDefense, 1);
+            Stats.SetAttribute(AttributeType.Luck, 1);
+            Stats.SetAttribute(AttributeType.Evade, 1);
+            Stats.SetAttribute(AttributeType.Speed, 1);
         }
     }
 }

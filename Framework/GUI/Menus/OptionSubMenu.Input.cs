@@ -1,6 +1,6 @@
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
-using Godot;
 
 namespace Arenbee.Framework.GUI
 {
@@ -12,34 +12,24 @@ namespace Arenbee.Framework.GUI
         private readonly float _rapidScrollDelay = 0.4f;
         private readonly float _rapidScrollInterval = 0.05f;
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
-            if (Engine.IsEditorHint() || !IsActive) return;
-            base._PhysicsProcess(delta);
+            if (this.IsToolDebugMode() || !IsActive) return;
+            base._Process(delta);
 
             var menuInput = GameRoot.MenuInput;
             var newDirection = Direction.None;
 
             if (menuInput.Up.IsActionPressed)
-            {
                 newDirection = Direction.Up;
-            }
             else if (menuInput.Down.IsActionPressed)
-            {
                 newDirection = Direction.Down;
-            }
             else if (menuInput.Left.IsActionPressed)
-            {
                 newDirection = Direction.Left;
-            }
             else if (menuInput.Right.IsActionPressed)
-            {
                 newDirection = Direction.Right;
-            }
             else if (menuInput.Enter.IsActionJustPressed)
-            {
                 CurrentContainer.SelectItem();
-            }
 
             HandleRapidScroll(delta, newDirection);
         }
@@ -82,16 +72,16 @@ namespace Arenbee.Framework.GUI
             switch (direction)
             {
                 case Direction.Up:
-                    CurrentContainer.FocusUp();
+                    CurrentContainer?.FocusUp();
                     break;
                 case Direction.Down:
-                    CurrentContainer.FocusDown();
+                    CurrentContainer?.FocusDown();
                     break;
                 case Direction.Left:
-                    CurrentContainer.FocusLeft();
+                    CurrentContainer?.FocusLeft();
                     break;
                 case Direction.Right:
-                    CurrentContainer.FocusRight();
+                    CurrentContainer?.FocusRight();
                     break;
             }
         }

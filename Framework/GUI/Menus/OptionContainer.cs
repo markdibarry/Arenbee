@@ -13,8 +13,6 @@ namespace Arenbee.Framework.GUI
         public OptionContainer()
         {
             OptionItems = new List<OptionItem>();
-            FillRight = false;
-            FillBottom = false;
         }
 
         private Control _control;
@@ -26,10 +24,6 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool DimItems { get; set; }
         [Export]
-        public bool FillRight { get; set; }
-        [Export]
-        public bool FillBottom { get; set; }
-        [Export]
         public bool KeepHighlightPosition { get; set; }
         [Export]
         public bool ShouldResizeToContent
@@ -37,8 +31,11 @@ namespace Arenbee.Framework.GUI
             get { return false; }
             set { if (value) ResizeToContent(); }
         }
+        [Export]
         public bool AutoResize { get; set; }
+        [Export]
         public SizeFlags HResize { get; set; }
+        [Export]
         public SizeFlags VResize { get; set; }
         public OptionItem CurrentItem => OptionItems[ItemIndex];
         public GridContainer GridContainer { get; set; }
@@ -63,14 +60,6 @@ namespace Arenbee.Framework.GUI
         {
             SetNodeReferences();
             Init();
-        }
-
-        public void AddItems(IEnumerable<OptionItem> optionItems)
-        {
-            foreach (var item in optionItems)
-            {
-                GridContainer.AddChild(item);
-            }
         }
 
         public void FocusItem(int index)
@@ -161,29 +150,41 @@ namespace Arenbee.Framework.GUI
             FocusItem(nextIndex);
         }
 
+        public void SetChildrenToOptionItems()
+        {
+            OptionItems = GridContainer.GetChildren<OptionItem>().ToList();
+        }
+
         /// <summary>
         /// Initialize the items that were added to the container
         /// </summary>
         public void InitItems()
         {
-            var children = GridContainer.GetChildren<OptionItem>().ToList();
-            foreach (var child in children)
+            SetChildrenToOptionItems();
+            foreach (var item in OptionItems)
             {
-                child.Dim = DimItems;
-                OptionItems.Add(child);
+                item.Dim = DimItems;
             }
-            if (DimItems && KeepHighlightPosition && children.Count > 0)
-                children[0].Dim = false;
+            if (DimItems && KeepHighlightPosition && OptionItems.Count > 0)
+                OptionItems[0].Dim = false;
 
             HandleHArrows();
             HandleVArrows();
         }
 
-        public virtual void ReplaceItems(IEnumerable<OptionItem> optionItems)
+        public void RefocusItem()
+        {
+            FocusItem(ItemIndex);
+        }
+
+        public virtual void ReplaceChildren(IEnumerable<OptionItem> optionItems)
         {
             OptionItems.Clear();
             GridContainer.RemoveAllChildren();
-            AddItems(optionItems);
+            foreach (var item in optionItems)
+            {
+                GridContainer.AddChild(item);
+            }
         }
 
         public void ResizeToContent()
@@ -269,20 +270,13 @@ namespace Arenbee.Framework.GUI
         {
             if (GridContainer.RectSize.x > _control.RectSize.x)
             {
-                if (GridContainer.RectPosition.x < 0)
-                    _arrowLeft.Modulate = new Color(1, 1, 1, 1);
-                else
-                    _arrowLeft.Modulate = new Color(1, 1, 1, 0);
-
-                if (GridContainer.RectSize.x + GridContainer.RectPosition.x > _control.RectSize.x)
-                    _arrowRight.Modulate = new Color(1, 1, 1, 1);
-                else
-                    _arrowRight.Modulate = new Color(1, 1, 1, 0);
+                _arrowLeft.Visible = GridContainer.RectPosition.x < 0;
+                _arrowRight.Visible = GridContainer.RectSize.x + GridContainer.RectPosition.x > _control.RectSize.x;
             }
             else
             {
-                _arrowLeft.Modulate = new Color(1, 1, 1, 0);
-                _arrowRight.Modulate = new Color(1, 1, 1, 0);
+                _arrowLeft.Visible = false;
+                _arrowRight.Visible = false;
             }
         }
 
@@ -290,20 +284,13 @@ namespace Arenbee.Framework.GUI
         {
             if (GridContainer.RectSize.y > _control.RectSize.y)
             {
-                if (GridContainer.RectPosition.y < 0)
-                    _arrowUp.Modulate = new Color(1, 1, 1, 1);
-                else
-                    _arrowUp.Modulate = new Color(1, 1, 1, 0);
-
-                if (GridContainer.RectSize.y + GridContainer.RectPosition.y > _control.RectSize.y)
-                    _arrowDown.Modulate = new Color(1, 1, 1, 1);
-                else
-                    _arrowDown.Modulate = new Color(1, 1, 1, 0);
+                _arrowUp.Visible = GridContainer.RectPosition.y < 0;
+                _arrowDown.Visible = GridContainer.RectSize.y + GridContainer.RectPosition.y > _control.RectSize.y;
             }
             else
             {
-                _arrowUp.Modulate = new Color(1, 1, 1, 0);
-                _arrowDown.Modulate = new Color(1, 1, 1, 0);
+                _arrowUp.Visible = false;
+                _arrowDown.Visible = false;
             }
         }
 
@@ -315,8 +302,6 @@ namespace Arenbee.Framework.GUI
 
         private void Init()
         {
-            GridContainer.AnchorRight = FillRight ? 1 : 0;
-            GridContainer.AnchorBottom = FillBottom ? 1 : 0;
             SubscribeEvents();
         }
 

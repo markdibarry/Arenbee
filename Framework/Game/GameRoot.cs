@@ -1,5 +1,5 @@
 using System;
-using Arenbee.Assets.GUI.Menus.TitleMenus;
+using Arenbee.Assets.GUI.Menus.Title;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
 using Godot;

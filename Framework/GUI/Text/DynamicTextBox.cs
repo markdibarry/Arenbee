@@ -19,6 +19,7 @@ namespace Arenbee.Framework.GUI.Text
         private Control _dynamicTextContainer;
         private int _page;
         private int[] _pageBreaks;
+        private float _speed;
         [Export]
         public int CurrentPage { get; set; }
         [Export(PropertyHint.MultilineText)]
@@ -52,8 +53,14 @@ namespace Arenbee.Framework.GUI.Text
         [Export]
         public float Speed
         {
-            get { return _dynamicText?.Speed ?? 0f; }
-            set { _dynamicText?.SetSpeed(value); }
+            get { return _dynamicText?.Speed ?? _speed; }
+            set
+            {
+                if (_dynamicText == null)
+                    _speed = value;
+                else
+                    _dynamicText.SetSpeed(value);
+            }
         }
         public bool SpeedUpText
         {
@@ -219,6 +226,7 @@ namespace Arenbee.Framework.GUI.Text
 
         private void SetDefault()
         {
+            Speed = _speed;
             if (this.IsSceneRoot())
             {
                 CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]\n" +

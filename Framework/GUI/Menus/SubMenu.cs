@@ -38,7 +38,7 @@ namespace Arenbee.Framework.GUI
 
         public override async void _Process(float delta)
         {
-            if (Engine.IsEditorHint() || !IsActive) return;
+            if (this.IsToolDebugMode() || !IsActive) return;
             var menuInput = GameRoot.MenuInput;
 
             if (menuInput.Cancel.IsActionJustPressed)
@@ -69,19 +69,30 @@ namespace Arenbee.Framework.GUI
             SubMenuClosed?.Invoke(this, cascadeTo);
         }
 
-        public virtual Task CustomSubMenuSetup()
-        {
-            return Task.CompletedTask;
-        }
-
         public async Task InitAsync()
         {
-            if (!this.IsToolDebugMode())
-                await CustomSubMenuSetup();
-            await SetupAsync();
+            PreLoadSetup();
+            await ToSignal(GetTree(), "process_frame");
+            await PostLoadSetupAsync();
         }
 
-        public virtual async Task SetupAsync()
+        public virtual void ResumeSubMenu(bool isCascading)
+        {
+            ProcessMode = ProcessModeEnum.Inherit;
+            Dim = false;
+        }
+
+        /// <summary>
+        /// Logic used for setup before needing to wait a frame to adjust.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual void PreLoadSetup() { }
+
+        /// <summary>
+        /// Logic used for setup after the controls have adjusted.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task PostLoadSetupAsync()
         {
             await TransitionInAsync();
             IsActive = true;

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Arenbee.Framework.Game;
 using Godot;
 
@@ -10,12 +9,6 @@ namespace Arenbee.Framework.GUI
         [Export]
         private float _timeDuration;
         private bool _timerEnabled;
-
-        public override async Task CustomSubMenuSetup()
-        {
-            if (_timeDuration > 0) _timerEnabled = true;
-            await base.CustomSubMenuSetup();
-        }
 
         public override void _Process(float delta)
         {
@@ -37,6 +30,12 @@ namespace Arenbee.Framework.GUI
                     _timeDuration -= delta;
                 }
             }
+        }
+
+        protected override void PreLoadSetup()
+        {
+            if (_timeDuration > 0) _timerEnabled = true;
+            base.PreLoadSetup();
         }
 
         protected virtual void Confirm() { }

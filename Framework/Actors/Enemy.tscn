@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cmwindadvvm2l"]
 
-[ext_resource type="PackedScene" uid="uid://qxn8inqies2j" path="res://Framework/Actors/Actor.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://Framework/Actors/Actor.tscn" id="2"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="2_fieqw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tce7g"]

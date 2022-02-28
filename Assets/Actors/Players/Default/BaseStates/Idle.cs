@@ -8,7 +8,7 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         public Idle() { AnimationName = "Idle"; }
         public override void Enter()
         {
-            StateMachine.PlayAnimation(AnimationName);
+            PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

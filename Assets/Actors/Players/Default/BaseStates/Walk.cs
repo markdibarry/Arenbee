@@ -9,7 +9,7 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         public Walk() { AnimationName = "Walk"; }
         public override void Enter()
         {
-            StateMachine.PlayAnimation(AnimationName);
+            PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

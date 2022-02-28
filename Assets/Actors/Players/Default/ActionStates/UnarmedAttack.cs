@@ -9,9 +9,9 @@ namespace Arenbee.Assets.Actors.Players.ActionStates
         public UnarmedAttack() { AnimationName = "UnarmedAttack"; }
         public override void Enter()
         {
-            StateMachine.PlayAnimation(AnimationName);
+            PlayAnimation(AnimationName);
+            SubscribeAnimation();
             StateController.BaseStateMachine.TransitionTo(new None());
-            Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
         }
 
         public override void Update(float delta)
@@ -21,11 +21,13 @@ namespace Arenbee.Assets.Actors.Players.ActionStates
 
         public override void Exit()
         {
+            UnsubscribeAnimation();
             StateController.BaseStateMachine.TransitionTo(new BaseStates.Idle());
         }
 
-        public void OnAnimationFinished(StringName animationName)
+        protected override void OnAnimationFinished(StringName animationName)
         {
+            UnsubscribeAnimation();
             StateMachine.TransitionTo(new NotAttacking());
             StateController.PlayFallbackAnimation();
         }

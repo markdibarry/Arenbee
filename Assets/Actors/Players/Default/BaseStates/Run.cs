@@ -9,7 +9,7 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         public Run() { AnimationName = "Run"; }
         public override void Enter()
         {
-            StateMachine.PlayAnimation(AnimationName);
+            PlayAnimation(AnimationName);
             Actor.MaxSpeed = Actor.RunSpeed;
         }
 
@@ -17,13 +17,9 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         {
             CheckForTransitions();
             if (InputHandler.Left.IsActionPressed)
-            {
                 Actor.MoveX(Facings.Left);
-            }
             else if (InputHandler.Right.IsActionPressed)
-            {
                 Actor.MoveX(Facings.Right);
-            }
         }
 
         public override void Exit()

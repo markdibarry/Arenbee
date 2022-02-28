@@ -1,6 +1,6 @@
 ﻿using Arenbee.Assets.Actors.Default.BaseStates;
 using Arenbee.Assets.Actors.Enemies.ActionStates;
-using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 using Godot;
@@ -21,22 +21,28 @@ namespace Arenbee.Framework.Actors
         private PackedScene _enemyDeathEffectScene;
         public delegate void ActorDefeatedHandler(Actor actor);
         public delegate void ActorRemovedHandler(Actor actor);
+        public delegate void DamageRecievedHandler(DamageRecievedData damageRecievedData);
         public event ActorDefeatedHandler ActorDefeated;
         public event ActorRemovedHandler ActorRemoved;
+        public event DamageRecievedHandler DamageRecieved;
+
+        public void CreateDeathEffect()
+        {
+            Node2D parent = GetParentOrNull<Node2D>();
+            if (parent != null)
+            {
+                var enemyDeathEffect = _enemyDeathEffectScene.Instantiate<EnemyDeathEffect>();
+                enemyDeathEffect.Position = BodySprite.GlobalPosition;
+                parent.AddChild(enemyDeathEffect);
+                enemyDeathEffect.Play();
+            }
+        }
 
         private void InitState()
         {
             _blinker.Init(this);
-
             StateController = new StateController(this);
-            WeaponSlot.Init(this, Equipment.GetSlot(EquipmentSlotName.Weapon));
             _enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.GetScenePath());
-        }
-
-        private void OnHurtBoxEntered(Area2D area2D)
-        {
-            if (area2D is HitBox hitBox)
-                HandleHitBoxAction(hitBox);
         }
 
         private void HandleDamage(int damage, Vector2 sourcePosition)
@@ -47,12 +53,6 @@ namespace Arenbee.Framework.Actors
                 HandleKnockBack(sourcePosition);
                 StateController.BaseStateMachine.TransitionTo(new Stagger());
             }
-        }
-
-        private void HandleKnockBack(Vector2 hitPosition)
-        {
-            Vector2 direction = hitPosition.DirectionTo(GlobalPosition);
-            Velocity = direction * -JumpVelocity;
         }
 
         private void HandleHPDepleted()
@@ -70,30 +70,21 @@ namespace Arenbee.Framework.Actors
             }
         }
 
-        public void CreateDeathEffect()
+        private void HandleKnockBack(Vector2 hitPosition)
         {
-            Node2D parent = GetParentOrNull<Node2D>();
-            if (parent != null)
-            {
-                var enemyDeathEffect = _enemyDeathEffectScene.Instantiate<EnemyDeathEffect>();
-                enemyDeathEffect.Position = BodySprite.GlobalPosition;
-                parent.AddChild(enemyDeathEffect);
-                enemyDeathEffect.Play();
-            }
+            Vector2 direction = hitPosition.DirectionTo(GlobalPosition);
+            Velocity = direction * -JumpVelocity;
         }
 
-        public void SubscribeEvents()
+        private void OnDamageRecieved(DamageRecievedData data)
         {
-            HurtBox.AreaEntered += OnHurtBoxEntered;
-            Equipment.EquipmentRemoved += OnEquipmentRemoved;
-            Equipment.EquipmentSet += OnEquipmentSet;
+            HandleDamage(data.TotalDamage, data.SourcePosition);
+            DamageRecieved?.Invoke(data);
         }
 
-        public void UnsubscribeEvents()
+        private void OnHPDepleted()
         {
-            HurtBox.AreaEntered -= OnHurtBoxEntered;
-            Equipment.EquipmentRemoved -= OnEquipmentRemoved;
-            Equipment.EquipmentSet -= OnEquipmentSet;
+            HandleHPDepleted();
         }
     }
 }

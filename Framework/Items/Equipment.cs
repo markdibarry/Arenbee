@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Statistics;
 
 namespace Arenbee.Framework.Items
 {
@@ -35,14 +36,20 @@ namespace Arenbee.Framework.Items
         }
 
         private readonly List<EquipmentSlot> _slots;
-        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item newItem);
-        public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
+        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;
-        public event EquipmentRemovedHandler EquipmentRemoved;
 
-        public IEnumerable<EquipmentSlot> GetAllSlots()
+        public Equipment CloneEquipment()
         {
-            return _slots.AsReadOnly();
+            var result = new List<EquipmentSlot>();
+            foreach (var slot in _slots)
+            {
+                result.Add(new EquipmentSlot(slot.SlotName, slot.SlotType)
+                {
+                    ItemId = slot.ItemId
+                });
+            }
+            return new Equipment(result);
         }
 
         public IEnumerable<EquipmentSlot> GetSlotsByType(ItemType itemType)
@@ -55,14 +62,36 @@ namespace Arenbee.Framework.Items
             return _slots.First(x => x.SlotName.Equals(slotName));
         }
 
-        private void OnEquipmentSet(EquipmentSlot slot, Item newItem)
+        public Stats GenerateStats(Stats oldStats)
         {
-            EquipmentSet?.Invoke(slot, newItem);
+            var newStats = new Stats { Attributes = oldStats.CloneBaseAttributes() };
+            foreach (var slot in _slots)
+            {
+                var itemStats = slot.Item?.ItemStats;
+                if (itemStats == null) continue;
+
+                foreach (ElementModifier mod in itemStats.DefenseElementModifiers)
+                {
+                    newStats.DefenseElementModifiers.Add(mod);
+                }
+
+                foreach (StatusEffectModifier mod in itemStats.DefenseStatusEffects)
+                {
+                    newStats.DefenseStatusEffects.Add(mod);
+                }
+
+                foreach (AttributeModifier mod in itemStats.AttributeModifiers)
+                {
+                    newStats.Attributes[mod.AttributeType].AttributeModifiers.Add(mod);
+                }
+            }
+            newStats.UpdateStats();
+            return newStats;
         }
 
-        private void OnEquipmentRemoved(EquipmentSlot slot, Item oldItem)
+        private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
         {
-            EquipmentRemoved?.Invoke(slot, oldItem);
+            EquipmentSet?.Invoke(slot, oldItem, newItem);
         }
 
         private void SubscribeEvents()
@@ -70,7 +99,6 @@ namespace Arenbee.Framework.Items
             foreach (var slot in _slots)
             {
                 slot.EquipmentSet += OnEquipmentSet;
-                slot.EquipmentRemoved += OnEquipmentRemoved;
             }
         }
     }

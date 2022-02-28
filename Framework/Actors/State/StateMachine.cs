@@ -69,9 +69,9 @@ namespace Arenbee.Framework.Actors
             Reset();
         }
 
-        public void PlayAnimation(string animationName, bool force = false)
+        public bool PlayAnimation(IState state, string animationName, bool force = false)
         {
-            StateController.PlayAnimation(animationName, StateMachineType, force);
+            return StateController.PlayAnimation(this, state, animationName, force);
         }
     }
 }

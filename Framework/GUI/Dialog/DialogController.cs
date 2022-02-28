@@ -186,7 +186,9 @@ namespace Arenbee.Framework.GUI.Dialog
 
         private async void OnOptionItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            if (int.TryParse(optionItem.OptionValue, out int result))
+            if (!optionItem.OptionData.TryGetValue("next", out string next))
+                return;
+            if (int.TryParse(next, out int result))
             {
                 NextDialogPart(result);
                 await CloseOptionBoxAsync();

@@ -18,7 +18,7 @@ namespace Arenbee.Framework.GUI.Text
             FitContentHeight = true;
             ScrollActive = false;
             ShouldWrite = false;
-            Speed = 0.05f;
+            //Speed = 0.05f;
             StopAt = -1;
             VisibleCharacters = 0;
             VisibleCharactersBehavior = VisibleCharactersBehaviorEnum.CharsAfterShaping;

@@ -1,4 +1,5 @@
 ﻿using Arenbee.Framework.Enums;
+using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Items
 {
@@ -13,6 +14,7 @@ namespace Arenbee.Framework.Items
         public EquipmentSlotName SlotName { get; }
         public ItemType SlotType { get; }
         public string ItemId { get; set; }
+        [JsonIgnore]
         public Item Item
         {
             get
@@ -27,34 +29,20 @@ namespace Arenbee.Framework.Items
             }
         }
         private Item _item;
-        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item newItem);
-        public delegate void EquipmentRemovedHandler(EquipmentSlot slot, Item oldItem);
+        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;
-        public event EquipmentRemovedHandler EquipmentRemoved;
 
         public void SetItem(Item newItem)
         {
-            if (newItem != null && CanSetItem(newItem))
-            {
-                RemoveItem();
-                ItemId = newItem.Id;
-                EquipmentSet?.Invoke(this, newItem);
-            }
-        }
-
-        public void RemoveItem()
-        {
-            if (!string.IsNullOrEmpty(ItemId))
-            {
-                Item oldItem = Item;
-                ItemId = null;
-                EquipmentRemoved?.Invoke(this, oldItem);
-            }
+            if (!CanSetItem(newItem)) return;
+            Item oldItem = Item;
+            ItemId = newItem?.Id;
+            EquipmentSet?.Invoke(this, oldItem, newItem);
         }
 
         private bool CanSetItem(Item item)
         {
-            return item.ItemType == SlotType;
+            return item == null || item.ItemType == SlotType;
         }
     }
 }

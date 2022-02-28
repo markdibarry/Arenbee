@@ -9,7 +9,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
         public override void Enter()
         {
             Actor.Jump();
-            StateMachine.PlayAnimation(AnimationName);
+            PlayAnimation(AnimationName);
         }
 
         public override void Update(float delta)

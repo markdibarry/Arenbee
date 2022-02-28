@@ -1,6 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bj28sv5vq5vnv"]
+[gd_scene load_steps=5 format=3 uid="uid://bj28sv5vq5vnv"]
 
-[ext_resource type="PackedScene" uid="uid://qxn8inqies2j" path="res://Framework/Actors/Actor.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://Framework/Actors/Actor.tscn" id="1"]
+[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="2_41t8i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ik3ws"]
+resource_local_to_scene = true
+shader = ExtResource( "2_41t8i" )
+shader_param/flash_color = null
+shader_param/flash_mix = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5hcfj"]
 resource_local_to_scene = true
@@ -10,6 +17,9 @@ size = Vector2(14, 24)
 collision_mask = 276
 ActorType = 0
 WalkSpeed = 100
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_ik3ws" )
 
 [node name="HurtBox" parent="Body/BodySprite" index="0"]
 collision_mask = 160

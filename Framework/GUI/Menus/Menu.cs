@@ -53,7 +53,7 @@ namespace Arenbee.Framework.GUI
             UnsubscribeEvents(subMenu);
             if (GetChildCount() > 0)
             {
-                SetCurrentSubMenu();
+                SetCurrentSubMenu(cascadeTo != null);
                 if (cascadeTo != null && cascadeTo != _currentSubMenu.GetType().Name)
                     await _currentSubMenu.CloseSubMenuAsync(cascadeTo);
             }
@@ -63,11 +63,10 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        private void SetCurrentSubMenu()
+        private void SetCurrentSubMenu(bool isCascading)
         {
             _currentSubMenu = GetChild<SubMenu>(GetChildCount() - 1);
-            _currentSubMenu.ProcessMode = ProcessModeEnum.Inherit;
-            _currentSubMenu.Dim = false;
+            _currentSubMenu.ResumeSubMenu(isCascading);
         }
 
         private void SubscribeEvents(SubMenu subMenu)

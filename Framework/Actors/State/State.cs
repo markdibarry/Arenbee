@@ -1,5 +1,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Input;
+using Godot;
 
 namespace Arenbee.Framework
 {
@@ -14,6 +15,7 @@ namespace Arenbee.Framework
         }
         public bool IsInitialState { get; set; }
         public string AnimationName { get; set; }
+        public bool SubscribedAnimation { get; set; }
 
         public virtual void Init()
         {
@@ -25,6 +27,28 @@ namespace Arenbee.Framework
         public abstract void Update(float delta);
         public abstract void Exit();
         public abstract void CheckForTransitions();
+
+        protected void PlayAnimation(string animationName, bool force = false)
+        {
+            StateMachine.PlayAnimation(this, animationName, force);
+        }
+
+        protected void SubscribeAnimation()
+        {
+            Actor.AnimationPlayer.AnimationFinished += OnAnimationFinished;
+            SubscribedAnimation = true;
+        }
+
+        protected void UnsubscribeAnimation()
+        {
+            if (SubscribedAnimation)
+            {
+                Actor.AnimationPlayer.AnimationFinished -= OnAnimationFinished;
+                SubscribedAnimation = false;
+            }
+        }
+
+        protected virtual void OnAnimationFinished(StringName animationName) { }
     }
 
     public class None : State<Actor>

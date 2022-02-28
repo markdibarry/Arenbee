@@ -1,13 +1,12 @@
 using System;
-using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
-using Arenbee.Assets.GUI.Menus.PartyMenus;
+using Arenbee.Assets.GUI.Menus.Party;
 using Arenbee.Framework.GUI.Dialog;
-using Arenbee.Framework.SaveData;
 using Godot;
+using Arenbee.Framework.Game.SaveData;
 
 namespace Arenbee.Framework.Game
 {
@@ -15,7 +14,7 @@ namespace Arenbee.Framework.Game
     {
         public GameSession()
         {
-            Party = new Party();
+            Party = new PlayerParty();
             SessionState = new SessionState();
         }
 
@@ -26,7 +25,7 @@ namespace Arenbee.Framework.Game
         private HUD _hud;
         public AreaScene CurrentAreaScene { get; private set; }
         public DialogController DialogController { get; private set; }
-        public Party Party { get; private set; }
+        public PlayerParty Party { get; private set; }
         public SessionState SessionState { get; private set; }
         public TransitionFadeColor Transition { get; private set; }
 
@@ -48,7 +47,7 @@ namespace Arenbee.Framework.Game
 
         public void Init(GameSave gameSave)
         {
-            Party = new Party(gameSave.ActorInfos, gameSave.Items);
+            Party = new PlayerParty(gameSave.ActorInfos, gameSave.Items);
             SessionState = gameSave.SessionState;
             InitAreaScene();
             CurrentAreaScene.AddPlayer();

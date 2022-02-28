@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.Actors.Stats;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
@@ -40,13 +40,285 @@ namespace Arenbee.Framework.Items
                 ItemStats = new ItemStats()
                 {
                     ActionElement = Element.Earth,
-                    StatModifiers = new StatModifier[]
+                    AttributeModifiers = new AttributeModifier[]
                     {
-                        new StatModifier()
+                        new AttributeModifier()
                         {
-                            StatType = StatType.Attack,
+                            AttributeType = AttributeType.Attack,
                             Effect = ModifierEffect.Add,
                             Value = 2
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "ClemsonHoodie",
+                DisplayName = "Clemson Hoodie",
+                ItemType = ItemType.Shirt,
+                Description = "Football is a sport!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 2
+                        },
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicAttack,
+                            Effect = ModifierEffect.Subtract,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "FriendshipBracelet",
+                DisplayName = "Friendship Bracelet",
+                ItemType = ItemType.Accessory,
+                Description = "Because I love you 5-ever.",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicDefense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "MoodRing",
+                DisplayName = "Mood Ring",
+                ItemType = ItemType.Accessory,
+                Description = "It's just black.",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicDefense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "Vibrams",
+                DisplayName = "Vibrams",
+                ItemType = ItemType.Footwear,
+                Description = "They feel as cool as they look!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 2
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "JNCOJeans",
+                DisplayName = "JNCO Jeans",
+                ItemType = ItemType.Pants,
+                Description = "Watch out for puddles.",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "MotleyCrueTee",
+                DisplayName = "Motley Crue Tshirt",
+                ItemType = ItemType.Shirt,
+                Description = "Shout at the devil!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "CheeseHat",
+                DisplayName = "Cheese Hat",
+                ItemType = ItemType.Headgear,
+                Description = "A Wisconsin favorite!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicAttack,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "Uggs",
+                DisplayName = "Uggs",
+                ItemType = ItemType.Footwear,
+                Description = "Lets get white-girl wasted!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        },
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicDefense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "RamenBoushi",
+                DisplayName = "Ramen Boushi",
+                ItemType = ItemType.Headgear,
+                Description = "Vital for any fisherman!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.MagicDefense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
+                        }
+                    }
+                }
+            });
+
+            s_items.Add(new Item()
+            {
+                Id = "FingerlessGloves",
+                DisplayName = "Fingerless Gloves",
+                ItemType = ItemType.Accessory,
+                Description = "That bohemian look.",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Defense,
+                            Effect = ModifierEffect.Add,
+                            Value = 1
                         }
                     }
                 }

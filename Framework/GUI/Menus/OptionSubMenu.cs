@@ -32,7 +32,14 @@ namespace Arenbee.Framework.GUI
             await base.CloseSubMenuAsync(cascadeTo);
         }
 
-        public override async Task SetupAsync()
+        public override async void ResumeSubMenu(bool isCascading)
+        {
+            await ToSignal(GetTree(), "process_frame");
+            CurrentContainer.RefocusItem();
+            base.ResumeSubMenu(isCascading);
+        }
+
+        protected override void PreLoadSetup()
         {
             if (!this.IsToolDebugMode())
                 CustomOptionsSetup();
@@ -43,9 +50,14 @@ namespace Arenbee.Framework.GUI
                     optionContainer.InitItems();
                     SubscribeToEvents(optionContainer);
                 }
-                // To allow elements to adjust to correct positions
-                await ToSignal(GetTree(), "process_frame");
+            }
+            base.PreLoadSetup();
+        }
 
+        protected override async Task PostLoadSetupAsync()
+        {
+            if (OptionContainers.Count > 0)
+            {
                 foreach (var optionContainer in OptionContainers)
                 {
                     if (optionContainer.AutoResize)
@@ -53,7 +65,7 @@ namespace Arenbee.Framework.GUI
                 }
                 FocusContainer(OptionContainers.FirstOrDefault());
             }
-            await base.SetupAsync();
+            await base.PostLoadSetupAsync();
         }
 
         /// <summary>
