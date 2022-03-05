@@ -8,17 +8,18 @@ namespace Arenbee.Framework.Statistics
     {
         public HitBoxAction(HitBox hitBox, Node2D source)
         {
+            ActionType = ActionType.Environment;
+            Element = Element.None;
             SourceName = source.Name;
             StatusEffects = new List<StatusEffectModifier>();
-            Element = Element.None;
-            ActionType = ActionType.Environment;
             Value = hitBox.InitialValue;
         }
 
-        public string SourceName { get; set; }
-        public IEnumerable<StatusEffectModifier> StatusEffects { get; set; }
-        public Element Element { get; set; }
         public ActionType ActionType { get; set; }
+        public Element Element { get; set; }
+        public string SourceName { get; set; }
+        public Vector2 SourcePosition { get; set; }
+        public IEnumerable<StatusEffectModifier> StatusEffects { get; set; }
         public int Value { get; set; }
     }
 }

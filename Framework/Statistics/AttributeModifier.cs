@@ -6,6 +6,16 @@ namespace Arenbee.Framework.Statistics
 {
     public class AttributeModifier
     {
+        public AttributeModifier() { }
+
+        public AttributeModifier(AttributeModifier attributeModifier)
+        {
+            AttributeType = attributeModifier.AttributeType;
+            IsHidden = attributeModifier.IsHidden;
+            Effect = attributeModifier.Effect;
+            Value = attributeModifier.Value;
+        }
+
         public AttributeType AttributeType { get; set; }
         public bool IsHidden { get; } = false;
         public ModifierEffect Effect { get; set; }

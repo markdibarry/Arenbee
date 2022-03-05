@@ -27,7 +27,7 @@ namespace Arenbee.Framework.GUI.Dialog
                 }
                 _options.ReplaceChildren(options);
             }
-            _options.AutoResize = true;
+            _options.FitContainer = true;
             _options.HResize = SizeFlags.ShrinkCenter;
             _options.VResize = SizeFlags.ShrinkCenter;
             base.CustomOptionsSetup();

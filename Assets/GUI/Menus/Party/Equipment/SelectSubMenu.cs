@@ -58,7 +58,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             }
             else if (bool.Parse(canSelect))
             {
-                slot.SetItem(_itemDB.GetItem(itemId));
+                slot.SetItemById(itemId);
                 return true;
             }
             return false;
@@ -66,15 +66,18 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         private void UpdateStatsDisplay(OptionItem optionItem)
         {
-            Framework.Items.Equipment mockEquipment = Actor.Equipment.CloneEquipment();
-            bool equipSuccess = TryEquip(optionItem, mockEquipment.GetSlot(Slot.SlotName));
-            Stats mockStats = mockEquipment.GenerateStats(Actor.Stats);
-            foreach (var attributePair in Actor.Stats.Attributes)
+            var mockStats = new Stats(Actor.Stats);
+            var newSlot = new EquipmentSlot(Slot);
+            newSlot.Item?.ItemStats?.RemoveFromStats(mockStats);
+            bool equipSuccess = TryEquip(optionItem, newSlot);
+            newSlot.Item?.ItemStats?.AddToStats(mockStats);
+            mockStats.UpdateStats();
+            foreach (var attribute in Actor.Stats.Attributes)
             {
-                var statContainer = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attributePair.Key.ToString());
+                var statContainer = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attribute.Name);
                 if (statContainer == null) continue;
-                var currentValue = attributePair.Value.DisplayValue;
-                var mockNewValue = mockStats.Attributes[attributePair.Key].DisplayValue;
+                var currentValue = attribute.DisplayValue;
+                var mockNewValue = mockStats.GetAttribute(attribute.AttributeType).DisplayValue;
                 var valueLabel = statContainer.GetNode<Label>("HBoxContainer/Values/Value");
                 var newValueLabel = statContainer.GetNode<Label>("HBoxContainer/Values/NewValue");
                 if (equipSuccess && currentValue != mockNewValue)

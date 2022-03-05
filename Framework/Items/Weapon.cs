@@ -50,10 +50,11 @@ namespace Arenbee.Framework.Items
 
         public virtual void UpdateHitBoxAction()
         {
-            HitBox.HitBoxAction = new HitBoxAction(HitBox, this)
+            HitBox.HitBoxAction = new HitBoxAction(HitBox, Holder)
             {
                 ActionType = ActionType.Melee,
-                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
+                Element = Item?.ItemStats?.ActionElement ?? Stats.ActionElement,
+                Value = Stats.GetAttribute(AttributeType.Attack).ModifiedValue
             };
         }
 

@@ -4,6 +4,14 @@ namespace Arenbee.Framework.Statistics
 {
     public class ElementModifier
     {
+        public ElementModifier() { }
+
+        public ElementModifier(ElementModifier mod)
+        {
+            Element = mod.Element;
+            Value = mod.Value;
+        }
+
         public Element Element { get; set; }
         /// <summary>
         /// How much an element should be resisted or strengthened.

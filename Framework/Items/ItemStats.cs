@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
-using System.Text;
-using System.Linq;
 
 namespace Arenbee.Framework.Items
 {
@@ -16,10 +13,10 @@ namespace Arenbee.Framework.Items
             DefenseElementModifiers = new ElementModifier[0];
         }
 
-        public IEnumerable<AttributeModifier> AttributeModifiers { get; set; }
-        public IEnumerable<StatusEffectModifier> ActionStatusEffects { get; set; }
-        public IEnumerable<StatusEffectModifier> DefenseStatusEffects { get; set; }
         public Element ActionElement { get; set; }
+        public IEnumerable<StatusEffectModifier> ActionStatusEffects { get; set; }
+        public IEnumerable<AttributeModifier> AttributeModifiers { get; set; }
+        public IEnumerable<StatusEffectModifier> DefenseStatusEffects { get; set; }
         public IEnumerable<ElementModifier> DefenseElementModifiers { get; set; }
 
         public string GetStatDescription()
@@ -28,17 +25,42 @@ namespace Arenbee.Framework.Items
             foreach (var mod in AttributeModifiers)
             {
                 if (mod.IsHidden) continue;
+                var name = mod.AttributeType.Get().Abbreviation;
                 switch (mod.Effect)
                 {
                     case ModifierEffect.Add:
-                        modParts.Add($"+{mod.Value} {mod.AttributeType}");
+                        modParts.Add($"+{mod.Value} {name}");
                         break;
                     case ModifierEffect.Subtract:
-                        modParts.Add($"-{mod.Value} {mod.AttributeType}");
+                        modParts.Add($"-{mod.Value} {name}");
                         break;
                 }
             }
             return string.Join(", ", modParts);
+        }
+
+        public void AddToStats(Stats stats)
+        {
+            foreach (ElementModifier mod in DefenseElementModifiers)
+                stats.DefenseElementModifiers.Add(mod);
+
+            foreach (StatusEffectModifier mod in DefenseStatusEffects)
+                stats.DefenseStatusEffects.Add(mod);
+
+            foreach (AttributeModifier mod in AttributeModifiers)
+                stats.GetAttribute(mod.AttributeType).AttributeModifiers.Add(mod);
+        }
+
+        public void RemoveFromStats(Stats stats)
+        {
+            foreach (ElementModifier mod in DefenseElementModifiers)
+                stats.DefenseElementModifiers.Remove(mod);
+
+            foreach (StatusEffectModifier mod in DefenseStatusEffects)
+                stats.DefenseStatusEffects.Remove(mod);
+
+            foreach (AttributeModifier mod in AttributeModifiers)
+                stats.GetAttribute(mod.AttributeType).AttributeModifiers.Remove(mod);
         }
     }
 }

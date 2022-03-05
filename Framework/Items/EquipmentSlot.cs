@@ -6,12 +6,30 @@ namespace Arenbee.Framework.Items
 {
     public class EquipmentSlot
     {
-        public EquipmentSlot(EquipmentSlotName slotName, ItemType slotType)
+        public EquipmentSlot()
+        {
+            _itemDB = Locator.GetItemDB();
+        }
+
+        public EquipmentSlot(EquipSlotName slotName, ItemType slotType)
+            : this()
         {
             SlotName = slotName;
             SlotType = slotType;
-            _itemDB = Locator.GetItemDB();
         }
+
+        public EquipmentSlot(EquipmentSlot slot)
+            : this(slot.SlotName, slot.SlotType)
+        {
+            ItemId = slot.ItemId;
+        }
+
+        public EquipmentSlot(EquipmentSlot slot, string itemId)
+            : this(slot.SlotName, slot.SlotType)
+        {
+            ItemId = itemId;
+        }
+
         private readonly IItemDB _itemDB;
         private Item _item;
         [JsonIgnore]
@@ -29,17 +47,25 @@ namespace Arenbee.Framework.Items
             }
         }
         public string ItemId { get; set; }
-        public EquipmentSlotName SlotName { get; }
-        public ItemType SlotType { get; }
+        public EquipSlotName SlotName { get; set; }
+        public ItemType SlotType { get; set; }
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;
 
-        public void SetItem(Item newItem)
+        public bool SetItemById(string itemId)
         {
-            if (!CanSetItem(newItem)) return;
+            Item item = _itemDB.GetItem(itemId);
+            if (item == null) return false;
+            return SetItem(item);
+        }
+
+        public bool SetItem(Item newItem)
+        {
+            if (!CanSetItem(newItem)) return false;
             Item oldItem = Item;
             ItemId = newItem?.Id;
             EquipmentSet?.Invoke(this, oldItem, newItem);
+            return true;
         }
 
         private bool CanSetItem(Item item)

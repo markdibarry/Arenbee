@@ -72,7 +72,7 @@ namespace Arenbee.Framework.GUI
             UpdatePlayerStatsDisplay(actor);
         }
 
-        private void OnDamageRecieved(DamageRecievedData data)
+        private void OnDamageRecieved(DamageData data)
         {
             if (data.ElementMultiplier != 1)
             {
@@ -110,8 +110,8 @@ namespace Arenbee.Framework.GUI
 
         private void UpdatePlayerStatsDisplay(Actor actor)
         {
-            int hp = actor.Stats.Attributes[AttributeType.HP].DisplayValue;
-            int maxHP = actor.Stats.Attributes[AttributeType.MaxHP].DisplayValue;
+            int hp = actor.Stats.GetAttribute(AttributeType.HP).DisplayValue;
+            int maxHP = actor.Stats.GetAttribute(AttributeType.MaxHP).DisplayValue;
             _hpDisplay.Text = $"{hp}/{maxHP}";
         }
     }

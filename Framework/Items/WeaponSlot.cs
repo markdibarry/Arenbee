@@ -40,7 +40,6 @@ namespace Arenbee.Framework.Items
 
         private void AttachWeapon(string itemId)
         {
-            DetachWeapon();
             var weapon = GDEx.Instantiate<Weapon>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
             if (weapon == null)
             {

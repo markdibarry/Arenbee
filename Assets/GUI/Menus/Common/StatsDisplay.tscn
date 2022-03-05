@@ -43,19 +43,19 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="MaxHP" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
+[node name="Max HP" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
 offset_top = 30.0
 offset_right = 105.0
 offset_bottom = 60.0
 
-[node name="HBoxContainer" parent="GridContainer/MaxHP" index="0"]
+[node name="HBoxContainer" parent="GridContainer/Max HP" index="0"]
 offset_right = 103.0
 
-[node name="Name" parent="GridContainer/MaxHP/HBoxContainer" index="0"]
+[node name="Name" parent="GridContainer/Max HP/HBoxContainer" index="0"]
 offset_right = 78.0
 text = "Max HP:"
 
-[node name="Values" parent="GridContainer/MaxHP/HBoxContainer" index="1"]
+[node name="Values" parent="GridContainer/Max HP/HBoxContainer" index="1"]
 offset_left = 82.0
 offset_right = 101.0
 
@@ -76,19 +76,19 @@ text = "HP:"
 offset_left = 95.0
 offset_right = 114.0
 
-[node name="MaxMP" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
+[node name="Max MP" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
 offset_top = 60.0
 offset_right = 105.0
 offset_bottom = 90.0
 
-[node name="HBoxContainer" parent="GridContainer/MaxMP" index="0"]
+[node name="HBoxContainer" parent="GridContainer/Max MP" index="0"]
 offset_right = 103.0
 
-[node name="Name" parent="GridContainer/MaxMP/HBoxContainer" index="0"]
+[node name="Name" parent="GridContainer/Max MP/HBoxContainer" index="0"]
 offset_right = 78.0
 text = "Max MP:"
 
-[node name="Values" parent="GridContainer/MaxMP/HBoxContainer" index="1"]
+[node name="Values" parent="GridContainer/Max MP/HBoxContainer" index="1"]
 offset_left = 82.0
 offset_right = 101.0
 
@@ -142,45 +142,45 @@ text = "Defense:"
 offset_left = 95.0
 offset_right = 114.0
 
-[node name="MagicAttack" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
+[node name="Magic Attack" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
 offset_top = 120.0
 offset_right = 105.0
 offset_bottom = 150.0
 
-[node name="HBoxContainer" parent="GridContainer/MagicAttack" index="0"]
+[node name="HBoxContainer" parent="GridContainer/Magic Attack" index="0"]
 offset_right = 103.0
 
-[node name="Name" parent="GridContainer/MagicAttack/HBoxContainer" index="0"]
+[node name="Name" parent="GridContainer/Magic Attack/HBoxContainer" index="0"]
 offset_right = 78.0
 text = "M. Attack:"
 
-[node name="Values" parent="GridContainer/MagicAttack/HBoxContainer" index="1"]
+[node name="Values" parent="GridContainer/Magic Attack/HBoxContainer" index="1"]
 offset_left = 82.0
 offset_right = 101.0
 
-[node name="MagicDefense" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
+[node name="Magic Defense" parent="GridContainer" instance=ExtResource( "1_1xe3x" )]
 offset_left = 109.0
 offset_top = 120.0
 offset_right = 227.0
 offset_bottom = 150.0
 
-[node name="HBoxContainer" parent="GridContainer/MagicDefense" index="0"]
+[node name="HBoxContainer" parent="GridContainer/Magic Defense" index="0"]
 offset_right = 116.0
 
-[node name="Name" parent="GridContainer/MagicDefense/HBoxContainer" index="0"]
+[node name="Name" parent="GridContainer/Magic Defense/HBoxContainer" index="0"]
 offset_right = 91.0
 text = "M. Defense:"
 
-[node name="Values" parent="GridContainer/MagicDefense/HBoxContainer" index="1"]
+[node name="Values" parent="GridContainer/Magic Defense/HBoxContainer" index="1"]
 offset_left = 95.0
 offset_right = 114.0
 
 [editable path="GridContainer/Level"]
-[editable path="GridContainer/MaxHP"]
+[editable path="GridContainer/Max HP"]
 [editable path="GridContainer/HP"]
-[editable path="GridContainer/MaxMP"]
+[editable path="GridContainer/Max MP"]
 [editable path="GridContainer/MP"]
 [editable path="GridContainer/Attack"]
 [editable path="GridContainer/Defense"]
-[editable path="GridContainer/MagicAttack"]
-[editable path="GridContainer/MagicDefense"]
+[editable path="GridContainer/Magic Attack"]
+[editable path="GridContainer/Magic Defense"]

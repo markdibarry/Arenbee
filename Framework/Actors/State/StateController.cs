@@ -162,6 +162,9 @@ namespace Arenbee.Framework.Actors
             _jumpStateDisplay = stateDisplay.GetNode<Label>("JumpState");
             _moveStateDisplay = stateDisplay.GetNode<Label>("MoveState");
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");
+            _moveStateDisplay.Text = string.Empty;
+            _jumpStateDisplay.Text = string.Empty;
+            _actionStateDisplay.Text = string.Empty;
             _actor.AddChild(stateDisplay);
             Vector2 frameSize = _actor.BodySprite.GetFrameSize();
             stateDisplay.RectPosition = new Vector2(_actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + _actor.BodySprite.Position.y);

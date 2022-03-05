@@ -1,6 +1,6 @@
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Statistics;
 
 namespace Arenbee.Assets.Actors.Players
 {

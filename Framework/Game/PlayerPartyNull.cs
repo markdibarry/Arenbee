@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.Items;
 

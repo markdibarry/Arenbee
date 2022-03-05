@@ -15,6 +15,9 @@ namespace Arenbee.Framework.GUI
             OptionItems = new List<OptionItem>();
         }
 
+
+        private bool _expandContent;
+        private bool _fitContainer;
         private Control _control;
         private TextureRect _arrowUp;
         private TextureRect _arrowDown;
@@ -26,13 +29,25 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool KeepHighlightPosition { get; set; }
         [Export]
-        public bool ShouldResizeToContent
+        public bool FitContainer
         {
-            get { return false; }
-            set { if (value) ResizeToContent(); }
+            get { return _fitContainer; }
+            set
+            {
+                _fitContainer = value;
+                _changesDirty = true;
+            }
         }
         [Export]
-        public bool AutoResize { get; set; }
+        public bool ExpandContent
+        {
+            get { return _expandContent; }
+            set
+            {
+                _expandContent = value;
+                _changesDirty = true;
+            }
+        }
         [Export]
         public SizeFlags HResize { get; set; }
         [Export]
@@ -62,20 +77,45 @@ namespace Arenbee.Framework.GUI
             Init();
         }
 
+        public void ExpandGridToContainer()
+        {
+            GridContainer.RectSize = new Vector2(_control.RectSize.x, GridContainer.RectSize.y);
+        }
+
+        public void FitToContent()
+        {
+            FitToContent(Vector2.Zero);
+        }
+
+        public void FitToContent(Vector2 max)
+        {
+            Vector2 oldSize = RectSize;
+            Vector2 padding = GetPadding(GridContainer);
+            Vector2 newSize = GridContainer.RectSize + (padding * 2);
+            Vector2 newPos = RectPosition;
+            if (max != Vector2.Zero)
+                newSize = new Vector2(Math.Min(newSize.x, max.x), Math.Min(newSize.y, max.x));
+
+            if (HResize == SizeFlags.ShrinkEnd)
+                newPos = new Vector2(newPos.x - newSize.x - oldSize.x, newPos.y);
+            else if (HResize == SizeFlags.ShrinkCenter)
+                newPos = new Vector2((int)Math.Floor(newPos.x - ((newSize.x - oldSize.x) * 0.5)), newPos.y);
+
+            if (VResize == SizeFlags.ShrinkEnd)
+                newPos = new Vector2(newPos.x, newPos.y - newSize.y - oldSize.y);
+            else if (VResize == SizeFlags.ShrinkCenter)
+                newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
+            RectSize = newSize;
+            RectPosition = newPos;
+            _changesDirty = true;
+        }
+
         public void FocusItem(int index)
         {
-            if (IsValidIndex(index))
-            {
-                if (DimItems) CurrentItem.Dim = true;
-                ItemIndex = index;
-                FocusItem(OptionItems[index]);
-            }
-            else if (0 < OptionItems.Count && OptionItems.Count < index)
-            {
-                if (DimItems) CurrentItem.Dim = true;
-                ItemIndex = OptionItems.Count - 1;
-                FocusItem(OptionItems[ItemIndex]);
-            }
+            if (OptionItems.Count == 0) return;
+            if (DimItems) CurrentItem.Dim = true;
+            ItemIndex = GetValidIndex(index);
+            FocusItem(OptionItems[ItemIndex]);
         }
 
         public void FocusItem(OptionItem optionItem)
@@ -124,6 +164,7 @@ namespace Arenbee.Framework.GUI
         public void FocusTopEnd()
         {
             int nextIndex = ItemIndex % GridContainer.Columns;
+            if (nextIndex == ItemIndex) return;
             FocusItem(nextIndex);
         }
 
@@ -133,12 +174,14 @@ namespace Arenbee.Framework.GUI
             int lastIndex = OptionItems.Count - 1;
             int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
             int nextIndex = Math.Min(lastRowFirstIndex + bottomIndex, lastIndex);
+            if (nextIndex == ItemIndex) return;
             FocusItem(nextIndex);
         }
 
         public void FocusLeftEnd()
         {
             int nextIndex = ItemIndex / GridContainer.Columns * GridContainer.Columns;
+            if (nextIndex == ItemIndex) return;
             FocusItem(nextIndex);
         }
 
@@ -147,12 +190,16 @@ namespace Arenbee.Framework.GUI
             int nextIndex = (((ItemIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
             if (nextIndex >= OptionItems.Count)
                 nextIndex = OptionItems.Count - 1;
+            if (nextIndex == ItemIndex) return;
             FocusItem(nextIndex);
         }
 
-        public void SetChildrenToOptionItems()
+        public int GetValidIndex(int index)
         {
-            OptionItems = GridContainer.GetChildren<OptionItem>().ToList();
+            if (index < 0) return 0;
+            if (index > OptionItems.Count)
+                return OptionItems.Count - 1;
+            return index;
         }
 
         /// <summary>
@@ -168,8 +215,7 @@ namespace Arenbee.Framework.GUI
             if (DimItems && KeepHighlightPosition && OptionItems.Count > 0)
                 OptionItems[0].Dim = false;
 
-            HandleHArrows();
-            HandleVArrows();
+            _changesDirty = true;
         }
 
         public void RefocusItem()
@@ -187,32 +233,15 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        public void ResizeToContent()
+        public void ResetContainer()
         {
-            ResizeToContent(Vector2.Zero);
+            ItemIndex = 0;
+            GridContainer.RectPosition = Vector2.Zero;
         }
 
-        public void ResizeToContent(Vector2 max)
+        public void SetChildrenToOptionItems()
         {
-            Vector2 oldSize = RectSize;
-            Vector2 padding = GetPadding(GridContainer);
-            Vector2 newSize = GridContainer.RectSize + (padding * 2);
-            Vector2 newPos = RectPosition;
-            if (max != Vector2.Zero)
-                newSize = new Vector2(Math.Min(newSize.x, max.x), Math.Min(newSize.y, max.x));
-
-            if (HResize == SizeFlags.ShrinkEnd)
-                newPos = new Vector2(newPos.x - newSize.x - oldSize.x, newPos.y);
-            else if (HResize == SizeFlags.ShrinkCenter)
-                newPos = new Vector2((int)Math.Floor(newPos.x - ((newSize.x - oldSize.x) * 0.5)), newPos.y);
-
-            if (VResize == SizeFlags.ShrinkEnd)
-                newPos = new Vector2(newPos.x, newPos.y - newSize.y - oldSize.y);
-            else if (VResize == SizeFlags.ShrinkCenter)
-                newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
-            RectSize = newSize;
-            RectPosition = newPos;
-            _changesDirty = true;
+            OptionItems = GridContainer.GetChildren<OptionItem>().ToList();
         }
 
         public void SelectItem()
@@ -251,6 +280,20 @@ namespace Arenbee.Framework.GUI
             }
         }
 
+        private Vector2 GetGridContainerSize()
+        {
+            float v = 0;
+            float h = 0;
+            foreach (var option in OptionItems)
+            {
+                if (!option.Visible) continue;
+                var optionPos = option.RectPosition + option.RectSize;
+                if (optionPos.x > h) h = optionPos.x;
+                if (optionPos.y > v) v = optionPos.y;
+            }
+            return new Vector2(h, v);
+        }
+
         private Vector2 GetPadding(Control subContainer)
         {
             Vector2 itemsPosition = subContainer.RectGlobalPosition;
@@ -261,6 +304,9 @@ namespace Arenbee.Framework.GUI
 
         private void HandleChanges()
         {
+            GridContainer.RectSize = GetGridContainerSize();
+            if (_fitContainer) FitToContent();
+            if (_expandContent) ExpandGridToContainer();
             HandleArrows();
             _changesDirty = false;
             ContainerUpdated?.Invoke(this);

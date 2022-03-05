@@ -13,8 +13,19 @@ namespace Arenbee.Framework.Actors
 
         private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
         {
+            oldItem?.ItemStats?.RemoveFromStats(Stats);
+            newItem?.ItemStats?.AddToStats(Stats);
             Inventory.SetReservation(slot, newItem);
             UpdateEquipment();
+        }
+
+        private Stats GetStatsWithoutEquipment()
+        {
+            var newStats = new Stats(Stats);
+            foreach (var slot in Equipment.Slots)
+                slot.Item?.ItemStats?.RemoveFromStats(newStats);
+            newStats.UpdateStats();
+            return newStats;
         }
 
         private void SetInitialEquipmentStats()
@@ -26,16 +37,17 @@ namespace Arenbee.Framework.Actors
                 bool setSuccessful = Inventory.SetReservation(slot, slot.Item);
                 if (!setSuccessful)
                     slot.SetItem(null);
+                else
+                    slot.Item?.ItemStats?.AddToStats(Stats);
             }
             UpdateEquipment();
         }
 
         private void UpdateEquipment()
         {
-            var newStats = Equipment.GenerateStats(Stats);
-            Stats.SetStats(newStats);
-            var weapon = Equipment.GetSlot(EquipmentSlotName.Weapon).Item;
+            var weapon = Equipment.GetSlot(EquipSlotName.Weapon).Item;
             WeaponSlot.SetWeapon(weapon);
+            Stats.UpdateStats();
         }
     }
 }

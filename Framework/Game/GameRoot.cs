@@ -3,6 +3,7 @@ using Arenbee.Assets.GUI.Menus.Title;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
 
@@ -36,12 +37,12 @@ namespace Arenbee.Framework.Game
         {
             TitleScreenMenu = GetNodeOrNull<Menu>("TitleScreen");
             CurrentGameContainer = GetNodeOrNull<Node2D>("CurrentGameContainer");
+            _menuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
         }
 
         private void Init()
         {
             Locator.ProvideItemDB(new ItemDB());
-            _menuInput = GetNodeOrNull<MenuInputHandler>("MenuInputHandler");
             Locator.ProvideMenuInput(_menuInput);
             ResetToTitleScreen();
         }

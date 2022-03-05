@@ -85,6 +85,7 @@ __meta__ = {
 "_edit_use_custom_anchors": false
 }
 DimItems = true
+ExpandContent = true
 
 [node name="MarginContainer" parent="Foreground/EquipmentOptions" index="0"]
 offset_left = 7.0
@@ -97,8 +98,11 @@ offset_right = 121.0
 offset_bottom = 92.0
 
 [node name="GridContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control" index="0"]
-anchor_right = 1.0
-offset_bottom = 84.0
+offset_right = 119.0
+offset_bottom = 90.0
+__meta__ = {
+"_edit_use_custom_anchors": false
+}
 
 [node name="Weapon" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "5_p7smi" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -109,20 +113,16 @@ KeyText = "Weapon:"
 ValueText = "Broad sword"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Weapon:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Weapon/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Broad sword"
 
@@ -136,20 +136,16 @@ KeyText = "Head:"
 ValueText = "Skull Cap"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Head:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Head/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Skull Cap"
 
@@ -163,20 +159,16 @@ KeyText = "Shirt:"
 ValueText = "Olive Garden"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Shirt:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Shirt/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Olive Garden"
 
@@ -190,20 +182,16 @@ KeyText = "Pants:"
 ValueText = "Slacks"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Pants:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Pants/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Slacks"
 
@@ -217,20 +205,16 @@ KeyText = "Foot:"
 ValueText = "Vibrams"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Foot:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Foot/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Vibrams"
 
@@ -244,20 +228,16 @@ KeyText = "Acc 1:"
 ValueText = "Walkman"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Acc 1:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc1/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Walkman"
 
@@ -271,20 +251,16 @@ KeyText = "Acc 2:"
 ValueText = "Mood Ring"
 
 [node name="HBoxContainer" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 118.0
 
 [node name="Key" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2/HBoxContainer" index="0"]
 offset_right = 37.0
-offset_bottom = 10.0
 size_flags_stretch_ratio = 0.5
 text = "Acc 2:"
 
 [node name="Value" parent="Foreground/EquipmentOptions/MarginContainer/Control/GridContainer/Acc2/HBoxContainer" index="1"]
 offset_left = 41.0
 offset_right = 117.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Mood Ring"
 

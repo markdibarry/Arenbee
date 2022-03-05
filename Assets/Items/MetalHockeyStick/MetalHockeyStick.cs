@@ -3,12 +3,12 @@ using Arenbee.Framework.Items;
 
 namespace Arenbee.Assets.Items
 {
-    public partial class HockeyStick : Weapon
+    public partial class MetalHockeyStick : Weapon
     {
         public override void _Ready()
         {
             base._Ready();
-            ItemId = "HockeyStick";
+            ItemId = "MetalHockeyStick";
             WeaponTypeName = WeaponTypeConstants.Spear;
             InitialState = new NotAttacking();
         }

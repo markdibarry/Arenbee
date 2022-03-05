@@ -1,4 +1,4 @@
-﻿namespace Arenbee.Framework.Enums
+﻿namespace Arenbee.Framework.Statistics
 {
     public enum ModifierEffect
     {

@@ -21,6 +21,8 @@ __meta__ = {
 "_edit_use_custom_anchors": false
 }
 DimItems = true
+ExpandContent = true
+HResize = 3
 
 [node name="MarginContainer" parent="Foreground/EquipOptions" index="0"]
 offset_left = 7.0
@@ -33,7 +35,7 @@ offset_right = 96.0
 offset_bottom = 92.0
 
 [node name="GridContainer" parent="Foreground/EquipOptions/MarginContainer/Control" index="0"]
-anchor_right = 1.0
+offset_right = 94.0
 offset_bottom = 12.0
 
 [node name="Unequip" parent="Foreground/EquipOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_wyx2u" )]

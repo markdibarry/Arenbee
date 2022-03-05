@@ -36,7 +36,8 @@ namespace Arenbee.Framework.Game
             var actor = GDEx.Instantiate<Actor>(actorInfo.ActorPath);
             actor.Inventory = Inventory;
             actor.Equipment = new Equipment(actorInfo.EquipmentSlots);
-            actor.Stats.Attributes = actorInfo.Attributes;
+            if (actorInfo.Stats != null)
+                actor.Stats.SetStats(actorInfo.Stats);
             _actors.Add(actor);
         }
 

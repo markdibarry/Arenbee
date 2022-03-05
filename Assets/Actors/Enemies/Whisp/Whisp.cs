@@ -29,10 +29,21 @@ namespace Arenbee.Assets.Actors.Enemies
 
         protected override void SetDefaultStats()
         {
+            Stats.ActionElement = Element.Fire;
             Stats.DefenseElementModifiers.Add(new ElementModifier()
             {
                 Element = Element.Water,
                 Value = ElementModifier.Weak
+            });
+            Stats.DefenseElementModifiers.Add(new ElementModifier()
+            {
+                Element = Element.Earth,
+                Value = ElementModifier.Resist
+            });
+            Stats.DefenseElementModifiers.Add(new ElementModifier()
+            {
+                Element = Element.Fire,
+                Value = ElementModifier.Absorb
             });
             Stats.SetAttribute(AttributeType.MaxHP, 4);
             Stats.SetAttribute(AttributeType.HP, 4);

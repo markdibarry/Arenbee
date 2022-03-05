@@ -21,7 +21,7 @@ namespace Arenbee.Framework.Actors
         private PackedScene _enemyDeathEffectScene;
         public delegate void ActorDefeatedHandler(Actor actor);
         public delegate void ActorRemovedHandler(Actor actor);
-        public delegate void DamageRecievedHandler(DamageRecievedData damageRecievedData);
+        public delegate void DamageRecievedHandler(DamageData damageRecievedData);
         public event ActorDefeatedHandler ActorDefeated;
         public event ActorRemovedHandler ActorRemoved;
         public event DamageRecievedHandler DamageRecieved;
@@ -76,8 +76,9 @@ namespace Arenbee.Framework.Actors
             Velocity = direction * -JumpVelocity;
         }
 
-        private void OnDamageRecieved(DamageRecievedData data)
+        private void OnDamageRecieved(DamageData data)
         {
+            data.RecieverName = Name;
             HandleDamage(data.TotalDamage, data.SourcePosition);
             DamageRecieved?.Invoke(data);
         }

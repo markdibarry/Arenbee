@@ -17,11 +17,22 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private OptionContainer _inventoryList;
         private DynamicTextContainer _itemInfo;
         private OptionContainer _typeList;
+        private PackedScene _keyValueOptionScene;
+
+        public override void _Process(float delta)
+        {
+            if (this.IsToolDebugMode() || !IsActive) return;
+            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
+                FocusContainer(_typeList);
+            else
+                base._Process(delta);
+        }
 
         protected override void CustomOptionsSetup()
         {
+            _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             _inventory = Locator.GetParty().Inventory;
-            _inventoryList?.ReplaceChildren(GetItemOptions(null));
+            _inventoryList?.ReplaceChildren(GetItemOptions());
 
             if (_typeList != null)
             {
@@ -36,37 +47,16 @@ namespace Arenbee.Assets.GUI.Menus.Party
         {
             base.OnItemFocused(optionContainer, optionItem);
             if (optionContainer == _typeList)
-            {
-                ItemType? itemType = null;
-                if (!optionItem.OptionData.TryGetValue("typeName", out string typeName))
-                    return;
-                if (typeName != "All")
-                    itemType = Enum.Parse<ItemType>(typeName);
-                var options = GetItemOptions(itemType);
-                _inventoryList.ReplaceChildren(options);
-                _inventoryList.InitItems();
-            }
+                UpdateItemList(optionItem);
             else
-            {
-                if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
-                    return;
-                Item item = _inventory.GetItemStack(itemId)?.Item;
-                if (item != null)
-                {
-                    var message = item.Description;
-                    if (item.ItemStats != null)
-                        message += $"\n{item.ItemStats.GetStatDescription()}";
-                    _itemInfo.UpdateText(message);
-                }
-            }
+                UpdateItemDescription(optionItem);
         }
 
-        protected override void OnFocusOOB(OptionContainer containerLeavingFocus, Direction direction)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            if (containerLeavingFocus == _typeList)
-                HandleTypeListOOB(containerLeavingFocus, direction);
-            else
-                HandleInventoryListOOB(containerLeavingFocus, direction);
+            base.OnItemSelected(optionContainer, optionItem);
+            if (optionContainer == _typeList)
+                FocusContainer(_inventoryList);
         }
 
         protected override void SetNodeReferences()
@@ -79,19 +69,36 @@ namespace Arenbee.Assets.GUI.Menus.Party
             _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
         }
 
-        private List<KeyValueOption> GetItemOptions(ItemType? itemType)
+        private List<TextOption> GetItemTypeOptions()
         {
-            var keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
+            var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            var allOption = textOptionScene.Instantiate<TextOption>();
+            allOption.LabelText = "All";
+            allOption.OptionData.Add("typeName", "None");
+            var options = new List<TextOption>() { allOption };
+            foreach (var itemType in Enum<ItemType>.Values())
+            {
+                if (itemType == ItemType.None) continue;
+                var option = textOptionScene.Instantiate<TextOption>();
+                option.LabelText = itemType.Get().Name;
+                option.OptionData.Add("typeName", itemType.Get().Name);
+                options.Add(option);
+            }
+            return options;
+        }
+
+        private List<KeyValueOption> GetItemOptions(ItemType itemType = ItemType.None)
+        {
             var options = new List<KeyValueOption>();
             ICollection<ItemStack> itemStacks;
-            if (itemType == null)
+            if (itemType == ItemType.None)
                 itemStacks = _inventory.Items;
             else
-                itemStacks = _inventory.GetItemsByType((ItemType)itemType);
+                itemStacks = _inventory.GetItemsByType(itemType);
 
             foreach (var itemStack in itemStacks)
             {
-                var option = keyValueOptionScene.Instantiate<KeyValueOption>();
+                var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
                 option.ValueText = "x" + itemStack.Amount.ToString();
                 option.OptionData.Add("itemId", itemStack.ItemId);
@@ -100,42 +107,31 @@ namespace Arenbee.Assets.GUI.Menus.Party
             return options;
         }
 
-        private List<TextOption> GetItemTypeOptions()
+        private void UpdateItemDescription(OptionItem optionItem)
         {
-            var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            var allOption = textOptionScene.Instantiate<TextOption>();
-            allOption.LabelText = "All";
-            allOption.OptionData.Add("typeName", "All");
-            var options = new List<TextOption>() { allOption };
-            foreach (var typeName in Enum.GetNames(typeof(ItemType)))
+            if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
+                return;
+            Item item = _inventory.GetItemStack(itemId)?.Item;
+            if (item != null)
             {
-                var option = textOptionScene.Instantiate<TextOption>();
-                option.LabelText = typeName;
-                option.OptionData.Add("typeName", typeName);
-                options.Add(option);
+                var message = item.Description;
+                if (item.ItemStats != null)
+                    message += $"\n{item.ItemStats.GetStatDescription()}";
+                _itemInfo.UpdateText(message);
             }
-            return options;
         }
 
-        private void HandleTypeListOOB(OptionContainer container, Direction direction)
+        private void UpdateItemList(OptionItem optionItem)
         {
-            if (direction == Direction.Down)
-                FocusContainerPreviousItem(_inventoryList);
-            else
-                base.OnFocusOOB(container, direction);
-        }
-
-        private void HandleInventoryListOOB(OptionContainer container, Direction direction)
-        {
-            if (direction == Direction.Up)
-            {
-                _itemInfo.UpdateText(string.Empty);
-                FocusContainerPreviousItem(_typeList);
-            }
-            else
-            {
-                base.OnFocusOOB(container, direction);
-            }
+            _inventoryList.ResetContainer();
+            ItemType itemType = ItemType.None;
+            if (!optionItem.OptionData.TryGetValue("typeName", out string typeName))
+                return;
+            if (typeName != "All")
+                itemType = Enum.Parse<ItemType>(typeName);
+            var options = GetItemOptions(itemType);
+            _inventoryList.ReplaceChildren(options);
+            _inventoryList.InitItems();
         }
     }
 }

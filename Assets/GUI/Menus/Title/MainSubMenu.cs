@@ -4,6 +4,7 @@ using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Game.SaveData;
 using Godot;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Assets.GUI.Menus.Title
 {
@@ -82,12 +83,12 @@ namespace Arenbee.Assets.GUI.Menus.Title
 
         private async void StartGame(GameSave gameSave = null)
         {
-            var gameRoot = GameRoot.Instance;
-            gameRoot.CurrentGame = GDEx.Instantiate<GameSession>(GameSession.GetScenePath());
-            gameRoot.CurrentGameContainer.AddChild((Node)gameRoot.CurrentGame);
-            gameRoot.CurrentGame.Init(gameSave);
+            Locator.ProvideCurrentGame(GDEx.Instantiate<GameSession>(GameSession.GetScenePath()));
+            var gameSession = Locator.GetCurrentGame();
+            GameRoot.Instance.CurrentGameContainer.AddChild(gameSession);
+            gameSession.Init(gameSave);
             await CloseSubMenuAsync();
-            gameRoot.CurrentGame.ProcessMode = ProcessModeEnum.Inherit;
+            gameSession.ProcessMode = ProcessModeEnum.Inherit;
         }
     }
 }

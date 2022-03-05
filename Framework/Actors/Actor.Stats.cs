@@ -16,7 +16,9 @@ namespace Arenbee.Framework.Actors
             HitBox.HitBoxAction = new HitBoxAction(HitBox, this)
             {
                 ActionType = ActionType.Melee,
-                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
+                Element = Stats.ActionElement,
+                StatusEffects = Stats.ActionStatusEffects,
+                Value = Stats.GetAttribute(AttributeType.Attack).ModifiedValue
             };
         }
 

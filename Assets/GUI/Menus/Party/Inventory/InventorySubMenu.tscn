@@ -105,6 +105,7 @@ __meta__ = {
 "_edit_use_custom_anchors": false
 }
 DimItems = true
+ExpandContent = true
 
 [node name="MarginContainer" parent="Foreground/InventoryList" index="0"]
 offset_left = 7.0
@@ -117,7 +118,13 @@ offset_right = 102.0
 offset_bottom = 200.0
 
 [node name="GridContainer" parent="Foreground/InventoryList/MarginContainer/Control" index="0"]
-anchor_right = 1.0
+offset_right = 100.0
+offset_bottom = 51.0
+grow_horizontal = 2
+__meta__ = {
+"_edit_layout_mode": 1,
+"_edit_use_custom_anchors": false
+}
 
 [node name="Potion" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_ipg3o" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -160,6 +167,7 @@ KeyText = "Gas Cap"
 ValueText = "x1"
 
 [node name="Rock" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_ipg3o" )]
+visible = false
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 39.0
 offset_right = 100.0

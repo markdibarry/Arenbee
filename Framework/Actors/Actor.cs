@@ -108,4 +108,11 @@ namespace Arenbee.Framework.Actors
             Stats.StatsUpdated += OnStatsUpdated;
         }
     }
+
+    public enum ActorType
+    {
+        Player,
+        Enemy,
+        NPC
+    }
 }

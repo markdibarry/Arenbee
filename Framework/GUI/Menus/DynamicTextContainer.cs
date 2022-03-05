@@ -59,9 +59,7 @@ namespace Arenbee.Framework.GUI
                     _dynamicTextBox.Speed = value;
             }
         }
-        public delegate void TextLoadedHandler(DynamicTextContainer textContainer);
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
-        public event TextLoadedHandler TextLoaded;
         public event EventHandler StoppedWriting;
 
         public override void _ExitTree()

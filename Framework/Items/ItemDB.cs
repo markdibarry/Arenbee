@@ -9,10 +9,11 @@ namespace Arenbee.Framework.Items
     {
         public ItemDB()
         {
+            _items = new List<Item>();
             BuildDB();
         }
 
-        private readonly List<Item> _items = new List<Item>();
+        private readonly List<Item> _items;
 
         public Item GetItem(string id)
         {
@@ -48,6 +49,33 @@ namespace Arenbee.Framework.Items
                             AttributeType = AttributeType.Attack,
                             Effect = ModifierEffect.Add,
                             Value = 2
+                        }
+                    }
+                }
+            });
+
+            _items.Add(new Item()
+            {
+                Id = "MetalHockeyStick",
+                DisplayName = "Metal Hockey Stick",
+                ItemType = ItemType.Weapon,
+                Description = "It's not sharp. Don't worry!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 10,
+                ItemStats = new ItemStats()
+                {
+                    ActionElement = Element.Water,
+                    AttributeModifiers = new AttributeModifier[]
+                    {
+                        new AttributeModifier()
+                        {
+                            AttributeType = AttributeType.Attack,
+                            Effect = ModifierEffect.Add,
+                            Value = 4
                         }
                     }
                 }

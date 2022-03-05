@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dgygikie1lfui"]
 
-[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/OptionItem.tscn" id="1_l6qor"]
+[ext_resource type="PackedScene" uid="uid://gydisdj3ltwf" path="res://Framework/GUI/Menus/OptionItems/OptionItem.tscn" id="1_l6qor"]
 [ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="2_khgoa"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.cs" id="3_f7kpw"]
 
@@ -14,20 +14,20 @@ KeyText = "Orange"
 ValueText = "x5"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 38.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 37.0
 offset_bottom = 11.0
 size_flags_horizontal = 3
 
 [node name="Key" type="Label" parent="HBoxContainer" index="0"]
 offset_right = 24.0
-offset_bottom = 9.0
+offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Orange"
 
 [node name="Value" type="Label" parent="HBoxContainer" index="1"]
 offset_left = 28.0
 offset_right = 36.0
-offset_bottom = 9.0
+offset_bottom = 10.0
 text = "x5"

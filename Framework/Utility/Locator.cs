@@ -1,4 +1,3 @@
-using System;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;

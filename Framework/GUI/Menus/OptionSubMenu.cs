@@ -60,8 +60,8 @@ namespace Arenbee.Framework.GUI
             {
                 foreach (var optionContainer in OptionContainers)
                 {
-                    if (optionContainer.AutoResize)
-                        optionContainer.ResizeToContent();
+                    if (optionContainer.FitContainer)
+                        optionContainer.FitToContent();
                 }
                 FocusContainer(OptionContainers.FirstOrDefault());
             }
@@ -73,19 +73,18 @@ namespace Arenbee.Framework.GUI
         /// </summary>
         protected virtual void CustomOptionsSetup() { }
 
-        protected void FocusContainerPreviousItem(OptionContainer optionContainer)
-        {
-            int index = optionContainer.ItemIndex;
-            FocusContainer(optionContainer, index);
-        }
-
         protected void FocusContainerClosestItem(OptionContainer optionContainer)
         {
             int index = CurrentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
             FocusContainer(optionContainer, index);
         }
 
-        protected void FocusContainer(OptionContainer optionContainer, int index = 0)
+        protected void FocusContainer(OptionContainer optionContainer)
+        {
+            FocusContainer(optionContainer, optionContainer.ItemIndex);
+        }
+
+        protected void FocusContainer(OptionContainer optionContainer, int index)
         {
             if (optionContainer?.OptionItems.Count > 0)
             {

@@ -57,12 +57,12 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private void DisplayStats(string actorName)
         {
             Actor actor = _playerParty.Actors.First(x => x.Name == actorName);
-            foreach (var attributePair in actor.Stats.Attributes)
+            foreach (var attribute in actor.Stats.Attributes)
             {
-                var node = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attributePair.Key.ToString());
+                var node = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attribute.Name);
                 if (node != null)
                 {
-                    node.GetNode<Label>("HBoxContainer/Values/Value").Text = attributePair.Value.DisplayValue.ToString();
+                    node.GetNode<Label>("HBoxContainer/Values/Value").Text = attribute.DisplayValue.ToString();
                 }
             }
         }

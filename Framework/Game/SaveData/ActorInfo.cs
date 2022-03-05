@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 
 namespace Arenbee.Framework.Game.SaveData
@@ -16,11 +15,11 @@ namespace Arenbee.Framework.Game.SaveData
         {
             ActorPath = actor.SceneFilePath;
             EquipmentSlots = actor.Equipment.Slots;
-            Attributes = actor.Stats.Attributes;
+            Stats = actor.Stats;
         }
 
         public string ActorPath { get; set; }
         public IEnumerable<EquipmentSlot> EquipmentSlots { get; set; }
-        public IDictionary<AttributeType, Attribute> Attributes { get; set; }
+        public Stats Stats { get; set; }
     }
 }

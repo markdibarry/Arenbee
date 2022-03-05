@@ -19,6 +19,7 @@ namespace Arenbee.Assets.Actors.Enemies
 
         protected override void SetDefaultStats()
         {
+            Stats.ActionElement = Element.Earth;
             Stats.DefenseElementModifiers.Add(new ElementModifier()
             {
                 Element = Element.Earth,
