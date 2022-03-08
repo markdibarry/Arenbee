@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bxukt6n1a77n4"]
+[gd_scene load_steps=5 format=3 uid="uid://bxukt6n1a77n4"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_yh25b"]
 [ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogOptionSubMenu.cs" id="2_rm6dj"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_rf88b"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_t7dly"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_fljr7"]
+[ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_t7dly"]
 
 [node name="DialogOptionSubMenu" instance=ExtResource( "1_yh25b" )]
 script = ExtResource( "2_rm6dj" )
@@ -16,64 +15,64 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -26.0
 offset_top = -25.0
-offset_right = 26.0
-offset_bottom = 25.0
+offset_right = 20.0
+offset_bottom = 18.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_layout_mode": 0,
 "_edit_use_custom_anchors": false
 }
+FitContainer = true
 
 [node name="MarginContainer" parent="Foreground/OptionContainer" index="0"]
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 47.0
-offset_bottom = 45.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 39.0
+offset_bottom = 36.0
 
 [node name="Control" parent="Foreground/OptionContainer/MarginContainer" index="0"]
-offset_right = 36.0
-offset_bottom = 34.0
+offset_right = 30.0
+offset_bottom = 27.0
+
+[node name="GridContainer" parent="Foreground/OptionContainer/MarginContainer/Control" index="0"]
+offset_right = 28.0
+offset_bottom = 25.0
 
 [node name="Option1" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_t7dly" )]
-offset_right = 30.0
-offset_bottom = 14.0
-OptionValue = "Option1"
+offset_right = 28.0
+offset_bottom = 12.0
 LabelText = "Option1"
 
 [node name="Option2" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_t7dly" )]
-offset_top = 14.0
-offset_right = 30.0
-offset_bottom = 28.0
-OptionValue = "Option2"
+offset_top = 13.0
+offset_right = 28.0
+offset_bottom = 25.0
 LabelText = "Option2"
 
 [node name="Arrows" parent="Foreground/OptionContainer" index="1"]
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 47.0
-offset_bottom = 45.0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 39.0
+offset_bottom = 36.0
 
 [node name="ArrowUp" parent="Foreground/OptionContainer/Arrows" index="0"]
-offset_left = 17.0
-offset_right = 24.0
+offset_left = 12.0
+offset_right = 19.0
 
 [node name="ArrowLeft" parent="Foreground/OptionContainer/Arrows" index="1"]
-offset_top = 16.0
-offset_bottom = 23.0
+offset_top = 11.0
+offset_bottom = 18.0
 
 [node name="ArrowDown" parent="Foreground/OptionContainer/Arrows" index="2"]
-offset_left = 17.0
-offset_top = 34.0
-offset_right = 24.0
-offset_bottom = 40.0
+offset_left = 12.0
+offset_top = 26.0
+offset_right = 19.0
+offset_bottom = 32.0
 
 [node name="ArrowRight" parent="Foreground/OptionContainer/Arrows" index="3"]
-offset_left = 36.0
-offset_top = 16.0
-offset_right = 42.0
-offset_bottom = 23.0
-
-[node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "5_fljr7" )]
-position = Vector2(221, 128)
+offset_left = 29.0
+offset_top = 11.0
+offset_right = 35.0
+offset_bottom = 18.0
 
 [editable path="Foreground/OptionContainer"]

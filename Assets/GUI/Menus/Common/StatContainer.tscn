@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://3pkonq47csuw"]
+
+[ext_resource type="Script" path="res://Assets/GUI/Menus/Common/StatContainer.cs" id="1_1xg6c"]
+
+[node name="StatContainer" type="MarginContainer"]
+rect_min_size = Vector2(72, 26)
+offset_right = 72.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource( "1_1xg6c" )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 72.0
+offset_bottom = 26.0
+size_flags_vertical = 0
+
+[node name="KeyContainer" type="MarginContainer" parent="HBoxContainer"]
+offset_right = 36.0
+offset_bottom = 26.0
+size_flags_vertical = 0
+
+[node name="Key" type="Label" parent="HBoxContainer/KeyContainer"]
+offset_right = 36.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Stat:"
+
+[node name="ValueContainer" type="MarginContainer" parent="HBoxContainer"]
+offset_left = 40.0
+offset_right = 72.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Value" type="Label" parent="HBoxContainer/ValueContainer"]
+offset_left = 4.0
+offset_right = 32.0
+offset_bottom = 26.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "999"

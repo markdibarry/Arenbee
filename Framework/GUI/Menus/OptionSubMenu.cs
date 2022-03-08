@@ -126,6 +126,11 @@ namespace Arenbee.Framework.GUI
         {
             base.SetNodeReferences();
             _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
+            if (_cursor == null)
+            {
+                _cursor = GD.Load<PackedScene>(HandCursor.GetScenePath()).Instantiate<HandCursor>();
+                Foreground.AddChild(_cursor);
+            }
         }
 
         protected void SubscribeToEvents(OptionContainer optionContainer)

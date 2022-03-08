@@ -15,7 +15,6 @@ namespace Arenbee.Framework.GUI
             OptionItems = new List<OptionItem>();
         }
 
-
         private bool _expandContent;
         private bool _fitContainer;
         private Control _control;

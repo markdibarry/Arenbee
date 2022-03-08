@@ -1,7 +1,6 @@
 ﻿using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Actors.Enemies
@@ -26,8 +25,8 @@ namespace Arenbee.Assets.Actors.Enemies
                 Element = Element.Earth,
                 Value = ElementModifier.Weak
             });
-            Stats.SetAttribute(AttributeType.MaxHP, 4);
-            Stats.SetAttribute(AttributeType.HP, 4);
+            Stats.SetAttribute(AttributeType.MaxHP, 6);
+            Stats.SetAttribute(AttributeType.HP, 6);
             Stats.SetAttribute(AttributeType.Attack, 4);
             Stats.SetAttribute(AttributeType.Defense, 0);
         }

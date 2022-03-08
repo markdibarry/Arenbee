@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://5hlxqydf0kdn"]
+[gd_scene load_steps=6 format=3 uid="uid://5hlxqydf0kdn"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_qqjb6"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/EquipmentSubMenu.cs" id="2_wyy0h"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_l5pbf"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_ieu0a"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="5_p7smi"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="6_mpso2"]
 
 [node name="EquipmentSubMenu" instance=ExtResource( "1_qqjb6" )]
 script = ExtResource( "2_wyy0h" )
@@ -289,9 +288,6 @@ offset_left = 120.0
 offset_top = 43.0
 offset_right = 126.0
 offset_bottom = 50.0
-
-[node name="HandCursor" parent="Foreground" index="2" instance=ExtResource( "6_mpso2" )]
-position = Vector2(93, 31)
 
 [editable path="Foreground/PartyOptions"]
 [editable path="Foreground/EquipmentOptions"]

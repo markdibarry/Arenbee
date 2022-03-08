@@ -84,6 +84,16 @@ namespace Arenbee.Framework.Items
             return leftOver;
         }
 
+        public bool CanReserve(Item item)
+        {
+            return CanReserve(item?.Id);
+        }
+
+        public bool CanReserve(string itemId)
+        {
+            return GetItemStack(itemId)?.CanReserve() ?? false;
+        }
+
         public bool Remove(Item item, int amount)
         {
             ItemStack itemStack = GetItemStack(item);

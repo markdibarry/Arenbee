@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Arenbee.Framework.Constants;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -8,8 +9,8 @@ namespace Arenbee.Framework.GUI
         public OptionItem()
         {
             OptionData = new Dictionary<string, string>();
-            CanHighlight = true;
         }
+
         private bool _dim;
         [Export]
         public Dictionary<string, string> OptionData { get; set; }
@@ -19,19 +20,18 @@ namespace Arenbee.Framework.GUI
             get { return _dim; }
             set
             {
-                if (CanHighlight && !value)
-                {
-                    Modulate = Colors.White;
-                    _dim = false;
-                }
-                else
-                {
-                    Modulate = Colors.White.Darkened(0.3f);
-                    _dim = true;
-                }
-
+                _dim = value;
+                Modulate = Disabled ? ColorConstants.DisabledGrey : _dim ? ColorConstants.DimGrey : Colors.White;
             }
         }
-        public bool CanHighlight { get; set; }
+        [Export]
+        public bool Disabled { get; set; }
+
+        public string GetData(string key)
+        {
+            if (!OptionData.TryGetValue(key, out string result))
+                return null;
+            return result;
+        }
     }
 }

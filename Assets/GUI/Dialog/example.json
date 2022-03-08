@@ -6,7 +6,7 @@
   },
   {
     "id": 1,
-    "speakers": [{"name":"Dani","mood":"happy"}],
+    "speakers": [{"name":"Dani","mood":"neutral"}],
     "text": "[wave amp=10]Hi[/wave] my name is Da-{{next}}"
   },
   {

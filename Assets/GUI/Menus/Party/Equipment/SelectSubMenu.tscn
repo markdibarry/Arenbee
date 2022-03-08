@@ -1,11 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bi5k8m13ufwjq"]
+[gd_scene load_steps=6 format=3 uid="uid://bi5k8m13ufwjq"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_uvd47"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="4_5a7d7"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
-[ext_resource type="PackedScene" uid="uid://bxq0ftt2qk6vn" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="6_dccvk"]
+[ext_resource type="PackedScene" uid="uid://b41pw27b6vksc" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="6_dccvk"]
 
 [node name="SelectSubMenu" instance=ExtResource( "1_uvd47" )]
 script = ExtResource( "2_kopb2" )
@@ -73,13 +72,15 @@ offset_top = 43.0
 offset_right = 101.0
 offset_bottom = 50.0
 
-[node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "4_5a7d7" )]
-position = Vector2(237, 67)
-
-[node name="StatsDisplay" parent="Foreground" index="2" instance=ExtResource( "6_dccvk" )]
-offset_left = 144.0
+[node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource( "6_dccvk" )]
+offset_left = 214.0
 offset_top = 168.0
 offset_right = 344.0
-offset_bottom = 252.0
+offset_bottom = 222.0
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_anchors_": false,
+"_edit_use_custom_anchors": false
+}
 
 [editable path="Foreground/EquipOptions"]

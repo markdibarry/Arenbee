@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://u468p7ngn3n3"]
+[gd_scene load_steps=7 format=3 uid="uid://u468p7ngn3n3"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Inventory/InventorySubMenu.cs" id="2_funy4"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_ipg3o"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_iv8vo"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_vg75a"]
 [ext_resource type="PackedScene" uid="uid://bkmu2nb7jhqad" path="res://Framework/GUI/Menus/DynamicTextContainer.tscn" id="7_8v57d"]
 
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
@@ -119,7 +118,7 @@ offset_bottom = 200.0
 
 [node name="GridContainer" parent="Foreground/InventoryList/MarginContainer/Control" index="0"]
 offset_right = 100.0
-offset_bottom = 51.0
+offset_bottom = 38.0
 grow_horizontal = 2
 __meta__ = {
 "_edit_layout_mode": 1,
@@ -134,19 +133,15 @@ Dim = true
 KeyText = "Potion"
 
 [node name="HBoxContainer" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion" index="0"]
-offset_left = 1.0
-offset_top = 1.0
 offset_right = 99.0
 
 [node name="Key" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion/HBoxContainer" index="0"]
 offset_right = 86.0
-offset_bottom = 10.0
 text = "Potion"
 
 [node name="Value" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer/Potion/HBoxContainer" index="1"]
 offset_left = 90.0
 offset_right = 98.0
-offset_bottom = 10.0
 
 [node name="Banana" parent="Foreground/InventoryList/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_ipg3o" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -215,9 +210,6 @@ __meta__ = {
 }
 CustomText = ""
 Speed = 0.01
-
-[node name="HandCursor" parent="Foreground" index="3" instance=ExtResource( "5_vg75a" )]
-position = Vector2(90, 28)
 
 [editable path="Foreground/TypeList"]
 [editable path="Foreground/InventoryList"]

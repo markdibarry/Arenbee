@@ -46,6 +46,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemFocused(optionContainer, optionItem);
+            _itemInfo.UpdateText(string.Empty);
             if (optionContainer == _typeList)
                 UpdateItemList(optionItem);
             else

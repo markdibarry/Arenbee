@@ -29,15 +29,15 @@ namespace Arenbee.Framework.Statistics
 
             ActionStatusEffects = new List<StatusEffectModifier>();
             foreach (var mod in stats.ActionStatusEffects)
-                ActionStatusEffects.Add(new StatusEffectModifier(mod));
+                ActionStatusEffects.Add(mod);
 
             DefenseStatusEffects = new List<StatusEffectModifier>();
             foreach (var mod in stats.DefenseStatusEffects)
-                DefenseStatusEffects.Add(new StatusEffectModifier(mod));
+                DefenseStatusEffects.Add(mod);
 
             DefenseElementModifiers = new List<ElementModifier>();
             foreach (var mod in stats.DefenseElementModifiers)
-                DefenseElementModifiers.Add(new ElementModifier(mod));
+                DefenseElementModifiers.Add(mod);
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -57,6 +57,16 @@ namespace Arenbee.Framework.Statistics
         public Attribute GetAttribute(AttributeType attributeType)
         {
             return Attributes.Find(x => x.AttributeType == attributeType);
+        }
+
+        public int GetElementMultiplier(Element element)
+        {
+            int result = 10;
+            int totalMod = DefenseElementModifiers
+                .Where(mod => mod.Element == element)
+                .Sum(mod => mod.Value);
+            result += totalMod;
+            return result;
         }
 
         public void HandleHitBoxAction(HitBox hitBox)
@@ -118,8 +128,8 @@ namespace Arenbee.Framework.Statistics
             // Get damage after ActionType resistances
             // TODO
             // Get damage after Elemental resistances
-            float elementMultiplier = GetElementMultiplier(hitBoxAction.Element);
-            damage = (int)(elementMultiplier * damage);
+            int elementMultiplier = GetElementMultiplier(hitBoxAction.Element);
+            damage = (int)(elementMultiplier * damage * 0.1f);
             return new DamageData(hitBoxAction, damage, elementMultiplier);
         }
 
@@ -134,16 +144,6 @@ namespace Arenbee.Framework.Statistics
                 amount = maxHP - hp;
 
             GetAttribute(AttributeType.HP).BaseValue -= amount;
-        }
-
-        private float GetElementMultiplier(Element element)
-        {
-            float result = 1;
-            float totalMod = DefenseElementModifiers
-                .Where(mod => mod.Element == element)
-                .Sum(mod => mod.Value);
-            result += totalMod;
-            return result;
         }
     }
 }

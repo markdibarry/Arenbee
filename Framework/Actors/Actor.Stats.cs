@@ -9,6 +9,12 @@ namespace Arenbee.Framework.Actors
         public delegate void StatsUpdatedHandler(Actor actor);
         public event StatsUpdatedHandler StatsUpdated;
 
+        public Element GetAtkElement()
+        {
+            var element = WeaponSlot.CurrentWeapon?.GetElement();
+            return element ?? Stats.ActionElement;
+        }
+
         protected virtual void SetDefaultStats() { }
 
         protected virtual void UpdateHitBoxAction()

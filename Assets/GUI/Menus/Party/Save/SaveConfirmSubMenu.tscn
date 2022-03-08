@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cp31ho6gbewus"]
+[gd_scene load_steps=5 format=3 uid="uid://cp31ho6gbewus"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Save/SaveConfirmSubMenu.cs" id="2_o5egm"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_af8ba"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="5_glxy3"]
 
 [node name="SaveConfirmSubMenu" instance=ExtResource( "1_8cyl3" )]
 script = ExtResource( "2_o5egm" )
@@ -13,24 +12,28 @@ script = ExtResource( "2_o5egm" )
 offset_left = 81.0
 offset_top = 69.0
 offset_right = 113.0
-offset_bottom = 111.0
+offset_bottom = 112.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_layout_mode": 0,
 "_edit_use_custom_anchors": false
 }
 DimItems = true
-AutoResize = true
+FitContainer = true
 
 [node name="MarginContainer" parent="Foreground/SaveOptions" index="0"]
 offset_left = 7.0
 offset_top = 7.0
 offset_right = 25.0
-offset_bottom = 35.0
+offset_bottom = 36.0
 
 [node name="Control" parent="Foreground/SaveOptions/MarginContainer" index="0"]
 offset_right = 16.0
-offset_bottom = 26.0
+offset_bottom = 27.0
+
+[node name="GridContainer" parent="Foreground/SaveOptions/MarginContainer/Control" index="0"]
+offset_right = 14.0
+offset_bottom = 25.0
 
 [node name="Yes" parent="Foreground/SaveOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_af8ba" )]
 offset_right = 14.0
@@ -55,30 +58,26 @@ LabelText = "No"
 offset_left = 7.0
 offset_top = 7.0
 offset_right = 25.0
-offset_bottom = 35.0
+offset_bottom = 36.0
 
 [node name="ArrowUp" parent="Foreground/SaveOptions/Arrows" index="0"]
 offset_left = 5.0
 offset_right = 12.0
 
 [node name="ArrowLeft" parent="Foreground/SaveOptions/Arrows" index="1"]
-offset_top = 10.0
-offset_bottom = 17.0
+offset_top = 11.0
+offset_bottom = 18.0
 
 [node name="ArrowDown" parent="Foreground/SaveOptions/Arrows" index="2"]
-visible = true
 offset_left = 5.0
-offset_top = 25.0
+offset_top = 26.0
 offset_right = 12.0
-offset_bottom = 31.0
+offset_bottom = 32.0
 
 [node name="ArrowRight" parent="Foreground/SaveOptions/Arrows" index="3"]
 offset_left = 15.0
-offset_top = 10.0
+offset_top = 11.0
 offset_right = 21.0
-offset_bottom = 17.0
-
-[node name="HandCursor" parent="Foreground" index="1" instance=ExtResource( "5_glxy3" )]
-position = Vector2(86, 84)
+offset_bottom = 18.0
 
 [editable path="Foreground/SaveOptions"]

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -17,7 +16,7 @@ namespace Arenbee.Framework.Statistics
         }
 
         public AttributeType AttributeType { get; set; }
-        public bool IsHidden { get; } = false;
+        public bool IsHidden { get; }
         public ModifierEffect Effect { get; set; }
         public float Value { get; set; }
 

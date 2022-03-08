@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkuopi3sttrcu"]
+[gd_scene load_steps=5 format=3 uid="uid://dkuopi3sttrcu"]
 
-[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_40jil"]
 [ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogBox.cs" id="2_c18hx"]
 [ext_resource type="SpriteFrames" uid="uid://c0wqy08338pii" path="res://Assets/GUI/Portraits/dani/portraits.tres" id="3_uipmn"]
 [ext_resource type="PackedScene" uid="uid://bnfvvhk6bvj0i" path="res://Framework/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
@@ -10,11 +9,9 @@
 layout_direction = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( "1_40jil" )
 script = ExtResource( "2_c18hx" )
 CustomText = "Hi!
 My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
-ShouldShowAllToStop = true
 Speed = 0.05
 
 [node name="PortraitContainer" type="Control" parent="."]
@@ -30,7 +27,7 @@ __meta__ = {
 
 [node name="Dani" type="AnimatedSprite2D" parent="PortraitContainer"]
 frames = ExtResource( "3_uipmn" )
-animation = &"happy"
+animation = &"neutral"
 playing = true
 
 [node name="DialogPanel" type="PanelContainer" parent="."]
@@ -59,7 +56,7 @@ offset_bottom = 54.0
 theme_override_constants/margin_top = 1
 CustomText = "Hi!
 My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
-ShouldShowAllPage = true
+ShouldShowAllPage = false
 
 [node name="ArrowMargin" type="MarginContainer" parent="DialogPanel"]
 layout_direction = 2

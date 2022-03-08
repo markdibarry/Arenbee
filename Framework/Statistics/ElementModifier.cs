@@ -1,5 +1,3 @@
-using Arenbee.Framework.Enums;
-
 namespace Arenbee.Framework.Statistics
 {
     public class ElementModifier
@@ -18,12 +16,13 @@ namespace Arenbee.Framework.Statistics
         /// Positive values indicate more damage, negative indicate reduced.
         /// </summary>
         /// <value></value>
-        public float Value { get; set; }
+        public int Value { get; set; }
 
-        public const float VeryWeak = 1f;
-        public const float Weak = 0.5f;
-        public const float Resist = -0.5f;
-        public const float Nullify = -1f;
-        public const float Absorb = -1.5f;
+        public const int VeryWeak = 10;
+        public const int Weak = 5;
+        public const int None = 0;
+        public const int Resist = -5;
+        public const int Nullify = -10;
+        public const int Absorb = -15;
     }
 }

@@ -1,8 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://bv0kyy3khfn1x"]
 
 [ext_resource type="Script" path="res://Framework/GUI/Text/MessageBox.cs" id="1"]
 [ext_resource type="StyleBox" path="res://Framework/GUI/Backgrounds/transparent.tres" id="2"]
-[ext_resource type="Font" uid="uid://dk32ss3xnst4o" path="res://Framework/GUI/Fonts/3x6.tres" id="3_cg2je"]
+[ext_resource type="Font" uid="uid://bdvwqvv0c2kgy" path="res://Framework/GUI/Fonts/3x6.tres" id="3_cg2je"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_av8k5"]
 bg_color = Color(0, 0, 0, 0.45098)
@@ -65,9 +65,9 @@ __meta__ = {
 }
 
 [node name="Border" type="Panel" parent="BoxWrapper"]
+rect_clip_content = true
 offset_right = 9.0
 offset_bottom = 17.0
-rect_clip_content = true
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource( "1" )
 __meta__ = {

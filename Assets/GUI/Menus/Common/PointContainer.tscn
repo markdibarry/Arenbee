@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://bf5q178lenm1v"]
+
+[ext_resource type="Script" path="res://Assets/GUI/Menus/Common/PointContainer.cs" id="1_43v1y"]
+
+[node name="PointContainer" type="MarginContainer"]
+offset_right = 172.0
+offset_bottom = 26.0
+size_flags_vertical = 0
+script = ExtResource( "1_43v1y" )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 172.0
+offset_bottom = 26.0
+size_flags_vertical = 0
+
+[node name="KeyContainer" type="MarginContainer" parent="HBoxContainer"]
+offset_right = 86.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="Key" type="Label" parent="HBoxContainer/KeyContainer"]
+offset_right = 86.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Stat Name:"
+
+[node name="ValueContainer" type="MarginContainer" parent="HBoxContainer"]
+offset_left = 90.0
+offset_right = 172.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/ValueContainer"]
+offset_left = 19.0
+offset_right = 82.0
+offset_bottom = 26.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Current" type="Label" parent="HBoxContainer/ValueContainer/HBoxContainer"]
+offset_right = 28.0
+offset_bottom = 26.0
+size_flags_horizontal = 8
+text = "999"
+
+[node name="Separator" type="Label" parent="HBoxContainer/ValueContainer/HBoxContainer"]
+offset_left = 28.0
+offset_right = 35.0
+offset_bottom = 26.0
+size_flags_horizontal = 8
+text = "/"
+
+[node name="Max" type="Label" parent="HBoxContainer/ValueContainer/HBoxContainer"]
+offset_left = 35.0
+offset_right = 63.0
+offset_bottom = 26.0
+size_flags_horizontal = 8
+text = "999"

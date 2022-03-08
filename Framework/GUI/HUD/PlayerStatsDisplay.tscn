@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://byn2061flwj1c"]
+[gd_scene load_steps=2 format=3 uid="uid://byn2061flwj1c"]
 
-[ext_resource type="Font" uid="uid://dk32ss3xnst4o" path="res://Framework/GUI/Fonts/3x6.tres" id="1_hagkc"]
-[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="1_j5sar"]
+[ext_resource type="Font" uid="uid://bdvwqvv0c2kgy" path="res://Framework/GUI/Fonts/3x6.tres" id="1_hagkc"]
 
 [node name="PlayerStatsDisplay" type="PanelContainer"]
 texture_filter = 1
@@ -9,7 +8,6 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 56.0
 offset_bottom = 48.0
-theme = ExtResource( "1_j5sar" )
 __meta__ = {
 "_edit_use_anchors_": false
 }

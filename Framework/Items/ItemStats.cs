@@ -44,6 +44,9 @@ namespace Arenbee.Framework.Items
             foreach (ElementModifier mod in DefenseElementModifiers)
                 stats.DefenseElementModifiers.Add(mod);
 
+            foreach (StatusEffectModifier mod in ActionStatusEffects)
+                stats.ActionStatusEffects.Add(mod);
+
             foreach (StatusEffectModifier mod in DefenseStatusEffects)
                 stats.DefenseStatusEffects.Add(mod);
 
@@ -55,6 +58,9 @@ namespace Arenbee.Framework.Items
         {
             foreach (ElementModifier mod in DefenseElementModifiers)
                 stats.DefenseElementModifiers.Remove(mod);
+
+            foreach (StatusEffectModifier mod in ActionStatusEffects)
+                stats.ActionStatusEffects.Remove(mod);
 
             foreach (StatusEffectModifier mod in DefenseStatusEffects)
                 stats.DefenseStatusEffects.Remove(mod);

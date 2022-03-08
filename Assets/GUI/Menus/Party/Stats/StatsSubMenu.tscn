@@ -1,14 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmky5pqeckuiv"]
+[gd_scene load_steps=6 format=3 uid="uid://cmky5pqeckuiv"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_0awv0"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Stats/StatsSubMenu.cs" id="2_ah025"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_6bypr"]
-[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="3_c637c"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_th6t8"]
-[ext_resource type="PackedScene" uid="uid://bxq0ftt2qk6vn" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="5_mp18g"]
+[ext_resource type="PackedScene" uid="uid://b41pw27b6vksc" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="5_mp18g"]
 
 [node name="StatsSubMenu" instance=ExtResource( "1_0awv0" )]
 script = ExtResource( "2_ah025" )
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+__meta__ = {
+"_edit_layout_mode": 1,
+"_edit_use_custom_anchors": false
+}
 
 [node name="PartyList" parent="Foreground" index="0" instance=ExtResource( "3_6bypr" )]
 offset_left = 80.0
@@ -67,9 +74,14 @@ offset_right = 21.0
 offset_bottom = 11.0
 
 [node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource( "5_mp18g" )]
-offset_bottom = 140.0
-
-[node name="HandCursor" parent="Foreground" index="2" instance=ExtResource( "3_c637c" )]
-position = Vector2(85, 31)
+offset_left = 80.0
+offset_top = 50.0
+offset_right = 210.0
+offset_bottom = 104.0
+__meta__ = {
+"_edit_layout_mode": 0,
+"_edit_use_anchors_": false,
+"_edit_use_custom_anchors": false
+}
 
 [editable path="Foreground/PartyList"]

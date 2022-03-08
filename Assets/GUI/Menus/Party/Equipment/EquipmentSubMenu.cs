@@ -83,9 +83,9 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             _partyOptions.InitItems();
         }
 
-        private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
+        private List<KeyValueOption> GetEquipmentOptions(OptionItem optionItem)
         {
-            var options = new List<EquipSelectOption>();
+            var options = new List<KeyValueOption>();
             if (optionItem == null) return options;
             if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
                 return options;
@@ -93,7 +93,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             if (actor == null) return options;
             foreach (var slot in actor.Equipment.Slots)
             {
-                var keyValueOption = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
+                var keyValueOption = _equipSelectOptionScene.Instantiate<KeyValueOption>();
                 string name = slot.SlotName.Get().Abbreviation;
                 keyValueOption.KeyText = name + ":";
                 keyValueOption.ValueText = slot.Item?.DisplayName ?? "<None>";
@@ -124,7 +124,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         private void UpdateEquipmentDisplay(OptionItem optionItem)
         {
-            List<EquipSelectOption> options = GetEquipmentOptions(optionItem);
+            List<KeyValueOption> options = GetEquipmentOptions(optionItem);
             _equipmentOptions.ReplaceChildren(options);
             _equipmentOptions.InitItems();
         }

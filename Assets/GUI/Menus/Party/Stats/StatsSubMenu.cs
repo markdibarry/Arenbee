@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
@@ -14,7 +15,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
     {
         public static string GetScenePath() => GDEx.GetScenePath();
         private IPlayerParty _playerParty;
-        private GridContainer _statsDisplayGrid;
+        private StatsDisplay _statsDisplay;
         private OptionContainer _partyList;
 
         protected override void SetNodeReferences()
@@ -22,7 +23,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.SetNodeReferences();
             _partyList = Foreground.GetNode<OptionContainer>("PartyList");
             OptionContainers.Add(_partyList);
-            _statsDisplayGrid = Foreground.GetNode<GridContainer>("StatsDisplay/GridContainer");
+            _statsDisplay = Foreground.GetNode<StatsDisplay>("StatsDisplay");
         }
 
         protected override void CustomOptionsSetup()
@@ -37,7 +38,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.OnItemFocused(optionContainer, optionItem);
             if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
                 return;
-            DisplayStats(actorName);
+            _statsDisplay.Update(_playerParty.GetPlayerByName(actorName));
         }
 
         private void AddPartyMembers()
@@ -52,19 +53,6 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 options.Add(textOption);
             }
             _partyList.ReplaceChildren(options);
-        }
-
-        private void DisplayStats(string actorName)
-        {
-            Actor actor = _playerParty.Actors.First(x => x.Name == actorName);
-            foreach (var attribute in actor.Stats.Attributes)
-            {
-                var node = _statsDisplayGrid.GetNodeOrNull<MarginContainer>(attribute.Name);
-                if (node != null)
-                {
-                    node.GetNode<Label>("HBoxContainer/Values/Value").Text = attribute.DisplayValue.ToString();
-                }
-            }
         }
     }
 }

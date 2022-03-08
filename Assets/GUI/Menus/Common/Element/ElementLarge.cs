@@ -1,0 +1,54 @@
+using Arenbee.Framework.Constants;
+using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Statistics;
+using Godot;
+
+namespace Arenbee.Assets.GUI.Menus.Common
+{
+    [Tool]
+    public partial class ElementLarge : ElementDisplay
+    {
+        public static string GetScenePath() => GDEx.GetScenePath();
+        public int Effectiveness { get; set; }
+        private Sprite2D _effectivenessSprite;
+
+        public override void _Ready()
+        {
+            base._Ready();
+            _effectivenessSprite = GetNode<Sprite2D>("Effectiveness");
+            SetEffectiveness(Effectiveness);
+        }
+
+        public void SetEffectiveness(int value)
+        {
+            if (Effectiveness == 0) return;
+            _effectivenessSprite.Show();
+            if (value > ElementModifier.VeryWeak)
+                value = ElementModifier.VeryWeak;
+            else if (value < ElementModifier.Absorb)
+                value = ElementModifier.Absorb;
+
+            switch (value)
+            {
+                case ElementModifier.VeryWeak:
+                    _effectivenessSprite.Frame = 0;
+                    _effectivenessSprite.Modulate = ColorConstants.TextRed;
+                    break;
+                case ElementModifier.Weak:
+                    _effectivenessSprite.Frame = 0;
+                    break;
+                case ElementModifier.Resist:
+                    _effectivenessSprite.Frame = 1;
+                    break;
+                case ElementModifier.Nullify:
+                    _effectivenessSprite.Frame = 2;
+                    _effectivenessSprite.Modulate = ColorConstants.DimGrey;
+                    break;
+                case ElementModifier.Absorb:
+                    _effectivenessSprite.Frame = 3;
+                    _effectivenessSprite.Modulate = ColorConstants.TextGreen;
+                    break;
+            }
+        }
+    }
+}

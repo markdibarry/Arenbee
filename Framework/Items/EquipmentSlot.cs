@@ -54,6 +54,8 @@ namespace Arenbee.Framework.Items
 
         public bool SetItemById(string itemId)
         {
+            if (itemId == null)
+                return SetItem(null);
             Item item = _itemDB.GetItem(itemId);
             if (item == null) return false;
             return SetItem(item);

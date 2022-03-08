@@ -1,14 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dgygikie1lfui"]
+[gd_scene load_steps=3 format=3 uid="uid://dgygikie1lfui"]
 
 [ext_resource type="PackedScene" uid="uid://gydisdj3ltwf" path="res://Framework/GUI/Menus/OptionItems/OptionItem.tscn" id="1_l6qor"]
-[ext_resource type="Theme" uid="uid://carc51vlnqtpp" path="res://Framework/GUI/Themes/BaseTheme.tres" id="2_khgoa"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.cs" id="3_f7kpw"]
 
 [node name="KeyValueOption" instance=ExtResource( "1_l6qor" )]
 offset_right = 10.0
 offset_bottom = 9.0
 size_flags_horizontal = 3
-theme = ExtResource( "2_khgoa" )
 script = ExtResource( "3_f7kpw" )
 KeyText = "Orange"
 ValueText = "x5"

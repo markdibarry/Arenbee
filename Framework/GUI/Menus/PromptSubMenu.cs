@@ -20,14 +20,9 @@ namespace Arenbee.Framework.GUI
             if (_timerEnabled)
             {
                 if (_timeDuration < 0)
-                {
                     OnTimeOut();
-                    _timerEnabled = false;
-                }
                 else
-                {
                     _timeDuration -= delta;
-                }
             }
         }
 
@@ -39,6 +34,9 @@ namespace Arenbee.Framework.GUI
 
         protected virtual void Confirm() { }
 
-        protected virtual void OnTimeOut() { }
+        protected virtual void OnTimeOut()
+        {
+            _timerEnabled = false;
+        }
     }
 }

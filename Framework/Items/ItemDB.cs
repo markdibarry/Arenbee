@@ -48,7 +48,7 @@ namespace Arenbee.Framework.Items
                         {
                             AttributeType = AttributeType.Attack,
                             Effect = ModifierEffect.Add,
-                            Value = 2
+                            Value = 1
                         }
                     }
                 }
@@ -75,7 +75,7 @@ namespace Arenbee.Framework.Items
                         {
                             AttributeType = AttributeType.Attack,
                             Effect = ModifierEffect.Add,
-                            Value = 4
+                            Value = 2
                         }
                     }
                 }
@@ -131,9 +131,9 @@ namespace Arenbee.Framework.Items
                     {
                         new AttributeModifier()
                         {
-                            AttributeType = AttributeType.MagicDefense,
+                            AttributeType = AttributeType.MaxHP,
                             Effect = ModifierEffect.Add,
-                            Value = 1
+                            Value = 10
                         }
                     }
                 }
@@ -160,6 +160,14 @@ namespace Arenbee.Framework.Items
                             AttributeType = AttributeType.MagicDefense,
                             Effect = ModifierEffect.Add,
                             Value = 1
+                        }
+                    },
+                    DefenseElementModifiers = new ElementModifier[]
+                    {
+                        new ElementModifier()
+                        {
+                            Element = Element.Dark,
+                            Value = ElementModifier.Resist
                         }
                     }
                 }
@@ -212,6 +220,14 @@ namespace Arenbee.Framework.Items
                             AttributeType = AttributeType.Defense,
                             Effect = ModifierEffect.Add,
                             Value = 1
+                        }
+                    },
+                    DefenseElementModifiers = new ElementModifier[]
+                    {
+                        new ElementModifier()
+                        {
+                            Element = Element.Water,
+                            Value = ElementModifier.Weak
                         }
                     }
                 }
@@ -297,6 +313,14 @@ namespace Arenbee.Framework.Items
                             Effect = ModifierEffect.Add,
                             Value = 1
                         }
+                    },
+                    DefenseElementModifiers = new ElementModifier[]
+                    {
+                        new ElementModifier()
+                        {
+                            Element = Element.Water,
+                            Value = ElementModifier.Resist
+                        }
                     }
                 }
             });
@@ -329,6 +353,31 @@ namespace Arenbee.Framework.Items
 
             _items.Add(new Item()
             {
+                Id = "SunGlasses",
+                DisplayName = "Sun Glasses",
+                ItemType = ItemType.Headgear,
+                Description = "To be worn exclusively at night.",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    DefenseElementModifiers = new ElementModifier[]
+                    {
+                        new ElementModifier()
+                        {
+                            Element = Element.Dark,
+                            Value = ElementModifier.Resist
+                        }
+                    }
+                }
+            });
+
+            _items.Add(new Item()
+            {
                 Id = "FingerlessGloves",
                 DisplayName = "Fingerless Gloves",
                 ItemType = ItemType.Accessory,
@@ -348,6 +397,31 @@ namespace Arenbee.Framework.Items
                             AttributeType = AttributeType.Defense,
                             Effect = ModifierEffect.Add,
                             Value = 1
+                        }
+                    }
+                }
+            });
+
+            _items.Add(new Item()
+            {
+                Id = "OvenMitts",
+                DisplayName = "Oven Mitts",
+                ItemType = ItemType.Accessory,
+                Description = "Keeps your hands burn-free for up to 5 seconds!",
+                MaxStack = 9,
+                IsUsableInMenu = false,
+                IsUsableInField = false,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 15,
+                ItemStats = new ItemStats()
+                {
+                    DefenseElementModifiers = new ElementModifier[]
+                    {
+                        new ElementModifier()
+                        {
+                            Element = Element.Fire,
+                            Value = ElementModifier.Resist
                         }
                     }
                 }
