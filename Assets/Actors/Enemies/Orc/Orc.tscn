@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_kkfne"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Orc/Orc.cs" id="2_0isoc"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_8dqhh"]
-[ext_resource type="Texture2D" uid="uid://du7e0xw7padv2" path="res://Assets/Actors/Enemies/Orc/orc.png" id="3_cduir"]
+[ext_resource type="Texture2D" uid="uid://xi436oglfj8k" path="res://Assets/Actors/Enemies/Orc/orc.png" id="3_cduir"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_o6dpv"]
 resource_local_to_scene = true

@@ -136,7 +136,7 @@ namespace Arenbee.Framework.GUI.Text
 
         public void UpdateText()
         {
-            _displayHeight = _dynamicTextContainer.RectSize.y;
+            _displayHeight = _dynamicTextContainer.Size.y;
             _dynamicText.UpdateText();
         }
 

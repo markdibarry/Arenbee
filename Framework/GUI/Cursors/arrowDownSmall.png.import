@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://lctogtjgsu68"
-path="res://.godot/imported/arrowDownSmall.png-e88a0171cee8868621195b638768d40d.stex"
+type="CompressedTexture2D"
+uid="uid://cjvc717d37jv7"
+path="res://.godot/imported/arrowDownSmall.png-e88a0171cee8868621195b638768d40d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Framework/GUI/Cursors/arrowDownSmall.png"
-dest_files=["res://.godot/imported/arrowDownSmall.png-e88a0171cee8868621195b638768d40d.stex"]
+dest_files=["res://.godot/imported/arrowDownSmall.png-e88a0171cee8868621195b638768d40d.ctex"]
 
 [params]
 

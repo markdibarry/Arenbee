@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://bbm3la4ls7yui"
-path="res://.godot/imported/Flight_Hurt_(32 x 32).png-bd7148ba29e89c5afa0f3be76028856a.stex"
+type="CompressedTexture2D"
+uid="uid://b2y04isr2s8ld"
+path="res://.godot/imported/Flight_Hurt_(32 x 32).png-bd7148ba29e89c5afa0f3be76028856a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/1 - Robo Retro/Flight_Hurt_(32 x 32).png"
-dest_files=["res://.godot/imported/Flight_Hurt_(32 x 32).png-bd7148ba29e89c5afa0f3be76028856a.stex"]
+dest_files=["res://.godot/imported/Flight_Hurt_(32 x 32).png-bd7148ba29e89c5afa0f3be76028856a.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

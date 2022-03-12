@@ -1,5 +1,4 @@
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 
 namespace Arenbee.Framework.Actors
@@ -13,8 +12,8 @@ namespace Arenbee.Framework.Actors
 
         private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
         {
-            oldItem?.ItemStats?.RemoveFromStats(Stats);
-            newItem?.ItemStats?.AddToStats(Stats);
+            oldItem?.ItemStats.RemoveFromStats(Stats);
+            newItem?.ItemStats.AddToStats(Stats);
             Inventory.SetReservation(slot, newItem);
             UpdateEquipment();
         }
@@ -24,7 +23,7 @@ namespace Arenbee.Framework.Actors
             var newStats = new Stats(Stats);
             foreach (var slot in Equipment.Slots)
                 slot.Item?.ItemStats?.RemoveFromStats(newStats);
-            newStats.UpdateStats();
+            newStats.RecalculateStats();
             return newStats;
         }
 
@@ -47,7 +46,7 @@ namespace Arenbee.Framework.Actors
         {
             var weapon = Equipment.GetSlot(EquipSlotName.Weapon).Item;
             WeaponSlot.SetWeapon(weapon);
-            Stats.UpdateStats();
+            Stats.RecalculateStats();
         }
     }
 }

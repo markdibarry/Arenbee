@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://c1qqeidjui6ru"]
 
 [ext_resource type="PackedScene" uid="uid://bjnp5nvoddno6" path="res://Framework/AreaScenes/AreaScene.tscn" id="1_d3aeo"]
-[ext_resource type="Texture2D" uid="uid://b20g73f08da0a" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
-[ext_resource type="Texture2D" uid="uid://clp55hh2725u0" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
-[ext_resource type="Texture2D" uid="uid://did6583girh0c" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]
-[ext_resource type="Texture2D" uid="uid://d2e8g1q2ri68w" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
+[ext_resource type="Texture2D" uid="uid://dnddvrhooqaot" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
+[ext_resource type="Texture2D" uid="uid://bga3oqredm6p4" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
+[ext_resource type="Texture2D" uid="uid://d30pukua2ppk3" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]
+[ext_resource type="Texture2D" uid="uid://b373w4w3b822s" path="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="PackedScene" uid="uid://dlhf2h7gt57an" path="res://Assets/Actors/Enemies/Plant/Plant.tscn" id="6_frfip"]
 [ext_resource type="Script" path="res://Framework/Events/ChangeScene.cs" id="7_ftrnt"]
 

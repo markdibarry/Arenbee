@@ -1,5 +1,6 @@
 ﻿using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
+using System.Collections.Generic;
 
 namespace Arenbee.Framework.Actors
 {
@@ -9,22 +10,16 @@ namespace Arenbee.Framework.Actors
         public delegate void StatsUpdatedHandler(Actor actor);
         public event StatsUpdatedHandler StatsUpdated;
 
-        public Element GetAtkElement()
-        {
-            var element = WeaponSlot.CurrentWeapon?.GetElement();
-            return element ?? Stats.ActionElement;
-        }
-
         protected virtual void SetDefaultStats() { }
 
         protected virtual void UpdateHitBoxAction()
         {
-            HitBox.HitBoxAction = new HitBoxAction(HitBox, this)
+            HitBox.ActionInfo = new ActionInfo(HitBox, this)
             {
                 ActionType = ActionType.Melee,
-                Element = Stats.ActionElement,
-                StatusEffects = Stats.ActionStatusEffects,
-                Value = Stats.GetAttribute(AttributeType.Attack).ModifiedValue
+                Element = Stats.ElementOffenses.CurrentElement,
+                StatusEffects = Stats.GetStatusEffectOffenses(),
+                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
             };
         }
 

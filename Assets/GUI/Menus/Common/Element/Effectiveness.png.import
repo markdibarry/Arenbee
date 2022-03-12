@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://crraica7tgen5"
-path="res://.godot/imported/Effectiveness.png-23b626982a8edefa95af268ea99afc93.stex"
+type="CompressedTexture2D"
+uid="uid://dvhnu0p1xpc5v"
+path="res://.godot/imported/Effectiveness.png-23b626982a8edefa95af268ea99afc93.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/GUI/Menus/Common/Element/Effectiveness.png"
-dest_files=["res://.godot/imported/Effectiveness.png-23b626982a8edefa95af268ea99afc93.stex"]
+dest_files=["res://.godot/imported/Effectiveness.png-23b626982a8edefa95af268ea99afc93.ctex"]
 
 [params]
 

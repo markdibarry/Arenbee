@@ -36,15 +36,14 @@ namespace Arenbee.Assets.GUI.Menus.Common
         public void Update(Actor actor, EquipmentSlot slot, string itemId)
         {
             var mockStats = actor.Stats;
-            EquipmentSlot newSlot = null;
             if (slot != null)
             {
                 mockStats = new Stats(actor.Stats);
-                newSlot = new EquipmentSlot(slot);
+                var newSlot = new EquipmentSlot(slot);
                 newSlot.Item?.ItemStats?.RemoveFromStats(mockStats);
                 newSlot.SetItemById(itemId);
                 newSlot.Item?.ItemStats?.AddToStats(mockStats);
-                mockStats.UpdateStats();
+                mockStats.RecalculateStats();
             }
             _gridContainer.RemoveAllChildren();
             AddStatContainer(actor.Stats, mockStats, AttributeType.Level);
@@ -55,25 +54,20 @@ namespace Arenbee.Assets.GUI.Menus.Common
             AddStatContainer(actor.Stats, mockStats, AttributeType.Defense);
             AddStatContainer(actor.Stats, mockStats, AttributeType.MagicAttack);
             AddStatContainer(actor.Stats, mockStats, AttributeType.MagicDefense);
-            AddEAtkContainer(actor, newSlot);
+            AddEAtkContainer(mockStats);
             AddEDefContainer(mockStats);
         }
 
-        private void AddEAtkContainer(Actor actor, EquipmentSlot slot)
+        private void AddEAtkContainer(Stats stats)
         {
             _elementAtkContainer.RemoveAllChildren();
-            var atkLabel = new Label();
-            atkLabel.Text = "E.Atk:";
+            var atkLabel = new Label() { Text = "E.Atk:" };
             _elementAtkContainer.AddChild(atkLabel);
-            Element? element;
-            if (slot?.SlotType == ItemType.Weapon)
-                element = slot.Item?.ItemStats?.ActionElement;
-            else
-                element = actor.GetAtkElement();
-            if (element != null && element != Element.None)
+            var element = stats.ElementOffenses.CurrentElement;
+            if (element != Element.None)
             {
                 var elementLg = _elementScene.Instantiate<ElementLarge>();
-                elementLg.Element = (Element)element;
+                elementLg.Element = element;
                 _elementAtkContainer.AddChild(elementLg);
             }
         }
@@ -81,16 +75,16 @@ namespace Arenbee.Assets.GUI.Menus.Common
         private void AddEDefContainer(Stats stats)
         {
             _elementDefContainer.RemoveAllChildren();
-            var defLabel = new Label();
-            defLabel.Text = "E.Def:";
+            var defLabel = new Label() { Text = "E.Def:" };
             _elementDefContainer.AddChild(defLabel);
             foreach (var element in Enum<Element>.Values())
             {
-                int multiplier = stats.GetElementMultiplier(element) - 10;
-                if (multiplier == ElementModifier.None) continue;
+                if (!stats.ElementDefenses.TryGetValue(element, out var elDef))
+                    continue;
+                if (elDef.ModifiedValue == ElementDefense.None) continue;
                 var elementLg = _elementScene.Instantiate<ElementLarge>();
                 elementLg.Element = element;
-                elementLg.Effectiveness = multiplier;
+                elementLg.Effectiveness = elDef.ModifiedValue;
                 _elementDefContainer.AddChild(elementLg);
             }
         }
@@ -104,19 +98,19 @@ namespace Arenbee.Assets.GUI.Menus.Common
                 maxType = AttributeType.MaxMP;
             else
                 return;
-            var currentValue = stats.GetAttribute(maxType).DisplayValue;
-            var mockValue = mockStats.GetAttribute(maxType).DisplayValue;
+            var currentValue = stats.Attributes[maxType].DisplayValue;
+            var mockValue = mockStats.Attributes[maxType].DisplayValue;
             var pointContainer = _pointContainerScene.Instantiate<PointContainer>();
             _gridContainer.AddChild(pointContainer);
             pointContainer.StatNameLabel.Text = attributeType.Get().Abbreviation + ":";
-            pointContainer.StatCurrentValueLabel.Text = stats.GetAttribute(attributeType).DisplayValue.ToString();
+            pointContainer.StatCurrentValueLabel.Text = stats.Attributes[attributeType].DisplayValue.ToString();
             DisplayValueColor(currentValue, mockValue, pointContainer.StatMaxValueLabel);
         }
 
         private void AddStatContainer(Stats stats, Stats mockStats, AttributeType attributeType)
         {
-            var currentValue = stats.GetAttribute(attributeType).DisplayValue;
-            var mockValue = mockStats.GetAttribute(attributeType).DisplayValue;
+            var currentValue = stats.Attributes[attributeType].DisplayValue;
+            var mockValue = mockStats.Attributes[attributeType].DisplayValue;
             var statContainer = _statContainerScene.Instantiate<StatContainer>();
             _gridContainer.AddChild(statContainer);
             statContainer.StatNameLabel.Text = attributeType.Get().Abbreviation + ":";

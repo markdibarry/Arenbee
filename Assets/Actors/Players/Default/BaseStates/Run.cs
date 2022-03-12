@@ -16,16 +16,14 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
         public override void Update(float delta)
         {
             CheckForTransitions();
+            Actor.MaxSpeed = Actor.RunSpeed;
             if (InputHandler.Left.IsActionPressed)
                 Actor.MoveX(Facings.Left);
             else if (InputHandler.Right.IsActionPressed)
                 Actor.MoveX(Facings.Right);
         }
 
-        public override void Exit()
-        {
-            Actor.MaxSpeed = Actor.WalkSpeed;
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {

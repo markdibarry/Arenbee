@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://bycdu6r85mrml"
-path="res://.godot/imported/Punching_(48 x 32).png-1f22f3aee13a6e58d8fdd25e6b3d1ef1.stex"
+type="CompressedTexture2D"
+uid="uid://b2km10igo7p17"
+path="res://.godot/imported/Punching_(48 x 32).png-1f22f3aee13a6e58d8fdd25e6b3d1ef1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/3 - Big Red/Punching_(48 x 32).png"
-dest_files=["res://.godot/imported/Punching_(48 x 32).png-1f22f3aee13a6e58d8fdd25e6b3d1ef1.stex"]
+dest_files=["res://.godot/imported/Punching_(48 x 32).png-1f22f3aee13a6e58d8fdd25e6b3d1ef1.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

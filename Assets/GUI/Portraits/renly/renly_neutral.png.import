@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://dpytudak4nwa7"
-path="res://.godot/imported/renly_neutral.png-72e98ab2430d34e10a4d398906f6acad.stex"
+type="CompressedTexture2D"
+uid="uid://cw7gnuvenmryq"
+path="res://.godot/imported/renly_neutral.png-72e98ab2430d34e10a4d398906f6acad.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/GUI/Portraits/renly/renly_neutral.png"
-dest_files=["res://.godot/imported/renly_neutral.png-72e98ab2430d34e10a4d398906f6acad.stex"]
+dest_files=["res://.godot/imported/renly_neutral.png-72e98ab2430d34e10a4d398906f6acad.ctex"]
 
 [params]
 

@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://85gypb4solo6"
-path="res://.godot/imported/Crawling_(32 x 32).png-f0fe34f61807729f91da6443f56f5f03.stex"
+type="CompressedTexture2D"
+uid="uid://ct0a4kiqe08av"
+path="res://.godot/imported/Crawling_(32 x 32).png-f0fe34f61807729f91da6443f56f5f03.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/6 - Mr. Chomps/Crawling_(32 x 32).png"
-dest_files=["res://.godot/imported/Crawling_(32 x 32).png-f0fe34f61807729f91da6443f56f5f03.stex"]
+dest_files=["res://.godot/imported/Crawling_(32 x 32).png-f0fe34f61807729f91da6443f56f5f03.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

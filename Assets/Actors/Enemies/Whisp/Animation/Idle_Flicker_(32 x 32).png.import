@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://0fus0um6v4bs"
-path="res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.stex"
+type="CompressedTexture2D"
+uid="uid://wq7i1jgih14x"
+path="res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png"
-dest_files=["res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.stex"]
+dest_files=["res://.godot/imported/Idle_Flicker_(32 x 32).png-462bb8ff88132c722e9d490b004f5636.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

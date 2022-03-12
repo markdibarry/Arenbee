@@ -34,59 +34,42 @@ namespace Arenbee.Assets.Actors.Enemies
 
         private class Run : State<Actor>
         {
-            public override void Enter()
-            {
-                Actor.MaxSpeed = Actor.RunSpeed;
-            }
+            public override void Enter() { }
 
             public override void Update(float delta)
             {
                 CheckForTransitions();
+                Actor.MaxSpeed = Actor.RunSpeed;
             }
 
-            public override void Exit()
-            {
-                Actor.MaxSpeed = Actor.WalkSpeed;
-            }
+            public override void Exit() { }
 
             public override void CheckForTransitions()
             {
                 if (Actor.IsWalkDisabled || InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                {
                     StateMachine.TransitionTo(new Idle());
-                }
                 else if (Actor.IsRunDisabled || !InputHandler.Run.IsActionPressed)
-                {
                     StateMachine.TransitionTo(new Walk());
-                }
             }
         }
 
         private class Walk : State<Actor>
         {
-            public override void Enter()
-            {
-            }
+            public override void Enter() { }
 
             public override void Update(float delta)
             {
                 CheckForTransitions();
             }
 
-            public override void Exit()
-            {
-            }
+            public override void Exit() { }
 
             public override void CheckForTransitions()
             {
                 if (!Actor.IsWalkDisabled && InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                {
                     StateMachine.TransitionTo(new Idle());
-                }
                 else if (!Actor.IsRunDisabled && InputHandler.Run.IsActionPressed)
-                {
                     StateMachine.TransitionTo(new Run());
-                }
             }
         }
     }

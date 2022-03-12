@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://vcvs182gs51a"
-path="res://.godot/imported/Jumping_(32 x 32).png-ed3adc6a6ec5afcbe17e89fd87440911.stex"
+type="CompressedTexture2D"
+uid="uid://c68ql6rohbnhg"
+path="res://.godot/imported/Jumping_(32 x 32).png-ed3adc6a6ec5afcbe17e89fd87440911.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/2 - Lil Wiz/Jumping_(32 x 32).png"
-dest_files=["res://.godot/imported/Jumping_(32 x 32).png-ed3adc6a6ec5afcbe17e89fd87440911.stex"]
+dest_files=["res://.godot/imported/Jumping_(32 x 32).png-ed3adc6a6ec5afcbe17e89fd87440911.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

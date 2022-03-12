@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Framework/GUI/Text/DynamicText.cs" id="3_2ehhg"]
 
 [node name="DynamicTextBox" type="MarginContainer"]
-rect_clip_content = true
+clip_contents = true
 offset_right = 68.0
 offset_bottom = 36.0
 theme_override_constants/margin_right = 1
@@ -24,7 +24,7 @@ offset_right = 67.0
 offset_bottom = 35.0
 
 [node name="DynamicText" type="RichTextLabel" parent="Control"]
-rect_clip_content = false
+clip_contents = false
 anchor_right = 1.0
 offset_bottom = 60.0
 bbcode_enabled = true

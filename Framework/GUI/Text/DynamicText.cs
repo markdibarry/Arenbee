@@ -118,7 +118,7 @@ namespace Arenbee.Framework.GUI.Text
         public void MoveToLine(int line)
         {
             line = GetValidLine(line);
-            RectPosition = new Vector2(0, -GetLineOffsetOrEnd(line));
+            Position = new Vector2(0, -GetLineOffsetOrEnd(line));
             _currentLine = line;
             if (line < LineBreaks.Count)
                 VisibleCharacters = LineBreaks[line];

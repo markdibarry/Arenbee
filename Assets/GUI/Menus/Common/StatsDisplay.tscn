@@ -28,7 +28,6 @@ theme_override_constants/vseparation = 0
 columns = 2
 
 [node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-rect_min_size = Vector2(24, 0)
 offset_right = 56.0
 offset_bottom = 10.0
 
@@ -66,7 +65,6 @@ theme_override_constants/margin_left = 2
 theme_override_constants/margin_bottom = 2
 
 [node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
-rect_min_size = Vector2(56, 0)
 offset_top = 10.0
 offset_right = 56.0
 offset_bottom = 20.0
@@ -109,7 +107,6 @@ offset_right = 28.0
 offset_bottom = 10.0
 
 [node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
-rect_min_size = Vector2(56, 0)
 offset_left = 60.0
 offset_top = 10.0
 offset_right = 116.0
@@ -153,7 +150,6 @@ offset_right = 28.0
 offset_bottom = 10.0
 
 [node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-rect_min_size = Vector2(28, 0)
 offset_top = 20.0
 offset_right = 56.0
 offset_bottom = 30.0
@@ -182,7 +178,6 @@ offset_right = 38.0
 offset_bottom = 10.0
 
 [node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-rect_min_size = Vector2(28, 0)
 offset_left = 60.0
 offset_top = 20.0
 offset_right = 116.0
@@ -212,7 +207,6 @@ offset_right = 38.0
 offset_bottom = 10.0
 
 [node name="M Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-rect_min_size = Vector2(44, 0)
 offset_top = 30.0
 offset_right = 56.0
 offset_bottom = 40.0
@@ -241,7 +235,6 @@ offset_right = 30.0
 offset_bottom = 10.0
 
 [node name="M Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-rect_min_size = Vector2(44, 0)
 offset_left = 60.0
 offset_top = 30.0
 offset_right = 116.0
@@ -282,11 +275,8 @@ offset_bottom = 10.0
 text = "E.Atk:"
 
 [node name="ElementLarge" parent="VBoxContainer/EAtk" instance=ExtResource( "4_oa43l" )]
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 20.0
 offset_right = 30.0
-offset_bottom = 10.0
 Element = 2
 
 [node name="EDef" type="HBoxContainer" parent="VBoxContainer"]
@@ -301,27 +291,18 @@ offset_bottom = 10.0
 text = "E.Def:"
 
 [node name="ElementLarge" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 20.0
 offset_right = 30.0
-offset_bottom = 10.0
 Element = 1
 
 [node name="ElementLarge2" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 30.0
 offset_right = 40.0
-offset_bottom = 10.0
 Element = 4
 
 [node name="ElementLarge3" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 40.0
 offset_right = 50.0
-offset_bottom = 10.0
 Element = 5
 
 [editable path="VBoxContainer/GridContainer/Level"]

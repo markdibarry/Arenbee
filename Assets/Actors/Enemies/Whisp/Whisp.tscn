@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
-[ext_resource type="Texture2D" uid="uid://0fus0um6v4bs" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
+[ext_resource type="Texture2D" uid="uid://wq7i1jgih14x" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
 [ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_rptpj"]
 
 [sub_resource type="Animation" id="Animation_8v7pu"]

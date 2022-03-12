@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://cb3m6g7tsek0v"
-path="res://.godot/imported/barrel_default.png-b1de8254f4b5a553237b40d8c075d76f.stex"
+type="CompressedTexture2D"
+uid="uid://155j02psjsqe"
+path="res://.godot/imported/barrel_default.png-b1de8254f4b5a553237b40d8c075d76f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Scenery/Barrel/barrel_default.png"
-dest_files=["res://.godot/imported/barrel_default.png-b1de8254f4b5a553237b40d8c075d76f.stex"]
+dest_files=["res://.godot/imported/barrel_default.png-b1de8254f4b5a553237b40d8c075d76f.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

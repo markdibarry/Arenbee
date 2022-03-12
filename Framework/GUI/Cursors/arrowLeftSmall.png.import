@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://dicjqwob1c8p5"
-path="res://.godot/imported/arrowLeftSmall.png-119ddca9bc818e2423c0155d9d451e6f.stex"
+type="CompressedTexture2D"
+uid="uid://blu1orkgmjcq"
+path="res://.godot/imported/arrowLeftSmall.png-119ddca9bc818e2423c0155d9d451e6f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Framework/GUI/Cursors/arrowLeftSmall.png"
-dest_files=["res://.godot/imported/arrowLeftSmall.png-119ddca9bc818e2423c0155d9d451e6f.stex"]
+dest_files=["res://.godot/imported/arrowLeftSmall.png-119ddca9bc818e2423c0155d9d451e6f.ctex"]
 
 [params]
 

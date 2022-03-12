@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://dayga4lw7facd"
-path="res://.godot/imported/Sparkles_(8 x 8).png-bee84ca8652b42d012a941b84c791858.stex"
+type="CompressedTexture2D"
+uid="uid://ns8l23umoje8"
+path="res://.godot/imported/Sparkles_(8 x 8).png-bee84ca8652b42d012a941b84c791858.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/2 - Lil Wiz/Sparkles_(8 x 8).png"
-dest_files=["res://.godot/imported/Sparkles_(8 x 8).png-bee84ca8652b42d012a941b84c791858.stex"]
+dest_files=["res://.godot/imported/Sparkles_(8 x 8).png-bee84ca8652b42d012a941b84c791858.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

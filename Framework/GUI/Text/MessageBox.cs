@@ -102,7 +102,7 @@ namespace Arenbee.Framework.GUI.Text
 
         private bool ShouldEnableAutoWrap()
         {
-            return _boxWrapper.RectSize.x > MaxWidth || _messageMargin.RectSize.x > MaxWidth;
+            return _boxWrapper.Size.x > MaxWidth || _messageMargin.Size.x > MaxWidth;
         }
 
         private bool ShouldDisableAutoWrap()

@@ -6,12 +6,12 @@ namespace Arenbee.Framework.Statistics
     {
         [Export]
         public int InitialValue { get; private set; } = 1;
-        public HitBoxAction HitBoxAction { get; set; }
+        public ActionInfo ActionInfo { get; set; }
 
         public override void _Ready()
         {
             base._Ready();
-            HitBoxAction = new HitBoxAction(this, this);
+            ActionInfo = new ActionInfo(this, this);
         }
     }
 }

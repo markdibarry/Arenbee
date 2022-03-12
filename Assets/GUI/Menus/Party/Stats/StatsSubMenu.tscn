@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Stats/StatsSubMenu.cs" id="2_ah025"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_6bypr"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_th6t8"]
-[ext_resource type="PackedScene" uid="uid://b41pw27b6vksc" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="5_mp18g"]
+[ext_resource type="PackedScene" uid="uid://b3th4j3xq58ie" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="5_mp18g"]
 
 [node name="StatsSubMenu" instance=ExtResource( "1_0awv0" )]
 script = ExtResource( "2_ah025" )
@@ -29,49 +29,51 @@ __meta__ = {
 }
 
 [node name="MarginContainer" parent="Foreground/PartyList" index="0"]
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 25.0
-offset_bottom = 23.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 32.0
+offset_bottom = 30.0
 
 [node name="Control" parent="Foreground/PartyList/MarginContainer" index="0"]
-offset_right = 16.0
-offset_bottom = 14.0
+offset_right = 30.0
+offset_bottom = 28.0
 
 [node name="GridContainer" parent="Foreground/PartyList/MarginContainer/Control" index="0"]
-offset_right = 14.0
-offset_bottom = 12.0
+offset_right = 32.0
+offset_bottom = 28.0
 
 [node name="TextOption" parent="Foreground/PartyList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_th6t8" )]
-offset_right = 14.0
-offset_bottom = 12.0
+offset_right = 32.0
+offset_bottom = 28.0
 LabelText = "Ady"
 
 [node name="Arrows" parent="Foreground/PartyList" index="1"]
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 25.0
-offset_bottom = 23.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 32.0
+offset_bottom = 30.0
 
 [node name="ArrowUp" parent="Foreground/PartyList/Arrows" index="0"]
-offset_left = 5.0
-offset_right = 12.0
+offset_left = 12.0
+offset_right = 19.0
 
 [node name="ArrowLeft" parent="Foreground/PartyList/Arrows" index="1"]
-offset_top = 4.0
-offset_bottom = 11.0
+offset_top = 11.0
+offset_bottom = 18.0
 
 [node name="ArrowDown" parent="Foreground/PartyList/Arrows" index="2"]
-offset_left = 5.0
-offset_top = 13.0
-offset_right = 12.0
-offset_bottom = 19.0
+visible = true
+offset_left = 12.0
+offset_top = 27.0
+offset_right = 19.0
+offset_bottom = 33.0
 
 [node name="ArrowRight" parent="Foreground/PartyList/Arrows" index="3"]
-offset_left = 15.0
-offset_top = 4.0
-offset_right = 21.0
-offset_bottom = 11.0
+visible = true
+offset_left = 29.0
+offset_top = 11.0
+offset_right = 35.0
+offset_bottom = 18.0
 
 [node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource( "5_mp18g" )]
 offset_left = 80.0

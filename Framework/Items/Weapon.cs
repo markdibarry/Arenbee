@@ -42,11 +42,6 @@ namespace Arenbee.Framework.Items
             SetNodeReferences();
         }
 
-        public Element? GetElement()
-        {
-            return Item?.ItemStats?.ActionElement;
-        }
-
         public void Init(Node2D holder, Stats stats)
         {
             Holder = holder;
@@ -55,11 +50,12 @@ namespace Arenbee.Framework.Items
 
         public virtual void UpdateHitBoxAction()
         {
-            HitBox.HitBoxAction = new HitBoxAction(HitBox, Holder)
+            HitBox.ActionInfo = new ActionInfo(HitBox, Holder)
             {
                 ActionType = ActionType.Melee,
-                Element = GetElement() ?? Stats.ActionElement,
-                Value = Stats.GetAttribute(AttributeType.Attack).ModifiedValue
+                Element = Stats.ElementOffenses.CurrentElement,
+                StatusEffects = Stats.GetStatusEffectOffenses(),
+                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
             };
         }
 

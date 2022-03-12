@@ -4,14 +4,19 @@ using Godot;
 
 namespace Arenbee.Framework.Statistics
 {
-    public class HitBoxAction
+    public class ActionInfo
     {
-        public HitBoxAction(HitBox hitBox, Node2D source)
+        public ActionInfo(Node2D source)
         {
             ActionType = ActionType.Environment;
             Element = Element.None;
             SourceName = source.Name;
-            StatusEffects = new List<StatusEffectModifier>();
+            StatusEffects = new Dictionary<StatusEffectType, int>();
+            Value = 1;
+        }
+
+        public ActionInfo(HitBox hitBox, Node2D source) : this(source)
+        {
             Value = hitBox.InitialValue;
         }
 
@@ -19,7 +24,7 @@ namespace Arenbee.Framework.Statistics
         public Element Element { get; set; }
         public string SourceName { get; set; }
         public Vector2 SourcePosition { get; set; }
-        public IEnumerable<StatusEffectModifier> StatusEffects { get; set; }
+        public IDictionary<StatusEffectType, int> StatusEffects { get; set; }
         public int Value { get; set; }
     }
 }

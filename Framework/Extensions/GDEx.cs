@@ -23,12 +23,12 @@ namespace Arenbee.Framework.Extensions
 
         public static void SetRectX(this Control control, float val)
         {
-            control.RectSize = new Vector2(val, control.RectSize.y);
+            control.Size = new Vector2(val, control.Size.y);
         }
 
         public static void SetRectY(this Control control, float val)
         {
-            control.RectSize = new Vector2(control.RectSize.x, val);
+            control.Size = new Vector2(control.Size.x, val);
         }
 
         public static void FlipScaleX(this Node2D node2D)
@@ -110,10 +110,10 @@ namespace Arenbee.Framework.Extensions
             if (controlCount == 0) return -1;
             if (controlCount == 1) return 0;
             int nearestIndex = 0;
-            float nearestDistance = control.RectGlobalPosition.DistanceTo(controls.ElementAt(0).RectGlobalPosition);
+            float nearestDistance = control.GlobalPosition.DistanceTo(controls.ElementAt(0).GlobalPosition);
             for (int i = 1; i < controlCount; i++)
             {
-                float newDistance = control.RectGlobalPosition.DistanceTo(controls.ElementAt(i).RectGlobalPosition);
+                float newDistance = control.GlobalPosition.DistanceTo(controls.ElementAt(i).GlobalPosition);
                 if (newDistance < nearestDistance)
                 {
                     nearestIndex = i;

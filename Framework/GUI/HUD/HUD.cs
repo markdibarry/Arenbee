@@ -2,7 +2,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.AreaScenes;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
@@ -74,7 +73,7 @@ namespace Arenbee.Framework.GUI
 
         private void OnDamageRecieved(DamageData data)
         {
-            if (data.ElementMultiplier != 1)
+            if (data.ElementMultiplier != ElementDefense.None)
             {
                 string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
                 string effectiveMessage = $"{data.RecieverName} {effectiveness} {data.Element}!";
@@ -96,13 +95,13 @@ namespace Arenbee.Framework.GUI
             UnsubscribeActorEvents(actor);
         }
 
-        private string GetEffectivenessMessage(float elementMultiplier)
+        private string GetEffectivenessMessage(int elementMultiplier)
         {
-            if (elementMultiplier > 1)
+            if (elementMultiplier > ElementDefense.None)
                 return "is weak to";
-            else if (0 < elementMultiplier && elementMultiplier < 1)
+            else if (elementMultiplier == ElementDefense.Resist)
                 return "resists";
-            else if (elementMultiplier == 0)
+            else if (elementMultiplier == ElementDefense.Nullify)
                 return "nullifies";
             else
                 return "absorbs";
@@ -110,8 +109,8 @@ namespace Arenbee.Framework.GUI
 
         private void UpdatePlayerStatsDisplay(Actor actor)
         {
-            int hp = actor.Stats.GetAttribute(AttributeType.HP).DisplayValue;
-            int maxHP = actor.Stats.GetAttribute(AttributeType.MaxHP).DisplayValue;
+            int hp = actor.Stats.Attributes[AttributeType.HP].DisplayValue;
+            int maxHP = actor.Stats.Attributes[AttributeType.MaxHP].DisplayValue;
             _hpDisplay.Text = $"{hp}/{maxHP}";
         }
     }

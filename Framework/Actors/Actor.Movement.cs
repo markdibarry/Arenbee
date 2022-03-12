@@ -100,13 +100,9 @@ namespace Arenbee.Framework.Actors
         private void HandleMoveX(float delta)
         {
             if (_moveX != 0)
-            {
                 VelocityX = Velocity.x.LerpClamp(_moveX * MaxSpeed, Acceleration * delta);
-            }
             else
-            {
                 VelocityX = Velocity.x.LerpClamp(0, Friction * delta);
-            }
         }
 
         private void HandleMoveXY(float delta)

@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://beeavpxsktbmn"
-path="res://.godot/imported/ElementShadeSmall.png-d99438b21ae9ea1f73d3b2441850e167.stex"
+type="CompressedTexture2D"
+uid="uid://520itu58yh0a"
+path="res://.godot/imported/ElementShadeSmall.png-d99438b21ae9ea1f73d3b2441850e167.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/GUI/Menus/Common/Element/ElementShadeSmall.png"
-dest_files=["res://.godot/imported/ElementShadeSmall.png-d99438b21ae9ea1f73d3b2441850e167.stex"]
+dest_files=["res://.godot/imported/ElementShadeSmall.png-d99438b21ae9ea1f73d3b2441850e167.ctex"]
 
 [params]
 

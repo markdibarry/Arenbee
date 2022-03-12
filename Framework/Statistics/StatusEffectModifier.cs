@@ -1,18 +1,19 @@
-using Arenbee.Framework.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Arenbee.Framework.Statistics
 {
-    public class StatusEffectModifier
+    public class StatusEffectModifier : Modifier<StatusEffectModifier>
     {
         public StatusEffectModifier() { }
 
         public StatusEffectModifier(StatusEffectModifier statusEffectModifier)
         {
-            StatusEffect = statusEffectModifier.StatusEffect;
+            StatusEffectType = statusEffectModifier.StatusEffectType;
             Value = statusEffectModifier.Value;
         }
 
-        public StatusEffect StatusEffect { get; set; }
-        public float Value { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public StatusEffectType StatusEffectType { get; set; }
     }
 }

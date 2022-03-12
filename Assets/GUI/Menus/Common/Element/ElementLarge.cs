@@ -8,6 +8,11 @@ namespace Arenbee.Assets.GUI.Menus.Common
     [Tool]
     public partial class ElementLarge : ElementDisplay
     {
+        public ElementLarge()
+        {
+            Effectiveness = ElementDefense.None;
+        }
+
         public static string GetScenePath() => GDEx.GetScenePath();
         public int Effectiveness { get; set; }
         private Sprite2D _effectivenessSprite;
@@ -21,30 +26,30 @@ namespace Arenbee.Assets.GUI.Menus.Common
 
         public void SetEffectiveness(int value)
         {
-            if (Effectiveness == 0) return;
+            if (Effectiveness == ElementDefense.None) return;
             _effectivenessSprite.Show();
-            if (value > ElementModifier.VeryWeak)
-                value = ElementModifier.VeryWeak;
-            else if (value < ElementModifier.Absorb)
-                value = ElementModifier.Absorb;
+            if (value > ElementDefense.VeryWeak)
+                value = ElementDefense.VeryWeak;
+            else if (value < ElementDefense.Absorb)
+                value = ElementDefense.Absorb;
 
             switch (value)
             {
-                case ElementModifier.VeryWeak:
+                case ElementDefense.VeryWeak:
                     _effectivenessSprite.Frame = 0;
                     _effectivenessSprite.Modulate = ColorConstants.TextRed;
                     break;
-                case ElementModifier.Weak:
+                case ElementDefense.Weak:
                     _effectivenessSprite.Frame = 0;
                     break;
-                case ElementModifier.Resist:
+                case ElementDefense.Resist:
                     _effectivenessSprite.Frame = 1;
                     break;
-                case ElementModifier.Nullify:
+                case ElementDefense.Nullify:
                     _effectivenessSprite.Frame = 2;
                     _effectivenessSprite.Modulate = ColorConstants.DimGrey;
                     break;
-                case ElementModifier.Absorb:
+                case ElementDefense.Absorb:
                     _effectivenessSprite.Frame = 3;
                     _effectivenessSprite.Modulate = ColorConstants.TextGreen;
                     break;

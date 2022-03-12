@@ -25,10 +25,10 @@ namespace Arenbee.Assets.GUI.Menus.Common
 
         protected void ResizeItems(Control itemA, Control itemB)
         {
-            if (itemA.RectSize.x > itemB.RectSize.x)
-                RectMinSize = new Vector2(itemA.RectSize.x * 2, 0);
-            else if (itemB.RectSize.x > itemA.RectSize.x)
-                RectMinSize = new Vector2(itemB.RectSize.x * 2, 0);
+            if (itemA.Size.x > itemB.Size.x)
+                MinimumSize = new Vector2(itemA.Size.x * 2, 0);
+            else if (itemB.Size.x > itemA.Size.x)
+                MinimumSize = new Vector2(itemB.Size.x * 2, 0);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Arenbee.Framework.Items
                 Price = 10,
                 ItemStats = new ItemStats()
                 {
-                    ActionElement = Element.Earth,
+                    ElementOffense = new ElementOffenseModifier(Element.Earth),
                     AttributeModifiers = new AttributeModifier[]
                     {
                         new AttributeModifier()
@@ -68,7 +68,7 @@ namespace Arenbee.Framework.Items
                 Price = 10,
                 ItemStats = new ItemStats()
                 {
-                    ActionElement = Element.Water,
+                    ElementOffense = new ElementOffenseModifier(Element.Water),
                     AttributeModifiers = new AttributeModifier[]
                     {
                         new AttributeModifier()
@@ -162,12 +162,12 @@ namespace Arenbee.Framework.Items
                             Value = 1
                         }
                     },
-                    DefenseElementModifiers = new ElementModifier[]
+                    ElementDefenseModifiers = new ElementDefenseModifier[]
                     {
-                        new ElementModifier()
+                        new ElementDefenseModifier()
                         {
                             Element = Element.Dark,
-                            Value = ElementModifier.Resist
+                            Value = ElementDefense.Resist
                         }
                     }
                 }
@@ -222,12 +222,12 @@ namespace Arenbee.Framework.Items
                             Value = 1
                         }
                     },
-                    DefenseElementModifiers = new ElementModifier[]
+                    ElementDefenseModifiers = new ElementDefenseModifier[]
                     {
-                        new ElementModifier()
+                        new ElementDefenseModifier()
                         {
                             Element = Element.Water,
-                            Value = ElementModifier.Weak
+                            Value = ElementDefense.Weak
                         }
                     }
                 }
@@ -314,12 +314,12 @@ namespace Arenbee.Framework.Items
                             Value = 1
                         }
                     },
-                    DefenseElementModifiers = new ElementModifier[]
+                    ElementDefenseModifiers = new ElementDefenseModifier[]
                     {
-                        new ElementModifier()
+                        new ElementDefenseModifier()
                         {
                             Element = Element.Water,
-                            Value = ElementModifier.Resist
+                            Value = ElementDefense.Resist
                         }
                     }
                 }
@@ -365,12 +365,12 @@ namespace Arenbee.Framework.Items
                 Price = 15,
                 ItemStats = new ItemStats()
                 {
-                    DefenseElementModifiers = new ElementModifier[]
+                    ElementDefenseModifiers = new ElementDefenseModifier[]
                     {
-                        new ElementModifier()
+                        new ElementDefenseModifier()
                         {
                             Element = Element.Dark,
-                            Value = ElementModifier.Resist
+                            Value = ElementDefense.Resist
                         }
                     }
                 }
@@ -416,12 +416,12 @@ namespace Arenbee.Framework.Items
                 Price = 15,
                 ItemStats = new ItemStats()
                 {
-                    DefenseElementModifiers = new ElementModifier[]
+                    ElementDefenseModifiers = new ElementDefenseModifier[]
                     {
-                        new ElementModifier()
+                        new ElementDefenseModifier()
                         {
                             Element = Element.Fire,
-                            Value = ElementModifier.Resist
+                            Value = ElementDefense.Resist
                         }
                     }
                 }

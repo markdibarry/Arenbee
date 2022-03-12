@@ -14,7 +14,7 @@ namespace Arenbee.Framework.GUI.Text
         public override void _Ready()
         {
             _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
-            MaxSize = GetParentOrNull<Control>().RectSize;
+            MaxSize = GetParentOrNull<Control>().Size;
             // if loading prepopulated messages
             var messageBoxes = GetChildren().OfType<MessageBox>();
             foreach (MessageBox messageBox in messageBoxes)

@@ -78,7 +78,7 @@ namespace Arenbee.Framework.GUI
 
         public void ExpandGridToContainer()
         {
-            GridContainer.RectSize = new Vector2(_control.RectSize.x, GridContainer.RectSize.y);
+            GridContainer.Size = new Vector2(_control.Size.x, GridContainer.Size.y);
         }
 
         public void FitToContent()
@@ -88,10 +88,10 @@ namespace Arenbee.Framework.GUI
 
         public void FitToContent(Vector2 max)
         {
-            Vector2 oldSize = RectSize;
+            Vector2 oldSize = Size;
             Vector2 padding = GetPadding(GridContainer);
-            Vector2 newSize = GridContainer.RectSize + (padding * 2);
-            Vector2 newPos = RectPosition;
+            Vector2 newSize = GridContainer.Size + (padding * 2);
+            Vector2 newPos = Position;
             if (max != Vector2.Zero)
                 newSize = new Vector2(Math.Min(newSize.x, max.x), Math.Min(newSize.y, max.x));
 
@@ -104,8 +104,8 @@ namespace Arenbee.Framework.GUI
                 newPos = new Vector2(newPos.x, newPos.y - newSize.y - oldSize.y);
             else if (VResize == SizeFlags.ShrinkCenter)
                 newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
-            RectSize = newSize;
-            RectPosition = newPos;
+            Size = newSize;
+            Position = newPos;
             _changesDirty = true;
         }
 
@@ -235,7 +235,7 @@ namespace Arenbee.Framework.GUI
         public void ResetContainer()
         {
             ItemIndex = 0;
-            GridContainer.RectPosition = Vector2.Zero;
+            GridContainer.Position = Vector2.Zero;
         }
 
         public void SetChildrenToOptionItems()
@@ -251,31 +251,31 @@ namespace Arenbee.Framework.GUI
         private void AdjustPosition(OptionItem optionItem)
         {
             // Adjust Right
-            if (_control.RectGlobalPosition.x + _control.RectSize.x < optionItem.RectGlobalPosition.x + optionItem.RectSize.x)
+            if (_control.GlobalPosition.x + _control.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
             {
-                var newXPos = optionItem.RectPosition.x + optionItem.RectSize.x - _control.RectSize.x;
-                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
+                var newXPos = optionItem.Position.x + optionItem.Size.x - _control.Size.x;
+                GridContainer.Position = new Vector2(newXPos * -1, GridContainer.Position.y);
             }
 
             // Adjust Down
-            if (_control.RectGlobalPosition.y + _control.RectSize.y < optionItem.RectGlobalPosition.y + optionItem.RectSize.y)
+            if (_control.GlobalPosition.y + _control.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
             {
-                var newYPos = optionItem.RectPosition.y + optionItem.RectSize.y - _control.RectSize.y;
-                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
+                var newYPos = optionItem.Position.y + optionItem.Size.y - _control.Size.y;
+                GridContainer.Position = new Vector2(GridContainer.Position.x, newYPos * -1);
             }
 
             // Adjust Left
-            if (_control.RectGlobalPosition.x > optionItem.RectGlobalPosition.x)
+            if (_control.GlobalPosition.x > optionItem.GlobalPosition.x)
             {
-                var newXPos = optionItem.RectPosition.x;
-                GridContainer.RectPosition = new Vector2(newXPos * -1, GridContainer.RectPosition.y);
+                var newXPos = optionItem.Position.x;
+                GridContainer.Position = new Vector2(newXPos * -1, GridContainer.Position.y);
             }
 
             // Adjust Up
-            if (_control.RectGlobalPosition.y > optionItem.RectGlobalPosition.y)
+            if (_control.GlobalPosition.y > optionItem.GlobalPosition.y)
             {
-                var newYPos = optionItem.RectPosition.y;
-                GridContainer.RectPosition = new Vector2(GridContainer.RectPosition.x, newYPos * -1);
+                var newYPos = optionItem.Position.y;
+                GridContainer.Position = new Vector2(GridContainer.Position.x, newYPos * -1);
             }
         }
 
@@ -286,7 +286,7 @@ namespace Arenbee.Framework.GUI
             foreach (var option in OptionItems)
             {
                 if (!option.Visible) continue;
-                var optionPos = option.RectPosition + option.RectSize;
+                var optionPos = option.Position + option.Size;
                 if (optionPos.x > h) h = optionPos.x;
                 if (optionPos.y > v) v = optionPos.y;
             }
@@ -295,15 +295,15 @@ namespace Arenbee.Framework.GUI
 
         private Vector2 GetPadding(Control subContainer)
         {
-            Vector2 itemsPosition = subContainer.RectGlobalPosition;
-            Vector2 containerPosition = RectGlobalPosition;
+            Vector2 itemsPosition = subContainer.GlobalPosition;
+            Vector2 containerPosition = GlobalPosition;
 
             return (itemsPosition - containerPosition).Abs();
         }
 
         private void HandleChanges()
         {
-            GridContainer.RectSize = GetGridContainerSize();
+            GridContainer.Size = GetGridContainerSize();
             if (_fitContainer) FitToContent();
             if (_expandContent) ExpandGridToContainer();
             HandleArrows();
@@ -313,10 +313,10 @@ namespace Arenbee.Framework.GUI
 
         private void HandleHArrows()
         {
-            if (GridContainer.RectSize.x > _control.RectSize.x)
+            if (GridContainer.Size.x > _control.Size.x)
             {
-                _arrowLeft.Visible = GridContainer.RectPosition.x < 0;
-                _arrowRight.Visible = GridContainer.RectSize.x + GridContainer.RectPosition.x > _control.RectSize.x;
+                _arrowLeft.Visible = GridContainer.Position.x < 0;
+                _arrowRight.Visible = GridContainer.Size.x + GridContainer.Position.x > _control.Size.x;
             }
             else
             {
@@ -327,10 +327,10 @@ namespace Arenbee.Framework.GUI
 
         private void HandleVArrows()
         {
-            if (GridContainer.RectSize.y > _control.RectSize.y)
+            if (GridContainer.Size.y > _control.Size.y)
             {
-                _arrowUp.Visible = GridContainer.RectPosition.y < 0;
-                _arrowDown.Visible = GridContainer.RectSize.y + GridContainer.RectPosition.y > _control.RectSize.y;
+                _arrowUp.Visible = GridContainer.Position.y < 0;
+                _arrowDown.Visible = GridContainer.Size.y + GridContainer.Position.y > _control.Size.y;
             }
             else
             {

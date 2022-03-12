@@ -6,27 +6,19 @@ namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
     public class Walk : State<Actor>
     {
-        public override void Enter()
-        {
-        }
+        public override void Enter() { }
 
         public override void Update(float delta)
         {
             CheckForTransitions();
-
+            Actor.MaxSpeed = Actor.WalkSpeed;
             if (InputHandler.Left.IsActionPressed)
-            {
                 Actor.MoveX(Facings.Left);
-            }
             else if (InputHandler.Right.IsActionPressed)
-            {
                 Actor.MoveX(Facings.Right);
-            }
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {

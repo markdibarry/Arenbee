@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://cuxly3c8fqvde"
-path="res://.godot/imported/Autumn_entities (16 x 16).png-6f872658c1b66367e955a1376ca26534.stex"
+type="CompressedTexture2D"
+uid="uid://cadpt8k0rv4t1"
+path="res://.godot/imported/Autumn_entities (16 x 16).png-6f872658c1b66367e955a1376ca26534.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Scenery/Seasonal Tilesets/2 - Autumn Forest/Autumn_entities (16 x 16).png"
-dest_files=["res://.godot/imported/Autumn_entities (16 x 16).png-6f872658c1b66367e955a1376ca26534.stex"]
+dest_files=["res://.godot/imported/Autumn_entities (16 x 16).png-6f872658c1b66367e955a1376ca26534.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

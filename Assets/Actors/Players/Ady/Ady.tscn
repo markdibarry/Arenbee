@@ -1,9 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://c3n3fmjf2qxh0"]
+[gd_scene load_steps=18 format=3 uid="uid://cmuteecrn2trn"]
 
 [ext_resource type="PackedScene" uid="uid://bj28sv5vq5vnv" path="res://Framework/Actors/Player.tscn" id="1_n2y5e"]
 [ext_resource type="Script" path="res://Assets/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
 [ext_resource type="Animation" uid="uid://btpwopgyi1ojn" path="res://Assets/Actors/Players/Ady/Animation/Idle.tres" id="3_5sjqk"]
-[ext_resource type="Texture2D" uid="uid://duu0xw5t5b1xq" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="3_72rfu"]
+[ext_resource type="Texture2D" uid="uid://cwjip5n6dl8at" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="3_72rfu"]
 [ext_resource type="Animation" uid="uid://dimyi2m7odx30" path="res://Assets/Actors/Players/Ady/Animation/Dead.tres" id="3_c80ot"]
 [ext_resource type="Animation" uid="uid://co615bidb54o1" path="res://Assets/Actors/Players/Ady/Animation/Jump.tres" id="4_6fk4c"]
 [ext_resource type="Animation" uid="uid://ce7pokvam44wb" path="res://Assets/Actors/Players/Ady/Animation/Run.tres" id="5_mm62d"]

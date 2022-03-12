@@ -68,6 +68,7 @@ namespace Arenbee.Framework.Actors
                 BehaviorTree?.Update(delta);
 
             StateController.UpdateStates(delta);
+            Stats.Update(delta, this);
             if (IsFloater)
                 HandleMoveXY(delta);
             else
@@ -96,7 +97,7 @@ namespace Arenbee.Framework.Actors
             Equipment.EquipmentSet += OnEquipmentSet;
             Stats.DamageRecieved += OnDamageRecieved;
             Stats.HPDepleted += OnHPDepleted;
-            Stats.StatsUpdated += OnStatsUpdated;
+            Stats.StatsRecalculated += OnStatsUpdated;
         }
 
         public void UnsubscribeEvents()
@@ -105,7 +106,7 @@ namespace Arenbee.Framework.Actors
             Equipment.EquipmentSet -= OnEquipmentSet;
             Stats.DamageRecieved += OnDamageRecieved;
             Stats.HPDepleted += OnHPDepleted;
-            Stats.StatsUpdated += OnStatsUpdated;
+            Stats.StatsRecalculated += OnStatsUpdated;
         }
     }
 

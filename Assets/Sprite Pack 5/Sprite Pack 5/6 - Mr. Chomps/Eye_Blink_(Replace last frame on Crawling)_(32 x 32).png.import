@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://qv07tvjq0l6a"
-path="res://.godot/imported/Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png-a518fbe5b5da64c39ab89bc981db911d.stex"
+type="CompressedTexture2D"
+uid="uid://ibjlmb1hfq0c"
+path="res://.godot/imported/Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png-a518fbe5b5da64c39ab89bc981db911d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Sprite Pack 5/Sprite Pack 5/6 - Mr. Chomps/Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png"
-dest_files=["res://.godot/imported/Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png-a518fbe5b5da64c39ab89bc981db911d.stex"]
+dest_files=["res://.godot/imported/Eye_Blink_(Replace last frame on Crawling)_(32 x 32).png-a518fbe5b5da64c39ab89bc981db911d.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

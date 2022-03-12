@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://cpvnr7fujk2ay"
-path="res://.godot/imported/_Complete_static_BG_(288 x 208).png-41ffc45b5d59a79b4b52e680608ad3d4.stex"
+type="CompressedTexture2D"
+uid="uid://borls2x327b40"
+path="res://.godot/imported/_Complete_static_BG_(288 x 208).png-41ffc45b5d59a79b4b52e680608ad3d4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Scenery/Seasonal Tilesets/3 - Tropics/Background parts/_Complete_static_BG_(288 x 208).png"
-dest_files=["res://.godot/imported/_Complete_static_BG_(288 x 208).png-41ffc45b5d59a79b4b52e680608ad3d4.stex"]
+dest_files=["res://.godot/imported/_Complete_static_BG_(288 x 208).png-41ffc45b5d59a79b4b52e680608ad3d4.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

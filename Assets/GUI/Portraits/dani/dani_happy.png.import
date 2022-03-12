@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://dluxdtt7pxuq0"
-path="res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.stex"
+type="CompressedTexture2D"
+uid="uid://by4rc2bumig6f"
+path="res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/GUI/Portraits/dani/dani_happy.png"
-dest_files=["res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.stex"]
+dest_files=["res://.godot/imported/dani_happy.png-7e8791f01fcba945b67aa711897000bc.ctex"]
 
 [params]
 

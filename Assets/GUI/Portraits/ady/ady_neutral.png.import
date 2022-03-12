@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://cddwq0uoap3ho"
-path="res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.stex"
+type="CompressedTexture2D"
+uid="uid://c6sg7ytu8xfbk"
+path="res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/GUI/Portraits/ady/ady_neutral.png"
-dest_files=["res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.stex"]
+dest_files=["res://.godot/imported/ady_neutral.png-920a7bb74250567da651320c0c7e3955.ctex"]
 
 [params]
 

@@ -1,6 +1,7 @@
 ﻿using Arenbee.Framework.Enums;
 using Arenbee.Framework.Utility;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Arenbee.Framework.Items
 {
@@ -47,7 +48,9 @@ namespace Arenbee.Framework.Items
             }
         }
         public string ItemId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public EquipSlotName SlotName { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemType SlotType { get; set; }
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;

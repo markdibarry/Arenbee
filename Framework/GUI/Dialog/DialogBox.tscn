@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogBox.cs" id="2_c18hx"]
 [ext_resource type="SpriteFrames" uid="uid://c0wqy08338pii" path="res://Assets/GUI/Portraits/dani/portraits.tres" id="3_uipmn"]
 [ext_resource type="PackedScene" uid="uid://bnfvvhk6bvj0i" path="res://Framework/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
-[ext_resource type="Texture2D" uid="uid://lctogtjgsu68" path="res://Framework/GUI/Cursors/arrowDownSmall.png" id="5_x5jni"]
+[ext_resource type="Texture2D" uid="uid://cjvc717d37jv7" path="res://Framework/GUI/Cursors/arrowDownSmall.png" id="5_x5jni"]
 
 [node name="DialogBox" type="Control"]
 layout_direction = 2

@@ -24,8 +24,6 @@ DimItems = true
 KeepHighlightPosition = true
 
 [node name="MarginContainer" parent="Foreground/TypeList" index="0"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 112.0
 offset_bottom = 23.0
 
@@ -34,9 +32,9 @@ offset_right = 103.0
 offset_bottom = 14.0
 
 [node name="GridContainer" parent="Foreground/TypeList/MarginContainer/Control" index="0"]
-offset_right = 98.0
+offset_right = 115.0
 offset_bottom = 12.0
-columns = 4
+columns = 5
 
 [node name="All" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_iv8vo" )]
 offset_right = 12.0
@@ -67,9 +65,15 @@ offset_bottom = 12.0
 Dim = true
 LabelText = "Key"
 
+[node name="Key2" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "4_iv8vo" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
+offset_left = 101.0
+offset_right = 115.0
+offset_bottom = 12.0
+Dim = true
+LabelText = "Key"
+
 [node name="Arrows" parent="Foreground/TypeList" index="1"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 112.0
 offset_bottom = 23.0
 
@@ -88,6 +92,7 @@ offset_right = 56.0
 offset_bottom = 19.0
 
 [node name="ArrowRight" parent="Foreground/TypeList/Arrows" index="3"]
+visible = true
 offset_left = 102.0
 offset_top = 4.0
 offset_right = 108.0
@@ -107,8 +112,6 @@ DimItems = true
 ExpandContent = true
 
 [node name="MarginContainer" parent="Foreground/InventoryList" index="0"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 111.0
 offset_bottom = 209.0
 
@@ -172,8 +175,6 @@ KeyText = "Rock"
 ValueText = "x500"
 
 [node name="Arrows" parent="Foreground/InventoryList" index="1"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 111.0
 offset_bottom = 209.0
 

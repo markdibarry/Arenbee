@@ -154,8 +154,8 @@ namespace Arenbee.Framework.GUI
 
         private void MoveCursorToItem(OptionItem optionItem)
         {
-            float cursorX = optionItem.RectGlobalPosition.x - 4;
-            float cursorY = (float)(optionItem.RectGlobalPosition.y + Math.Round(optionItem.RectSize.y * 0.5));
+            float cursorX = optionItem.GlobalPosition.x - 4;
+            float cursorY = (float)(optionItem.GlobalPosition.y + Math.Round(optionItem.Size.y * 0.5));
             _cursor.GlobalPosition = new Vector2(cursorX, cursorY);
         }
 

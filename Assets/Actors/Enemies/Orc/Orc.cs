@@ -20,10 +20,10 @@ namespace Arenbee.Assets.Actors.Enemies
 
         protected override void SetDefaultStats()
         {
-            Stats.DefenseElementModifiers.Add(new ElementModifier()
+            Stats.AddElementDefenseMod(new ElementDefenseModifier()
             {
                 Element = Element.Earth,
-                Value = ElementModifier.Weak
+                Value = ElementDefense.Weak
             });
             Stats.SetAttribute(AttributeType.MaxHP, 6);
             Stats.SetAttribute(AttributeType.HP, 6);

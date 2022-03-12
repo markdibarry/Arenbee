@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://cm0cyked3sdsn"
-path="res://.godot/imported/5 - Sky_color.png-2e260e6cfef9513896743fb395a59646.stex"
+type="CompressedTexture2D"
+uid="uid://cw31evuhs6fyy"
+path="res://.godot/imported/5 - Sky_color.png-2e260e6cfef9513896743fb395a59646.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Scenery/Seasonal Tilesets/3 - Tropics/Background parts/5 - Sky_color.png"
-dest_files=["res://.godot/imported/5 - Sky_color.png-2e260e6cfef9513896743fb395a59646.stex"]
+dest_files=["res://.godot/imported/5 - Sky_color.png-2e260e6cfef9513896743fb395a59646.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0

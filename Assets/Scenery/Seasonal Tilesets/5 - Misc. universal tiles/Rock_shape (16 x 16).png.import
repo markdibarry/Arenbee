@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
-uid="uid://bktt5uluwrbtd"
-path="res://.godot/imported/Rock_shape (16 x 16).png-24523325345c85e26ca52a94d844e338.stex"
+type="CompressedTexture2D"
+uid="uid://7n00iybucooo"
+path="res://.godot/imported/Rock_shape (16 x 16).png-24523325345c85e26ca52a94d844e338.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Assets/Scenery/Seasonal Tilesets/5 - Misc. universal tiles/Rock_shape (16 x 16).png"
-dest_files=["res://.godot/imported/Rock_shape (16 x 16).png-24523325345c85e26ca52a94d844e338.stex"]
+dest_files=["res://.godot/imported/Rock_shape (16 x 16).png-24523325345c85e26ca52a94d844e338.ctex"]
 
 [params]
 
@@ -29,7 +29,6 @@ roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
-process/HDR_as_SRGB=false
+process/hdr_as_srgb=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
