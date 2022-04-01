@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cy4ikfjajypuu"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://Framework/Game/GameSession.cs" id="1_wqoak"]
-[ext_resource type="PackedScene" uid="uid://pr5rmcsxq4br" path="res://Framework/GUI/HUD/HUD.tscn" id="2_ii0go"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/HUD/HUD.tscn" id="2_ii0go"]
 [ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="3_e220r"]
 [ext_resource type="PackedScene" uid="uid://dhwyc83vt5s70" path="res://Framework/GUI/Dialog/DialogController.tscn" id="4_3vlfm"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/Menu.cs" id="5_xjdwq"]

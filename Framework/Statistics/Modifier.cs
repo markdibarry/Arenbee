@@ -1,25 +1,121 @@
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace Arenbee.Framework.Statistics
 {
-    public abstract class Modifier<T>
+    public class Modifier
     {
+        [JsonConstructor]
+        public Modifier(
+            StatType statType,
+            int subType,
+            ModEffect effect,
+            int value,
+            int chance,
+            bool isHidden = false)
+        {
+            StatType = statType;
+            SubType = subType;
+            Effect = effect;
+            Chance = chance;
+            Value = value;
+            IsHidden = isHidden;
+        }
+
+        public Modifier(
+            StatType statType,
+            int subType,
+            ModEffect effect,
+            int value,
+            bool isHidden = false)
+            : this(statType, subType, effect, value, 100, isHidden)
+        { }
+
+        public Modifier(
+            StatType statType,
+            int subType,
+            bool isHidden = false)
+            : this(statType, subType, ModEffect.None, 0, 100, isHidden)
+        { }
+
+        public Modifier(Modifier mod)
+        {
+            StatType = mod.StatType;
+            SubType = mod.SubType;
+            Effect = mod.Effect;
+            IsHidden = mod.IsHidden;
+            Value = mod.Value;
+            Chance = mod.Chance;
+        }
+
+        public int Chance { get; set; }
+        public StatType StatType { get; set; }
+        public int SubType { get; set; }
+        public ModEffect Effect { get; set; }
         public bool IsHidden { get; set; }
-        public int RemainingEvents { get; set; }
-        public float RemainingTime { get; set; }
-        public int Value { get; set; }
-        public delegate void ExpiredHandler(Modifier<T> modifer);
-        public event ExpiredHandler Expired;
+        public int Value { get; }
 
-        public virtual int Apply(int value) { return 0; }
-
-        public void DecreaseTime(float delta)
+        public int Apply(int baseValue)
         {
-            RemainingTime -= delta;
-            if (RemainingTime <= 0)
-                Expired?.Invoke(this);
+            return s_methods[Effect](baseValue, Value);
         }
 
-        public void OnStatsUpdated(float delta)
+        /// <summary>
+        /// TODO MAKE BETTER
+        /// </summary>
+        /// <returns></returns>
+        private static readonly Dictionary<ModEffect, Func<int, int, int>> s_methods =
+            new()
+            {
+                { ModEffect.None, None },
+                { ModEffect.Add, Add },
+                { ModEffect.Subtract, Subtract },
+                { ModEffect.Multiply, Multiply },
+                { ModEffect.Divide, Divide },
+                { ModEffect.Percentage, Percentage }
+            };
+
+        private static int None(int baseValue, int modValue)
         {
+            return baseValue;
         }
+
+        private static int Add(int baseValue, int modValue)
+        {
+            return baseValue + modValue;
+        }
+
+        private static int Subtract(int baseValue, int modValue)
+        {
+            return baseValue - modValue;
+        }
+
+        public static int Multiply(int baseValue, int modValue)
+        {
+            return baseValue * modValue;
+        }
+
+        public static int Divide(int baseValue, int modValue)
+        {
+            if (baseValue == 0 || modValue == 0)
+                return 0;
+            return baseValue / modValue;
+        }
+
+        public static int Percentage(int baseValue, int modValue)
+        {
+            return (int)(baseValue * (modValue * 0.01));
+        }
+    }
+
+    public enum ModEffect
+    {
+        None,
+        Add,
+        Subtract,
+        Multiply,
+        Divide,
+        Percentage
     }
 }

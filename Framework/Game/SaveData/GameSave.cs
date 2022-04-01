@@ -8,7 +8,7 @@ namespace Arenbee.Framework.Game.SaveData
     {
         public GameSave()
         {
-            ActorInfos = new List<ActorInfo>();
+            ActorData = new List<ActorData>();
         }
 
         public GameSave(GameSessionBase gameSession) : this()
@@ -16,13 +16,11 @@ namespace Arenbee.Framework.Game.SaveData
             Items = gameSession.Party?.Inventory?.Items;
             SessionState = gameSession.SessionState;
             foreach (Actor actor in gameSession.Party?.Actors)
-            {
-                ActorInfos.Add(new ActorInfo(actor));
-            }
+                ActorData.Add(new ActorData(actor));
         }
 
         public SessionState SessionState { get; set; }
         public ICollection<ItemStack> Items { get; set; }
-        public List<ActorInfo> ActorInfos { get; set; }
+        public List<ActorData> ActorData { get; set; }
     }
 }

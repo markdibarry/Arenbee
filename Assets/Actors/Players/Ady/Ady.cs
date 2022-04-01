@@ -16,8 +16,9 @@ namespace Arenbee.Assets.Actors.Players
                 new ActionStates.NotAttacking());
         }
 
-        protected override void SetDefaultStats()
+        protected override void ApplyDefaultStats()
         {
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Dark, ModEffect.Add, ElementDef.Nullify));
             Stats.SetAttribute(AttributeType.MaxHP, 12);
             Stats.SetAttribute(AttributeType.HP, 12);
             Stats.SetAttribute(AttributeType.Attack, 0);

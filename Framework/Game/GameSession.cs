@@ -9,6 +9,7 @@ using Godot;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Utility;
+using Arenbee.Assets.GUI;
 
 namespace Arenbee.Framework.Game
 {
@@ -62,7 +63,7 @@ namespace Arenbee.Framework.Game
 
         public override void Init(GameSave gameSave)
         {
-            Locator.ProvidePlayerParty(new PlayerParty(gameSave.ActorInfos, gameSave.Items));
+            Locator.ProvidePlayerParty(new PlayerParty(gameSave.ActorData, gameSave.Items));
             Party = Locator.GetParty();
             SessionState = gameSave.SessionState;
             InitAreaScene();
@@ -123,6 +124,7 @@ namespace Arenbee.Framework.Game
         private void OnPartyMenuRootClosed(object sender, EventArgs e)
         {
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
+            _hud.ProcessMode = ProcessModeEnum.Inherit;
         }
 
         private void OpenPartyMenu()
@@ -130,6 +132,7 @@ namespace Arenbee.Framework.Game
             if (_partyMenu.GetChildCount() == 0)
             {
                 CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
+                _hud.ProcessMode = ProcessModeEnum.Disabled;
                 var partySubMenu = _partyMenuScene.Instantiate<SubMenu>();
                 _partyMenu.AddSubMenu(partySubMenu);
             }

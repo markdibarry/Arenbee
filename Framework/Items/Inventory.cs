@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {
@@ -101,28 +100,16 @@ namespace Arenbee.Framework.Items
             {
                 itemStack.RemoveAmount(amount);
                 if (itemStack.Amount == 0)
-                {
                     _itemStacks.Remove(itemStack);
-                }
                 return true;
             }
             return false;
         }
 
-        public bool SetReservation(EquipmentSlot slot, Item newItem)
+        public void SetReservation(EquipmentSlot slot, Item newItem)
         {
-            ItemStack oldStack = _itemStacks.Find(x => x.Reservations.Contains(slot));
-            oldStack?.RemoveReservation(slot);
-            ItemStack newStack = GetItemStack(newItem);
-            if (newStack == null) return false;
-            return newStack.AddReservation(slot);
-        }
-
-        public bool RemoveReservation(EquipmentSlot slot, Item oldItem)
-        {
-            ItemStack stack = GetItemStack(oldItem);
-            if (stack == null) return false;
-            return stack.RemoveReservation(slot);
+            GetItemStack(slot.Item)?.RemoveReservation(slot);
+            GetItemStack(newItem)?.AddReservation(slot);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
@@ -77,9 +76,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         private bool TryEquip(string itemId, EquipmentSlot slot)
         {
-            if (itemId == null || _playerParty.Inventory.CanReserve(itemId))
-                return slot.SetItemById(itemId);
-            return false;
+            return Actor.Equipment.TrySetItemById(slot, itemId);
         }
     }
 }

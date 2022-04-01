@@ -1,33 +1,28 @@
 ﻿using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Framework.Items
 {
     public partial class WeaponSlot : Node2D
     {
-        private StateController _stateController;
-        private Stats _stats;
-        private Node2D _holder;
+        private Actor _holder;
         public Weapon CurrentWeapon { get; private set; }
 
-        public void Init(Node2D holder, Stats stats, StateController stateController)
+        public void Init(Actor holder)
         {
             _holder = holder;
-            _stats = stats;
-            _stateController = stateController;
+            var slot = _holder.Equipment.GetSlot(EquipSlotName.Weapon);
+            SetWeapon(slot.Item);
         }
 
         public void SetWeapon(Item item)
         {
-            if (item == null)
-            {
+            if (item != null)
+                SetWeapon(item.Id);
+            else
                 DetachWeapon();
-                return;
-            }
-            SetWeapon(item.Id);
         }
 
         public void SetWeapon(string itemId)
@@ -46,10 +41,10 @@ namespace Arenbee.Framework.Items
                 GD.PrintErr("No weapon at provided location!");
                 return;
             }
-            weapon.Init(_holder, _stats);
+            weapon.Init(_holder);
             CurrentWeapon = weapon;
             AddChild(weapon);
-            _stateController.ActionStateMachine.Init(weapon.InitialState);
+            _holder.StateController.ActionStateMachine.Init(weapon.InitialState);
         }
 
         private void DetachWeapon()
@@ -60,7 +55,7 @@ namespace Arenbee.Framework.Items
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;
-                _stateController.ActionStateMachine.Init(_stateController.UnarmedInitialState);
+                _holder.StateController.ActionStateMachine.Init(_holder.StateController.UnarmedInitialState);
             }
         }
     }

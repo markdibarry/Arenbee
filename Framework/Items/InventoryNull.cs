@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Items
 {
@@ -11,7 +10,6 @@ namespace Arenbee.Framework.Items
         public ICollection<ItemStack> GetItemsByType(ItemType itemType) { return new List<ItemStack>(); }
         public int Add(Item item, int amount) { return 0; }
         public bool Remove(Item item, int amount) { return false; }
-        public bool SetReservation(EquipmentSlot slot, Item newItem) { return false; }
-        public bool RemoveReservation(EquipmentSlot slot, Item oldItem) { return false; }
+        public void SetReservation(EquipmentSlot slot, Item newItem) { }
     }
 }

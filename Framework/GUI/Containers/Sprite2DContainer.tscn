@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dc2o0ar6blunv"]
+
+[ext_resource type="Script" path="res://Framework/GUI/Containers/Sprite2DContainer.cs" id="1_pug8t"]
+
+[node name="Sprite2DContainer" type="Container"]
+script = ExtResource( "1_pug8t" )

@@ -7,33 +7,34 @@ namespace Arenbee.Framework.Items
     {
         public ItemStats()
         {
-            AttributeModifiers = new AttributeModifier[0];
-            ElementDefenseModifiers = new List<ElementDefenseModifier>();
-            StatusEffectOffenses = new List<StatusEffectModifier>();
-            StatusEffectDefenses = new List<StatusEffectModifier>();
+            Modifiers = new List<Modifier>();
         }
 
-        public IEnumerable<AttributeModifier> AttributeModifiers { get; set; }
-        public IEnumerable<ElementDefenseModifier> ElementDefenseModifiers { get; set; }
-        public ElementOffenseModifier ElementOffense { get; set; }
-        public IEnumerable<StatusEffectModifier> StatusEffectDefenses { get; set; }
-        public IEnumerable<StatusEffectModifier> StatusEffectOffenses { get; set; }
+        public ItemStats(Modifier[] mods)
+        {
+            Modifiers = mods;
+        }
+
+        public IEnumerable<Modifier> Modifiers { get; set; }
 
         public string GetStatDescription()
         {
             var modParts = new List<string>();
-            foreach (var mod in AttributeModifiers)
+            foreach (var itemMod in Modifiers)
             {
-                if (mod.IsHidden) continue;
-                var name = mod.AttributeType.Get().Abbreviation;
-                switch (mod.Effect)
+                if (itemMod.IsHidden) continue;
+                if (itemMod.StatType == StatType.Attribute)
                 {
-                    case ModifierEffect.Add:
-                        modParts.Add($"+{mod.Value} {name}");
-                        break;
-                    case ModifierEffect.Subtract:
-                        modParts.Add($"-{mod.Value} {name}");
-                        break;
+                    var name = ((AttributeType)itemMod.SubType).Get().Abbreviation;
+                    switch (itemMod.Effect)
+                    {
+                        case ModEffect.Add:
+                            modParts.Add($"+{itemMod.Value} {name}");
+                            break;
+                        case ModEffect.Subtract:
+                            modParts.Add($"-{itemMod.Value} {name}");
+                            break;
+                    }
                 }
             }
             return string.Join(", ", modParts);
@@ -41,37 +42,14 @@ namespace Arenbee.Framework.Items
 
         public void AddToStats(Stats stats)
         {
-            foreach (AttributeModifier mod in AttributeModifiers)
-                stats.Attributes[mod.AttributeType].Modifiers.Add(mod);
-
-            foreach (ElementDefenseModifier mod in ElementDefenseModifiers)
-                stats.AddElementDefenseMod(mod);
-
-            if (ElementOffense != null)
-                stats.ElementOffenses.Modifiers.Add(ElementOffense);
-
-            foreach (var mod in StatusEffectDefenses)
-                stats.AddStatusEffectDefenseMod(mod);
-
-            foreach (var mod in StatusEffectOffenses)
-                stats.AddStatusEffectOffenseMod(mod);
+            foreach (Modifier mod in Modifiers)
+                stats.AddMod(mod);
         }
 
         public void RemoveFromStats(Stats stats)
         {
-            foreach (AttributeModifier mod in AttributeModifiers)
-                stats.Attributes[mod.AttributeType].Modifiers.Remove(mod);
-
-            foreach (var mod in ElementDefenseModifiers)
-                stats.RemoveElementDefenseMod(mod);
-
-            stats.ElementOffenses.Modifiers.Remove(ElementOffense);
-
-            foreach (var mod in StatusEffectDefenses)
-                stats.RemoveStatusEffectDefenseMod(mod);
-
-            foreach (var mod in StatusEffectOffenses)
-                stats.RemoveStatusEffectOffenseMod(mod);
+            foreach (Modifier mod in Modifiers)
+                stats.RemoveMod(mod);
         }
     }
 }

@@ -21,12 +21,8 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             CheckForTransitions();
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
-        public override void CheckForTransitions()
-        {
-        }
+        public override void CheckForTransitions() { }
     }
 }

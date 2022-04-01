@@ -64,6 +64,11 @@ namespace Arenbee.Framework.GUI
         public event ItemFocusedHandler ItemFocused;
         public event ItemSelectedHandler ItemSelected;
 
+        public override void _ExitTree()
+        {
+            UnsubscribeEvents();
+        }
+
         public override void _Process(float delta)
         {
             if (_changesDirty)

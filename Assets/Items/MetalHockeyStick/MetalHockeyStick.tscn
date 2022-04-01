@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://Framework/Items/Weapon.tscn" id="1_8enrq"]
 [ext_resource type="Script" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStick.cs" id="2_lko0s"]
-[ext_resource type="Texture2D" uid="uid://caps3rrv4fosu" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStick.png" id="3_ywibr"]
+[ext_resource type="Texture2D" uid="uid://dmf74sr30exi7" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStick.png" id="3_ywibr"]
 [ext_resource type="Animation" uid="uid://bygnulqi68y5j" path="res://Assets/Items/HockeyStick/WeakAttack1.tres" id="4_knblh"]
 
 [sub_resource type="Animation" id="Animation_io26f"]

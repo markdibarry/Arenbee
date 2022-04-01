@@ -1,7 +1,0 @@
-[gd_resource type="Font" load_steps=2 format=3 uid="uid://bdvwqvv0c2kgy"]
-
-[ext_resource type="FontData" uid="uid://cnj3ld63hgrhf" path="res://Framework/GUI/Fonts/m3x6.ttf" id="1_xpcgx"]
-
-[resource]
-spacing_top = -4
-data/0 = ExtResource( "1_xpcgx" )

@@ -1,3 +1,4 @@
+using Arenbee.Framework.Enums;
 using Godot;
 
 namespace Arenbee.Framework.Statistics
@@ -6,12 +7,12 @@ namespace Arenbee.Framework.Statistics
     {
         [Export]
         public int InitialValue { get; private set; } = 1;
-        public ActionInfo ActionInfo { get; set; }
+        public ActionData ActionData { get; set; }
 
         public override void _Ready()
         {
             base._Ready();
-            ActionInfo = new ActionInfo(this, this);
+            ActionData = new ActionData(this, this, ActionType.Environment);
         }
     }
 }

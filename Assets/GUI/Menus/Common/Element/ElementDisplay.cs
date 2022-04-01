@@ -7,9 +7,9 @@ namespace Arenbee.Assets.GUI.Menus.Common
     public partial class ElementDisplay : MarginContainer
     {
         private TextureRect _elementColor;
-        private Element _element;
+        private ElementType _element;
         [Export]
-        public Element Element
+        public ElementType Element
         {
             get { return _element; }
             set

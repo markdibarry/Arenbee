@@ -43,6 +43,7 @@ namespace Arenbee.Framework.Game
         private void Init()
         {
             Locator.ProvideItemDB(new ItemDB());
+            Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
             ResetToTitleScreen();
         }

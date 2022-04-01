@@ -1,6 +1,7 @@
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Statistics;
 
 namespace Arenbee.Framework.Utility
 {
@@ -12,12 +13,14 @@ namespace Arenbee.Framework.Utility
             s_itemDB = new ItemDBNull();
             s_menuInput = new MenuInputHandlerNull();
             s_playerParty = new PlayerPartyNull();
+            s_statusEffectDB = new StatusEffectDBNull();
         }
 
         private static GameSessionBase s_currentGame;
         private static IItemDB s_itemDB;
         private static GUIInputHandler s_menuInput;
         private static IPlayerParty s_playerParty;
+        private static IStatusEffectDB s_statusEffectDB;
 
         public static void ProvideCurrentGame(GameSessionBase gameSession)
         {
@@ -43,6 +46,11 @@ namespace Arenbee.Framework.Utility
             s_playerParty = playerParty ?? new PlayerPartyNull();
         }
 
+        public static void ProvideStatusEffectDB(IStatusEffectDB statusEffectDB)
+        {
+            s_statusEffectDB = statusEffectDB ?? new StatusEffectDBNull();
+        }
+
         public static GameSessionBase GetCurrentGame()
         {
             return s_currentGame;
@@ -61,6 +69,11 @@ namespace Arenbee.Framework.Utility
         public static IPlayerParty GetParty()
         {
             return s_playerParty;
+        }
+
+        public static IStatusEffectDB GetStatusEffectDB()
+        {
+            return s_statusEffectDB;
         }
     }
 }

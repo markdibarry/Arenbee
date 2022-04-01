@@ -10,7 +10,7 @@ namespace Arenbee.Assets.GUI.Menus.Common
     {
         public ElementLarge()
         {
-            Effectiveness = ElementDefense.None;
+            Effectiveness = ElementDef.None;
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
@@ -26,30 +26,30 @@ namespace Arenbee.Assets.GUI.Menus.Common
 
         public void SetEffectiveness(int value)
         {
-            if (Effectiveness == ElementDefense.None) return;
+            if (Effectiveness == ElementDef.None) return;
             _effectivenessSprite.Show();
-            if (value > ElementDefense.VeryWeak)
-                value = ElementDefense.VeryWeak;
-            else if (value < ElementDefense.Absorb)
-                value = ElementDefense.Absorb;
+            if (value > ElementDef.VeryWeak)
+                value = ElementDef.VeryWeak;
+            else if (value < ElementDef.Absorb)
+                value = ElementDef.Absorb;
 
             switch (value)
             {
-                case ElementDefense.VeryWeak:
+                case ElementDef.VeryWeak:
                     _effectivenessSprite.Frame = 0;
                     _effectivenessSprite.Modulate = ColorConstants.TextRed;
                     break;
-                case ElementDefense.Weak:
+                case ElementDef.Weak:
                     _effectivenessSprite.Frame = 0;
                     break;
-                case ElementDefense.Resist:
+                case ElementDef.Resist:
                     _effectivenessSprite.Frame = 1;
                     break;
-                case ElementDefense.Nullify:
+                case ElementDef.Nullify:
                     _effectivenessSprite.Frame = 2;
                     _effectivenessSprite.Modulate = ColorConstants.DimGrey;
                     break;
-                case ElementDefense.Absorb:
+                case ElementDef.Absorb:
                     _effectivenessSprite.Frame = 3;
                     _effectivenessSprite.Modulate = ColorConstants.TextGreen;
                     break;

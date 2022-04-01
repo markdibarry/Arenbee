@@ -16,12 +16,16 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             CheckForTransitions();
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {
+            if (Actor.IsRunStuck > 0)
+            {
+                StateMachine.TransitionTo(new Run());
+                return;
+            }
+
             if (Actor.ShouldWalk())
             {
                 if (Actor.ShouldRun())

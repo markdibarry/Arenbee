@@ -65,12 +65,9 @@ namespace Arenbee.Framework.Items
 
         public bool RemoveReservation(EquipmentSlot slot)
         {
-            if (Reservations.Contains(slot))
-            {
-                Reservations.Remove(slot);
-                return true;
-            }
-            return false;
+            if (!Reservations.Contains(slot))
+                return false;
+            return Reservations.Remove(slot);
         }
     }
 }

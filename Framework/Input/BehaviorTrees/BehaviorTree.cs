@@ -6,12 +6,13 @@ namespace Arenbee.Framework.Input
     {
         protected BehaviorTree(Actor actor)
         {
+            _blackBoard = new BlackBoard();
             _root = SetupTree();
             _root.SetDependencies(actor, _blackBoard);
         }
 
-        private readonly BTNode _root = null;
-        private readonly BlackBoard _blackBoard = new BlackBoard();
+        private readonly BTNode _root;
+        private readonly BlackBoard _blackBoard;
 
         public void Update(float delta)
         {

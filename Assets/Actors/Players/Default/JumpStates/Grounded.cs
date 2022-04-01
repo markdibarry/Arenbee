@@ -16,20 +16,14 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
             CheckForTransitions();
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {
             if (InputHandler.Jump.IsActionJustPressed && !Actor.IsJumpDisabled)
-            {
                 StateMachine.TransitionTo(new Jump());
-            }
             else if (!Actor.IsOnFloor())
-            {
                 StateMachine.TransitionTo(new Fall());
-            }
         }
     }
 }

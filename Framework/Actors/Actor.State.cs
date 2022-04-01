@@ -1,7 +1,6 @@
 ﻿using Arenbee.Assets.Actors.Default.BaseStates;
 using Arenbee.Assets.Actors.Enemies.ActionStates;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Input;
 using Godot;
 
@@ -45,42 +44,39 @@ namespace Arenbee.Framework.Actors
             _enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.GetScenePath());
         }
 
-        private void HandleDamage(int damage, Vector2 sourcePosition)
+        private void HandleDamage(DamageData damageData)
         {
-            _blinker.Start(damage > 0);
-            if (damage > 0)
+            damageData.RecieverName = Name;
+            _blinker.Start(damageData);
+            if (damageData.TotalDamage > 0 && damageData.StatusEffectDamage == StatusEffectType.None)
             {
-                HandleKnockBack(sourcePosition);
+                HandleKnockBack(damageData.SourcePosition);
                 StateController.BaseStateMachine.TransitionTo(new Stagger());
             }
+            DamageRecieved?.Invoke(damageData);
         }
 
         private void HandleHPDepleted()
         {
+            if (!_isReady) return;
             _blinker.Stop();
             HurtBox.SetDeferred("monitoring", false);
             ActorDefeated?.Invoke(this);
             if (ActorType == ActorType.Player)
-            {
                 StateController.BaseStateMachine.TransitionTo(new Assets.Actors.Players.BaseStates.Dead());
-            }
             else if (ActorType == ActorType.Enemy)
-            {
                 StateController.BaseStateMachine.TransitionTo(new Assets.Actors.Enemies.BaseStates.Dead());
-            }
         }
 
         private void HandleKnockBack(Vector2 hitPosition)
         {
             Vector2 direction = hitPosition.DirectionTo(GlobalPosition);
-            Velocity = direction * -JumpVelocity;
+            Velocity = direction * (int)(JumpVelocity * -0.5);
         }
 
         private void OnDamageRecieved(DamageData data)
         {
-            data.RecieverName = Name;
-            HandleDamage(data.TotalDamage, data.SourcePosition);
-            DamageRecieved?.Invoke(data);
+            HandleDamage(data);
         }
 
         private void OnHPDepleted()

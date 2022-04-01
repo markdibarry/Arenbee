@@ -1,3 +1,5 @@
+using Arenbee.Framework.Enums;
+using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Framework.Actors
@@ -19,9 +21,9 @@ namespace Arenbee.Framework.Actors
         [Export]
         public float FlashDuration { get; set; } = 0.1f;
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
-            base._PhysicsProcess(delta);
+            base._Process(delta);
             if (_iframeTimerEnabled)
             {
                 if (_iframeTimer <= 0)
@@ -69,15 +71,16 @@ namespace Arenbee.Framework.Actors
             if (_spriteShader == null) GD.PrintErr("ShaderMaterial not provided!");
         }
 
-        public void Start(bool shouldBlink)
+        public void Start(DamageData damageData)
         {
             _actor.HurtBox.SetDeferred("monitoring", false);
             _spriteShader.SetShaderParam("flash_mix", 1);
+            SetShaderFlashColor(damageData);
             _flashTimer = FlashDuration;
             _flashTimerEnabled = true;
             _iframeTimer = IFrameDuration;
             _iframeTimerEnabled = true;
-            if (shouldBlink)
+            if (damageData.TotalDamage > 0 && damageData.StatusEffectDamage == StatusEffectType.None)
             {
                 _blinkTimer = BlinkSpeed;
                 _blinkEnabled = true;
@@ -97,21 +100,15 @@ namespace Arenbee.Framework.Actors
         public override void _Notification(int what)
         {
             if (what == NotificationPredelete)
-            {
                 _spriteShader.Dispose();
-            }
         }
 
         private void OnBlinkSpeedTimerExpire()
         {
             if (_actor.BodySprite.Modulate.a > 0)
-            {
                 _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0);
-            }
             else
-            {
                 _actor.BodySprite.Modulate = new Color(_actor.BodySprite.Modulate, 0.75f);
-            }
         }
 
         private void OnFlashTimerExpire()
@@ -122,6 +119,27 @@ namespace Arenbee.Framework.Actors
         private void OnIFrameTimerExpire()
         {
             Stop();
+        }
+
+        private void SetShaderFlashColor(DamageData damageData)
+        {
+            if (damageData.ActionType == ActionType.Status)
+            {
+                var color = damageData.StatusEffectDamage switch
+                {
+                    StatusEffectType.Burn => new Color(1, 0.35f, 0.35f),
+                    StatusEffectType.Freeze => new Color(0.4f, 0.9f, 1),
+                    StatusEffectType.Paralysis => new Color(1, 0.9f, 0.45f),
+                    StatusEffectType.Poison => new Color(1, 0.65f, 1),
+                    _ => throw new System.NotImplementedException()
+                };
+                _spriteShader.SetShaderParam("flash_color", color);
+            }
+            else
+            {
+                var color = damageData.ElementDamage.Get().Color;
+                _spriteShader.SetShaderParam("flash_color", color);
+            }
         }
     }
 }

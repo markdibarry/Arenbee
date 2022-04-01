@@ -31,9 +31,15 @@ window/stretch/mode="viewport"
 
 [gui]
 
-theme/custom="res://Framework/GUI/Themes/BaseTheme.tres"
+theme/custom="res://Assets/GUI/Themes/BaseTheme.tres"
 theme/default_font_antialiased=false
 fonts/dynamic_fonts/use_oversampling=false
+
+[importer_defaults]
+
+font_data_dynamic={
+"antialiased": false
+}
 
 [input]
 
@@ -137,4 +143,6 @@ hardReset={
 
 [rendering]
 
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
 textures/canvas_textures/default_texture_filter=0

@@ -1,0 +1,50 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace Arenbee.Framework.Statistics
+{
+    public class ElementOffs : IStatSet
+    {
+        public ElementOffs()
+        {
+            StatType = StatType.ElementOff;
+            Modifiers = new List<Modifier>();
+        }
+
+        public ElementOffs(ElementOffs elementOffs)
+            : this()
+        {
+            Modifiers = new List<Modifier>(elementOffs.Modifiers);
+        }
+
+        [JsonIgnore]
+        public ElementType CurrentElement { get; set; }
+        public StatType StatType { get; set; }
+        [JsonIgnore]
+        public List<Modifier> Modifiers { get; set; }
+
+        public void AddMod(Modifier mod)
+        {
+            Modifiers.Add(mod);
+        }
+
+        public void RemoveMod(Modifier mod)
+        {
+            Modifiers.Remove(mod);
+        }
+
+        public void UpdateStat()
+        {
+            int highest = 0;
+            CurrentElement = ElementType.None;
+            foreach (var mod in Modifiers)
+            {
+                if (mod.Value > highest)
+                {
+                    highest = mod.Value;
+                    CurrentElement = (ElementType)mod.SubType;
+                }
+            }
+        }
+    }
+}

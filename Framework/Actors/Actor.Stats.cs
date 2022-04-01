@@ -1,37 +1,66 @@
 ﻿using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
-using System.Collections.Generic;
 
 namespace Arenbee.Framework.Actors
 {
     public partial class Actor
     {
-        public Stats Stats { get; private set; }
-        public delegate void StatsUpdatedHandler(Actor actor);
-        public event StatsUpdatedHandler StatsUpdated;
+        private Stats _stats;
+        public Stats Stats
+        {
+            get { return _stats; }
+            private set
+            {
+                if (_stats != null)
+                {
+                    _stats.DamageRecieved -= OnDamageRecieved;
+                    _stats.HPDepleted -= OnHPDepleted;
+                    _stats.StatsRecalculated -= OnStatsRecalculated;
+                    _stats.ModChanged -= OnModChanged;
+                }
+                _stats = value;
+                if (_stats != null)
+                {
+                    _stats.DamageRecieved += OnDamageRecieved;
+                    _stats.HPDepleted += OnHPDepleted;
+                    _stats.StatsRecalculated += OnStatsRecalculated;
+                    _stats.ModChanged += OnModChanged;
+                }
+            }
+        }
+        public delegate void ModChangedHandler(ModChangeData modChangeData);
+        public delegate void StatsRecalculatedHandler(Actor actor);
+        public event ModChangedHandler ModChanged;
+        public event StatsRecalculatedHandler StatsRecalculated;
 
-        protected virtual void SetDefaultStats() { }
+        protected virtual void ApplyDefaultStats() { }
 
         protected virtual void UpdateHitBoxAction()
         {
-            HitBox.ActionInfo = new ActionInfo(HitBox, this)
+            if (HitBox == null) return;
+            HitBox.ActionData = new ActionData(HitBox, this, ActionType.Melee)
             {
-                ActionType = ActionType.Melee,
-                Element = Stats.ElementOffenses.CurrentElement,
-                StatusEffects = Stats.GetStatusEffectOffenses(),
-                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
+                ElementDamage = Stats.ElementOffs.CurrentElement,
+                StatusEffects = Stats.StatusEffectOffs.GetModifiers(),
+                Value = Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
             };
         }
 
-        private void OnStatsUpdated()
+        private void OnModChanged(ModChangeData modChangeData)
+        {
+            modChangeData.Actor = this;
+            ModChanged?.Invoke(modChangeData);
+        }
+
+        private void OnStatsRecalculated()
         {
             UpdateHitBox();
-            StatsUpdated?.Invoke(this);
+            StatsRecalculated?.Invoke(this);
         }
 
         private void UpdateHitBox()
         {
-            if (WeaponSlot.CurrentWeapon != null)
+            if (WeaponSlot?.CurrentWeapon != null)
                 WeaponSlot.CurrentWeapon.UpdateHitBoxAction();
             else
                 UpdateHitBoxAction();

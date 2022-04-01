@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://dlw363v3qsmge"]
 
 [ext_resource type="Script" path="res://Framework/Items/WeaponSlot.cs" id="1"]
 [ext_resource type="PackedScene" path="res://Framework/Statistics/HurtBox.tscn" id="2"]
@@ -10,7 +10,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4xqgv"]
 resource_local_to_scene = true
 shader = ExtResource( "2_gfi1y" )
-shader_param/flash_color = null
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
 shader_param/flash_mix = null
 
 [sub_resource type="RectangleShape2D" id="40"]

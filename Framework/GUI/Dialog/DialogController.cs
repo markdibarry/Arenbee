@@ -102,10 +102,7 @@ namespace Arenbee.Framework.GUI.Dialog
             }
 
             // Swap boxes
-            var oldFocusedBox = FocusedBox;
-            FocusedBox = UnfocusedBox;
-            UnfocusedBox = oldFocusedBox;
-
+            (UnfocusedBox, FocusedBox) = (FocusedBox, UnfocusedBox);
             if (FocusedBox != null)
             {
                 // Same speakers as unfocused dialog box

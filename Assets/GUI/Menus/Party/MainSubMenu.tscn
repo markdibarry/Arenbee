@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bh36ddiyx7j84"]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_el5n0"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/MainSubMenu.cs" id="2_21jpy"]
 [ext_resource type="Shader" path="res://Assets/GUI/Menus/Party/MainSubMenu.gdshader" id="2_i5og2"]
-[ext_resource type="Texture2D" uid="uid://k2iy1ku4rye1" path="res://Framework/GUI/Backgrounds/star.png" id="3_06twx"]
+[ext_resource type="Texture2D" path="res://Assets/GUI/Backgrounds/star.png" id="3_06twx"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_pgcgp"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_afdfe"]
 [ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="8_4mjf0"]

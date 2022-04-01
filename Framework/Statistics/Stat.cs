@@ -1,25 +1,51 @@
 using System.Collections.Generic;
+using Godot;
 using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Statistics
 {
-    public abstract class Stat<T>
+    public abstract class Stat
     {
-        protected Stat()
+        /// <summary>
+        /// Creates a new instance of Stat
+        /// </summary>
+        protected Stat(int type)
         {
-            Modifiers = new List<T>();
-            TempModifiers = new List<T>();
+            SubType = type;
+            BaseValue = 1;
+            MaxValue = 999;
+            Modifiers = new List<Modifier>();
+        }
+
+        protected Stat(int type, int baseValue, int maxValue)
+            : this(type)
+        {
+            BaseValue = baseValue;
+            MaxValue = maxValue;
+        }
+
+        /// <summary>
+        /// Creates a clone of a Stat
+        /// </summary>
+        /// <param name="valueStat"></param>
+        protected Stat(int type, Stat valueStat)
+        {
+            SubType = type;
+            BaseValue = valueStat.BaseValue;
+            MaxValue = valueStat.MaxValue;
+            Modifiers = new List<Modifier>(valueStat.Modifiers);
         }
 
         public int BaseValue { get; set; }
         [JsonIgnore]
         public int DisplayValue { get; set; }
-        [JsonIgnore]
-        public int ModifiedValue { get; set; }
         public int MaxValue { get; set; }
         [JsonIgnore]
-        public ICollection<T> Modifiers { get; set; }
-        public ICollection<T> TempModifiers { get; set; }
+        public int ModifiedValue { get; set; }
+        [JsonIgnore]
+        public List<Modifier> Modifiers { get; set; }
+        [JsonIgnore]
+        public int SubType { get; protected set; }
 
         public abstract void UpdateStat();
     }

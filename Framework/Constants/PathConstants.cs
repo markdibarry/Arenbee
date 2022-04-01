@@ -12,6 +12,6 @@ namespace Arenbee.Framework.Constants
         public const string DemoLevel2 = "res://Assets/AreaScenes/DemoLevel/DemoLevel2.tscn";
 
         // Framework
-        public const string StateDisplay = "res://Framework/GUI/HUD/StateDisplay.tscn";
+        public const string StateDisplay = "res://Assets/GUI/HUD/StateDisplay.tscn";
     }
 }

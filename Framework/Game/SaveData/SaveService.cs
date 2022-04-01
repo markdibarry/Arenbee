@@ -21,11 +21,14 @@ namespace Arenbee.Framework.Game.SaveData
         private static GameSave LoadSavedGame(string path)
         {
             var file = new File();
-            if (!file.FileExists(path)) return null;
+            if (!File.FileExists(path)) return null;
             file.Open(path, File.ModeFlags.Read);
             string content = file.GetAsText();
             file.Close();
-            return JsonConvert.DeserializeObject<GameSave>(content);
+            return JsonConvert.DeserializeObject<GameSave>(content, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
         }
 
         public static void SaveGame(GameSessionBase gameSession)

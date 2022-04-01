@@ -1,6 +1,5 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Godot;
 
 namespace Arenbee.Assets.Actors.Enemies.JumpStates
 {
@@ -14,18 +13,10 @@ namespace Arenbee.Assets.Actors.Enemies.JumpStates
         public override void Update(float delta)
         {
             CheckForTransitions();
-            var velocity = InputHandler.GetLeftAxis();
-
-            if (velocity != Vector2.Zero)
-                Actor.MoveXY(velocity);
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
-        public override void CheckForTransitions()
-        {
-        }
+        public override void CheckForTransitions() { }
     }
 }

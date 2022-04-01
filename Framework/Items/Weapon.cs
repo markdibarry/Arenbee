@@ -2,6 +2,7 @@ using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Enums;
 using Godot;
 using Arenbee.Framework.Utility;
+using Arenbee.Framework.Actors;
 
 namespace Arenbee.Framework.Items
 {
@@ -33,8 +34,7 @@ namespace Arenbee.Framework.Items
         public string ItemId { get; set; }
         public Sprite2D Sprite { get; set; }
         public string WeaponTypeName { get; set; }
-        protected Node2D Holder { get; set; }
-        protected Stats Stats { get; set; }
+        protected Actor Holder { get; set; }
 
         public override void _Ready()
         {
@@ -42,20 +42,18 @@ namespace Arenbee.Framework.Items
             SetNodeReferences();
         }
 
-        public void Init(Node2D holder, Stats stats)
+        public void Init(Actor holder)
         {
             Holder = holder;
-            Stats = stats;
         }
 
         public virtual void UpdateHitBoxAction()
         {
-            HitBox.ActionInfo = new ActionInfo(HitBox, Holder)
+            HitBox.ActionData = new ActionData(HitBox, Holder, ActionType.Melee)
             {
-                ActionType = ActionType.Melee,
-                Element = Stats.ElementOffenses.CurrentElement,
-                StatusEffects = Stats.GetStatusEffectOffenses(),
-                Value = Stats.Attributes[AttributeType.Attack].ModifiedValue
+                ElementDamage = Holder.Stats.ElementOffs.CurrentElement,
+                StatusEffects = Holder.Stats.StatusEffectOffs.GetModifiers(),
+                Value = Holder.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
             };
         }
 

@@ -12,31 +12,59 @@ namespace Arenbee.Framework.Actors
     {
         protected Actor()
         {
+            UpDirection = Vector2.Up;
             Acceleration = 1000f;
             Friction = 1000f;
-            Facing = Facings.Right;
-            Stats = new Stats();
-            SetDefaultStats();
+            WalkSpeed = 100;
+            _jumpHeight = 64;
+            _timeToJumpPeak = 0.4f;
+            GroundedGravity = 0.05f;
+            Direction = new Vector2(1, 1);
+            Stats = new Stats(this);
+            ApplyDefaultStats();
             Inventory = new Inventory();
-            Equipment = new Equipment();
-            UpDirection = Vector2.Up;
+            Equipment = new Equipment(this);
         }
 
         private Node2D _body;
-        private bool _readyCalled;
+        private Equipment _equipment;
+        private HurtBox _hurtBox;
+        private bool _isReady;
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
         public Inventory Inventory { get; set; }
-        public Equipment Equipment { get; set; }
+        public Equipment Equipment
+        {
+            get { return _equipment; }
+            private set
+            {
+                if (_equipment != null)
+                    _equipment.EquipmentSet -= OnEquipmentSet;
+                _equipment = value;
+                if (_equipment != null)
+                    _equipment.EquipmentSet += OnEquipmentSet;
+            }
+        }
         public WeaponSlot WeaponSlot { get; private set; }
-        public HurtBox HurtBox { get; private set; }
+        public HurtBox HurtBox
+        {
+            get { return _hurtBox; }
+            private set
+            {
+                if (_hurtBox != null)
+                    _hurtBox.AreaEntered -= Stats.OnHurtBoxEntered;
+                _hurtBox = value;
+                if (_hurtBox != null)
+                    _hurtBox.AreaEntered += Stats.OnHurtBoxEntered;
+            }
+        }
         public HitBox HitBox { get; private set; }
 
         public override void _Ready()
         {
             SetNodeReferences();
             Init();
-            _readyCalled = true;
+            _isReady = true;
         }
 
         private void SetNodeReferences()
@@ -56,57 +84,35 @@ namespace Arenbee.Framework.Actors
         {
             InitMovement();
             InitState();
-            InitEquipment();
-            SubscribeEvents();
+            WeaponSlot.Init(this);
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            _moveX = 0;
-            _moveXY = Vector2.Zero;
+            _move = Vector2.Zero;
             if (!_isPlayerControlled)
                 BehaviorTree?.Update(delta);
-
             StateController.UpdateStates(delta);
-            Stats.Update(delta, this);
-            if (IsFloater)
-                HandleMoveXY(delta);
-            else
-                HandleMoveX(delta);
-
+            Stats.Process(delta);
+            HandleMove(delta);
             MoveAndSlide();
             InputHandler.Update();
-        }
-
-        public override void _EnterTree()
-        {
-            if (_readyCalled) SubscribeEvents();
         }
 
         public override void _ExitTree()
         {
             BehaviorTree?.ClearBlackBoard();
-            UnsubscribeEvents();
             ActorRemoved?.Invoke(this);
             // TODO: Shader memory leak
         }
 
-        public void SubscribeEvents()
+        private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
         {
-            HurtBox.AreaEntered += Stats.OnHurtBoxEntered;
-            Equipment.EquipmentSet += OnEquipmentSet;
-            Stats.DamageRecieved += OnDamageRecieved;
-            Stats.HPDepleted += OnHPDepleted;
-            Stats.StatsRecalculated += OnStatsUpdated;
-        }
-
-        public void UnsubscribeEvents()
-        {
-            HurtBox.AreaEntered -= Stats.OnHurtBoxEntered;
-            Equipment.EquipmentSet -= OnEquipmentSet;
-            Stats.DamageRecieved += OnDamageRecieved;
-            Stats.HPDepleted += OnHPDepleted;
-            Stats.StatsRecalculated += OnStatsUpdated;
+            oldItem?.ItemStats.RemoveFromStats(Stats);
+            newItem?.ItemStats.AddToStats(Stats);
+            if (slot.SlotName == EquipSlotName.Weapon)
+                WeaponSlot?.SetWeapon(newItem);
+            Stats.RecalculateStats();
         }
     }
 

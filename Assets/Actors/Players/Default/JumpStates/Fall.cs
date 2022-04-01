@@ -9,9 +9,8 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
         readonly float _fallMultiplier = 2f;
         float _jumpGraceTimer = 0;
         readonly float _jumpGraceTime = 0.1f;
-        public override void Enter()
-        {
-        }
+
+        public override void Enter() { }
 
         public override void Update(float delta)
         {
@@ -24,9 +23,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
                 _jumpGraceTimer = _jumpGraceTime;
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {

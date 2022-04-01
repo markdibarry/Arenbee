@@ -18,13 +18,10 @@ namespace Arenbee.Assets.Actors.Enemies
             BehaviorTree = new PatrolChaseGroundBT(this);
         }
 
-        protected override void SetDefaultStats()
+        protected override void ApplyDefaultStats()
         {
-            Stats.AddElementDefenseMod(new ElementDefenseModifier()
-            {
-                Element = Element.Earth,
-                Value = ElementDefense.Weak
-            });
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Earth, ModEffect.Add, ElementDef.Weak));
+            Stats.AddMod(new Modifier(StatType.StatusEffectOff, (int)StatusEffectType.Poison, ModEffect.Add, 1, 100));
             Stats.SetAttribute(AttributeType.MaxHP, 6);
             Stats.SetAttribute(AttributeType.HP, 6);
             Stats.SetAttribute(AttributeType.Attack, 4);

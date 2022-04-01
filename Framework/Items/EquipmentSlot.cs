@@ -1,4 +1,4 @@
-﻿using Arenbee.Framework.Enums;
+﻿using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -7,29 +7,22 @@ namespace Arenbee.Framework.Items
 {
     public class EquipmentSlot
     {
-        public EquipmentSlot()
+        [JsonConstructor]
+        public EquipmentSlot(EquipSlotName slotName, ItemType slotType, string itemId)
         {
             _itemDB = Locator.GetItemDB();
+            SlotName = slotName;
+            SlotType = slotType;
+            ItemId = itemId;
         }
 
         public EquipmentSlot(EquipSlotName slotName, ItemType slotType)
-            : this()
-        {
-            SlotName = slotName;
-            SlotType = slotType;
-        }
+            : this(slotName, slotType, null)
+        { }
 
         public EquipmentSlot(EquipmentSlot slot)
-            : this(slot.SlotName, slot.SlotType)
-        {
-            ItemId = slot.ItemId;
-        }
-
-        public EquipmentSlot(EquipmentSlot slot, string itemId)
-            : this(slot.SlotName, slot.SlotType)
-        {
-            ItemId = itemId;
-        }
+            : this(slot.SlotName, slot.SlotType, slot.ItemId)
+        { }
 
         private readonly IItemDB _itemDB;
         private Item _item;
@@ -52,8 +45,11 @@ namespace Arenbee.Framework.Items
         public EquipSlotName SlotName { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemType SlotType { get; set; }
-        public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
-        public event EquipmentSetHandler EquipmentSet;
+
+        public bool IsCompatible(Item item)
+        {
+            return item == null || item.ItemType == SlotType;
+        }
 
         public bool SetItemById(string itemId)
         {
@@ -66,16 +62,19 @@ namespace Arenbee.Framework.Items
 
         public bool SetItem(Item newItem)
         {
-            if (!CanSetItem(newItem)) return false;
-            Item oldItem = Item;
             ItemId = newItem?.Id;
-            EquipmentSet?.Invoke(this, oldItem, newItem);
             return true;
         }
 
-        private bool CanSetItem(Item item)
+        public Stats GetMockStats(Stats stats, string itemId)
         {
-            return item == null || item.ItemType == SlotType;
+            var mockStats = new Stats(stats);
+            var newSlot = new EquipmentSlot(this);
+            newSlot.Item?.ItemStats?.RemoveFromStats(mockStats);
+            newSlot.SetItemById(itemId);
+            newSlot.Item?.ItemStats?.AddToStats(mockStats);
+            mockStats.RecalculateStats();
+            return mockStats;
         }
     }
 }

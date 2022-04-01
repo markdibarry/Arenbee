@@ -83,7 +83,6 @@ namespace Arenbee.Framework.Actors
         {
             if (CurrentWeapon != null)
             {
-                CurrentWeapon.UpdateHitBoxAction();
                 ActorAnimationPlayer.Stop();
                 CurrentWeapon.AnimationPlayer.Stop();
                 if (ActorAnimationPlayer.HasAnimation(CurrentWeapon.WeaponTypeName + animationName)

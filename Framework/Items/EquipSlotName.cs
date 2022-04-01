@@ -10,14 +10,14 @@ namespace Arenbee.Framework.Items
     public sealed class EquipSlotNameData : Enum<EquipSlotName, EquipSlotNameData>
     {
         public static readonly EquipSlotNameData
-            None = new EquipSlotNameData(nameof(None)),
-            Weapon = new EquipSlotNameData(nameof(Weapon)),
-            Headgear = new EquipSlotNameData(nameof(Headgear), "Head"),
-            Shirt = new EquipSlotNameData(nameof(Shirt)),
-            Pants = new EquipSlotNameData(nameof(Pants)),
-            Footwear = new EquipSlotNameData(nameof(Footwear), "Foot"),
-            Accessory1 = new EquipSlotNameData("Accessory 1", "Acc 1"),
-            Accessory2 = new EquipSlotNameData("Accessory 2", "Acc 2");
+            None = new(nameof(None)),
+            Weapon = new(nameof(Weapon)),
+            Headgear = new(nameof(Headgear), "Head"),
+            Shirt = new(nameof(Shirt)),
+            Pants = new(nameof(Pants)),
+            Footwear = new(nameof(Footwear), "Foot"),
+            Accessory1 = new("Accessory 1", "Acc 1"),
+            Accessory2 = new("Accessory 2", "Acc 2");
 
         private EquipSlotNameData(string name) : this(name, name) { }
 

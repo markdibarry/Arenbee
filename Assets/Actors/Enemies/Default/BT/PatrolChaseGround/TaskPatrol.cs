@@ -20,7 +20,7 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
                 if (_waitCounter <= 0)
                 {
                     _waiting = false;
-                    Actor.ChangeFacing();
+                    Actor.ChangeDirectionX();
                 }
             }
             else
@@ -28,14 +28,14 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
                 if (Actor.IsOnWall())
                 {
                     int direction = GetWallDirection();
-                    if (direction == (int)Actor.Facing)
+                    if (direction == Actor.Direction.x)
                     {
                         _waitCounter = _waitTime;
                         _waiting = true;
                     }
                 }
 
-                if (Actor.Facing == Facings.Left)
+                if (Actor.Direction.x == (int)Facings.Left)
                 {
                     Actor.InputHandler.Right.SimulateRelease();
                     Actor.InputHandler.Left.SimulatePress();

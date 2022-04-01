@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Framework.Actors;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Framework.Items
 {
     public class Equipment
     {
-        // TODO: Fix event subscription/ freeing
-        public Equipment()
+        public Equipment(Actor actor)
         {
+            _itemDB = Locator.GetItemDB();
+            _actor = actor;
             _slots = new List<EquipmentSlot>()
             {
                 new EquipmentSlot(EquipSlotName.Weapon, ItemType.Weapon),
@@ -18,24 +21,27 @@ namespace Arenbee.Framework.Items
                 new EquipmentSlot(EquipSlotName.Accessory1, ItemType.Accessory),
                 new EquipmentSlot(EquipSlotName.Accessory2, ItemType.Accessory),
             };
-
-            SubscribeEvents();
         }
 
-        public Equipment(IEnumerable<EquipmentSlot> slots)
-        {
-            _slots = slots.ToList();
-            SubscribeEvents();
-        }
-
+        private readonly Actor _actor;
+        private readonly IItemDB _itemDB;
+        private readonly List<EquipmentSlot> _slots;
         public IEnumerable<EquipmentSlot> Slots
         {
             get { return _slots.AsReadOnly(); }
         }
-
-        private readonly List<EquipmentSlot> _slots;
         public delegate void EquipmentSetHandler(EquipmentSlot slot, Item oldItem, Item newItem);
         public event EquipmentSetHandler EquipmentSet;
+
+        /// <summary>
+        /// Applies equipment if reservation available.
+        /// </summary>
+        /// <param name="slots"></param>
+        public void ApplyEquipment(IEnumerable<EquipmentSlot> slots)
+        {
+            foreach (var slot in slots)
+                TrySetItem(GetSlot(slot.SlotName), slot.Item);
+        }
 
         public IEnumerable<EquipmentSlot> GetSlotsByType(ItemType itemType)
         {
@@ -47,15 +53,29 @@ namespace Arenbee.Framework.Items
             return _slots.First(x => x.SlotName.Equals(slotName));
         }
 
-        private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
+        public bool TrySetItemById(EquipmentSlot slot, string itemId)
         {
-            EquipmentSet?.Invoke(slot, oldItem, newItem);
+            if (itemId == null)
+                return TrySetItem(slot, null);
+            Item item = _itemDB.GetItem(itemId);
+            if (item == null) return false;
+            return TrySetItem(slot, item);
         }
 
-        private void SubscribeEvents()
+        public bool TrySetItem(EquipmentSlot slot, Item newItem)
         {
-            foreach (var slot in _slots)
-                slot.EquipmentSet += OnEquipmentSet;
+            var inventory = _actor.Inventory;
+            if (inventory == null)
+                return false;
+            if (newItem != null && !inventory.CanReserve(newItem))
+                return false;
+            if (!slot.IsCompatible(newItem))
+                return false;
+            inventory.SetReservation(slot, newItem);
+            Item oldItem = slot.Item;
+            slot.SetItem(newItem);
+            EquipmentSet?.Invoke(slot, oldItem, newItem);
+            return true;
         }
     }
 }

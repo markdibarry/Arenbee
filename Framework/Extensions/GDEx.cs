@@ -11,24 +11,22 @@ namespace Arenbee.Framework.Extensions
     {
         private static readonly string s_godotRoot = GetGodotRoot();
         private const string ProjectDirName = "Arenbee";
-        public static void SetPositionX(this Node2D node2D, float val)
+
+        public static Vector2 GDExSign(this Vector2 vec)
         {
-            node2D.Position = new Vector2(val, node2D.Position.y);
+            var x = vec.x > 0 ? 1 : vec.x < 0 ? -1 : 0;
+            var y = vec.y > 0 ? 1 : vec.y < 0 ? -1 : 0;
+            return new Vector2(x, y);
         }
 
-        public static void SetPositionY(this Node2D node2D, float val)
+        public static Vector2 SetX(this Vector2 vec, float x)
         {
-            node2D.Position = new Vector2(node2D.Position.x, val);
+            return new Vector2(x, vec.y);
         }
 
-        public static void SetRectX(this Control control, float val)
+        public static Vector2 SetY(this Vector2 vec, float y)
         {
-            control.Size = new Vector2(val, control.Size.y);
-        }
-
-        public static void SetRectY(this Control control, float val)
-        {
-            control.Size = new Vector2(control.Size.x, val);
+            return new Vector2(vec.x, y);
         }
 
         public static void FlipScaleX(this Node2D node2D)
@@ -142,15 +140,6 @@ namespace Arenbee.Framework.Extensions
             return nearestIndex;
         }
 
-        public static async void QueueFreeAsync(this Node node)
-        {
-            node.QueueFree();
-            while (Godot.Object.IsInstanceValid(node))
-            {
-                await node.ToSignal(node.GetTree(), "physics_frame");
-            }
-        }
-
         public static string GetScenePath([CallerFilePath] string csPath = "")
         {
             if (!csPath.EndsWith(".cs"))
@@ -197,6 +186,27 @@ namespace Arenbee.Framework.Extensions
             else
             {
                 return fallback;
+            }
+        }
+
+        /// <summary>
+        /// If no value is found at key, a new value is added and returned
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns>The value at the key's location</returns>
+        public static TValue GetOrAddNew<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new()
+        {
+            if (!dict.TryGetValue(key, out TValue stat))
+            {
+                dict[key] = new TValue();
+                return dict[key];
+            }
+            else
+            {
+                return stat;
             }
         }
 

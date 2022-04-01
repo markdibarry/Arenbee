@@ -6,6 +6,7 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
     public class Jump : State<Actor>
     {
         public Jump() { AnimationName = "Jump"; }
+
         public override void Enter()
         {
             Actor.Jump();
@@ -21,20 +22,14 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
             CheckForTransitions();
         }
 
-        public override void Exit()
-        {
-        }
+        public override void Exit() { }
 
         public override void CheckForTransitions()
         {
             if (Actor.IsOnFloor())
-            {
                 StateMachine.TransitionTo(new Grounded());
-            }
             else if (Actor.Velocity.y >= 0)
-            {
                 StateMachine.TransitionTo(new Fall());
-            }
         }
     }
 }

@@ -34,12 +34,16 @@ namespace Arenbee.Assets.Actors.Enemies
 
         private class Run : State<Actor>
         {
-            public override void Enter() { }
+            public override void Enter()
+            {
+                Actor.MaxSpeed = Actor.RunSpeed;
+            }
 
             public override void Update(float delta)
             {
                 CheckForTransitions();
-                Actor.MaxSpeed = Actor.RunSpeed;
+                Actor.UpdateDirection();
+                Actor.Move();
             }
 
             public override void Exit() { }
@@ -55,11 +59,16 @@ namespace Arenbee.Assets.Actors.Enemies
 
         private class Walk : State<Actor>
         {
-            public override void Enter() { }
+            public override void Enter()
+            {
+                Actor.MaxSpeed = Actor.WalkSpeed;
+            }
 
             public override void Update(float delta)
             {
                 CheckForTransitions();
+                Actor.UpdateDirection();
+                Actor.Move();
             }
 
             public override void Exit() { }

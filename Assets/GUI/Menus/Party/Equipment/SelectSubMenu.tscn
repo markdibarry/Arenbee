@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
-[ext_resource type="PackedScene" uid="uid://b41pw27b6vksc" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="6_dccvk"]
+[ext_resource type="PackedScene" uid="uid://b3th4j3xq58ie" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="6_dccvk"]
 
 [node name="SelectSubMenu" instance=ExtResource( "1_uvd47" )]
 script = ExtResource( "2_kopb2" )
@@ -24,8 +24,6 @@ ExpandContent = true
 HResize = 3
 
 [node name="MarginContainer" parent="Foreground/EquipOptions" index="0"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 105.0
 offset_bottom = 101.0
 
@@ -47,8 +45,6 @@ KeyText = "<Unequip>"
 ValueText = ""
 
 [node name="Arrows" parent="Foreground/EquipOptions" index="1"]
-offset_left = 7.0
-offset_top = 7.0
 offset_right = 105.0
 offset_bottom = 101.0
 
