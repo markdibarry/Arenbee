@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Arenbee.Framework.Actors;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -19,13 +21,129 @@ namespace Arenbee.Framework.Statistics
             return null;
         }
 
+        public StatusEffectData GetEffectData(int type)
+        {
+            return GetEffectData((StatusEffectType)type);
+        }
+
         private void BuildDB()
         {
-            _effects.Add(StatusEffectType.Burn, new Burn());
-            _effects.Add(StatusEffectType.Freeze, new Freeze());
-            _effects.Add(StatusEffectType.Paralysis, new Paralyze());
-            _effects.Add(StatusEffectType.Poison, new Poison());
-            _effects.Add(StatusEffectType.Attack, new Attack());
+            _effects[StatusEffectType.Burn] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Burn,
+                Name = "Burn",
+                AbbrName = "Brn",
+                PastTenseName = "Burned",
+                Description = "Character takes fire damage and runs to put out the flames!",
+                EnterEffect = (stats) =>
+                {
+                    if (stats.StatsOwner is not Actor actor)
+                        return;
+                    actor.IsRunStuck++;
+                },
+                ExitEffect = (stats) =>
+                {
+                    if (stats.StatsOwner is not Actor actor)
+                        return;
+                    actor.IsRunStuck--;
+                },
+                ExpireNotifier = new TimedNotifier(10f, true),
+                TickNotifier = new TimedNotifier(3f, false),
+                TickEffect = (statusEffect) =>
+                {
+                    var statsOwner = statusEffect.Stats.StatsOwner;
+                    if (statsOwner is Actor actor)
+                        actor.InputHandler.Jump.SimulateJustPressed();
+                    var actionData = new ActionData(
+                        (int)(statsOwner.Stats.Attributes.GetStat(AttributeType.MaxHP).ModifiedValue * 0.05),
+                        statusEffect.EffectData.Name,
+                        ActionType.Status)
+                    {
+                        StatusEffectDamage = statusEffect.StatusEffectType
+                    };
+                    statsOwner.Stats.TakeDamage(actionData);
+                }
+            };
+            _effects[StatusEffectType.Freeze] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Freeze,
+                Name = "Freeze",
+                AbbrName = "Frz",
+                PastTenseName = "Frozen",
+                Description = "Character can't move.",
+                ExpireNotifier = new TimedNotifier(10f, true),
+            };
+            _effects[StatusEffectType.Paralysis] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Paralysis,
+                Name = "Paralysis",
+                AbbrName = "Pyz",
+                PastTenseName = "Paralyzed",
+                Description = "Character can't move.",
+                ExpireNotifier = new TimedNotifier(10f, true),
+            };
+            _effects[StatusEffectType.Poison] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Poison,
+                Name = "Poison",
+                AbbrName = "Psn",
+                PastTenseName = "Poisoned",
+                Description = "Feel nauseous and hurt??",
+                EnterEffect = (stats) =>
+                {
+                    if (stats.StatsOwner is not Actor actor)
+                        return;
+                    actor.HalfSpeed++;
+                },
+                ExitEffect = (stats) =>
+                {
+                    if (stats.StatsOwner is not Actor actor)
+                        return;
+                    actor.HalfSpeed--;
+                },
+                ExpireNotifier = new TimedNotifier(10f, true),
+                TickNotifier = new TimedNotifier(3f),
+                TickEffect = (statusEffect) =>
+                {
+                    var statsOwner = statusEffect.Stats.StatsOwner;
+                    var actionData = new ActionData(
+                        (int)(statsOwner.Stats.Attributes.GetStat(AttributeType.MaxHP).ModifiedValue * 0.05),
+                        statusEffect.EffectData.Name,
+                        ActionType.Status)
+                    {
+                        StatusEffectDamage = statusEffect.StatusEffectType
+                    };
+                    statsOwner.Stats.TakeDamage(actionData);
+                }
+            };
+            _effects[StatusEffectType.Zombie] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Zombie,
+                Name = "Zombie",
+                AbbrName = "Zom",
+                PastTenseName = "Zombified",
+                Description = "Character takes damage from healing.",
+                ExpireNotifier = new TimedNotifier(10f, true)
+            };
+            _effects[StatusEffectType.Attack] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.Attack,
+                Name = "Attack",
+                AbbrName = "Atk",
+                Description = "Character's Attack is increased or decreased.",
+                ExpireNotifier = new TimedNotifier(10f, true),
+                GetEffectModifiers = (statusEffect) =>
+                {
+                    return new()
+                    {
+                        new Modifier(
+                            StatType.Attribute,
+                            (int)AttributeType.Attack,
+                            ModEffect.Percentage,
+                            statusEffect.ModifiedValue > 0 ? 120 : 80)
+                    };
+                }
+            };
         }
     }
 }

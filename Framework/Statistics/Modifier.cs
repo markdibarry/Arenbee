@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -50,8 +51,10 @@ namespace Arenbee.Framework.Statistics
         }
 
         public int Chance { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public StatType StatType { get; set; }
         public int SubType { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ModEffect Effect { get; set; }
         public bool IsHidden { get; set; }
         public int Value { get; }
@@ -105,7 +108,7 @@ namespace Arenbee.Framework.Statistics
 
         public static int Percentage(int baseValue, int modValue)
         {
-            return (int)(baseValue * (modValue * 0.01));
+            return (int)(baseValue * modValue * 0.01);
         }
     }
 

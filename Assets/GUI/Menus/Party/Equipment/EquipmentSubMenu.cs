@@ -16,7 +16,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         public static string GetScenePath() => GDEx.GetScenePath();
         private OptionContainer _partyOptions;
         private OptionContainer _equipmentOptions;
-        private IPlayerParty _playerParty;
+        private PlayerParty _playerParty;
         private PackedScene _equipSelectOptionScene;
         private PackedScene _textOptionScene;
 
@@ -37,7 +37,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         protected override void CustomOptionsSetup()
         {
-            _playerParty = Locator.GetParty();
+            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
             _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
             _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
             AddPartyMembers();

@@ -49,7 +49,7 @@ namespace Arenbee.Framework.Items
 
         public virtual void UpdateHitBoxAction()
         {
-            HitBox.ActionData = new ActionData(HitBox, Holder, ActionType.Melee)
+            HitBox.ActionData = new ActionData(Holder.Name, ActionType.Melee)
             {
                 ElementDamage = Holder.Stats.ElementOffs.CurrentElement,
                 StatusEffects = Holder.Stats.StatusEffectOffs.GetModifiers(),

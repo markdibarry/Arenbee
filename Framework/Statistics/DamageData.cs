@@ -7,14 +7,14 @@ namespace Arenbee.Framework.Statistics
 {
     public class DamageData
     {
-        public DamageData()
+        private DamageData()
         {
             ElementMultiplier = ElementDef.None;
             TotalDamage = 1;
             StatusEffects = new List<Modifier>();
         }
 
-        public DamageData(ActionData actionData)
+        public DamageData(Stats stats, ActionData actionData)
             : this()
         {
             ActionType = actionData.ActionType;
@@ -23,6 +23,9 @@ namespace Arenbee.Framework.Statistics
             SourcePosition = actionData.SourcePosition;
             StatusEffectDamage = actionData.StatusEffectDamage;
             TotalDamage = actionData.Value;
+            SetDamageFromActionType(stats, actionData.ActionType);
+            SetDamageFromElement(stats, actionData);
+            SetStatusEffects(stats, actionData);
         }
 
         public ActionType ActionType { get; set; }

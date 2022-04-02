@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
@@ -31,7 +30,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void CustomOptionsSetup()
         {
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
-            _inventory = Locator.GetParty().Inventory;
+            _inventory = Locator.GetCurrentGame().Party.Inventory;
             _inventoryList?.ReplaceChildren(GetItemOptions());
 
             if (_typeList != null)

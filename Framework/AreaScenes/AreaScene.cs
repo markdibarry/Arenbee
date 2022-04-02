@@ -13,10 +13,10 @@ namespace Arenbee.Framework.AreaScenes
     {
         public AreaScene()
         {
-            _playerParty = Locator.GetParty();
+            _playerParty = Locator.GetCurrentGame().Party;
         }
 
-        private readonly IPlayerParty _playerParty;
+        private readonly PlayerParty _playerParty;
         public Camera2D Camera { get; set; }
         public Node2D PlayersContainer { get; set; }
         public Node2D EnemiesContainer { get; set; }

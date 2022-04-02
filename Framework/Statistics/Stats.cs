@@ -5,10 +5,10 @@ namespace Arenbee.Framework.Statistics
 {
     public class Stats
     {
-        public Stats(Node2D node2D)
+        public Stats(IDamageable damageable)
         {
             _isDirty = true;
-            StatsOwner = node2D;
+            StatsOwner = damageable;
             Attributes = new Attributes();
             ElementDefs = new ElementDefs();
             ElementOffs = new ElementOffs();
@@ -57,7 +57,7 @@ namespace Arenbee.Framework.Statistics
         public Attributes Attributes { get; }
         [JsonIgnore] public ElementDefs ElementDefs { get; }
         [JsonIgnore] public ElementOffs ElementOffs { get; }
-        [JsonIgnore] public Node2D StatsOwner { get; }
+        [JsonIgnore] public IDamageable StatsOwner { get; }
         [JsonIgnore] public StatusEffectDefs StatusEffectDefs { get; }
         [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
         public StatusEffects StatusEffects { get; }
@@ -139,8 +139,9 @@ namespace Arenbee.Framework.Statistics
             _isDirty = true;
         }
 
-        public void RecalculateStats()
+        public void RecalculateStats(bool force = false)
         {
+            if (force) _isDirty = true;
             if (!_isDirty) return;
 
             while (_isDirty)
@@ -170,7 +171,7 @@ namespace Arenbee.Framework.Statistics
         public void TakeDamage(ActionData actionData)
         {
             if (_hasNoHP) return;
-            var damageData = GetDamageData(actionData);
+            var damageData = new DamageData(this, actionData);
             DamageRecieved?.Invoke(damageData);
             StatusEffects.AddStatusMods(damageData.StatusEffects);
             ModifyHP(damageData.TotalDamage);
@@ -180,15 +181,6 @@ namespace Arenbee.Framework.Statistics
         private void SubscribeEvents()
         {
             StatusEffects.ModChanged += OnModChanged;
-        }
-
-        private DamageData GetDamageData(ActionData actionData)
-        {
-            var damageData = new DamageData(actionData);
-            damageData.SetDamageFromActionType(this, actionData.ActionType);
-            damageData.SetDamageFromElement(this, actionData);
-            damageData.SetStatusEffects(this, actionData);
-            return damageData;
         }
 
         private void ModifyHP(int amount)

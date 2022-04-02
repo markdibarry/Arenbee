@@ -5,7 +5,7 @@ using Arenbee.Framework.Items;
 
 namespace Arenbee.Framework.Game
 {
-    public class PlayerParty : IPlayerParty
+    public class PlayerParty
     {
         public PlayerParty()
         {

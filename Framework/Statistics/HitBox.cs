@@ -12,7 +12,7 @@ namespace Arenbee.Framework.Statistics
         public override void _Ready()
         {
             base._Ready();
-            ActionData = new ActionData(this, this, ActionType.Environment);
+            ActionData = new ActionData(InitialValue, Name, ActionType.Environment);
         }
     }
 }

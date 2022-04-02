@@ -10,7 +10,7 @@ namespace Arenbee.Framework.Game
     {
         public AreaScene CurrentAreaScene { get; protected set; }
         public DialogController DialogController { get; protected set; }
-        public IPlayerParty Party { get; protected set; }
+        public PlayerParty Party { get; protected set; }
         public SessionState SessionState { get; protected set; }
         public TransitionFadeColor Transition { get; protected set; }
 

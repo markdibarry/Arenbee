@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
 
-namespace Arenbee.Framework.Items
+namespace Arenbee.Assets.Items
 {
     public class ItemDB : IItemDB
     {

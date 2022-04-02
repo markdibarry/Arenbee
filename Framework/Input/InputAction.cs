@@ -70,6 +70,11 @@ namespace Arenbee.Framework.Input
             }
         }
 
+        public void SimulateJustPressed()
+        {
+            _simulatedJustPressed = true;
+        }
+
         public void SimulateRelease()
         {
             if (_simulatedPress)
@@ -86,8 +91,8 @@ namespace Arenbee.Framework.Input
 
         public void ClearOneTimeActions()
         {
+            _simulatedJustReleased = _simulatedJustPressed && !_simulatedPress;
             _simulatedJustPressed = false;
-            _simulatedJustReleased = false;
         }
     }
 }

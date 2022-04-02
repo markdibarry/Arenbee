@@ -29,7 +29,6 @@ namespace Arenbee.Framework.Statistics
         }
 
         private readonly Stats _stats;
-        [JsonProperty(ItemTypeNameHandling = TypeNameHandling.All)]
         public List<TempModifier> TempModifiers { get; set; }
         public delegate void ModChangedHandler(ModChangeData modChangeData);
         public event ModChangedHandler ModChanged;
@@ -46,17 +45,17 @@ namespace Arenbee.Framework.Statistics
             return new StatusEffect(_stats, type);
         }
 
-        public void OnModExpired(TempModifier tempMod)
+        public void OnModExpired(TempModifier tempModifier)
         {
-            RemoveTempMod(tempMod);
+            RemoveTempMod(tempModifier);
         }
 
         public void AddStatusMods(List<Modifier> mods)
         {
             foreach (var mod in mods)
             {
-                var data = Locator.GetStatusEffectDB().GetEffectData((StatusEffectType)mod.SubType);
-                AddTempMod(data.GetTempModifier(mod));
+                var data = Locator.GetStatusEffectDB().GetEffectData(mod.SubType);
+                AddTempMod(new TempModifier(mod, data.ExpireNotifier));
             }
         }
 
@@ -67,11 +66,11 @@ namespace Arenbee.Framework.Statistics
             {
                 stat.TempModifier.Expired -= OnModExpired;
                 TempModifiers.Remove(stat.TempModifier);
-                stat.TempModifier.UnsubscribeEvents(_stats);
+                stat.TempModifier.Notifier.UnsubscribeEvents(_stats);
             }
             tempMod.Expired += OnModExpired;
             TempModifiers.Add(tempMod);
-            tempMod.SubscribeEvents(_stats);
+            tempMod.Notifier.SubscribeEvents(_stats);
             stat.TempModifier = tempMod;
             RaiseModChanged(new ModChangeData(tempMod.Modifier, ModChange.Add));
         }
@@ -87,7 +86,7 @@ namespace Arenbee.Framework.Statistics
                 return;
             tempMod.Expired -= OnModExpired;
             TempModifiers.Remove(tempMod);
-            tempMod.UnsubscribeEvents(_stats);
+            tempMod.Notifier.UnsubscribeEvents(_stats);
             stat.TempModifier = null;
             RaiseModChanged(new ModChangeData(tempMod.Modifier, ModChange.Remove));
             if (stat.Modifiers.Count == 0)
@@ -107,8 +106,8 @@ namespace Arenbee.Framework.Statistics
             : base(effectType)
         {
             Stats = stats;
-            EffectData = Locator.GetStatusEffectDB().GetEffectData((StatusEffectType)effectType);
-            TickData = EffectData.GetTickData(stats);
+            EffectData = Locator.GetStatusEffectDB().GetEffectData(effectType);
+            TickNotifier = EffectData.TickNotifier.Clone();
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -118,28 +117,45 @@ namespace Arenbee.Framework.Statistics
             set { SubType = (int)value; }
         }
 
-        public StatusEffectData EffectData { get; set; }
+        public StatusEffectData EffectData { get; }
         public List<Modifier> EffectModifiers { get; set; }
-        public TickData TickData { get; set; }
+        public StatsNotifier TickNotifier { get; set; }
         public TempModifier TempModifier { get; set; }
-        protected Stats Stats { get; }
+        public Stats Stats { get; }
+        public delegate void TempModExpiredHandler(TempModifier tempModifier);
+        public event TempModExpiredHandler TempModExpired;
 
         public void ApplyEffect()
         {
-            TickData?.SubscribeEvents();
-            EffectData.ApplyEffect(Stats);
-            EffectModifiers = EffectData.GetEffectModifiers(this);
+            if (TickNotifier != null)
+            {
+                TickNotifier.Elapsed += OnTick;
+                TickNotifier?.SubscribeEvents(Stats);
+            }
+
+            EffectData.EnterEffect?.Invoke(Stats);
+            EffectModifiers = EffectData.GetEffectModifiers?.Invoke(this) ?? new List<Modifier>();
             foreach (var mod in EffectModifiers)
                 Stats.AddMod(mod);
         }
 
         public void RemoveEffect()
         {
-            TickData?.UnsubscribeEvents();
+            if (TickNotifier != null)
+            {
+                TickNotifier.Elapsed -= OnTick;
+                TickNotifier?.UnsubscribeEvents(Stats);
+            }
+
             foreach (var mod in EffectModifiers)
                 Stats.RemoveMod(mod);
-            EffectData.RemoveEffect(Stats);
+            EffectData.ExitEffect?.Invoke(Stats);
             EffectModifiers = new List<Modifier>();
+        }
+
+        public void OnTick()
+        {
+            EffectData.TickEffect(this);
         }
 
         public override void UpdateStat()

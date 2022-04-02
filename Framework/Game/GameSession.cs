@@ -17,8 +17,7 @@ namespace Arenbee.Framework.Game
     {
         public GameSession()
         {
-            Locator.ProvidePlayerParty(null);
-            Party = Locator.GetParty();
+            Party = new PlayerParty();
             SessionState = new SessionState();
             _menuInput = Locator.GetMenuInput();
         }
@@ -63,8 +62,7 @@ namespace Arenbee.Framework.Game
 
         public override void Init(GameSave gameSave)
         {
-            Locator.ProvidePlayerParty(new PlayerParty(gameSave.ActorData, gameSave.Items));
-            Party = Locator.GetParty();
+            Party = new PlayerParty(gameSave.ActorData, gameSave.Items);
             SessionState = gameSave.SessionState;
             InitAreaScene();
             CurrentAreaScene.AddPlayer();

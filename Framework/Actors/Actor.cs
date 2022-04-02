@@ -1,5 +1,4 @@
 ﻿using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Godot;
 
@@ -8,7 +7,7 @@ namespace Arenbee.Framework.Actors
     /// <summary>
     /// Base character object.
     /// </summary>
-    public partial class Actor : CharacterBody2D
+    public partial class Actor : CharacterBody2D, IDamageable
     {
         protected Actor()
         {
@@ -90,10 +89,10 @@ namespace Arenbee.Framework.Actors
         public override void _PhysicsProcess(float delta)
         {
             _move = Vector2.Zero;
+            Stats.Process(delta);
             if (!_isPlayerControlled)
                 BehaviorTree?.Update(delta);
             StateController.UpdateStates(delta);
-            Stats.Process(delta);
             HandleMove(delta);
             MoveAndSlide();
             InputHandler.Update();
@@ -112,7 +111,7 @@ namespace Arenbee.Framework.Actors
             newItem?.ItemStats.AddToStats(Stats);
             if (slot.SlotName == EquipSlotName.Weapon)
                 WeaponSlot?.SetWeapon(newItem);
-            Stats.RecalculateStats();
+            Stats.RecalculateStats(force: true);
         }
     }
 

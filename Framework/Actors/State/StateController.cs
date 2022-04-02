@@ -1,6 +1,7 @@
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
 using Godot;
 
@@ -157,7 +158,7 @@ namespace Arenbee.Framework.Actors
         private void CreateStateDisplay()
         {
             //Debug Only
-            var stateDisplay = GDEx.Instantiate<Control>(PathConstants.StateDisplay);
+            var stateDisplay = GDEx.Instantiate<Control>(StateDisplay.GetScenePath());
             _jumpStateDisplay = stateDisplay.GetNode<Label>("JumpState");
             _moveStateDisplay = stateDisplay.GetNode<Label>("MoveState");
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");

@@ -3,6 +3,7 @@ using Arenbee.Assets.Actors.Enemies.ActionStates;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Input;
 using Godot;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Actors
 {
@@ -48,7 +49,7 @@ namespace Arenbee.Framework.Actors
         {
             damageData.RecieverName = Name;
             _blinker.Start(damageData);
-            if (damageData.TotalDamage > 0 && damageData.StatusEffectDamage == StatusEffectType.None)
+            if (damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status)
             {
                 HandleKnockBack(damageData.SourcePosition);
                 StateController.BaseStateMachine.TransitionTo(new Stagger());

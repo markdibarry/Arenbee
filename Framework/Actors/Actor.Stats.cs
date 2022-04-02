@@ -38,11 +38,13 @@ namespace Arenbee.Framework.Actors
         protected virtual void UpdateHitBoxAction()
         {
             if (HitBox == null) return;
-            HitBox.ActionData = new ActionData(HitBox, this, ActionType.Melee)
+            HitBox.ActionData = new ActionData(
+                Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue,
+                Name,
+                ActionType.Melee)
             {
                 ElementDamage = Stats.ElementOffs.CurrentElement,
-                StatusEffects = Stats.StatusEffectOffs.GetModifiers(),
-                Value = Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
+                StatusEffects = Stats.StatusEffectOffs.GetModifiers()
             };
         }
 

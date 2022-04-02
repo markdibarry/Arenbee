@@ -6,5 +6,10 @@ namespace Arenbee.Framework.Statistics
         {
             return null;
         }
+
+        public StatusEffectData GetEffectData(int type)
+        {
+            return null;
+        }
     }
 }

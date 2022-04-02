@@ -14,7 +14,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
     public partial class SelectSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private IPlayerParty _playerParty;
+        private PlayerParty _playerParty;
         private OptionContainer _equipOptions;
         private StatsDisplay _statsDisplay;
         private PackedScene _keyValueOptionScene;
@@ -23,7 +23,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         protected override void CustomOptionsSetup()
         {
-            _playerParty = Locator.GetParty();
+            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             AddItemOptions();
             base.CustomOptionsSetup();

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Godot;
 using Newtonsoft.Json;
 
 namespace Arenbee.Framework.Statistics
@@ -12,7 +11,7 @@ namespace Arenbee.Framework.Statistics
         protected Stat(int type)
         {
             SubType = type;
-            BaseValue = 1;
+            BaseValue = 0;
             MaxValue = 999;
             Modifiers = new List<Modifier>();
         }

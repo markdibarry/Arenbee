@@ -6,6 +6,7 @@ using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
 using Arenbee.Framework.Enums;
+using Arenbee.Framework.Utility;
 
 namespace Arenbee.Assets.GUI
 {
@@ -15,12 +16,14 @@ namespace Arenbee.Assets.GUI
         private MessageBoxList _messageBoxList;
         private Label _fpsDisplay;
         private HeartDisplay _heartDisplay;
+        private IStatusEffectDB _statusEffectDB;
 
         public override void _Ready()
         {
             _messageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
             _fpsDisplay = GetNode<Label>("FPSDisplay");
             _heartDisplay = GetNode<HeartDisplay>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HeartDisplay");
+            _statusEffectDB = Locator.GetStatusEffectDB();
         }
 
         public override void _PhysicsProcess(float delta)
@@ -104,9 +107,9 @@ namespace Arenbee.Assets.GUI
             {
                 string message;
                 if (data.Change == ModChange.Add)
-                    message = $"{data.Actor.Name} was {((StatusEffectType)data.Modifier.SubType).Get().PastTense}!";
+                    message = $"{data.Actor.Name} was {_statusEffectDB.GetEffectData(data.Modifier.SubType).PastTenseName}!";
                 else
-                    message = $"{data.Actor.Name} recovered from {((StatusEffectType)data.Modifier.SubType).Get().Name}!";
+                    message = $"{data.Actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
 
                 _messageBoxList.AddMessageToTop(message);
             }

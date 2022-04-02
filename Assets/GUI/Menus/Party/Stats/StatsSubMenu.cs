@@ -14,7 +14,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class StatsSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private IPlayerParty _playerParty;
+        private PlayerParty _playerParty;
         private StatsDisplay _statsDisplay;
         private OptionContainer _partyList;
 
@@ -28,7 +28,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         protected override void CustomOptionsSetup()
         {
-            _playerParty = Locator.GetParty();
+            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
             AddPartyMembers();
             base.CustomOptionsSetup();
         }

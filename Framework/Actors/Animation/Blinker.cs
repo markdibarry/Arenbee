@@ -80,7 +80,7 @@ namespace Arenbee.Framework.Actors
             _flashTimerEnabled = true;
             _iframeTimer = IFrameDuration;
             _iframeTimerEnabled = true;
-            if (damageData.TotalDamage > 0 && damageData.StatusEffectDamage == StatusEffectType.None)
+            if (damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status)
             {
                 _blinkTimer = BlinkSpeed;
                 _blinkEnabled = true;
