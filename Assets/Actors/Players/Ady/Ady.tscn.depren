@@ -1,0 +1,59 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bj28sv5vq5vnv" path="res://Framework/Actors/Player.tscn" id="1_n2y5e"]
+[ext_resource type="Script" path="res://Assets/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
+[ext_resource type="AnimationLibrary" uid="uid://0t0ca6phh7jd" path="res://Assets/Actors/Players/Ady/Animation/AdyLibrary.res" id="3_1pauw"]
+[ext_resource type="AnimationLibrary" path="res://Assets/Actors/Players/Ady/Animation/LongStick/LongStickLibrary.res" id="4_afqd2"]
+[ext_resource type="Texture2D" uid="uid://vnmqhrjhbtq8" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="7_28ga8"]
+[ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="12_3qfsg"]
+[ext_resource type="Texture2D" uid="uid://dhvumgci5ai1q" path="res://Assets/Actors/Players/Ady/Animation/AdyPalette.png" id="13_txydx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
+resource_local_to_scene = true
+shader = ExtResource( "12_3qfsg" )
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
+shader_param/flash_mix = 0.0
+shader_param/speed = null
+shader_param/cycle_start = null
+shader_param/cycle_end = null
+shader_param/cycle_direction = null
+shader_param/use_palette1 = true
+shader_param/use_palette2 = null
+shader_param/palette1 = ExtResource( "13_txydx" )
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_niveh"]
+size = Vector2(14, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_53s3l"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Ady" instance=ExtResource( "1_n2y5e" )]
+script = ExtResource( "2_0vmt5" )
+
+[node name="AnimationPlayer" parent="." index="0"]
+libraries = {
+"": ExtResource( "3_1pauw" ),
+"LongStick": ExtResource( "4_afqd2" )
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+modulate = Color(1, 1, 1, 1)
+texture_filter = 3
+material = SubResource( "ShaderMaterial_vhqga" )
+texture = ExtResource( "7_28ga8" )
+hframes = 6
+vframes = 9
+frame = 48
+
+[node name="HurtBox" parent="Body/BodySprite" index="0"]
+visible = false
+
+[node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
+position = Vector2(0, 3)
+shape = SubResource( "RectangleShape2D_niveh" )
+
+[node name="CollisionShape2D" parent="." index="3"]
+visible = false
+position = Vector2(0, 3)
+shape = SubResource( "RectangleShape2D_53s3l" )

@@ -4,13 +4,13 @@ namespace Arenbee.Framework.Input
     {
         protected override void SetInputActions()
         {
-            Start = new InputAction("menu_start");
-            Enter = new InputAction("menu_enter");
-            Cancel = new InputAction("menu_cancel");
-            Up = new InputAction("menu_up");
-            Down = new InputAction("menu_down");
-            Left = new InputAction("menu_left");
-            Right = new InputAction("menu_right");
+            Start = new InputAction(this, "menu_start");
+            Enter = new InputAction(this, "menu_enter");
+            Cancel = new InputAction(this, "menu_cancel");
+            Up = new InputAction(this, "menu_up");
+            Down = new InputAction(this, "menu_down");
+            Left = new InputAction(this, "menu_left");
+            Right = new InputAction(this, "menu_right");
         }
     }
 }

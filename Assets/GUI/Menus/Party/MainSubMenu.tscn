@@ -1,58 +1,33 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://d1njfu3c60n07"]
 
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_el5n0"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/OptionSubMenu.tscn" id="1_el5n0"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/MainSubMenu.cs" id="2_21jpy"]
-[ext_resource type="Shader" path="res://Assets/GUI/Menus/Party/MainSubMenu.gdshader" id="2_i5og2"]
-[ext_resource type="Texture2D" path="res://Assets/GUI/Backgrounds/star.png" id="3_06twx"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_pgcgp"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_afdfe"]
-[ext_resource type="PackedScene" uid="uid://b20vppt688xwk" path="res://Framework/GUI/Transitions/TransitionFadeColor.tscn" id="8_4mjf0"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_c8dpc"]
-shader = ExtResource( "2_i5og2" )
-shader_param/scroll_speed = 0.3
-shader_param/tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
 
 [node name="MainSubMenu" instance=ExtResource( "1_el5n0" )]
 script = ExtResource( "2_21jpy" )
 
-[node name="TextureRect" type="TextureRect" parent="Background" index="0"]
-material = SubResource( "ShaderMaterial_c8dpc" )
-anchor_right = 1.0
-anchor_bottom = 1.0
-texture = ExtResource( "3_06twx" )
-stretch_mode = 1
-
-[node name="Foreground" parent="." index="1"]
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="OptionContainer" parent="Foreground" index="0" instance=ExtResource( "3_pgcgp" )]
+[node name="OptionContainer" parent="Foreground/" index="0" instance=ExtResource( "3_pgcgp" )]
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 72.0
 offset_bottom = 111.0
-__meta__ = {
-"_edit_group_": true,
-"_edit_layout_mode": 0,
-"_edit_use_custom_anchors": false
-}
 DimItems = true
 
-[node name="MarginContainer" parent="Foreground/OptionContainer" index="0"]
+[node name="MarginContainer" parent="Foreground//OptionContainer" index="0"]
 offset_right = 49.0
 offset_bottom = 88.0
 
-[node name="Control" parent="Foreground/OptionContainer/MarginContainer" index="0"]
+[node name="Control" parent="Foreground//OptionContainer/MarginContainer" index="0"]
 offset_right = 40.0
 offset_bottom = 79.0
 
-[node name="GridContainer" parent="Foreground/OptionContainer/MarginContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground//OptionContainer/MarginContainer/Control" index="0"]
 offset_right = 38.0
 offset_bottom = 77.0
 
-[node name="Stats" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_afdfe" )]
+[node name="Stats" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_afdfe" )]
 offset_right = 38.0
 offset_bottom = 12.0
 OptionData = {
@@ -60,7 +35,7 @@ OptionData = {
 }
 LabelText = "Stats"
 
-[node name="Inventory" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_afdfe" )]
+[node name="Inventory" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "4_afdfe" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 13.0
 offset_right = 38.0
@@ -71,7 +46,7 @@ OptionData = {
 Dim = true
 LabelText = "Inventory"
 
-[node name="Equipment" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "4_afdfe" )]
+[node name="Equipment" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="2" instance=ExtResource( "4_afdfe" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 26.0
 offset_right = 38.0
@@ -82,7 +57,7 @@ OptionData = {
 Dim = true
 LabelText = "Equipment"
 
-[node name="Options" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_afdfe" )]
+[node name="Options" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="3" instance=ExtResource( "4_afdfe" )]
 modulate = Color(0.5, 0.5, 0.5, 1)
 offset_top = 39.0
 offset_right = 38.0
@@ -94,7 +69,7 @@ Dim = true
 Disabled = true
 LabelText = "Options"
 
-[node name="Save" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "4_afdfe" )]
+[node name="Save" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="4" instance=ExtResource( "4_afdfe" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 52.0
 offset_right = 38.0
@@ -105,7 +80,7 @@ OptionData = {
 Dim = true
 LabelText = "Save"
 
-[node name="Quit" parent="Foreground/OptionContainer/MarginContainer/Control/GridContainer" index="5" instance=ExtResource( "4_afdfe" )]
+[node name="Quit" parent="Foreground//OptionContainer/MarginContainer/Control/GridContainer" index="5" instance=ExtResource( "4_afdfe" )]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 65.0
 offset_right = 38.0
@@ -116,38 +91,28 @@ OptionData = {
 Dim = true
 LabelText = "Quit"
 
-[node name="Arrows" parent="Foreground/OptionContainer" index="1"]
+[node name="Arrows" parent="Foreground//OptionContainer" index="1"]
 offset_right = 49.0
 offset_bottom = 88.0
 
-[node name="ArrowUp" parent="Foreground/OptionContainer/Arrows" index="0"]
+[node name="ArrowUp" parent="Foreground//OptionContainer/Arrows" index="0"]
 offset_left = 17.0
 offset_right = 24.0
 
-[node name="ArrowLeft" parent="Foreground/OptionContainer/Arrows" index="1"]
+[node name="ArrowLeft" parent="Foreground//OptionContainer/Arrows" index="1"]
 offset_top = 37.0
 offset_bottom = 44.0
 
-[node name="ArrowDown" parent="Foreground/OptionContainer/Arrows" index="2"]
+[node name="ArrowDown" parent="Foreground//OptionContainer/Arrows" index="2"]
 offset_left = 17.0
 offset_top = 78.0
 offset_right = 24.0
 offset_bottom = 84.0
 
-[node name="ArrowRight" parent="Foreground/OptionContainer/Arrows" index="3"]
+[node name="ArrowRight" parent="Foreground//OptionContainer/Arrows" index="3"]
 offset_left = 39.0
 offset_top = 37.0
 offset_right = 45.0
 offset_bottom = 44.0
 
-[node name="TransitionFadeColor" parent="." index="2" instance=ExtResource( "8_4mjf0" )]
-grow_horizontal = 2
-grow_vertical = 2
-__meta__ = {
-"_edit_layout_mode": 1,
-"_edit_use_anchors_": false,
-"_edit_use_custom_anchors": false
-}
-
-[editable path="Foreground/OptionContainer"]
-[editable path="TransitionFadeColor"]
+[editable path="Foreground//OptionContainer"]

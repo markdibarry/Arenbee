@@ -3,20 +3,23 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies.JumpStates
 {
-    public class Float : State<Actor>
+    public class Float : ActorState
     {
         public override void Enter()
         {
             StateController.PlayFallbackAnimation();
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions() { }
+        public override ActorState CheckForTransitions()
+        {
+            return null;
+        }
     }
 }

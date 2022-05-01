@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://fgo4e48fm1i5"]
+
+[ext_resource type="Script" path="res://Framework/Skills/SkillEffect.cs" id="1_22kax"]
+
+[node name="SkillEffect" type="Node2D"]
+script = ExtResource( "1_22kax" )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -3,6 +3,7 @@ using Arenbee.Framework.Actors;
 namespace Arenbee.Framework.Statistics
 {
     public enum ModChange { Add, Remove }
+
     public class ModChangeData
     {
         public ModChangeData(Modifier modifier, ModChange change)

@@ -45,6 +45,11 @@ namespace Arenbee.Framework.Statistics
             return new StatusEffect(_stats, type);
         }
 
+        public StatusEffect GetStat(StatusEffectType type)
+        {
+            return GetStat((int)type);
+        }
+
         public void OnModExpired(TempModifier tempModifier)
         {
             RemoveTempMod(tempModifier);
@@ -59,6 +64,13 @@ namespace Arenbee.Framework.Statistics
             }
         }
 
+        public override void AddMod(Modifier mod)
+        {
+            var stat = GetOrNewStat(mod.SubType);
+            stat.Modifiers.Add(mod);
+            stat.UpdateEffect();
+        }
+
         public void AddTempMod(TempModifier tempMod)
         {
             var stat = GetOrNewStat(tempMod.Modifier.SubType);
@@ -66,18 +78,30 @@ namespace Arenbee.Framework.Statistics
             {
                 stat.TempModifier.Expired -= OnModExpired;
                 TempModifiers.Remove(stat.TempModifier);
-                stat.TempModifier.Notifier.UnsubscribeEvents(_stats);
+                stat.TempModifier.Notifier?.UnsubscribeEvents(_stats);
             }
             tempMod.Expired += OnModExpired;
             TempModifiers.Add(tempMod);
-            tempMod.Notifier.SubscribeEvents(_stats);
+            tempMod.Notifier?.SubscribeEvents(_stats);
             stat.TempModifier = tempMod;
             RaiseModChanged(new ModChangeData(tempMod.Modifier, ModChange.Add));
+            stat.UpdateEffect();
         }
 
         public void RaiseModChanged(ModChangeData data)
         {
             ModChanged?.Invoke(data);
+        }
+
+        public override void RemoveMod(Modifier mod)
+        {
+            if (!StatsDict.TryGetValue(mod.SubType, out var stat))
+                return;
+            stat.Modifiers.Remove(mod);
+            if (stat.Modifiers.Count == 0)
+                RemoveStat(stat);
+            else
+                stat.UpdateEffect();
         }
 
         public void RemoveTempMod(TempModifier tempMod)
@@ -86,17 +110,24 @@ namespace Arenbee.Framework.Statistics
                 return;
             tempMod.Expired -= OnModExpired;
             TempModifiers.Remove(tempMod);
-            tempMod.Notifier.UnsubscribeEvents(_stats);
+            tempMod.Notifier?.UnsubscribeEvents(_stats);
             stat.TempModifier = null;
             RaiseModChanged(new ModChangeData(tempMod.Modifier, ModChange.Remove));
             if (stat.Modifiers.Count == 0)
                 RemoveStat(stat);
+            else
+                stat.UpdateEffect();
         }
 
         public override void RemoveStat(StatusEffect stat)
         {
-            stat.RemoveEffect();
+            stat.UpdateEffect();
             base.RemoveStat(stat);
+        }
+
+        public void UpdateEffect(StatusEffectType statusEffectType)
+        {
+            GetStat(statusEffectType)?.UpdateEffect();
         }
     }
 
@@ -107,7 +138,7 @@ namespace Arenbee.Framework.Statistics
         {
             Stats = stats;
             EffectData = Locator.GetStatusEffectDB().GetEffectData(effectType);
-            TickNotifier = EffectData.TickNotifier.Clone();
+            TickNotifier = EffectData.TickNotifier?.Clone();
         }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -119,6 +150,7 @@ namespace Arenbee.Framework.Statistics
 
         public StatusEffectData EffectData { get; }
         public List<Modifier> EffectModifiers { get; set; }
+        public bool IsEffectActive { get; set; }
         public StatsNotifier TickNotifier { get; set; }
         public TempModifier TempModifier { get; set; }
         public Stats Stats { get; }
@@ -137,6 +169,34 @@ namespace Arenbee.Framework.Statistics
             EffectModifiers = EffectData.GetEffectModifiers?.Invoke(this) ?? new List<Modifier>();
             foreach (var mod in EffectModifiers)
                 Stats.AddMod(mod);
+            IsEffectActive = true;
+        }
+
+        public override int CalculateStat(bool ignoreHidden = false)
+        {
+            int result = 0;
+
+            if (Modifiers.Count > 0)
+            {
+                foreach (var mod in Modifiers)
+                {
+                    if (ignoreHidden && mod.IsHidden)
+                        continue;
+                    result = mod.Apply(result);
+                }
+            }
+            else if (TempModifier != null)
+            {
+                result = TempModifier.Modifier.Value;
+            }
+
+            if (StatusEffectType != StatusEffectType.KO && Stats.IsKO())
+                result = 0;
+            var statDef = Stats.StatusEffectDefs.GetStat(SubType);
+            if (statDef?.ModifiedValue >= 100)
+                result = 0;
+
+            return result;
         }
 
         public void RemoveEffect()
@@ -151,6 +211,7 @@ namespace Arenbee.Framework.Statistics
                 Stats.RemoveMod(mod);
             EffectData.ExitEffect?.Invoke(Stats);
             EffectModifiers = new List<Modifier>();
+            IsEffectActive = false;
         }
 
         public void OnTick()
@@ -158,49 +219,13 @@ namespace Arenbee.Framework.Statistics
             EffectData.TickEffect(this);
         }
 
-        public override void UpdateStat()
+        public void UpdateEffect()
         {
-            var prevValue = ModifiedValue;
-            ModifiedValue = 0;
-            DisplayValue = 0;
-
-            if (Modifiers.Count > 0)
-            {
-                foreach (var mod in Modifiers)
-                {
-                    if (!mod.IsHidden)
-                        DisplayValue = mod.Apply(DisplayValue);
-                    ModifiedValue = mod.Apply(ModifiedValue);
-                }
-            }
-            else if (TempModifier != null)
-            {
-                ModifiedValue = TempModifier.Modifier.Value;
-                DisplayValue = ModifiedValue;
-            }
-
-            var statDef = Stats.StatusEffectDefs.GetStat(SubType);
-            if (statDef?.ModifiedValue >= 100)
-            {
-                ModifiedValue = 0;
-                DisplayValue = 0;
-            }
-
-            if (ModifiedValue == prevValue)
-                return;
-            if (prevValue == 0)
-            {
+            var modifiedValue = ModifiedValue;
+            if (modifiedValue != 0 && !IsEffectActive)
                 ApplyEffect();
-            }
-            else if (ModifiedValue == 0)
-            {
+            else if (modifiedValue == 0 && IsEffectActive)
                 RemoveEffect();
-            }
-            else
-            {
-                RemoveEffect();
-                ApplyEffect();
-            }
         }
     }
 }

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjnp5nvoddno6"]
+[gd_scene load_steps=3 format=3 uid="uid://bjnp5nvoddno6"]
 
 [ext_resource type="Script" path="res://Framework/AreaScenes/AreaScene.cs" id="1_bjmkr"]
+[ext_resource type="PackedScene" uid="uid://b7btk4atcpbwy" path="res://Framework/Utility/ColorAdjustment.tscn" id="2_rv66l"]
 
 [node name="AreaScene" type="Node2D"]
 script = ExtResource( "1_bjmkr" )
@@ -14,3 +15,9 @@ script = ExtResource( "1_bjmkr" )
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Players" type="Node2D" parent="."]
+
+[node name="Effects" type="Node2D" parent="."]
+
+[node name="ColorAdjustment" parent="." instance=ExtResource( "2_rv66l" )]
+layer = 20
+TintColor = Color(1, 0.0823529, 0, 1)

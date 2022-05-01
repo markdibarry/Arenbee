@@ -18,7 +18,7 @@ namespace Arenbee.Assets.GUI
 
         public void UpdateMaxHearts(int maxHp)
         {
-            this.RemoveAllChildren();
+            this.QueueFreeAllChildren();
             int heartNum = (int)(maxHp * 0.5);
             if (maxHp % 2 == 1)
                 heartNum++;

@@ -1,7 +1,6 @@
 ﻿using Arenbee.Assets.Actors.Default.BaseStates;
 using Arenbee.Assets.Actors.Enemies.ActionStates;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Input;
 using Godot;
 using Arenbee.Framework.Enums;
 
@@ -16,7 +15,6 @@ namespace Arenbee.Framework.Actors
         public Sprite2D BodySprite { get; private set; }
         public AnimationPlayer AnimationPlayer { get; private set; }
         public StateController StateController { get; private set; }
-        protected BehaviorTree BehaviorTree { get; set; }
         private Blinker _blinker;
         private PackedScene _enemyDeathEffectScene;
         public delegate void ActorDefeatedHandler(Actor actor);

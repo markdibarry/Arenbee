@@ -2,51 +2,22 @@ namespace Arenbee.Framework.Input
 {
     public class InputAction
     {
-        public InputAction() { }
-        public InputAction(string alias)
+        public InputAction(InputHandler inputHandler)
+        {
+            _inputHandler = inputHandler;
+        }
+
+        public InputAction(InputHandler inputHandler, string alias)
+            : this(inputHandler)
         {
             Alias = alias;
         }
 
-        public string Alias { get; set; }
-        public bool UserInputDisabled { get; set; }
-        private bool _simulatedPress;
+        public InputHandler _inputHandler;
         private bool _simulatedJustPressed;
         private bool _simulatedJustReleased;
+        private bool _simulatedPress;
         private float _simulatedStrength;
-        public bool IsActionPressed
-        {
-            get
-            {
-                if (_simulatedPress || _simulatedJustPressed) return true;
-                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
-                    return false;
-                return Godot.Input.IsActionPressed(Alias);
-            }
-        }
-
-        public bool IsActionJustPressed
-        {
-            get
-            {
-                if (_simulatedJustPressed) return true;
-                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
-                    return false;
-                return Godot.Input.IsActionJustPressed(Alias);
-            }
-        }
-
-        public bool IsActionJustReleased
-        {
-            get
-            {
-                if (_simulatedJustReleased) return true;
-                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
-                    return false;
-                return Godot.Input.IsActionJustReleased(Alias);
-            }
-        }
-
         public float ActionStrength
         {
             get
@@ -55,39 +26,67 @@ namespace Arenbee.Framework.Input
                     return _simulatedStrength;
                 if (IsActionPressed)
                     return 1;
-                if (string.IsNullOrEmpty(Alias) || UserInputDisabled)
+                if (_inputHandler.UserInputDisabled || UserInputDisabled || string.IsNullOrEmpty(Alias))
                     return 0;
                 return Godot.Input.GetActionStrength(Alias);
             }
-        }
-
-        public void SimulatePress()
-        {
-            if (!_simulatedPress)
+            set
             {
-                _simulatedPress = true;
-                _simulatedJustPressed = true;
+                _simulatedStrength = value;
             }
         }
-
-        public void SimulateJustPressed()
+        public string Alias { get; set; }
+        public bool IsActionPressed
         {
-            _simulatedJustPressed = true;
-        }
-
-        public void SimulateRelease()
-        {
-            if (_simulatedPress)
+            get
             {
-                _simulatedPress = false;
-                _simulatedJustReleased = true;
+                if (_simulatedPress || _simulatedJustPressed)
+                    return true;
+                if (_inputHandler.UserInputDisabled || UserInputDisabled || string.IsNullOrEmpty(Alias))
+                    return false;
+                return Godot.Input.IsActionPressed(Alias);
+            }
+            set
+            {
+                if (value && !_simulatedPress)
+                {
+                    _simulatedPress = true;
+                    _simulatedJustPressed = true;
+                }
+                else if (!value && _simulatedPress)
+                {
+                    _simulatedPress = false;
+                    _simulatedJustReleased = true;
+                }
             }
         }
-
-        public void SetActionStrength(float value)
+        public bool IsActionJustPressed
         {
-            _simulatedStrength = value;
+            get
+            {
+                if (_simulatedJustPressed)
+                    return true;
+                if (_inputHandler.UserInputDisabled || UserInputDisabled || string.IsNullOrEmpty(Alias))
+                    return false;
+                return Godot.Input.IsActionJustPressed(Alias);
+            }
+            set
+            {
+                _simulatedJustPressed = value;
+            }
         }
+        public bool IsActionJustReleased
+        {
+            get
+            {
+                if (_simulatedJustReleased)
+                    return true;
+                if (_inputHandler.UserInputDisabled || UserInputDisabled || string.IsNullOrEmpty(Alias))
+                    return false;
+                return Godot.Input.IsActionJustReleased(Alias);
+            }
+        }
+        public bool UserInputDisabled { get; set; }
 
         public void ClearOneTimeActions()
         {

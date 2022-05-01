@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Arenbee.Framework.GUI.Text;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Utility;
@@ -15,15 +14,15 @@ namespace Arenbee.Framework.GUI.Dialog
         }
 
         private int _currentPart;
+        private PackedScene _dialogBoxScene;
+        private PackedScene _dialogOptionSubMenuScene;
+        private DialogOptionSubMenu _dialogOptionSubMenu;
         private readonly GUIInputHandler _menuInput;
         public bool CanProceed { get; set; }
         public bool DialogActive { get; set; }
         public DialogPart[] DialogParts { get; set; }
         public DialogBox UnfocusedBox { get; set; }
         public DialogBox FocusedBox { get; set; }
-        private PackedScene _dialogBoxScene;
-        private PackedScene _dialogOptionSubMenuScene;
-        private DialogOptionSubMenu _dialogOptionSubMenu;
         public delegate void DialogStartedHandler();
         public delegate void DialogEndedHandler();
         public event DialogStartedHandler DialogStarted;
@@ -43,6 +42,8 @@ namespace Arenbee.Framework.GUI.Dialog
         {
             _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
             _dialogOptionSubMenuScene = GD.Load<PackedScene>(DialogOptionSubMenu.GetScenePath());
+            DialogStarted += OnDialogStarted;
+            DialogEnded += OnDialogEnded;
         }
 
         public void CloseBox(DialogBox box)
@@ -171,11 +172,21 @@ namespace Arenbee.Framework.GUI.Dialog
             FocusedBox.UpdateDialogPart();
         }
 
-        private async Task CloseOptionBoxAsync()
+        private void CloseOptionBox()
         {
             _dialogOptionSubMenu.ItemSelected -= OnOptionItemSelected;
-            await _dialogOptionSubMenu.CloseSubMenuAsync();
+            _dialogOptionSubMenu.CloseSubMenu();
             _dialogOptionSubMenu = null;
+        }
+
+        private void OnDialogEnded()
+        {
+            Locator.GetParty()?.DisableUserInput(false);
+        }
+
+        private void OnDialogStarted()
+        {
+            Locator.GetParty()?.DisableUserInput(true);
         }
 
         private void OnDialogBoxLoaded(DialogBox dialogBox)
@@ -188,14 +199,14 @@ namespace Arenbee.Framework.GUI.Dialog
             textEvent.HandleEvent(this);
         }
 
-        private async void OnOptionItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        private void OnOptionItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             if (!optionItem.OptionData.TryGetValue("next", out string next))
                 return;
             if (int.TryParse(next, out int result))
             {
                 NextDialogPart(result);
-                await CloseOptionBoxAsync();
+                CloseOptionBox();
             }
             else
             {

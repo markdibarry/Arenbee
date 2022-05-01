@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Players.BaseStates
 {
-    public class Idle : State<Actor>
+    public class Idle : ActorState
     {
         public Idle() { AnimationName = "Idle"; }
         public override void Enter()
@@ -11,28 +11,25 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             PlayAnimation(AnimationName);
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsRunStuck > 0)
-            {
-                StateMachine.TransitionTo(new Run());
-                return;
-            }
+                return new Run();
 
             if (Actor.ShouldWalk())
             {
                 if (Actor.ShouldRun())
-                    StateMachine.TransitionTo(new Run());
-                else
-                    StateMachine.TransitionTo(new Walk());
+                    return new Run();
+                return new Walk();
             }
+            return null;
         }
     }
 }

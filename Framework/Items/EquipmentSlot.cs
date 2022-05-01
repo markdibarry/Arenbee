@@ -65,16 +65,5 @@ namespace Arenbee.Framework.Items
             ItemId = newItem?.Id;
             return true;
         }
-
-        public Stats GetMockStats(Stats stats, string itemId)
-        {
-            var mockStats = new Stats(stats);
-            var newSlot = new EquipmentSlot(this);
-            newSlot.Item?.ItemStats?.RemoveFromStats(mockStats);
-            newSlot.SetItemById(itemId);
-            newSlot.Item?.ItemStats?.AddToStats(mockStats);
-            mockStats.RecalculateStats();
-            return mockStats;
-        }
     }
 }

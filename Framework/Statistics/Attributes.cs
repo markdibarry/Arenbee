@@ -97,20 +97,18 @@ namespace Arenbee.Framework.Statistics
             MaxValue = maxValue;
         }
 
-        public override void UpdateStat()
+        public override int CalculateStat(bool ignoreHidden = false)
         {
-            int modifiedValue = BaseValue;
-            int displayValue = BaseValue;
+            int result = BaseValue;
 
             foreach (var mod in Modifiers)
             {
-                if (!mod.IsHidden)
-                    displayValue = mod.Apply(displayValue);
-                modifiedValue = mod.Apply(modifiedValue);
+                if (ignoreHidden && mod.IsHidden)
+                    continue;
+                result = mod.Apply(result);
             }
 
-            ModifiedValue = Math.Min(modifiedValue, MaxValue);
-            DisplayValue = Math.Min(displayValue, MaxValue);
+            return Math.Min(result, MaxValue);
         }
     }
 }

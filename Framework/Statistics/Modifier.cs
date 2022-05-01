@@ -11,14 +11,14 @@ namespace Arenbee.Framework.Statistics
         public Modifier(
             StatType statType,
             int subType,
-            ModEffect effect,
+            ModOperator effect,
             int value,
             int chance,
             bool isHidden = false)
         {
             StatType = statType;
             SubType = subType;
-            Effect = effect;
+            Operator = effect;
             Chance = chance;
             Value = value;
             IsHidden = isHidden;
@@ -27,7 +27,7 @@ namespace Arenbee.Framework.Statistics
         public Modifier(
             StatType statType,
             int subType,
-            ModEffect effect,
+            ModOperator effect,
             int value,
             bool isHidden = false)
             : this(statType, subType, effect, value, 100, isHidden)
@@ -37,46 +37,43 @@ namespace Arenbee.Framework.Statistics
             StatType statType,
             int subType,
             bool isHidden = false)
-            : this(statType, subType, ModEffect.None, 0, 100, isHidden)
+            : this(statType, subType, ModOperator.None, 0, 100, isHidden)
         { }
 
         public Modifier(Modifier mod)
         {
             StatType = mod.StatType;
             SubType = mod.SubType;
-            Effect = mod.Effect;
+            Operator = mod.Operator;
             IsHidden = mod.IsHidden;
             Value = mod.Value;
             Chance = mod.Chance;
         }
 
         public int Chance { get; set; }
+        public bool IsHidden { get; set; }
+        public ModOperator Operator { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public StatType StatType { get; set; }
         public int SubType { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public ModEffect Effect { get; set; }
-        public bool IsHidden { get; set; }
         public int Value { get; }
 
         public int Apply(int baseValue)
         {
-            return s_methods[Effect](baseValue, Value);
+            return s_methods[Operator](baseValue, Value);
         }
 
         /// <summary>
         /// TODO MAKE BETTER
         /// </summary>
         /// <returns></returns>
-        private static readonly Dictionary<ModEffect, Func<int, int, int>> s_methods =
+        private static readonly Dictionary<ModOperator, Func<int, int, int>> s_methods =
             new()
             {
-                { ModEffect.None, None },
-                { ModEffect.Add, Add },
-                { ModEffect.Subtract, Subtract },
-                { ModEffect.Multiply, Multiply },
-                { ModEffect.Divide, Divide },
-                { ModEffect.Percentage, Percentage }
+                { ModOperator.None, None },
+                { ModOperator.Add, Add },
+                { ModOperator.Multiply, Multiply }
             };
 
         private static int None(int baseValue, int modValue)
@@ -89,36 +86,16 @@ namespace Arenbee.Framework.Statistics
             return baseValue + modValue;
         }
 
-        private static int Subtract(int baseValue, int modValue)
-        {
-            return baseValue - modValue;
-        }
-
         public static int Multiply(int baseValue, int modValue)
         {
-            return baseValue * modValue;
-        }
-
-        public static int Divide(int baseValue, int modValue)
-        {
-            if (baseValue == 0 || modValue == 0)
-                return 0;
-            return baseValue / modValue;
-        }
-
-        public static int Percentage(int baseValue, int modValue)
-        {
-            return (int)(baseValue * modValue * 0.01);
+            return (int)(baseValue + (baseValue * modValue * 0.01));
         }
     }
 
-    public enum ModEffect
+    public enum ModOperator
     {
         None,
         Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Percentage
+        Multiply
     }
 }

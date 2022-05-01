@@ -233,6 +233,7 @@ position = Vector2(470, 200)
 monitorable = false
 script = ExtResource( "7_ftrnt" )
 PackedScenePath = "res://Assets/AreaScenes/DemoLevel/DemoLevel1.tscn"
+TransitionType = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Events/Teleport" index="0"]
 position = Vector2(-6, 8.5)
@@ -243,9 +244,6 @@ offset_left = -16.0
 offset_top = -8.0
 offset_right = 4.0
 offset_bottom = 24.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Plant" parent="Enemies" index="0" instance=ExtResource( "6_frfip" )]
 position = Vector2(418, 216)

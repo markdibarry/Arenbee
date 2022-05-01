@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bi5k8m13ufwjq"]
 
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_uvd47"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/OptionSubMenu.tscn" id="1_uvd47"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
@@ -14,11 +14,6 @@ offset_left = 232.0
 offset_top = 52.0
 offset_right = 344.0
 offset_bottom = 160.0
-__meta__ = {
-"_edit_group_": true,
-"_edit_layout_mode": 0,
-"_edit_use_custom_anchors": false
-}
 DimItems = true
 ExpandContent = true
 HResize = 3
@@ -73,10 +68,5 @@ offset_left = 214.0
 offset_top = 168.0
 offset_right = 344.0
 offset_bottom = 222.0
-__meta__ = {
-"_edit_layout_mode": 0,
-"_edit_use_anchors_": false,
-"_edit_use_custom_anchors": false
-}
 
 [editable path="Foreground/EquipOptions"]

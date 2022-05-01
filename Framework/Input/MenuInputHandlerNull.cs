@@ -1,6 +1,4 @@
 namespace Arenbee.Framework.Input
 {
-    public partial class MenuInputHandlerNull : GUIInputHandler
-    {
-    }
+    public partial class MenuInputHandlerNull : GUIInputHandler { }
 }

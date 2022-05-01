@@ -1,7 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Input;
-using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -11,11 +11,10 @@ namespace Arenbee.Framework.GUI
     {
         public SubMenu()
         {
-            MenuInput = Locator.GetMenuInput();
+            Visible = false;
         }
 
         private bool _dim;
-        protected readonly GUIInputHandler MenuInput;
         [Export]
         public bool Dim
         {
@@ -29,106 +28,110 @@ namespace Arenbee.Framework.GUI
                 }
             }
         }
-        [Export]
-        protected bool PreventCancel { get; set; }
-        [Export]
-        protected bool PreventCloseAll { get; set; }
-        protected bool IsActive { get; set; }
-        protected Control Foreground { get; set; }
+        public bool IsActive { get; set; }
         protected Control Background { get; set; }
+        protected Control Foreground { get; set; }
+        [Export] protected bool PreventCancel { get; set; }
+        [Export] protected bool PreventCloseAll { get; set; }
         public delegate void RequestedAddHandler(SubMenu subMenu);
-        public delegate void SubMenuClosedHandler(SubMenu subMenu, string cascadeTo = null);
-        public delegate void RequestedCloseAllHandler();
+        public delegate void RequestedCloseHandler(Action callback, string cascadeTo);
+        public delegate void RequestedCloseAllHandler(Action callback);
         public event RequestedAddHandler RequestedAdd;
-        public event SubMenuClosedHandler SubMenuClosed;
+        public event RequestedCloseHandler RequestedClose;
         public event RequestedCloseAllHandler RequestedCloseAll;
 
-        public override async void _Process(float delta)
+        public override void _Ready()
         {
-            if (this.IsToolDebugMode() || !IsActive) return;
-
-            if (MenuInput.Cancel.IsActionJustPressed)
-            {
-                if (!PreventCancel)
-                    await CloseSubMenuAsync();
-            }
-            else if (MenuInput.Start.IsActionJustPressed)
-            {
-                if (!PreventCloseAll)
-                    RaiseRequestedCloseAll();
-            }
-        }
-
-        public override async void _Ready()
-        {
-            Modulate = Colors.Transparent;
             SetNodeReferences();
             if (this.IsSceneRoot())
-                await InitAsync();
+                Init();
         }
 
-        public virtual async Task CloseSubMenuAsync(string cascadeTo = null)
+        public virtual void CloseSubMenu(Action callback = null, string cascadeTo = null)
         {
-            IsActive = false;
-            await TransitionOutAsync();
-            QueueFree();
-            SubMenuClosed?.Invoke(this, cascadeTo);
+            RaiseRequestedClose(callback, cascadeTo);
+        }
+
+        public virtual void HandleInput(GUIInputHandler input, float delta)
+        {
+            if (input.Cancel.IsActionJustPressed && !PreventCancel)
+                RaiseRequestedClose();
+            else if (input.Start.IsActionJustPressed && !PreventCloseAll)
+                RaiseRequestedCloseAll();
+        }
+
+        public async void Init()
+        {
+            await InitAsync();
         }
 
         public async Task InitAsync()
         {
-            PreLoadSetup();
+            PreWaitFrameSetup();
             await ToSignal(GetTree(), "process_frame");
-            await PostLoadSetupAsync();
+            await PostWaitFrameSetup();
         }
 
-        public virtual void ResumeSubMenu(bool isCascading)
+        public virtual void ResumeSubMenu()
         {
             ProcessMode = ProcessModeEnum.Inherit;
             Dim = false;
+            IsActive = true;
+        }
+
+        public virtual void SuspendSubMenu()
+        {
+            IsActive = false;
+            Dim = true;
+            ProcessMode = ProcessModeEnum.Disabled;
+        }
+
+        public virtual Task TransitionOpenAsync()
+        {
+            Modulate = Colors.White;
+            return Task.CompletedTask;
+        }
+
+        public virtual Task TransitionCloseAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Logic used for setup before needing to wait a frame to adjust.
         /// </summary>
         /// <returns></returns>
-        protected virtual void PreLoadSetup() { }
+        protected virtual void PreWaitFrameSetup() { }
 
         /// <summary>
         /// Logic used for setup after the controls have adjusted.
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task PostLoadSetupAsync()
+        protected virtual async Task PostWaitFrameSetup()
         {
-            await TransitionInAsync();
-            IsActive = true;
+            Visible = true;
+            await TransitionOpenAsync();
         }
 
-        protected void RaiseRequestedAddSubMenu(SubMenu subMenu)
+        protected void RaiseRequestedAdd(SubMenu subMenu)
         {
             RequestedAdd?.Invoke(subMenu);
         }
 
-        protected void RaiseRequestedCloseAll()
+        protected void RaiseRequestedClose(Action callback = null, string cascadeTo = null)
         {
-            RequestedCloseAll?.Invoke();
+            RequestedClose?.Invoke(callback, cascadeTo);
+        }
+
+        protected void RaiseRequestedCloseAll(Action callback = null)
+        {
+            RequestedCloseAll?.Invoke(callback);
         }
 
         protected virtual void SetNodeReferences()
         {
             Foreground = GetNode<Control>("Foreground");
             Background = GetNode<Control>("Background");
-        }
-
-        protected virtual Task TransitionInAsync()
-        {
-            Modulate = Colors.White;
-            return Task.CompletedTask;
-        }
-
-        protected virtual Task TransitionOutAsync()
-        {
-            return Task.CompletedTask;
         }
     }
 }

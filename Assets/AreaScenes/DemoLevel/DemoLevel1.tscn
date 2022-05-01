@@ -143,6 +143,7 @@ position = Vector2(212, 104)
 monitorable = false
 script = ExtResource( "12_vgakd" )
 PackedScenePath = "res://Assets/AreaScenes/DemoLevel/DemoLevel2.tscn"
+TransitionType = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Events/Teleport" index="0"]
 position = Vector2(-6, 8.5)
@@ -165,3 +166,6 @@ position = Vector2(544, 200)
 
 [node name="Wisp" parent="Enemies" index="1" instance=ExtResource( "11_mxxem" )]
 position = Vector2(392, 40)
+
+[node name="ColorAdjustment" parent="." index="6"]
+TintColor = Color(1, 0.0823529, 0, 1)

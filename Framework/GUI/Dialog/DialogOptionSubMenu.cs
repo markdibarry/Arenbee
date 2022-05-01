@@ -12,7 +12,7 @@ namespace Arenbee.Framework.GUI.Dialog
         private PackedScene _textOptionScene;
         private OptionContainer _options;
 
-        protected override void CustomOptionsSetup()
+        protected override void ReplaceDefaultOptions()
         {
             if (DialogChoices?.Length > 0)
             {
@@ -27,17 +27,15 @@ namespace Arenbee.Framework.GUI.Dialog
                 }
                 _options.ReplaceChildren(options);
             }
-            _options.FitContainer = true;
-            _options.HResize = SizeFlags.ShrinkCenter;
-            _options.VResize = SizeFlags.ShrinkCenter;
-            base.CustomOptionsSetup();
         }
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _options = Foreground.GetNode<OptionContainer>("OptionContainer");
-            OptionContainers.Add(_options);
+            _options = OptionContainers.Find(x => x.Name == "OptionContainer");
+            _options.FitContainer = true;
+            _options.HResize = Control.SizeFlags.ShrinkCenter;
+            _options.VResize = Control.SizeFlags.ShrinkCenter;
         }
     }
 }

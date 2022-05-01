@@ -3,23 +3,22 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies.ActionStates
 {
-    public class NotAttacking : State<Actor>
+    public class NotAttacking : ActorState
     {
         public NotAttacking() { IsInitialState = true; }
-        public override void Enter()
+
+        public override void Enter() { }
+
+        public override ActorState Update(float delta)
         {
+            return CheckForTransitions();
         }
 
-        public override void Update(float delta)
-        {
-        }
+        public override void Exit() { }
 
-        public override void Exit()
+        public override ActorState CheckForTransitions()
         {
-        }
-
-        public override void CheckForTransitions()
-        {
+            return null;
         }
     }
 }

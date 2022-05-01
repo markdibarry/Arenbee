@@ -1,41 +1,35 @@
 using Arenbee.Framework;
 using Arenbee.Framework.Actors;
-using Godot;
 
 namespace Arenbee.Assets.Actors.Players.ActionStates
 {
-    public class UnarmedAttack : State<Actor>
+    public class UnarmedAttack : ActorState
     {
         public UnarmedAttack() { AnimationName = "UnarmedAttack"; }
+
         public override void Enter()
         {
             PlayAnimation(AnimationName);
-            SubscribeAnimation();
             StateController.BaseStateMachine.TransitionTo(new None());
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit()
         {
-            UnsubscribeAnimation();
             StateController.BaseStateMachine.TransitionTo(new BaseStates.Idle());
         }
 
-        protected override void OnAnimationFinished(StringName animationName)
+        public override ActorState CheckForTransitions()
         {
-            UnsubscribeAnimation();
-            StateMachine.TransitionTo(new NotAttacking());
-            StateController.PlayFallbackAnimation();
-        }
-
-        public override void CheckForTransitions()
-        {
-            if (InputHandler.Attack.IsActionJustPressed && !Actor.IsAttackDisabled)
-                StateMachine.TransitionTo(new UnarmedAttack());
+            if (Actor.AnimationPlayer.CurrentAnimation != AnimationName)
+                return new NotAttacking();
+            if (!Actor.IsAttackDisabled && InputHandler.Attack.IsActionJustPressed)
+                return new UnarmedAttack();
+            return null;
         }
     }
 }

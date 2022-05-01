@@ -4,7 +4,7 @@ namespace Arenbee.Framework.Statistics
     {
         public StatType StatType { get; set; }
         public int SubType { get; set; }
-        public ModEffect Effect { get; set; }
+        public ModOperator Operator { get; set; }
         public bool IsHidden { get; set; }
         public int Value { get; }
         public int Chance { get; }

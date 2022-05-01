@@ -17,19 +17,19 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
                 if (distance > _maxChaseDistance)
                 {
                     Actor.InputHandler.SetLeftAxis(Vector2.Zero);
-                    Actor.InputHandler.Run.SimulateRelease();
+                    Actor.InputHandler.Run.IsActionPressed = false;
                     ClearData("Target");
                     State = NodeState.Failure;
                     return State;
                 }
                 Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
                 Actor.InputHandler.SetLeftAxis(direction);
-                Actor.InputHandler.Run.SimulatePress();
+                Actor.InputHandler.Run.IsActionPressed = true;
             }
             else
             {
                 Actor.InputHandler.SetLeftAxis(Vector2.Zero);
-                Actor.InputHandler.Run.SimulateRelease();
+                Actor.InputHandler.Run.IsActionPressed = false;
             }
 
             State = NodeState.Running;

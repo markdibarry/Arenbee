@@ -6,6 +6,7 @@ namespace Arenbee.Framework.Statistics
     public enum StatusEffectType
     {
         None,
+        KO,
         Burn,
         Freeze,
         Paralysis,

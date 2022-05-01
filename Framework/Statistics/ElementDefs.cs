@@ -50,19 +50,17 @@ namespace Arenbee.Framework.Statistics
             set { SubType = (int)value; }
         }
 
-        public override void UpdateStat()
+        public override int CalculateStat(bool ignoreHidden = false)
         {
-            int modifiedValue = BaseValue;
-            int displayValue = BaseValue;
+            int result = BaseValue;
             foreach (var mod in Modifiers)
             {
-                if (!mod.IsHidden)
-                    displayValue += mod.Value - None;
-                modifiedValue += mod.Value - None;
+                if (ignoreHidden && mod.IsHidden)
+                    continue;
+                result += mod.Value - None;
             }
 
-            ModifiedValue = Math.Clamp(modifiedValue + None, Absorb, VeryWeak);
-            DisplayValue = Math.Clamp(displayValue + None, Absorb, VeryWeak);
+            return Math.Clamp(result + None, Absorb, VeryWeak);
         }
     }
 }

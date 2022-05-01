@@ -1,7 +1,6 @@
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.AreaScenes;
-using Arenbee.Framework.Enums;
-using Arenbee.Framework.Utility;
+using Arenbee.Framework.Game;
+using Arenbee.Framework.GUI;
 using Godot;
 
 namespace Arenbee.Framework.Events
@@ -10,18 +9,36 @@ namespace Arenbee.Framework.Events
     {
         [Export(PropertyHint.File)]
         public string PackedScenePath { get; set; }
+        [Export(PropertyHint.Enum)]
+        public TransitionType TransitionType { get; set; }
+        public bool IsActive { get; set; }
+
         public override void _Ready()
         {
             BodyEntered += OnBodyEntered;
         }
+
         public void OnBodyEntered(Node body)
         {
-            if (PackedScenePath == null) return;
+            if (IsActive || PackedScenePath == null) return;
             if (body is Actor actor && actor.ActorType == ActorType.Player)
             {
-                AreaScene newScene = GD.Load<PackedScene>(PackedScenePath).Instantiate<AreaScene>();
-                Locator.GetCurrentGame().ReplaceScene(newScene);
+                IsActive = true;
+                if (!File.FileExists(PackedScenePath))
+                    return;
+                CallDeferred(nameof(LoadScene));
             }
+        }
+
+        private void LoadScene()
+        {
+            var tData = new TransitionData()
+            {
+                ScenePath = PackedScenePath,
+                TransitionType = TransitionType
+            };
+            var tController = GameRoot.Instance.TransitionController;
+            tController.LoadScene(tData);
         }
     }
 }

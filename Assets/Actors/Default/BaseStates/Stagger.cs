@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Default.BaseStates
 {
-    public class Stagger : State<Actor>
+    public class Stagger : ActorState
     {
         public Stagger() { AnimationName = "Stagger"; }
         float _staggerTimer = 0.5f;
@@ -19,13 +19,13 @@ namespace Arenbee.Assets.Actors.Default.BaseStates
             PlayAnimation(AnimationName, true);
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
             if (_staggerTimer > 0)
                 _staggerTimer -= delta;
             else
                 _isStaggered = false;
+            return CheckForTransitions();
         }
 
         public override void Exit()
@@ -37,12 +37,11 @@ namespace Arenbee.Assets.Actors.Default.BaseStates
             StateController.AnimationOverride = false;
         }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (!_isStaggered)
-            {
                 StateController.ResetMachines();
-            }
+            return null;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 
 namespace Arenbee.Framework.Actors
 {
@@ -13,40 +12,27 @@ namespace Arenbee.Framework.Actors
             {
                 if (_stats != null)
                 {
-                    _stats.DamageRecieved -= OnDamageRecieved;
+                    _stats.DamageReceived -= OnDamageRecieved;
                     _stats.HPDepleted -= OnHPDepleted;
-                    _stats.StatsRecalculated -= OnStatsRecalculated;
+                    _stats.StatsChanged -= OnStatsChanged;
                     _stats.ModChanged -= OnModChanged;
                 }
                 _stats = value;
                 if (_stats != null)
                 {
-                    _stats.DamageRecieved += OnDamageRecieved;
+                    _stats.DamageReceived += OnDamageRecieved;
                     _stats.HPDepleted += OnHPDepleted;
-                    _stats.StatsRecalculated += OnStatsRecalculated;
+                    _stats.StatsChanged += OnStatsChanged;
                     _stats.ModChanged += OnModChanged;
                 }
             }
         }
         public delegate void ModChangedHandler(ModChangeData modChangeData);
-        public delegate void StatsRecalculatedHandler(Actor actor);
+        public delegate void StatsChangedHandler(Actor actor);
         public event ModChangedHandler ModChanged;
-        public event StatsRecalculatedHandler StatsRecalculated;
+        public event StatsChangedHandler StatsChanged;
 
         protected virtual void ApplyDefaultStats() { }
-
-        protected virtual void UpdateHitBoxAction()
-        {
-            if (HitBox == null) return;
-            HitBox.ActionData = new ActionData(
-                Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue,
-                Name,
-                ActionType.Melee)
-            {
-                ElementDamage = Stats.ElementOffs.CurrentElement,
-                StatusEffects = Stats.StatusEffectOffs.GetModifiers()
-            };
-        }
 
         private void OnModChanged(ModChangeData modChangeData)
         {
@@ -54,18 +40,9 @@ namespace Arenbee.Framework.Actors
             ModChanged?.Invoke(modChangeData);
         }
 
-        private void OnStatsRecalculated()
+        private void OnStatsChanged()
         {
-            UpdateHitBox();
-            StatsRecalculated?.Invoke(this);
-        }
-
-        private void UpdateHitBox()
-        {
-            if (WeaponSlot?.CurrentWeapon != null)
-                WeaponSlot.CurrentWeapon.UpdateHitBoxAction();
-            else
-                UpdateHitBoxAction();
+            StatsChanged?.Invoke(this);
         }
     }
 }

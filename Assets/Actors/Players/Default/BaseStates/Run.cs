@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Players.BaseStates
 {
-    public class Run : State<Actor>
+    public class Run : ActorState
     {
         public Run() { AnimationName = "Run"; }
 
@@ -13,26 +13,26 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             Actor.MaxSpeed = Actor.RunSpeed;
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
             Actor.UpdateDirection();
             Actor.Move();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsRunStuck > 0)
-                return;
+                return null;
             if (!Actor.ShouldRun())
             {
                 if (Actor.ShouldWalk())
-                    StateMachine.TransitionTo(new Walk());
-                else
-                    StateMachine.TransitionTo(new Idle());
+                    return new Walk();
+                return new Idle();
             }
+            return null;
         }
     }
 }

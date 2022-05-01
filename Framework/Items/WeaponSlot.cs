@@ -15,7 +15,6 @@ namespace Arenbee.Framework.Items
             _holder = holder;
             var slot = _holder.Equipment.GetSlot(EquipSlotName.Weapon);
             SetWeapon(slot.Item);
-            _holder.Stats.RecalculateStats(true);
         }
 
         public void SetWeapon(Item item)

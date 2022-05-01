@@ -9,22 +9,22 @@ namespace Arenbee.Framework.Utility
     {
         static Locator()
         {
-            s_currentGame = new GameSessionNull();
+            s_gameSession = null;
             s_itemDB = new ItemDBNull();
             s_menuInput = new MenuInputHandlerNull();
             s_statusEffectDB = new StatusEffectDBNull();
         }
 
-        private static GameSessionBase s_currentGame;
+        private static GameSession s_gameSession;
         private static IItemDB s_itemDB;
         private static GUIInputHandler s_menuInput;
         private static IStatusEffectDB s_statusEffectDB;
 
-        public static void ProvideCurrentGame(GameSessionBase gameSession)
+        public static void ProvideGameSession(GameSession gameSession)
         {
-            if (Godot.Object.IsInstanceValid(s_currentGame))
-                s_currentGame.Free();
-            s_currentGame = gameSession ?? new GameSessionNull();
+            if (Godot.Object.IsInstanceValid(s_gameSession))
+                s_gameSession.Free();
+            s_gameSession = gameSession;
         }
 
         public static void ProvideItemDB(IItemDB itemDB)
@@ -44,9 +44,14 @@ namespace Arenbee.Framework.Utility
             s_statusEffectDB = statusEffectDB ?? new StatusEffectDBNull();
         }
 
-        public static GameSessionBase GetCurrentGame()
+        public static GameSession GetGameSession()
         {
-            return s_currentGame;
+            return s_gameSession;
+        }
+
+        public static PlayerParty GetParty()
+        {
+            return GetGameSession()?.Party;
         }
 
         public static IItemDB GetItemDB()

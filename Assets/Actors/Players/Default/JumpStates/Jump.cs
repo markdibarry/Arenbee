@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Players.JumpStates
 {
-    public class Jump : State<Actor>
+    public class Jump : ActorState
     {
         public Jump() { AnimationName = "Jump"; }
 
@@ -13,23 +13,24 @@ namespace Arenbee.Assets.Actors.Players.JumpStates
             PlayAnimation(AnimationName);
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
             if (InputHandler.Jump.IsActionJustReleased)
                 Actor.VelocityY = Actor.Velocity.y * 0.5f;
             Actor.VelocityY = Actor.Velocity.y + (Actor.JumpGravity * delta);
 
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsOnFloor())
-                StateMachine.TransitionTo(new Grounded());
+                return new Grounded();
             else if (Actor.Velocity.y >= 0)
-                StateMachine.TransitionTo(new Fall());
+                return new Fall();
+            return null;
         }
     }
 }

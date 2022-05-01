@@ -1,5 +1,3 @@
-using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Enums;
 using Godot;
 using Arenbee.Framework.Utility;
 using Arenbee.Framework.Actors;
@@ -16,8 +14,7 @@ namespace Arenbee.Framework.Items
         private readonly IItemDB _itemDB;
         private Item _item;
         public AnimationPlayer AnimationPlayer { get; set; }
-        public HitBox HitBox { get; set; }
-        public IState InitialState { get; set; }
+        public ActorState InitialState { get; set; }
         public Item Item
         {
             get
@@ -40,6 +37,7 @@ namespace Arenbee.Framework.Items
         {
             base._Ready();
             SetNodeReferences();
+            SetHitBoxes();
         }
 
         public void Init(Actor holder)
@@ -47,21 +45,14 @@ namespace Arenbee.Framework.Items
             Holder = holder;
         }
 
-        public virtual void UpdateHitBoxAction()
-        {
-            HitBox.ActionData = new ActionData(Holder.Name, ActionType.Melee)
-            {
-                ElementDamage = Holder.Stats.ElementOffs.CurrentElement,
-                StatusEffects = Holder.Stats.StatusEffectOffs.GetModifiers(),
-                Value = Holder.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
-            };
-        }
+        public virtual void DisableHitBoxes(int hitboxNum) { }
 
-        private void SetNodeReferences()
+        protected virtual void SetHitBoxes() { }
+
+        protected virtual void SetNodeReferences()
         {
             AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             Sprite = GetNode<Sprite2D>("Sprite");
-            HitBox = GetNode<HitBox>("HitBox");
         }
     }
 }

@@ -6,18 +6,10 @@ namespace Arenbee.Framework.Statistics
 {
     public class ActionData
     {
-        public ActionData(string sourceName, ActionType actionType)
+        public ActionData()
         {
-            ActionType = actionType;
-            SourceName = sourceName;
             StatusEffects = new List<Modifier>();
             Value = 1;
-        }
-
-        public ActionData(int value, string sourceName, ActionType actionType)
-            : this(sourceName, actionType)
-        {
-            Value = value;
         }
 
         public ActionType ActionType { get; set; }

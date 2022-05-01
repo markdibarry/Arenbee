@@ -28,11 +28,11 @@ namespace Arenbee.Assets.Actors.Enemies
 
         protected override void ApplyDefaultStats()
         {
-            Stats.AddMod(new Modifier(StatType.ElementOff, (int)ElementType.Fire, ModEffect.Add, 1));
-            Stats.AddMod(new Modifier(StatType.StatusEffectOff, (int)StatusEffectType.Burn, ModEffect.Add, 1, 100));
-            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Water, ModEffect.Add, ElementDef.Weak));
-            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Earth, ModEffect.Add, ElementDef.Resist));
-            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Fire, ModEffect.Add, ElementDef.Absorb));
+            Stats.AddMod(new Modifier(StatType.ElementOff, (int)ElementType.Fire, ModOperator.Add, 1));
+            Stats.AddMod(new Modifier(StatType.StatusEffectOff, (int)StatusEffectType.Burn, ModOperator.Add, 1, 100));
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Weak));
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Earth, ModOperator.Add, ElementDef.Resist));
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Fire, ModOperator.Add, ElementDef.Absorb));
             Stats.SetAttribute(AttributeType.MaxHP, 4);
             Stats.SetAttribute(AttributeType.HP, 4);
             Stats.SetAttribute(AttributeType.Attack, 2);

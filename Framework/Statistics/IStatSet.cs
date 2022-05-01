@@ -18,6 +18,5 @@ namespace Arenbee.Framework.Statistics
         StatType StatType { get; set; }
         void AddMod(Modifier mod);
         void RemoveMod(Modifier mod);
-        void UpdateStat();
     }
 }

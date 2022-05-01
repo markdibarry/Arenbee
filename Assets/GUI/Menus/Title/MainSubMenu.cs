@@ -4,7 +4,6 @@ using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Game.SaveData;
 using Godot;
-using Arenbee.Framework.Utility;
 
 namespace Arenbee.Assets.GUI.Menus.Title
 {
@@ -12,46 +11,21 @@ namespace Arenbee.Assets.GUI.Menus.Title
     public partial class MainSubMenu : OptionSubMenu
     {
         public MainSubMenu()
-            : base()
         {
             PreventCancel = true;
             PreventCloseAll = true;
         }
 
+        private OptionContainer _startOptions;
         public static string GetScenePath() => GDEx.GetScenePath();
-        public AnimationPlayer AnimationPlayer { get; set; }
-        private OptionContainer _optionContainer;
 
-        protected override void SetNodeReferences()
+        public override async Task TransitionOpenAsync()
         {
-            base.SetNodeReferences();
-            AnimationPlayer = GetNode<AnimationPlayer>("TransitionFadeColor/AnimationPlayer");
-            _optionContainer = Foreground.GetNode<OptionContainer>("MainOptions");
-            OptionContainers.Add(_optionContainer);
-        }
-
-        protected override async Task TransitionInAsync()
-        {
-            Foreground.Modulate = Colors.Transparent;
-            Background.Modulate = Colors.Transparent;
-            Modulate = Colors.White;
-            AnimationPlayer.Play("TransitionIn");
-            await ToSignal(AnimationPlayer, "animation_finished");
-            GameRoot.Instance?.EndCurrentgame();
-            Foreground.Modulate = Colors.White;
-            Background.Modulate = Colors.White;
-            AnimationPlayer.Play("TransitionOut");
-            await ToSignal(AnimationPlayer, "animation_finished");
-        }
-
-        protected override async Task TransitionOutAsync()
-        {
-            AnimationPlayer.Play("TransitionIn");
-            await ToSignal(AnimationPlayer, "animation_finished");
-            Foreground.Modulate = Colors.Transparent;
-            Background.Modulate = Colors.Transparent;
-            AnimationPlayer.Play("TransitionOut");
-            await ToSignal(AnimationPlayer, "animation_finished");
+            var pos = _startOptions.Position;
+            _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);
+            var tween = GetTree().CreateTween();
+            tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
+            await ToSignal(tween, "finished");
         }
 
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
@@ -71,24 +45,20 @@ namespace Arenbee.Assets.GUI.Menus.Title
             }
         }
 
+        protected override void SetNodeReferences()
+        {
+            base.SetNodeReferences();
+            _startOptions = OptionContainers.Find(x => x.Name == "MainOptions");
+        }
+
         private void StartNewGame()
         {
-            StartGame(SaveService.GetNewGame());
+            RaiseRequestedClose(() => GameRoot.Instance.StartGame(SaveService.GetNewGame()));
         }
 
         private void ContinueSavedGame()
         {
-            StartGame(SaveService.LoadGame());
-        }
-
-        private async void StartGame(GameSave gameSave = null)
-        {
-            Locator.ProvideCurrentGame(GDEx.Instantiate<GameSession>(GameSession.GetScenePath()));
-            var gameSession = Locator.GetCurrentGame();
-            GameRoot.Instance.CurrentGameContainer.AddChild(gameSession);
-            gameSession.Init(gameSave);
-            await CloseSubMenuAsync();
-            gameSession.ProcessMode = ProcessModeEnum.Inherit;
+            RaiseRequestedClose(() => GameRoot.Instance.StartGame(SaveService.LoadGame()));
         }
     }
 }

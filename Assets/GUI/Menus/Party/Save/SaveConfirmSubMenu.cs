@@ -11,16 +11,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private GameSessionBase _currentGame;
-        private OptionContainer _saveOptions;
 
-        protected override void CustomOptionsSetup()
-        {
-            base.CustomOptionsSetup();
-            _currentGame = Locator.GetCurrentGame();
-        }
-
-        protected override async void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
             if (!optionItem.OptionData.TryGetValue("saveChoice", out string saveChoice))
@@ -31,22 +23,15 @@ namespace Arenbee.Assets.GUI.Menus.Party
                     SaveGame();
                     break;
                 case "No":
-                    await CloseSubMenuAsync();
+                    RaiseRequestedClose();
                     break;
             }
         }
 
-        protected override void SetNodeReferences()
-        {
-            base.SetNodeReferences();
-            _saveOptions = Foreground.GetNode<OptionContainer>("SaveOptions");
-            OptionContainers.Add(_saveOptions);
-        }
-
         private void SaveGame()
         {
-            SaveService.SaveGame(_currentGame);
-            RaiseRequestedAddSubMenu(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
+            SaveService.SaveGame(Locator.GetGameSession());
+            RaiseRequestedAdd(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
         }
     }
 }

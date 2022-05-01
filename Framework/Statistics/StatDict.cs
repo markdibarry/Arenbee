@@ -52,12 +52,6 @@ namespace Arenbee.Framework.Statistics
             StatsDict.Remove(stat.SubType);
         }
 
-        public void UpdateStat()
-        {
-            foreach (var statPair in StatsDict)
-                statPair.Value.UpdateStat();
-        }
-
         protected abstract TStat GetNewStat(int type);
 
         protected TStat GetOrNewStat(int type)

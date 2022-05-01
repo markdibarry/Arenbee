@@ -19,16 +19,6 @@ namespace Arenbee.Framework.Extensions
             return new Vector2(x, y);
         }
 
-        public static Vector2 SetX(this Vector2 vec, float x)
-        {
-            return new Vector2(x, vec.y);
-        }
-
-        public static Vector2 SetY(this Vector2 vec, float y)
-        {
-            return new Vector2(vec.x, y);
-        }
-
         public static void FlipScaleX(this Node2D node2D)
         {
             node2D.Scale = new Vector2(-node2D.Scale.x, node2D.Scale.y);
@@ -48,33 +38,6 @@ namespace Arenbee.Framework.Extensions
             return new Vector2(textureSize.x / sprite2D.Hframes, textureSize.y / sprite2D.Vframes);
         }
 
-        public static float LerpClamp(this float val, float target, float maxMove)
-        {
-            return val > target ? Math.Max(val - maxMove, target) : Math.Min(val + maxMove, target);
-        }
-
-        public static Timer CreateOneShotTimer(this Node node, float waitTime)
-        {
-            var oneShotTimer = new Timer
-            {
-                WaitTime = waitTime,
-                OneShot = true
-            };
-            node.AddChild(oneShotTimer);
-            oneShotTimer.Start();
-            oneShotTimer.Timeout += () =>
-            {
-                if (Godot.Object.IsInstanceValid(oneShotTimer))
-                    oneShotTimer.QueueFree();
-            };
-            return oneShotTimer;
-        }
-
-        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
-        {
-            return source ?? Enumerable.Empty<T>();
-        }
-
         public static IEnumerable<T> GetChildren<T>(this Node node) where T : Node
         {
             return node.GetChildren().OfType<T>();
@@ -84,22 +47,8 @@ namespace Arenbee.Framework.Extensions
         {
             var children = node.GetChildren().OfType<T>();
             if (-1 < index && index < children.Count())
-            {
                 return children.ElementAt(index);
-            }
             return null;
-        }
-
-        public static void RemoveAllChildren(this Node node)
-        {
-            if (node.GetChildCount() > 0)
-            {
-                var children = node.GetChildren().OfType<Node>();
-                foreach (var child in children)
-                {
-                    child.Free();
-                }
-            }
         }
 
         public static int GetClosestIndex(this Control control, IEnumerable<Control> controls)
@@ -140,55 +89,6 @@ namespace Arenbee.Framework.Extensions
             return nearestIndex;
         }
 
-        public static string GetScenePath([CallerFilePath] string csPath = "")
-        {
-            if (!csPath.EndsWith(".cs"))
-            {
-                throw new Exception($"Caller '{csPath}' is not cs file.");
-            }
-
-            if (!csPath.StartsWith(s_godotRoot))
-            {
-                throw new Exception($"Caller '{csPath}' is outside '{s_godotRoot}'.");
-            }
-
-            string resPath = csPath[s_godotRoot.Length..];
-            resPath = Path.ChangeExtension(resPath, ".tscn");
-            resPath = resPath.TrimStart('/', '\\').Replace("\\", "/");
-            return $"res://{resPath}";
-        }
-
-        public static T Instantiate<T>(string path) where T : Godot.Object
-        {
-            return GD.Load<PackedScene>(path).Instantiate<T>();
-        }
-
-        private static string GetGodotRoot([CallerFilePath] string rootResourcePath = "")
-        {
-            int stopIndex = rootResourcePath.LastIndexOf(ProjectDirName) + ProjectDirName.Length;
-            return rootResourcePath[..stopIndex];
-        }
-
-        /// <summary>
-        /// Do not use with Int32. Godot bug
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="key"></param>
-        /// <param name="fallback"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T TryGet<T>(this Godot.Collections.Dictionary dict, object key, T fallback)
-        {
-            if (dict.Contains(key))
-            {
-                return (T)dict[key];
-            }
-            else
-            {
-                return fallback;
-            }
-        }
-
         /// <summary>
         /// If no value is found at key, a new value is added and returned
         /// </summary>
@@ -210,15 +110,22 @@ namespace Arenbee.Framework.Extensions
             }
         }
 
-        /// <summary>
-        /// Returns if in debug context.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public static bool IsToolDebugMode(this Node node)
+        public static string GetScenePath([CallerFilePath] string csPath = "")
         {
-            if (Engine.IsEditorHint()) return true;
-            else return node == node.GetTree().CurrentScene;
+            if (!csPath.EndsWith(".cs"))
+                throw new Exception($"Caller '{csPath}' is not cs file.");
+            if (!csPath.StartsWith(s_godotRoot))
+                throw new Exception($"Caller '{csPath}' is outside '{s_godotRoot}'.");
+
+            string resPath = csPath[s_godotRoot.Length..];
+            resPath = Path.ChangeExtension(resPath, ".tscn");
+            resPath = resPath.TrimStart('/', '\\').Replace("\\", "/");
+            return $"res://{resPath}";
+        }
+
+        public static T Instantiate<T>(string path) where T : Godot.Object
+        {
+            return GD.Load<PackedScene>(path).Instantiate<T>();
         }
 
         /// <summary>
@@ -232,6 +139,87 @@ namespace Arenbee.Framework.Extensions
                 return node == node.GetTree().EditedSceneRoot;
             else
                 return node == node.GetTree().CurrentScene;
+        }
+
+        /// <summary>
+        /// Returns if in debug context.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static bool IsToolDebugMode(this Node node)
+        {
+            if (Engine.IsEditorHint())
+                return true;
+            else
+                return node == node.GetTree().CurrentScene;
+        }
+
+        public static float LerpClamp(this float val, float target, float maxMove)
+        {
+            return val > target ? Math.Max(val - maxMove, target) : Math.Min(val + maxMove, target);
+        }
+
+        public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
+        {
+            return source ?? Enumerable.Empty<T>();
+        }
+
+        public static void QueueFreeAllChildren(this Node node)
+        {
+            if (node.GetChildCount() > 0)
+            {
+                var children = node.GetChildren().OfType<Node>();
+                foreach (var child in children)
+                {
+                    node.RemoveChild(child);
+                    child.QueueFree();
+                }
+            }
+        }
+
+        public static void QueueFreeAllChildren<T>(this Node node) where T : Node
+        {
+            if (node.GetChildCount() > 0)
+            {
+                var children = node.GetChildren<T>();
+                foreach (var child in children)
+                {
+                    node.RemoveChild(child);
+                    child.QueueFree();
+                }
+            }
+        }
+
+        public static Vector2 SetX(this Vector2 vec, float x)
+        {
+            return new Vector2(x, vec.y);
+        }
+
+        public static Vector2 SetY(this Vector2 vec, float y)
+        {
+            return new Vector2(vec.x, y);
+        }
+
+        /// <summary>
+        /// Do not use with Int32. Godot bug
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="fallback"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T TryGet<T>(this Godot.Collections.Dictionary dict, object key, T fallback)
+        {
+            if (dict.Contains(key))
+                return (T)dict[key];
+            else
+                return fallback;
+        }
+
+        private static string GetGodotRoot([CallerFilePath] string rootResourcePath = "")
+        {
+            int stopIndex = rootResourcePath.LastIndexOf(ProjectDirName) + ProjectDirName.Length;
+            return rootResourcePath[..stopIndex];
         }
     }
 }

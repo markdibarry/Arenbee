@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Assets.Input;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
@@ -13,11 +12,10 @@ namespace Arenbee.Framework.AreaScenes
     {
         public AreaScene()
         {
-            _playerParty = Locator.GetCurrentGame().Party;
+            _playerParty = Locator.GetParty();
         }
 
         private readonly PlayerParty _playerParty;
-        public Camera2D Camera { get; set; }
         public Node2D PlayersContainer { get; set; }
         public Node2D EnemiesContainer { get; set; }
         public Node2D SpawnPointContainer { get; set; }
@@ -29,7 +27,6 @@ namespace Arenbee.Framework.AreaScenes
         public override void _Ready()
         {
             SetNodeReferences();
-            Init();
         }
 
         private void SetNodeReferences()
@@ -40,38 +37,24 @@ namespace Arenbee.Framework.AreaScenes
             EventContainer = GetNodeOrNull<Node2D>("Events");
         }
 
-        private void Init()
+        public void AddPlayer(int spawnPointIndex)
         {
-            Camera = new Camera2D() { LimitLeft = 0, LimitBottom = 270, Current = true };
-            AddChild(Camera);
-        }
-
-        public void AddPlayer()
-        {
-            Actor actor = _playerParty.Actors.ElementAt(0);
-
-            actor.GlobalPosition = SpawnPointContainer.GetChild<Position2D>(0).GlobalPosition;
-            var handler = new Player1InputHandler();
-            actor.AttachInputHandler(handler);
-            RemoveChild(Camera);
-            actor.AddChild(Camera);
+            Actor actor = _playerParty.Actors?.ElementAt(0);
+            var spawnPoint = SpawnPointContainer.GetChild<Position2D>(spawnPointIndex);
+            if (spawnPoint != null)
+                actor.GlobalPosition = spawnPoint.GlobalPosition;
+            else
+                actor.GlobalPosition = new Vector2(100, 100);
             PlayersContainer.AddChild(actor);
+            GameRoot.Instance.GameCamera.CurrentTarget = actor;
+            actor.InputHandler = GameRoot.Instance.PlayerOneInput;
             ActorAdded?.Invoke(actor);
         }
 
         public void RemovePlayer()
         {
-            Actor actor = _playerParty.Actors.ElementAt(0);
-            actor.InputHandler.QueueFree();
-            actor.RemoveChild(Camera);
-            AddChild(Camera);
+            Actor actor = _playerParty.Actors?.ElementAt(0);
             PlayersContainer.RemoveChild(actor);
-        }
-
-        public void AddEnemy(Actor actor)
-        {
-            EnemiesContainer.AddChild(actor);
-            ActorAdded?.Invoke(actor);
         }
 
         public IEnumerable<Actor> GetAllActors()

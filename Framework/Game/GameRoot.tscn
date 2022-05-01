@@ -1,26 +1,52 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2gc31v2yhuoj"]
+[gd_scene load_steps=8 format=3 uid="uid://dhvd6tksglcdf"]
 
 [ext_resource type="Script" path="res://Framework/Game/GameRoot.cs" id="1_6aro1"]
 [ext_resource type="Script" path="res://Assets/Input/MenuInputHandler.cs" id="2_103x3"]
-[ext_resource type="Script" path="res://Framework/GUI/Menus/Menu.cs" id="3_fq7kg"]
+[ext_resource type="PackedScene" uid="uid://dhwyc83vt5s70" path="res://Framework/GUI/Dialog/DialogController.tscn" id="3_83vvo"]
+[ext_resource type="Script" path="res://Assets/Input/Player1InputHandler.cs" id="3_bax5s"]
+[ext_resource type="Script" path="res://Framework/GUI/Menus/MenuController.cs" id="3_rl0ho"]
+[ext_resource type="PackedScene" uid="uid://b7btk4atcpbwy" path="res://Framework/Utility/ColorAdjustment.tscn" id="5_bcxdk"]
+[ext_resource type="Script" path="res://Framework/Game/GameCamera.cs" id="7_s1nbx"]
 
 [node name="GameRoot" type="Node"]
 process_mode = 3
 script = ExtResource( "1_6aro1" )
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="MainBackground" type="CanvasLayer" parent="."]
 layer = -100
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="ColorRect" type="ColorRect" parent="MainBackground"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0.54902, 1, 1)
+color = Color(0, 0, 0, 1)
 
-[node name="MenuInputHandler" type="Node" parent="."]
+[node name="InputHandlers" type="Node" parent="."]
+
+[node name="MenuInputHandler" type="Node" parent="InputHandlers"]
 script = ExtResource( "2_103x3" )
 
-[node name="CurrentGameContainer" type="Node2D" parent="."]
+[node name="PlayerOneInputHandler" type="Node" parent="InputHandlers"]
+script = ExtResource( "3_bax5s" )
 
-[node name="TitleScreen" type="CanvasLayer" parent="."]
-layer = 10
-script = ExtResource( "3_fq7kg" )
+[node name="GameDisplay" type="Node2D" parent="."]
+
+[node name="GameSessionContainer" type="Node2D" parent="GameDisplay"]
+
+[node name="MenuController" type="CanvasLayer" parent="GameDisplay"]
+layer = 50
+script = ExtResource( "3_rl0ho" )
+
+[node name="DialogController" parent="GameDisplay" instance=ExtResource( "3_83vvo" )]
+layer = 60
+
+[node name="Transition" type="CanvasLayer" parent="GameDisplay"]
+layer = 90
+
+[node name="ColorAdjustment" parent="GameDisplay" instance=ExtResource( "5_bcxdk" )]
+TintColor = Color(1, 0.0823529, 0, 1)
+
+[node name="GameCamera" type="Camera2D" parent="GameDisplay"]
+current = true
+limit_left = 0
+limit_bottom = 270
+script = ExtResource( "7_s1nbx" )

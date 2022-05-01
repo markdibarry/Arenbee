@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://Assets/GUI/HUD/HeartDisplay.cs" id="1_fqy6l"]
 
 [node name="HeartDisplay" type="GridContainer"]
-theme_override_constants/vseparation = 0
-theme_override_constants/hseparation = 1
+theme_override_constants/h_separation = 1
 columns = 8
 script = ExtResource( "1_fqy6l" )

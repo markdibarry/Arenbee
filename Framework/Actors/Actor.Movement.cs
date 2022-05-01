@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Arenbee.Assets.Input;
+﻿using Arenbee.Assets.Input;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Input;
 using Godot;
@@ -8,8 +7,8 @@ namespace Arenbee.Framework.Actors
 {
     public partial class Actor
     {
-        private bool _isPlayerControlled;
-
+        private Vector2 _floatPosition;
+        private ActorInputHandler _inputHandler;
         private Vector2 _move;
         [Export]
         private readonly float _jumpHeight;
@@ -39,25 +38,28 @@ namespace Arenbee.Framework.Actors
         public float JumpGravity { get; protected set; }
         public int RunSpeed { get; protected set; }
         public CollisionShape2D CollisionShape2D { get; private set; }
-        public ActorInputHandler InputHandler { get; private set; }
-
-        private void InitMovement()
+        public ActorInputHandler InputHandler
         {
-            RunSpeed = (int)(WalkSpeed * 1.5);
-            MaxSpeed = WalkSpeed;
-            JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1f;
-            JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1f;
+            get { return _inputHandler; }
+            set { _inputHandler = value ?? DummyInputHandler; }
         }
-
-        public void Move()
-        {
-            _move = IsFloater ? InputHandler.GetLeftAxis() : Direction;
-        }
+        public DummyInputHandler DummyInputHandler { get; private set; }
+        protected BehaviorTree BehaviorTree { get; set; }
 
         public void ChangeDirectionX()
         {
             Direction = Direction.SetX(Direction.x * -1);
             _body.FlipScaleX();
+        }
+
+        public void Jump()
+        {
+            VelocityY = JumpVelocity;
+        }
+
+        public void Move()
+        {
+            _move = IsFloater ? InputHandler.GetLeftAxis() : Direction;
         }
 
         public void UpdateDirection()
@@ -72,15 +74,9 @@ namespace Arenbee.Framework.Actors
                 Direction = Direction.SetY(velocity.y);
         }
 
-        public void Jump()
-        {
-            VelocityY = JumpVelocity;
-        }
-
         public bool ShouldWalk()
         {
-            return !IsWalkDisabled &&
-                (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed);
+            return !IsWalkDisabled && InputHandler.GetLeftAxis().x != 0;
         }
 
         public bool ShouldRun()
@@ -90,44 +86,29 @@ namespace Arenbee.Framework.Actors
                 && InputHandler.Run.IsActionPressed;
         }
 
-        public void AttachInputHandler(ActorInputHandler inputHandler)
-        {
-            InputHandler = inputHandler;
-            AddChild(inputHandler);
-        }
-
         private void HandleMove(float delta)
         {
             var maxSpeed = HalfSpeed > 0 ? (int)(MaxSpeed * 0.5) : MaxSpeed;
+            var newVelocity = Velocity;
             if (_move != Vector2.Zero)
             {
-                VelocityX = Velocity.x.LerpClamp(_move.x * maxSpeed, Acceleration * delta);
-                if (IsFloater)
-                    VelocityY = Velocity.y.LerpClamp(_move.y * maxSpeed, Acceleration * delta);
+                newVelocity.x = Velocity.x.LerpClamp(_move.x * maxSpeed, Acceleration * delta);
+                if (IsFloater) newVelocity.y = Velocity.y.LerpClamp(_move.y * maxSpeed, Acceleration * delta);
             }
             else
             {
-                VelocityX = Velocity.x.LerpClamp(0, Friction * delta);
-                if (IsFloater)
-                    VelocityY = Velocity.y.LerpClamp(0, Friction * delta);
+                newVelocity.x = Velocity.x.LerpClamp(0, Friction * delta);
+                if (IsFloater) newVelocity.y = Velocity.y.LerpClamp(0, Friction * delta);
             }
+            Velocity = newVelocity;
         }
 
-        private void AttachInitialInputHandler()
+        private void InitMovement()
         {
-            if (InputHandler != null) return;
-            var attachedInputHandler = this.GetChildren<ActorInputHandler>()
-                .FirstOrDefault();
-            if (attachedInputHandler != null)
-            {
-                _isPlayerControlled = true;
-                InputHandler = attachedInputHandler;
-            }
-            else
-            {
-                InputHandler = new DummyInputHandler();
-                AddChild(InputHandler);
-            }
+            RunSpeed = (int)(WalkSpeed * 1.5);
+            MaxSpeed = WalkSpeed;
+            JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1f;
+            JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1f;
         }
     }
 }

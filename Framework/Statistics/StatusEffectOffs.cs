@@ -23,7 +23,7 @@ namespace Arenbee.Framework.Statistics
             foreach (var pair in StatsDict)
             {
                 if (pair.Value.ModifiedValue != 0)
-                    result.Add(new Modifier(StatType.StatusEffect, pair.Key, ModEffect.Add, pair.Value.ModifiedValue, pair.Value.Chance));
+                    result.Add(new Modifier(StatType.StatusEffect, pair.Key, ModOperator.Add, pair.Value.ModifiedValue, pair.Value.Chance));
             }
             return result;
         }
@@ -44,29 +44,35 @@ namespace Arenbee.Framework.Statistics
             : base(type, statusEffectOff)
         { }
 
-        public int Chance { get; set; }
+        public int Chance
+        {
+            get
+            {
+                int chance = 0;
+                foreach (var mod in Modifiers)
+                    chance += mod.Chance;
+
+                return Math.Min(chance, 100);
+            }
+        }
         public StatusEffectType StatusEffectType
         {
             get { return (StatusEffectType)SubType; }
             set { SubType = (int)value; }
         }
 
-        public override void UpdateStat()
+        public override int CalculateStat(bool ignoreHidden = false)
         {
-            int modifiedValue = BaseValue;
-            int displayValue = BaseValue;
-            int chance = 0;
+            int result = BaseValue;
+
             foreach (var mod in Modifiers)
             {
-                if (!mod.IsHidden)
-                    displayValue = mod.Apply(displayValue);
-                modifiedValue = mod.Apply(modifiedValue);
-                chance += mod.Chance;
+                if (ignoreHidden && mod.IsHidden)
+                    continue;
+                result = mod.Apply(result);
             }
 
-            Chance = Math.Min(chance, 100);
-            DisplayValue = displayValue;
-            ModifiedValue = modifiedValue;
+            return result;
         }
     }
 }

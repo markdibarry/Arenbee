@@ -22,11 +22,10 @@ namespace Arenbee.Framework.GUI
         private TextureRect _arrowDown;
         private TextureRect _arrowLeft;
         private TextureRect _arrowRight;
+        private bool _arrowsDirty;
         private bool _changesDirty;
-        [Export]
-        public bool DimItems { get; set; }
-        [Export]
-        public bool KeepHighlightPosition { get; set; }
+        [Export] public bool DimItems { get; set; }
+        [Export] public bool KeepHighlightPosition { get; set; }
         [Export]
         public bool FitContainer
         {
@@ -47,11 +46,9 @@ namespace Arenbee.Framework.GUI
                 _changesDirty = true;
             }
         }
-        [Export]
-        public SizeFlags HResize { get; set; }
-        [Export]
-        public SizeFlags VResize { get; set; }
-        public OptionItem CurrentItem => OptionItems[ItemIndex];
+        [Export] public SizeFlags HResize { get; set; }
+        [Export] public SizeFlags VResize { get; set; }
+        public OptionItem CurrentItem => OptionItems.ElementAtOrDefault(ItemIndex);
         public GridContainer GridContainer { get; set; }
         public int ItemIndex { get; set; }
         public List<OptionItem> OptionItems { get; set; }
@@ -64,13 +61,10 @@ namespace Arenbee.Framework.GUI
         public event ItemFocusedHandler ItemFocused;
         public event ItemSelectedHandler ItemSelected;
 
-        public override void _ExitTree()
-        {
-            UnsubscribeEvents();
-        }
-
         public override void _Process(float delta)
         {
+            if (_arrowsDirty)
+                HandleArrows();
             if (_changesDirty)
                 HandleChanges();
         }
@@ -111,7 +105,6 @@ namespace Arenbee.Framework.GUI
                 newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
             Size = newSize;
             Position = newPos;
-            _changesDirty = true;
         }
 
         public void FocusItem(int index)
@@ -200,10 +193,7 @@ namespace Arenbee.Framework.GUI
 
         public int GetValidIndex(int index)
         {
-            if (index < 0) return 0;
-            if (index > OptionItems.Count)
-                return OptionItems.Count - 1;
-            return index;
+            return Math.Clamp(index, 0, OptionItems.Count - 1);
         }
 
         /// <summary>
@@ -211,14 +201,7 @@ namespace Arenbee.Framework.GUI
         /// </summary>
         public void InitItems()
         {
-            SetChildrenToOptionItems();
-            foreach (var item in OptionItems)
-            {
-                item.Dim = DimItems;
-            }
-            if (DimItems && KeepHighlightPosition && OptionItems.Count > 0)
-                OptionItems[0].Dim = false;
-
+            SetOptionItems();
             _changesDirty = true;
         }
 
@@ -230,22 +213,22 @@ namespace Arenbee.Framework.GUI
         public virtual void ReplaceChildren(IEnumerable<OptionItem> optionItems)
         {
             OptionItems.Clear();
-            GridContainer.RemoveAllChildren();
+            GridContainer.QueueFreeAllChildren();
             foreach (var item in optionItems)
-            {
                 GridContainer.AddChild(item);
-            }
+            InitItems();
         }
 
-        public void ResetContainer()
+        public void ResetContainerFocus()
         {
             ItemIndex = 0;
             GridContainer.Position = Vector2.Zero;
         }
 
-        public void SetChildrenToOptionItems()
+        public void SetOptionItems()
         {
             OptionItems = GridContainer.GetChildren<OptionItem>().ToList();
+            OptionItems.ForEach(x => x.Dim = DimItems);
         }
 
         public void SelectItem()
@@ -259,43 +242,42 @@ namespace Arenbee.Framework.GUI
             if (_control.GlobalPosition.x + _control.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
             {
                 var newXPos = optionItem.Position.x + optionItem.Size.x - _control.Size.x;
-                GridContainer.Position = new Vector2(newXPos * -1, GridContainer.Position.y);
+                GridContainer.Position = new Vector2(-newXPos, GridContainer.Position.y);
             }
 
             // Adjust Down
             if (_control.GlobalPosition.y + _control.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
             {
                 var newYPos = optionItem.Position.y + optionItem.Size.y - _control.Size.y;
-                GridContainer.Position = new Vector2(GridContainer.Position.x, newYPos * -1);
+                GridContainer.Position = new Vector2(GridContainer.Position.x, -newYPos);
             }
 
             // Adjust Left
             if (_control.GlobalPosition.x > optionItem.GlobalPosition.x)
             {
                 var newXPos = optionItem.Position.x;
-                GridContainer.Position = new Vector2(newXPos * -1, GridContainer.Position.y);
+                GridContainer.Position = new Vector2(-newXPos, GridContainer.Position.y);
             }
 
             // Adjust Up
             if (_control.GlobalPosition.y > optionItem.GlobalPosition.y)
             {
                 var newYPos = optionItem.Position.y;
-                GridContainer.Position = new Vector2(GridContainer.Position.x, newYPos * -1);
+                GridContainer.Position = new Vector2(GridContainer.Position.x, -newYPos);
             }
         }
 
         private Vector2 GetGridContainerSize()
         {
-            float v = 0;
-            float h = 0;
+            Vector2 newVec = Vector2.Zero;
             foreach (var option in OptionItems)
             {
                 if (!option.Visible) continue;
                 var optionPos = option.Position + option.Size;
-                if (optionPos.x > h) h = optionPos.x;
-                if (optionPos.y > v) v = optionPos.y;
+                newVec.x = Math.Max(newVec.x, optionPos.x);
+                newVec.y = Math.Max(newVec.y, optionPos.y);
             }
-            return new Vector2(h, v);
+            return newVec.Round();
         }
 
         private Vector2 GetPadding(Control subContainer)
@@ -311,7 +293,7 @@ namespace Arenbee.Framework.GUI
             GridContainer.Size = GetGridContainerSize();
             if (_fitContainer) FitToContent();
             if (_expandContent) ExpandGridToContainer();
-            HandleArrows();
+            _arrowsDirty = true;
             _changesDirty = false;
             ContainerUpdated?.Invoke(this);
         }
@@ -348,11 +330,13 @@ namespace Arenbee.Framework.GUI
         {
             HandleHArrows();
             HandleVArrows();
+            _arrowsDirty = false;
         }
 
         private void Init()
         {
             SubscribeEvents();
+            InitItems();
         }
 
         private bool IsValidIndex(int index)
@@ -387,14 +371,8 @@ namespace Arenbee.Framework.GUI
 
         private void SubscribeEvents()
         {
-            ItemRectChanged += OnResized;
+            Resized += OnResized;
             GridContainer.ItemRectChanged += OnGridRectChanged;
-        }
-
-        private void UnsubscribeEvents()
-        {
-            ItemRectChanged -= OnResized;
-            GridContainer.ItemRectChanged -= OnGridRectChanged;
         }
     }
 }

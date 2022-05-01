@@ -1,3 +1,4 @@
+using Arenbee.Framework.Input;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -9,12 +10,11 @@ namespace Arenbee.Framework.GUI
         private float _timeDuration;
         private bool _timerEnabled;
 
-        public override void _Process(float delta)
+        public override void HandleInput(GUIInputHandler input, float delta)
         {
-            if (Engine.IsEditorHint()) return;
-            base._Process(delta);
+            base.HandleInput(input, delta);
 
-            if (MenuInput.Enter.IsActionJustPressed)
+            if (input.Enter.IsActionJustPressed)
                 Confirm();
 
             if (_timerEnabled)
@@ -26,13 +26,13 @@ namespace Arenbee.Framework.GUI
             }
         }
 
-        protected override void PreLoadSetup()
+        protected virtual void Confirm() { }
+
+        protected override void PreWaitFrameSetup()
         {
             if (_timeDuration > 0) _timerEnabled = true;
-            base.PreLoadSetup();
+            base.PreWaitFrameSetup();
         }
-
-        protected virtual void Confirm() { }
 
         protected virtual void OnTimeOut()
         {

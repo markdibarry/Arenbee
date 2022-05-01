@@ -11,7 +11,7 @@ namespace Arenbee.Framework.Game.SaveData
             ActorData = new List<ActorData>();
         }
 
-        public GameSave(GameSessionBase gameSession) : this()
+        public GameSave(GameSession gameSession) : this()
         {
             Items = gameSession.Party?.Inventory?.Items;
             SessionState = gameSession.SessionState;

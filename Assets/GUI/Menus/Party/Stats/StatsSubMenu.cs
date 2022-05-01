@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using Arenbee.Assets.GUI.Menus.Common;
-using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
@@ -16,21 +14,21 @@ namespace Arenbee.Assets.GUI.Menus.Party
         public static string GetScenePath() => GDEx.GetScenePath();
         private PlayerParty _playerParty;
         private StatsDisplay _statsDisplay;
-        private OptionContainer _partyList;
+        private OptionContainer _partyOptions;
+        private PackedScene _textOptionScene;
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _partyList = Foreground.GetNode<OptionContainer>("PartyList");
-            OptionContainers.Add(_partyList);
+            _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            _partyOptions = OptionContainers.Find(x => x.Name == "PartyList");
             _statsDisplay = Foreground.GetNode<StatsDisplay>("StatsDisplay");
+            _playerParty = Locator.GetParty() ?? new PlayerParty();
         }
 
-        protected override void CustomOptionsSetup()
+        protected override void ReplaceDefaultOptions()
         {
-            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
-            AddPartyMembers();
-            base.CustomOptionsSetup();
+            UpdatePartyMemberOptions();
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
@@ -38,21 +36,26 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.OnItemFocused(optionContainer, optionItem);
             if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
                 return;
-            _statsDisplay.Update(_playerParty.GetPlayerByName(actorName));
+            _statsDisplay.UpdateStatsDisplay(_playerParty.GetPlayerByName(actorName));
         }
 
-        private void AddPartyMembers()
+        private List<TextOption> GetPartyMemberOptions()
         {
-            var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
             var options = new List<TextOption>();
             foreach (var actor in _playerParty.Actors)
             {
-                var textOption = textOptionScene.Instantiate<TextOption>();
+                var textOption = _textOptionScene.Instantiate<TextOption>();
                 textOption.OptionData.Add("actorName", actor.Name);
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }
-            _partyList.ReplaceChildren(options);
+            return options;
+        }
+
+        private void UpdatePartyMemberOptions()
+        {
+            List<TextOption> options = GetPartyMemberOptions();
+            _partyOptions.ReplaceChildren(options);
         }
     }
 }

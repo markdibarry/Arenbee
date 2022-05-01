@@ -1,86 +1,138 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
+using Arenbee.Framework.Input;
+using Arenbee.Framework.Utility;
+using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Framework.GUI
 {
     [Tool]
-    public partial class Menu : CanvasLayer
+    public partial class Menu : Control
     {
+        public Menu()
+        {
+            Visible = false;
+            _menuInput = Locator.GetMenuInput();
+        }
+
+        private readonly GUIInputHandler _menuInput;
         private SubMenu _currentSubMenu;
-        public event EventHandler RootSubMenuClosed;
-
-        public async void AddSubMenu(SubMenu subMenu)
+        private SubMenu CurrentSubMenu
         {
-            if (_currentSubMenu != null)
+            get { return _currentSubMenu; }
+            set
             {
-                _currentSubMenu.Dim = true;
-                _currentSubMenu.ProcessMode = ProcessModeEnum.Disabled;
-            }
-            _currentSubMenu = subMenu;
-            SubscribeEvents(_currentSubMenu);
-            AddChild(_currentSubMenu);
-            await _currentSubMenu.InitAsync();
-        }
-
-        private async void CloseAllSubMenusAsync()
-        {
-            while (GetChildCount() > 0)
-            {
-                await CloseCurrentSubMenu();
+                if (_currentSubMenu != null)
+                {
+                    _currentSubMenu.RequestedAdd -= OnRequestedAdd;
+                    _currentSubMenu.RequestedClose -= OnRequestedCloseAsync;
+                    _currentSubMenu.RequestedCloseAll -= OnRequestedCloseAllAsync;
+                }
+                _currentSubMenu = value;
+                if (_currentSubMenu != null)
+                {
+                    _currentSubMenu.RequestedAdd += OnRequestedAdd;
+                    _currentSubMenu.RequestedClose += OnRequestedCloseAsync;
+                    _currentSubMenu.RequestedCloseAll += OnRequestedCloseAllAsync;
+                }
             }
         }
+        protected CanvasGroup ContentGroup { get; set; }
+        protected Control Background { get; set; }
+        protected Control SubMenus { get; set; }
+        public delegate void RequestedCloseMenuHandler(Action callback);
+        public event RequestedCloseMenuHandler RequestedCloseMenu;
 
-        private async Task CloseCurrentSubMenu()
+        public override void _Process(float delta)
         {
-            await _currentSubMenu.CloseSubMenuAsync();
+            if (CurrentSubMenu?.IsActive == true)
+                CurrentSubMenu.HandleInput(_menuInput, delta);
         }
 
-        private void OnRequestedAdd(SubMenu subMenu)
+        public override void _Ready()
         {
-            AddSubMenu(subMenu);
+            ContentGroup = GetNode<CanvasGroup>("ContentGroup");
+            Background = ContentGroup.GetNode<Control>("Content/Background");
+            SubMenus = ContentGroup.GetNode<Control>("Content/SubMenus");
+            if (this.IsToolDebugMode())
+                Init();
         }
 
-        private void OnRequestedCloseAll()
+        public async Task AddSubMenuAsync(SubMenu subMenu)
         {
-            CloseAllSubMenusAsync();
+            CurrentSubMenu?.SuspendSubMenu();
+            SubMenus?.AddChild(subMenu);
+            await subMenu.InitAsync();
+            CurrentSubMenu = subMenu;
+            CurrentSubMenu.IsActive = true;
         }
 
-        private async void OnSubMenuClosed(SubMenu subMenu, string cascadeTo = null)
+        public async void Init()
         {
-            _currentSubMenu = null;
-            RemoveChild(subMenu);
-            UnsubscribeEvents(subMenu);
-            if (GetChildCount() > 0)
+            await InitAsync();
+        }
+
+        public virtual async Task InitAsync()
+        {
+            await TransitionOpenAsync();
+        }
+
+        public virtual Task TransitionOpenAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task TransitionCloseAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task CloseCurrentSubMenuAsync(Action callback = null, string cascadeTo = null)
+        {
+            CurrentSubMenu.IsActive = false;
+            await CurrentSubMenu.TransitionCloseAsync();
+            var subMenu = CurrentSubMenu;
+            CurrentSubMenu = null;
+            SubMenus.RemoveChild(subMenu);
+            subMenu.QueueFree();
+            if (SubMenus.GetChildCount() == 0)
             {
-                SetCurrentSubMenu(cascadeTo != null);
-                if (cascadeTo != null && cascadeTo != _currentSubMenu.GetType().Name)
-                    await _currentSubMenu.CloseSubMenuAsync(cascadeTo);
+                await CloseMenuAsync(callback);
+                return;
             }
+            SetCurrentSubMenu();
+            if (cascadeTo != null && cascadeTo != CurrentSubMenu.GetType().Name)
+                await CloseCurrentSubMenuAsync(callback, cascadeTo);
             else
-            {
-                RootSubMenuClosed?.Invoke(this, EventArgs.Empty);
-            }
+                callback?.Invoke();
         }
 
-        private void SetCurrentSubMenu(bool isCascading)
+        private async Task CloseMenuAsync(Action callback = null)
         {
-            _currentSubMenu = GetChild<SubMenu>(GetChildCount() - 1);
-            _currentSubMenu.ResumeSubMenu(isCascading);
+            await TransitionCloseAsync();
+            RequestedCloseMenu?.Invoke(callback);
         }
 
-        private void SubscribeEvents(SubMenu subMenu)
+        private async void OnRequestedAdd(SubMenu subMenu)
         {
-            subMenu.RequestedAdd += OnRequestedAdd;
-            subMenu.SubMenuClosed += OnSubMenuClosed;
-            subMenu.RequestedCloseAll += OnRequestedCloseAll;
+            await AddSubMenuAsync(subMenu);
         }
 
-        private void UnsubscribeEvents(SubMenu subMenu)
+        private async void OnRequestedCloseAsync(Action callback = null, string cascadeTo = null)
         {
-            subMenu.RequestedAdd -= OnRequestedAdd;
-            subMenu.SubMenuClosed -= OnSubMenuClosed;
-            subMenu.RequestedCloseAll -= OnRequestedCloseAll;
+            await CloseCurrentSubMenuAsync(callback, cascadeTo);
+        }
+
+        private async void OnRequestedCloseAllAsync(Action callback = null)
+        {
+            await CloseMenuAsync(callback);
+        }
+
+        private void SetCurrentSubMenu()
+        {
+            CurrentSubMenu = SubMenus.GetChild<SubMenu>(SubMenus.GetChildCount() - 1);
+            CurrentSubMenu.ResumeSubMenu();
         }
     }
 }

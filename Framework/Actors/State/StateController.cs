@@ -1,4 +1,3 @@
-using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
@@ -12,35 +11,26 @@ namespace Arenbee.Framework.Actors
         public StateController(Actor actor)
         {
             _actor = actor;
-            BaseStateMachine = new StateMachine(_actor, this, StateMachineType.Base);
-            JumpStateMachine = new StateMachine(_actor, this, StateMachineType.Jump);
-            ActionStateMachine = new StateMachine(_actor, this, StateMachineType.Action);
+            BaseStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Base);
+            JumpStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Jump);
+            ActionStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Action);
             CreateStateDisplay();
         }
 
-        public IStateMachine JumpStateMachine { get; }
-        public IStateMachine BaseStateMachine { get; }
-        public IStateMachine ActionStateMachine { get; }
-        public IState UnarmedInitialState { get; private set; }
+        public ActorStateMachine JumpStateMachine { get; }
+        public ActorStateMachine BaseStateMachine { get; }
+        public ActorStateMachine ActionStateMachine { get; }
+        public ActorState UnarmedInitialState { get; private set; }
         public bool AnimationOverride { get; set; }
         private readonly Actor _actor;
-        public AnimationPlayer ActorAnimationPlayer
-        {
-            get { return _actor.AnimationPlayer; }
-        }
-        public Weapon CurrentWeapon
-        {
-            get { return _actor.WeaponSlot.CurrentWeapon; }
-        }
-        public AnimationPlayer WeaponAnimationPlayer
-        {
-            get { return CurrentWeapon?.AnimationPlayer; }
-        }
+        public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
+        public Weapon CurrentWeapon => _actor.WeaponSlot.CurrentWeapon;
+        public AnimationPlayer WeaponAnimationPlayer => CurrentWeapon?.AnimationPlayer;
         private Label _jumpStateDisplay;
         private Label _moveStateDisplay;
         private Label _actionStateDisplay;
 
-        public void Init(IState baseState, IState jumpState, IState actionState)
+        public void Init(ActorState baseState, ActorState jumpState, ActorState actionState)
         {
             BaseStateMachine.Init(baseState);
             JumpStateMachine.Init(jumpState);
@@ -56,20 +46,19 @@ namespace Arenbee.Framework.Actors
             ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
         }
 
-        public bool PlayAnimation(IStateMachine stateMachine, IState state, string animationName, bool force = false)
+        public bool PlayAnimation(ActorStateMachine stateMachine, ActorState state, string animationName, bool force = false)
         {
             if (force)
             {
-                if (PlayIfAvailable(animationName))
-                {
-                    AnimationOverride = true;
-                    return true;
-                }
+                if (!PlayIfAvailable(animationName))
+                    return false;
 
-                return false;
+                AnimationOverride = true;
+                return true;
             }
 
-            if (AnimationOverride) return false;
+            if (AnimationOverride)
+                return false;
 
             return stateMachine.StateMachineType switch
             {
@@ -82,44 +71,41 @@ namespace Arenbee.Framework.Actors
 
         public bool PlayActionAnimation(string animationName)
         {
-            if (CurrentWeapon != null)
-            {
-                ActorAnimationPlayer.Stop();
-                CurrentWeapon.AnimationPlayer.Stop();
-                if (ActorAnimationPlayer.HasAnimation(CurrentWeapon.WeaponTypeName + animationName)
-                    && CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
-                {
-                    PlayIfAvailable(CurrentWeapon.WeaponTypeName + animationName);
-                    CurrentWeapon.AnimationPlayer.Play(animationName);
-                    return true;
-                }
+            if (CurrentWeapon == null)
+                return PlayIfAvailable(animationName);
 
+            ActorAnimationPlayer.Stop();
+            CurrentWeapon.AnimationPlayer.Stop();
+            string playerAnimPath = $"{CurrentWeapon.WeaponTypeName}/{animationName}";
+            if (!ActorAnimationPlayer.HasAnimation(playerAnimPath)
+                || !CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
+            {
                 return false;
             }
 
-            return PlayIfAvailable(animationName);
+            CurrentWeapon.AnimationPlayer.Play(animationName);
+            return PlayIfAvailable(playerAnimPath);
         }
 
         public bool PlayJumpAnimation(string animationName)
         {
-            if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
-                return PlayIfAvailable(animationName);
-            return false;
+            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
+                return false;
+            return PlayIfAvailable(animationName);
         }
 
         public bool PlayBaseAnimation(string animationName)
         {
-            if (string.IsNullOrEmpty(ActionStateMachine.State.AnimationName)
-                && string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
+            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName)
+                || !string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
             {
-                return PlayIfAvailable(animationName);
+                return false;
             }
-            return false;
+            return PlayIfAvailable(animationName);
         }
 
         // public void PlaySubWeaponAttack(string animationName)
         // {
-
         // }
 
         public bool PlayIfAvailable(string animationName)

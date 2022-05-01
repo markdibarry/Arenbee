@@ -26,9 +26,8 @@ namespace Arenbee.Assets.GUI
             _statusEffectDB = Locator.GetStatusEffectDB();
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
-            base._PhysicsProcess(delta);
             _fpsDisplay.Text = Performance.GetMonitor(Performance.Monitor.TimeFps).ToString();
         }
 
@@ -52,7 +51,7 @@ namespace Arenbee.Assets.GUI
             if (actor.ActorType == ActorType.Player)
             {
                 UpdatePlayerStatsDisplay(actor);
-                actor.StatsRecalculated += OnPlayerStatsUpdated;
+                actor.StatsChanged += OnPlayerStatsChanged;
                 actor.ModChanged += OnPlayerModChanged;
             }
         }
@@ -65,11 +64,11 @@ namespace Arenbee.Assets.GUI
             if (actor.ActorType == ActorType.Player)
             {
                 actor.ModChanged -= OnPlayerModChanged;
-                actor.StatsRecalculated -= OnPlayerStatsUpdated;
+                actor.StatsChanged -= OnPlayerStatsChanged;
             }
         }
 
-        private void OnPlayerStatsUpdated(Actor actor)
+        private void OnPlayerStatsChanged(Actor actor)
         {
             if (ProcessMode == ProcessModeEnum.Disabled) return;
             UpdatePlayerStatsDisplay(actor);
@@ -152,8 +151,8 @@ namespace Arenbee.Assets.GUI
 
         private void UpdatePlayerStatsDisplay(Actor actor)
         {
-            int hp = actor.Stats.Attributes.GetStat(AttributeType.HP).DisplayValue;
-            int maxHP = actor.Stats.Attributes.GetStat(AttributeType.MaxHP).DisplayValue;
+            int hp = actor.Stats.GetHP();
+            int maxHP = actor.Stats.GetMaxHP();
             _heartDisplay.UpdateMaxHearts(maxHP);
             _heartDisplay.UpdateCurrentHearts(hp);
         }

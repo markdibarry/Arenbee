@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies.JumpStates
 {
-    public class Grounded : State<Actor>
+    public class Grounded : ActorState
     {
         public override void Enter()
         {
@@ -11,17 +11,18 @@ namespace Arenbee.Assets.Actors.Enemies.JumpStates
             StateController.PlayFallbackAnimation();
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (!Actor.IsOnFloor())
-                StateMachine.TransitionTo(new Fall());
+                return new Fall();
+            return null;
         }
     }
 }

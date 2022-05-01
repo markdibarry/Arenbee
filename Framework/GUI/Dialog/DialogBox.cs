@@ -144,7 +144,7 @@ namespace Arenbee.Framework.GUI.Dialog
         public void SetPortraits()
         {
             int shiftBase = 30;
-            _portraitContainer.RemoveAllChildren();
+            _portraitContainer.QueueFreeAllChildren();
             _nameLabel.Text = string.Empty;
             if (ReverseDisplay)
             {

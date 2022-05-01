@@ -4,36 +4,41 @@ using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Actors.Players.JumpStates
 {
-    public class Fall : State<Actor>
+    public class Fall : ActorState
     {
         readonly float _fallMultiplier = 2f;
         float _jumpGraceTimer = 0;
         readonly float _jumpGraceTime = 0.1f;
 
-        public override void Enter() { }
+        public Fall() { AnimationName = "Jump"; }
 
-        public override void Update(float delta)
+        public override void Enter()
         {
-            CheckForTransitions();
+            PlayAnimation(AnimationName);
+        }
+
+        public override ActorState Update(float delta)
+        {
             Actor.VelocityY = Actor.Velocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
             if (_jumpGraceTimer > 0)
                 _jumpGraceTimer -= delta;
 
             if (InputHandler.Jump.IsActionJustPressed)
                 _jumpGraceTimer = _jumpGraceTime;
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsOnFloor())
             {
                 if (_jumpGraceTimer > 0 && !Actor.IsJumpDisabled)
-                    StateMachine.TransitionTo(new Jump());
-                else
-                    StateMachine.TransitionTo(new Grounded());
+                    return new Jump();
+                return new Grounded();
             }
+            return null;
         }
     }
 }

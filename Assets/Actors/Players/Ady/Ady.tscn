@@ -1,39 +1,25 @@
-[gd_scene load_steps=18 format=3 uid="uid://cmuteecrn2trn"]
+[gd_scene load_steps=11 format=3 uid="uid://c3gxiutcdj2aw"]
 
 [ext_resource type="PackedScene" uid="uid://bj28sv5vq5vnv" path="res://Framework/Actors/Player.tscn" id="1_n2y5e"]
 [ext_resource type="Script" path="res://Assets/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
-[ext_resource type="Animation" uid="uid://btpwopgyi1ojn" path="res://Assets/Actors/Players/Ady/Animation/Idle.tres" id="3_5sjqk"]
-[ext_resource type="Texture2D" uid="uid://cwjip5n6dl8at" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="3_72rfu"]
-[ext_resource type="Animation" uid="uid://dimyi2m7odx30" path="res://Assets/Actors/Players/Ady/Animation/Dead.tres" id="3_c80ot"]
-[ext_resource type="Animation" uid="uid://co615bidb54o1" path="res://Assets/Actors/Players/Ady/Animation/Jump.tres" id="4_6fk4c"]
-[ext_resource type="Animation" uid="uid://ce7pokvam44wb" path="res://Assets/Actors/Players/Ady/Animation/Run.tres" id="5_mm62d"]
-[ext_resource type="Animation" uid="uid://daavf15ohry4b" path="res://Assets/Actors/Players/Ady/Animation/UnarmedAttack.tres" id="6_sqe2g"]
-[ext_resource type="Animation" uid="uid://bu0lnw8lkiuf" path="res://Assets/Actors/Players/Ady/Animation/Walk.tres" id="7_7ctrm"]
-[ext_resource type="Animation" uid="uid://ckug8y3cgsnn1" path="res://Assets/Actors/Players/Ady/Animation/SpearWeakAttack1.tres" id="7_yp6gg"]
-[ext_resource type="Animation" uid="uid://2ik4a1kw6j1o" path="res://Assets/Actors/Players/Ady/Animation/SpearWeakAttack2.tres" id="8_jkh36"]
-[ext_resource type="Animation" uid="uid://cnxu11xftd3m2" path="res://Assets/Actors/Players/Ady/Animation/Stagger.tres" id="9_hv74u"]
-[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="12_jmvdf"]
+[ext_resource type="AnimationLibrary" uid="uid://0t0ca6phh7jd" path="res://Assets/Actors/Players/Ady/Animation/AdyLibrary.res" id="3_1pauw"]
+[ext_resource type="AnimationLibrary" uid="uid://bsb3k1lmvuc0m" path="res://Assets/Actors/Players/Ady/Animation/LongStick/LongStickLibrary.res" id="4_cmo6m"]
+[ext_resource type="Texture2D" uid="uid://vnmqhrjhbtq8" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="7_28ga8"]
+[ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="12_3qfsg"]
+[ext_resource type="Texture2D" uid="uid://dhvumgci5ai1q" path="res://Assets/Actors/Players/Ady/Animation/AdyPalette.png" id="13_txydx"]
 
-[sub_resource type="Animation" id="Animation_g0rvy"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body/BodySprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_35qwq"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
 resource_local_to_scene = true
-shader = ExtResource( "12_jmvdf" )
-shader_param/flash_color = null
-shader_param/flash_mix = null
+shader = ExtResource( "12_3qfsg" )
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
+shader_param/flash_mix = 0.0
+shader_param/speed = null
+shader_param/cycle_start = null
+shader_param/cycle_end = null
+shader_param/cycle_direction = null
+shader_param/use_palette1 = true
+shader_param/use_palette2 = null
+shader_param/palette1 = ExtResource( "13_txydx" )
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_niveh"]
 size = Vector2(14, 24)
@@ -46,28 +32,28 @@ size = Vector2(14, 24)
 script = ExtResource( "2_0vmt5" )
 
 [node name="AnimationPlayer" parent="." index="0"]
-anims/Dead = ExtResource( "3_c80ot" )
-anims/Idle = ExtResource( "3_5sjqk" )
-anims/Jump = ExtResource( "4_6fk4c" )
-anims/RESET = SubResource( "Animation_g0rvy" )
-anims/Run = ExtResource( "5_mm62d" )
-anims/SpearWeakAttack1 = ExtResource( "7_yp6gg" )
-anims/SpearWeakAttack2 = ExtResource( "8_jkh36" )
-anims/Stagger = ExtResource( "9_hv74u" )
-anims/UnarmedAttack = ExtResource( "6_sqe2g" )
-anims/Walk = ExtResource( "7_7ctrm" )
+libraries = {
+"": ExtResource( "3_1pauw" ),
+"LongStick": ExtResource( "4_cmo6m" )
+}
 
 [node name="BodySprite" parent="Body" index="0"]
 modulate = Color(1, 1, 1, 1)
-material = SubResource( "ShaderMaterial_35qwq" )
-texture = ExtResource( "3_72rfu" )
+texture_filter = 3
+material = SubResource( "ShaderMaterial_vhqga" )
+texture = ExtResource( "7_28ga8" )
 hframes = 6
 vframes = 9
+frame = 48
+
+[node name="HurtBox" parent="Body/BodySprite" index="0"]
+visible = false
 
 [node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_niveh" )
 
 [node name="CollisionShape2D" parent="." index="3"]
+visible = false
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_53s3l" )

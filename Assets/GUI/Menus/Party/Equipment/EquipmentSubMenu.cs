@@ -4,6 +4,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
+using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -20,28 +21,23 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private PackedScene _equipSelectOptionScene;
         private PackedScene _textOptionScene;
 
-        public override void _Process(float delta)
+        public override void HandleInput(GUIInputHandler input, float delta)
         {
-            if (this.IsToolDebugMode() || !IsActive) return;
-            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
+            if (input.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
                 FocusContainer(_partyOptions);
             else
-                base._Process(delta);
+                base.HandleInput(input, delta);
         }
 
-        public override void ResumeSubMenu(bool isCascading)
+        public override void ResumeSubMenu()
         {
             UpdateEquipmentDisplay(_partyOptions.CurrentItem);
-            base.ResumeSubMenu(isCascading);
+            base.ResumeSubMenu();
         }
 
-        protected override void CustomOptionsSetup()
+        protected override void ReplaceDefaultOptions()
         {
-            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
-            _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
-            AddPartyMembers();
-            base.CustomOptionsSetup();
+            UpdatePartyMemberOptions();
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
@@ -63,24 +59,11 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _partyOptions = Foreground.GetNode<OptionContainer>("PartyOptions");
-            OptionContainers.Add(_partyOptions);
-            _equipmentOptions = Foreground.GetNode<OptionContainer>("EquipmentOptions");
-            OptionContainers.Add(_equipmentOptions);
-        }
-
-        private void AddPartyMembers()
-        {
-            var options = new List<TextOption>();
-            foreach (var actor in _playerParty.Actors)
-            {
-                var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.OptionData.Add("actorName", actor.Name);
-                textOption.LabelText = actor.Name;
-                options.Add(textOption);
-            }
-            _partyOptions.ReplaceChildren(options);
-            _partyOptions.InitItems();
+            _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
+            _equipmentOptions = OptionContainers.Find(x => x.Name == "EquipmentOptions");
+            _playerParty = Locator.GetParty() ?? new PlayerParty();
+            _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
         }
 
         private List<KeyValueOption> GetEquipmentOptions(OptionItem optionItem)
@@ -103,6 +86,19 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             return options;
         }
 
+        private List<TextOption> GetPartyMemberOptions()
+        {
+            var options = new List<TextOption>();
+            foreach (var actor in _playerParty.Actors)
+            {
+                var textOption = _textOptionScene.Instantiate<TextOption>();
+                textOption.OptionData.Add("actorName", actor.Name);
+                textOption.LabelText = actor.Name;
+                options.Add(textOption);
+            }
+            return options;
+        }
+
         private void OpenEquipSelectMenu(OptionItem optionItem)
         {
             if (!_partyOptions.CurrentItem.OptionData.TryGetValue("actorName", out string actorName))
@@ -119,14 +115,19 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             SelectSubMenu selectMenu = GDEx.Instantiate<SelectSubMenu>(SelectSubMenu.GetScenePath());
             selectMenu.Slot = slot;
             selectMenu.Actor = actor;
-            RaiseRequestedAddSubMenu(selectMenu);
+            RaiseRequestedAdd(selectMenu);
         }
 
         private void UpdateEquipmentDisplay(OptionItem optionItem)
         {
             List<KeyValueOption> options = GetEquipmentOptions(optionItem);
             _equipmentOptions.ReplaceChildren(options);
-            _equipmentOptions.InitItems();
+        }
+
+        private void UpdatePartyMemberOptions()
+        {
+            List<TextOption> options = GetPartyMemberOptions();
+            _partyOptions.ReplaceChildren(options);
         }
     }
 }

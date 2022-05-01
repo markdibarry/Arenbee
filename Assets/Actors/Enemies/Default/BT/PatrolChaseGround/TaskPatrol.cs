@@ -14,8 +14,8 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
         {
             if (_waiting)
             {
-                Actor.InputHandler.Right.SimulateRelease();
-                Actor.InputHandler.Left.SimulateRelease();
+                Actor.InputHandler.Right.IsActionPressed = false;
+                Actor.InputHandler.Left.IsActionPressed = false;
                 _waitCounter -= delta;
                 if (_waitCounter <= 0)
                 {
@@ -37,13 +37,13 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
 
                 if (Actor.Direction.x == (int)Facings.Left)
                 {
-                    Actor.InputHandler.Right.SimulateRelease();
-                    Actor.InputHandler.Left.SimulatePress();
+                    Actor.InputHandler.Right.IsActionPressed = false;
+                    Actor.InputHandler.Left.IsActionPressed = true;
                 }
                 else
                 {
-                    Actor.InputHandler.Left.SimulateRelease();
-                    Actor.InputHandler.Right.SimulatePress();
+                    Actor.InputHandler.Left.IsActionPressed = false;
+                    Actor.InputHandler.Right.IsActionPressed = true;
                 }
             }
 

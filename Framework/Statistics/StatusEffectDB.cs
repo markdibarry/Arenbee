@@ -28,6 +28,14 @@ namespace Arenbee.Framework.Statistics
 
         private void BuildDB()
         {
+            _effects[StatusEffectType.KO] = new StatusEffectData()
+            {
+                EffectType = StatusEffectType.KO,
+                Name = "KO",
+                AbbrName = "KO",
+                PastTenseName = "KO'd",
+                Description = "Character is unable to fight!"
+            };
             _effects[StatusEffectType.Burn] = new StatusEffectData()
             {
                 EffectType = StatusEffectType.Burn,
@@ -53,15 +61,15 @@ namespace Arenbee.Framework.Statistics
                 {
                     var statsOwner = statusEffect.Stats.StatsOwner;
                     if (statsOwner is Actor actor)
-                        actor.InputHandler.Jump.SimulateJustPressed();
-                    var actionData = new ActionData(
-                        (int)(statsOwner.Stats.Attributes.GetStat(AttributeType.MaxHP).ModifiedValue * 0.05),
-                        statusEffect.EffectData.Name,
-                        ActionType.Status)
+                        actor.InputHandler.Jump.IsActionJustPressed = true;
+                    var actionData = new ActionData()
                     {
+                        Value = (int)(statsOwner.Stats.GetMaxHP() * 0.05),
+                        SourceName = statusEffect.EffectData.Name,
+                        ActionType = ActionType.Status,
                         StatusEffectDamage = statusEffect.StatusEffectType
                     };
-                    statsOwner.Stats.TakeDamage(actionData);
+                    statsOwner.Stats.ReceiveAction(actionData);
                 }
             };
             _effects[StatusEffectType.Freeze] = new StatusEffectData()
@@ -106,14 +114,14 @@ namespace Arenbee.Framework.Statistics
                 TickEffect = (statusEffect) =>
                 {
                     var statsOwner = statusEffect.Stats.StatsOwner;
-                    var actionData = new ActionData(
-                        (int)(statsOwner.Stats.Attributes.GetStat(AttributeType.MaxHP).ModifiedValue * 0.05),
-                        statusEffect.EffectData.Name,
-                        ActionType.Status)
+                    var actionData = new ActionData()
                     {
+                        Value = (int)(statsOwner.Stats.GetMaxHP() * 0.05),
+                        SourceName = statusEffect.EffectData.Name,
+                        ActionType = ActionType.Status,
                         StatusEffectDamage = statusEffect.StatusEffectType
                     };
-                    statsOwner.Stats.TakeDamage(actionData);
+                    statsOwner.Stats.ReceiveAction(actionData);
                 }
             };
             _effects[StatusEffectType.Zombie] = new StatusEffectData()
@@ -139,8 +147,8 @@ namespace Arenbee.Framework.Statistics
                         new Modifier(
                             StatType.Attribute,
                             (int)AttributeType.Attack,
-                            ModEffect.Percentage,
-                            statusEffect.ModifiedValue > 0 ? 120 : 80)
+                            ModOperator.Multiply,
+                            statusEffect.ModifiedValue > 0 ? 20 : -20)
                     };
                 }
             };

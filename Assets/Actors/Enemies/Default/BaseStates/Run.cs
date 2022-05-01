@@ -3,35 +3,31 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
-    public class Run : State<Actor>
+    public class Run : ActorState
     {
         public override void Enter()
         {
             Actor.MaxSpeed = Actor.RunSpeed;
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
             Actor.UpdateDirection();
             Actor.Move();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsRunStuck > 0)
-                return;
-            if (!InputHandler.Left.IsActionPressed && !InputHandler.Right.IsActionPressed)
-            {
-                StateMachine.TransitionTo(new Idle());
-            }
-            else
-            {
-                if (!InputHandler.Run.IsActionPressed)
-                    StateMachine.TransitionTo(new Walk());
-            }
+                return null;
+            if (InputHandler.GetLeftAxis().x == 0)
+                return new Idle();
+            if (!InputHandler.Run.IsActionPressed)
+                return new Walk();
+            return null;
         }
     }
 }

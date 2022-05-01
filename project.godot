@@ -40,6 +40,11 @@ fonts/dynamic_fonts/use_oversampling=false
 font_data_dynamic={
 "antialiased": false
 }
+texture={
+"compress/hdr_compression": 0,
+"detect_3d/compress_to": 0,
+"process/hdr_as_srgb": true
+}
 
 [input]
 

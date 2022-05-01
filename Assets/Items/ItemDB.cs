@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Skills;
 using Arenbee.Framework.Statistics;
 
 namespace Arenbee.Assets.Items
@@ -44,16 +45,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Hockey Stick",
                 Description = "Perfect for slap-shots.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 10,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Attack, ModEffect.Add, 1),
-                    new(StatType.ElementOff, (int)ElementType.Earth, ModEffect.Add, 2)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Attack, ModOperator.Add, 1),
+                    new(StatType.ElementOff, (int)ElementType.Earth, ModOperator.Add, 2)
+                }
             });
 
             _items.Add(new("MetalHockeyStick", ItemType.Weapon)
@@ -61,16 +60,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Metal Hockey Stick",
                 Description = "It's not sharp. Don't worry!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 10,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Attack, ModEffect.Add, 1),
-                    new(StatType.ElementOff, (int)ElementType.Water, ModEffect.Add, 2)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Attack, ModOperator.Add, 1),
+                    new(StatType.ElementOff, (int)ElementType.Water, ModOperator.Add, 2)
+                }
             });
         }
 
@@ -81,15 +78,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Cheese Hat",
                 Description = "A Wisconsin favorite!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.MagicAttack, ModEffect.Add, 1)
-                })
+                    new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1)
+                }
             });
 
             _items.Add(new("FaceMask", ItemType.Headgear)
@@ -97,15 +92,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Face Mask",
                 Description = "Cheap but effective.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModEffect.Add, 20)
-                })
+                    new(StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModOperator.Add, 20)
+                }
             });
 
             _items.Add(new("RamenBoushi", ItemType.Headgear)
@@ -113,15 +106,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Ramen Boushi",
                 Description = "Vital for any fisherman!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModEffect.Add, 1)
-                })
+                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1)
+                }
             });
 
             _items.Add(new("SunGlasses", ItemType.Headgear)
@@ -129,15 +120,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Sun Glasses",
                 Description = "To be worn exclusively at night.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.ElementDef, (int)ElementType.Dark, ModEffect.Add, ElementDef.Resist)
-                })
+                    new(StatType.ElementDef, (int)ElementType.Dark, ModOperator.Add, ElementDef.Resist)
+                }
             });
         }
 
@@ -148,16 +137,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Clemson Hoodie",
                 Description = "Football is a sport!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 1),
-                    new(StatType.Attribute, (int)AttributeType.MagicAttack, ModEffect.Add, 1)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
+                    new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1)
+                }
             });
 
             _items.Add(new("MotleyCrueTee", ItemType.Shirt)
@@ -165,15 +152,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Motley Crue Tshirt",
                 Description = "Shout at the devil!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 1)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1)
+                }
             });
         }
 
@@ -184,16 +169,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "JNCO Jeans",
                 Description = "Watch out for puddles.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 1),
-                    new(StatType.ElementDef, (int)ElementType.Water, ModEffect.Add, ElementDef.Weak)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
+                    new(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Weak)
+                }
             });
         }
 
@@ -204,15 +187,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Vibrams",
                 Description = "They feel as cool as they look!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 2)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 2)
+                }
             });
 
             _items.Add(new("Uggs", ItemType.Footwear)
@@ -220,17 +201,15 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Uggs",
                 Description = "Lets get white-girl wasted!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 1),
-                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModEffect.Add, 1),
-                    new(StatType.ElementDef, (int)ElementType.Water, ModEffect.Add, ElementDef.Resist)
-                })
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
+                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
+                    new(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Resist)
+                }
             });
 
             _items.Add(new("SnakeskinShoes", ItemType.Footwear)
@@ -238,16 +217,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Snakeskin Shoes",
                 Description = "Goro Majima approved!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new (StatType.ElementDef, (int)ElementType.Water, ModEffect.Add, ElementDef.Resist),
-                    new (StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModEffect.Add, 100)
-                })
+                    new (StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Resist),
+                    new (StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModOperator.Add, 100)
+                }
             });
         }
 
@@ -258,15 +235,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Friendship Bracelet",
                 Description = "Because I love you 5-ever.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.MaxHP, ModEffect.Add, 10)
-                })
+                    new(StatType.Attribute, (int)AttributeType.MaxHP, ModOperator.Add, 10)
+                }
             });
 
             _items.Add(new("SnakeRing", ItemType.Accessory)
@@ -274,15 +249,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Snake Ring",
                 Description = "Why would you wear this?",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new(StatType.StatusEffect, (int)StatusEffectType.Poison, ModEffect.Add, 1)
-                })
+                    new(StatType.StatusEffect, (int)StatusEffectType.Poison, ModOperator.Add, 1)
+                }
             });
 
             _items.Add(new("MoodRing", ItemType.Accessory)
@@ -290,16 +263,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Mood Ring",
                 Description = "It's just black.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new (StatType.Attribute, (int)AttributeType.MagicDefense, ModEffect.Add, 1),
-                    new (StatType.ElementDef, (int)ElementType.Dark, ModEffect.Add, ElementDef.Resist)
-                })
+                    new (StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
+                    new (StatType.ElementDef, (int)ElementType.Dark, ModOperator.Add, ElementDef.Resist)
+                }
             });
 
             _items.Add(new("FingerlessGloves", ItemType.Accessory)
@@ -307,15 +278,13 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Fingerless Gloves",
                 Description = "That bohemian look.",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new (StatType.Attribute, (int)AttributeType.Defense, ModEffect.Add, 1)
-                })
+                    new (StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1)
+                }
             });
 
             _items.Add(new("OvenMitts", ItemType.Accessory)
@@ -323,16 +292,14 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Oven Mitts",
                 Description = "Keeps your hands burn-free for up to 5 seconds!",
                 MaxStack = 9,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 15,
-                ItemStats = new(new Modifier[]
+                Modifiers = new Modifier[]
                 {
-                    new (StatType.ElementDef, (int)ElementType.Fire, ModEffect.Add, ElementDef.Resist),
-                    new (StatType.StatusEffectDef, (int)StatusEffectType.Burn, ModEffect.Add, 10)
-                })
+                    new (StatType.ElementDef, (int)ElementType.Fire, ModOperator.Add, ElementDef.Resist),
+                    new (StatType.StatusEffectDef, (int)StatusEffectType.Burn, ModOperator.Add, 10)
+                }
             });
         }
 
@@ -341,34 +308,34 @@ namespace Arenbee.Assets.Items
             _items.Add(new Item("Potion", ItemType.Restorative)
             {
                 DisplayName = "Potion",
-                Description = "Restores up to 10 of your HP.",
+                Description = "Restores a bit of HP.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10,
+                UseData = new()
+                {
+                    SkillEffect = SkillEffectName.RestoreHP,
+                    UseType = ItemUseType.PartyMember,
+                    Value1 = 5
+                }
             });
 
             _items.Add(new Item("GeneSupreme", ItemType.Restorative)
             {
                 DisplayName = "Gene Supreme",
-                Description = "Restores up to 30 of your HP, and you get your name on the wall!",
+                Description = "Restores a good bit of HP, and you get your name on the wall if you finish it!",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
-                Price = 30,
+                Price = 30
             });
 
             _items.Add(new Item("SuperDonut", ItemType.Restorative)
             {
                 DisplayName = "Super Donut",
-                Description = "Restores up to 10 of your MP. Even more when microwaved.",
+                Description = "Restores a bit of MP. Even more when microwaved.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -377,10 +344,8 @@ namespace Arenbee.Assets.Items
             _items.Add(new Item("TurboEther", ItemType.Restorative)
             {
                 DisplayName = "Turbo Ether",
-                Description = "Restores up to 30 of your MP.",
+                Description = "Restores a good bit of MP.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 30
@@ -391,8 +356,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Elixer",
                 Description = "Restores 30% of your HP & MP.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 90
@@ -403,8 +366,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Antidote",
                 Description = "Removes Poison status.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -415,8 +376,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Aloe",
                 Description = "Removes Burn status.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -427,8 +386,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Life Alert",
                 Description = "Auto-Restores KO once.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -439,8 +396,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Escape Rope",
                 Description = "Returns you to the entrance of a dungeon.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -451,8 +406,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Eye Drops",
                 Description = "Removes the Blind status.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -463,8 +416,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Throat Spray",
                 Description = "Removes the Silent status.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -475,8 +426,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Subway Sandwich",
                 Description = "Baked fresh, yet somehow tastes old.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -487,8 +436,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "IPA",
                 Description = "People say it tastes good. It doesn't.",
                 MaxStack = 9,
-                IsUsableInMenu = true,
-                IsUsableInField = true,
                 IsSellable = true,
                 IsDroppable = true,
                 Price = 10
@@ -502,8 +449,6 @@ namespace Arenbee.Assets.Items
                 DisplayName = "Bunny Nugget",
                 Description = "Unseals the dreaded Di-a-blur.",
                 MaxStack = 1,
-                IsUsableInMenu = false,
-                IsUsableInField = false,
                 IsSellable = false,
                 IsDroppable = false,
                 Price = 800

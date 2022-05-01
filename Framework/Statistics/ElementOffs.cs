@@ -18,7 +18,7 @@ namespace Arenbee.Framework.Statistics
         }
 
         [JsonIgnore]
-        public ElementType CurrentElement { get; set; }
+        public ElementType CurrentElement { get { return CalculateStat(); } }
         public StatType StatType { get; set; }
         [JsonIgnore]
         public List<Modifier> Modifiers { get; set; }
@@ -33,18 +33,19 @@ namespace Arenbee.Framework.Statistics
             Modifiers.Remove(mod);
         }
 
-        public void UpdateStat()
+        public ElementType CalculateStat()
         {
             int highest = 0;
-            CurrentElement = ElementType.None;
+            var result = ElementType.None;
             foreach (var mod in Modifiers)
             {
                 if (mod.Value > highest)
                 {
                     highest = mod.Value;
-                    CurrentElement = (ElementType)mod.SubType;
+                    result = (ElementType)mod.SubType;
                 }
             }
+            return result;
         }
     }
 }

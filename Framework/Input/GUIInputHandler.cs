@@ -4,9 +4,9 @@ namespace Arenbee.Framework.Input
     {
         protected GUIInputHandler()
         {
-            Enter = new InputAction();
-            Cancel = new InputAction();
-            Start = new InputAction();
+            Enter = new InputAction(this);
+            Cancel = new InputAction(this);
+            Start = new InputAction(this);
         }
 
         public InputAction Enter { get; protected set; }
@@ -19,14 +19,6 @@ namespace Arenbee.Framework.Input
             Enter.ClearOneTimeActions();
             Cancel.ClearOneTimeActions();
             Start.ClearOneTimeActions();
-        }
-
-        protected override void DisableUserInput(bool disable)
-        {
-            base.DisableUserInput(disable);
-            Enter.UserInputDisabled = disable;
-            Cancel.UserInputDisabled = disable;
-            Start.UserInputDisabled = disable;
         }
     }
 }

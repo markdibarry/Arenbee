@@ -5,7 +5,7 @@ namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Whisp : Actor
     {
-        private class Idle : State<Actor>
+        private class Idle : ActorState
         {
             public Idle() { AnimationName = "Idle"; }
             public override void Enter()
@@ -13,72 +13,74 @@ namespace Arenbee.Assets.Actors.Enemies
                 PlayAnimation(AnimationName);
             }
 
-            public override void Update(float delta)
+            public override ActorState Update(float delta)
             {
-                CheckForTransitions();
+                return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override void CheckForTransitions()
+            public override ActorState CheckForTransitions()
             {
                 if (!Actor.IsWalkDisabled && InputHandler.GetLeftAxis() != Godot.Vector2.Zero)
                 {
                     if (!Actor.IsRunDisabled && InputHandler.Run.IsActionPressed)
-                        StateMachine.TransitionTo(new Run());
-                    else
-                        StateMachine.TransitionTo(new Walk());
+                        return new Run();
+                    return new Walk();
                 }
+                return null;
             }
         }
 
-        private class Run : State<Actor>
+        private class Run : ActorState
         {
             public override void Enter()
             {
                 Actor.MaxSpeed = Actor.RunSpeed;
             }
 
-            public override void Update(float delta)
+            public override ActorState Update(float delta)
             {
-                CheckForTransitions();
                 Actor.UpdateDirection();
                 Actor.Move();
+                return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override void CheckForTransitions()
+            public override ActorState CheckForTransitions()
             {
                 if (Actor.IsWalkDisabled || InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                    StateMachine.TransitionTo(new Idle());
+                    return new Idle();
                 else if (Actor.IsRunDisabled || !InputHandler.Run.IsActionPressed)
-                    StateMachine.TransitionTo(new Walk());
+                    return new Walk();
+                return null;
             }
         }
 
-        private class Walk : State<Actor>
+        private class Walk : ActorState
         {
             public override void Enter()
             {
                 Actor.MaxSpeed = Actor.WalkSpeed;
             }
 
-            public override void Update(float delta)
+            public override ActorState Update(float delta)
             {
-                CheckForTransitions();
                 Actor.UpdateDirection();
                 Actor.Move();
+                return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override void CheckForTransitions()
+            public override ActorState CheckForTransitions()
             {
                 if (!Actor.IsWalkDisabled && InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                    StateMachine.TransitionTo(new Idle());
+                    return new Idle();
                 else if (!Actor.IsRunDisabled && InputHandler.Run.IsActionPressed)
-                    StateMachine.TransitionTo(new Run());
+                    return new Run();
+                return null;
             }
         }
     }

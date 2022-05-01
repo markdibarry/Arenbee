@@ -15,13 +15,9 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
             {
                 _area2D = Actor.GetNode<Area2D>("DetectTargetZone");
                 if (_area2D == null)
-                {
                     GD.PrintErr("Area2D required for Patrol!");
-                }
                 else
-                {
                     _area2D.BodyEntered += OnBodyEntered;
-                }
             }
         }
 
@@ -40,12 +36,11 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
 
         public void OnBodyEntered(Node body)
         {
-            if (body is Actor)
-            {
-                object target = GetData("Target");
-                if (target == null)
-                    SetData("Target", body);
-            }
+            if (body is not Framework.Actors.Actor)
+                return;
+            object target = GetData("Target");
+            if (target == null)
+                SetData("Target", body);
         }
     }
 }

@@ -4,24 +4,25 @@ using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Assets.Actors.Enemies.JumpStates
 {
-    public class Fall : State<Actor>
+    public class Fall : ActorState
     {
         readonly float _fallMultiplier = 2f;
 
         public override void Enter() { }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
             Actor.VelocityY = Actor.Velocity.y.LerpClamp(Actor.JumpGravity * _fallMultiplier, Actor.JumpGravity * delta);
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsOnFloor())
-                StateMachine.TransitionTo(new Grounded());
+                return new Grounded();
+            return null;
         }
     }
 }

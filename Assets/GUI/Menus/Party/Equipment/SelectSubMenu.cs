@@ -5,6 +5,7 @@ using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
 
@@ -14,43 +15,56 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
     public partial class SelectSubMenu : OptionSubMenu
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private PlayerParty _playerParty;
+        private string _currentItemId;
         private OptionContainer _equipOptions;
-        private StatsDisplay _statsDisplay;
+        private IItemDB _itemDB;
         private PackedScene _keyValueOptionScene;
+        private Stats _mockStats;
+        private PlayerParty _playerParty;
+        private StatsDisplay _statsDisplay;
         public Actor Actor { get; set; }
         public EquipmentSlot Slot { get; set; }
 
-        protected override void CustomOptionsSetup()
+        protected override void ReplaceDefaultOptions()
         {
-            _playerParty = Locator.GetCurrentGame().Party ?? new PlayerParty();
-            _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
-            AddItemOptions();
-            base.CustomOptionsSetup();
+            UpdateEquippableOptions();
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemFocused(optionContainer, optionItem);
-            _statsDisplay.Update(Actor, Slot, optionItem.GetData("itemId"));
+
+            _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
+            _currentItemId = optionItem.GetData("itemId");
+            _itemDB.GetItem(_currentItemId)?.AddToStats(_mockStats);
+            _statsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
         }
 
-        protected override async void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
             if (TryEquip(optionItem.GetData("itemId"), Slot))
-                await CloseSubMenuAsync();
+                RaiseRequestedClose();
         }
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _equipOptions = Foreground.GetNode<OptionContainer>("EquipOptions");
-            OptionContainers.Add(_equipOptions);
+            _itemDB = Locator.GetItemDB();
+            _mockStats = Actor?.Stats == null ? null : new Stats(Actor.Stats);
+            _currentItemId = Slot?.ItemId;
+            _equipOptions = OptionContainers.Find(x => x.Name == "EquipOptions");
             _statsDisplay = Foreground.GetNode<StatsDisplay>("StatsDisplay");
+            _playerParty = Locator.GetParty() ?? new PlayerParty();
+            _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
         }
 
-        private void AddItemOptions()
+        private bool TryEquip(string itemId, EquipmentSlot slot)
+        {
+            return Actor.Equipment.TrySetItemById(slot, itemId);
+        }
+
+        private void UpdateEquippableOptions()
         {
             var options = new List<KeyValueOption>();
             var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
@@ -58,7 +72,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             unequipOption.ValueText = string.Empty;
             unequipOption.OptionData.Add("itemId", null);
             options.Add(unequipOption);
-            foreach (var itemStack in _playerParty.Inventory.GetItemsByType(Slot.SlotType))
+            foreach (var itemStack in _playerParty.Inventory?.GetItemsByType(Slot.SlotType))
             {
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
@@ -71,12 +85,6 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
                 options.Add(option);
             }
             _equipOptions.ReplaceChildren(options);
-            _equipOptions.InitItems();
-        }
-
-        private bool TryEquip(string itemId, EquipmentSlot slot)
-        {
-            return Actor.Equipment.TrySetItemById(slot, itemId);
         }
     }
 }

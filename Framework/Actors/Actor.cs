@@ -1,6 +1,7 @@
 ﻿using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Items;
 using Godot;
+using Arenbee.Assets.Input;
 
 namespace Arenbee.Framework.Actors
 {
@@ -68,19 +69,21 @@ namespace Arenbee.Framework.Actors
 
         private void SetNodeReferences()
         {
+            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
             _body = GetNode<Node2D>("Body");
             BodySprite = _body.GetNode<Sprite2D>("BodySprite");
-            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
-            WeaponSlot = BodySprite.GetNode<WeaponSlot>("WeaponSlot");
+            WeaponSlot = _body.GetNode<WeaponSlot>("WeaponSlot");
             HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
             HitBox = BodySprite.GetNode<HitBox>("HitBox");
             AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+            DummyInputHandler = GetNode<DummyInputHandler>("DummyInputHandler");
+            _inputHandler ??= DummyInputHandler;
             _blinker = GetNode<Blinker>("Blinker");
-            AttachInitialInputHandler();
         }
 
         public virtual void Init()
         {
+            _floatPosition = GlobalPosition;
             InitMovement();
             InitState();
             WeaponSlot.Init(this);
@@ -88,30 +91,37 @@ namespace Arenbee.Framework.Actors
 
         public override void _PhysicsProcess(float delta)
         {
+            GlobalPosition = _floatPosition;
             _move = Vector2.Zero;
             Stats.Process(delta);
-            if (!_isPlayerControlled)
-                BehaviorTree?.Update(delta);
             StateController.UpdateStates(delta);
             HandleMove(delta);
             MoveAndSlide();
-            InputHandler.Update();
+            _floatPosition = GlobalPosition;
+            GlobalPosition = GlobalPosition.Round();
+            HandleInput(delta);
         }
 
         public override void _ExitTree()
         {
-            BehaviorTree?.ClearBlackBoard();
             ActorRemoved?.Invoke(this);
-            // TODO: Shader memory leak
+        }
+
+        private void HandleInput(float delta)
+        {
+            if (InputHandler == DummyInputHandler)
+            {
+                BehaviorTree?.Update(delta);
+                DummyInputHandler.Update();
+            }
         }
 
         private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
         {
-            oldItem?.ItemStats.RemoveFromStats(Stats);
-            newItem?.ItemStats.AddToStats(Stats);
+            oldItem?.RemoveFromStats(Stats);
+            newItem?.AddToStats(Stats);
             if (slot.SlotName == EquipSlotName.Weapon)
                 WeaponSlot?.SetWeapon(newItem);
-            Stats.RecalculateStats(force: true);
         }
     }
 

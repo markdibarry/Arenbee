@@ -9,7 +9,7 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
         public PatrolChaseAirBT(Actor actor) : base(actor) { }
         protected override BTNode SetupTree()
         {
-            BTNode root = new Selector(new List<BTNode>
+            return new Selector(new List<BTNode>
             {
                 new Sequence(new List<BTNode>
                 {
@@ -26,8 +26,6 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir
                 }),
                 new TaskPatrol()
             });
-
-            return root;
         }
     }
 }

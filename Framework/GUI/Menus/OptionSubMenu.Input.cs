@@ -1,5 +1,5 @@
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Input;
 
 namespace Arenbee.Framework.GUI
 {
@@ -11,22 +11,21 @@ namespace Arenbee.Framework.GUI
         private readonly float _rapidScrollDelay = 0.4f;
         private readonly float _rapidScrollInterval = 0.05f;
 
-        public override void _Process(float delta)
+        public override void HandleInput(GUIInputHandler input, float delta)
         {
-            if (this.IsToolDebugMode() || !IsActive) return;
-            base._Process(delta);
+            base.HandleInput(input, delta);
 
             var newDirection = Direction.None;
 
-            if (MenuInput.Up.IsActionPressed)
+            if (input.Up.IsActionPressed)
                 newDirection = Direction.Up;
-            else if (MenuInput.Down.IsActionPressed)
+            else if (input.Down.IsActionPressed)
                 newDirection = Direction.Down;
-            else if (MenuInput.Left.IsActionPressed)
+            else if (input.Left.IsActionPressed)
                 newDirection = Direction.Left;
-            else if (MenuInput.Right.IsActionPressed)
+            else if (input.Right.IsActionPressed)
                 newDirection = Direction.Right;
-            else if (MenuInput.Enter.IsActionJustPressed)
+            else if (input.Enter.IsActionJustPressed)
                 CurrentContainer.SelectItem();
 
             HandleRapidScroll(delta, newDirection);
@@ -36,33 +35,29 @@ namespace Arenbee.Framework.GUI
         {
             if (newDirection == _currentDirection)
             {
-                if (_rapidScrollTimerEnabled)
+                if (!_rapidScrollTimerEnabled)
+                    return;
+                if (_rapidScrollTimer > 0)
                 {
-                    if (_rapidScrollTimer > 0)
-                    {
-                        _rapidScrollTimer -= delta;
-                    }
-                    else
-                    {
-                        _rapidScrollTimer = _rapidScrollInterval;
-                        ScrollDirection(_currentDirection);
-                    }
+                    _rapidScrollTimer -= delta;
+                    return;
                 }
+
+                _rapidScrollTimer = _rapidScrollInterval;
+                ScrollDirection(_currentDirection);
+                return;
             }
-            else
+
+            _currentDirection = newDirection;
+            if (newDirection == Direction.None)
             {
-                _currentDirection = newDirection;
-                if (newDirection != Direction.None)
-                {
-                    _rapidScrollTimerEnabled = true;
-                    _rapidScrollTimer = _rapidScrollDelay;
-                    ScrollDirection(_currentDirection);
-                }
-                else
-                {
-                    _rapidScrollTimerEnabled = false;
-                }
+                _rapidScrollTimerEnabled = false;
+                return;
             }
+
+            _rapidScrollTimerEnabled = true;
+            _rapidScrollTimer = _rapidScrollDelay;
+            ScrollDirection(_currentDirection);
         }
 
         private void ScrollDirection(Direction direction)

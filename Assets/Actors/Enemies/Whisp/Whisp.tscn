@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://3tu1uhllhg11"]
+[gd_scene load_steps=11 format=3 uid="uid://3tu1uhllhg11"]
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
 [ext_resource type="Texture2D" uid="uid://wq7i1jgih14x" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
-[ext_resource type="Shader" path="res://Framework/Actors/Animation/IFrame.gdshader" id="3_rptpj"]
 
 [sub_resource type="Animation" id="Animation_8v7pu"]
 resource_name = "Idle"
@@ -38,11 +37,11 @@ tracks/0/keys = {
 "values": [1]
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nsvto"]
-resource_local_to_scene = true
-shader = ExtResource( "3_rptpj" )
-shader_param/flash_color = null
-shader_param/flash_mix = null
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bu72h"]
+_data = {
+"Idle": SubResource( "Animation_8v7pu" ),
+"RESET": SubResource( "Animation_cwund" )
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
 size = Vector2(16, 18)
@@ -64,11 +63,11 @@ script = ExtResource( "2_smssj" )
 _jumpHeight = 30.0
 
 [node name="AnimationPlayer" parent="." index="0"]
-anims/Idle = SubResource( "Animation_8v7pu" )
-anims/RESET = SubResource( "Animation_cwund" )
+libraries = {
+"": SubResource( "AnimationLibrary_bu72h" )
+}
 
 [node name="BodySprite" parent="Body" index="0"]
-material = SubResource( "ShaderMaterial_nsvto" )
 scale = Vector2(-1, 1)
 texture = ExtResource( "3_gge5r" )
 hframes = 21

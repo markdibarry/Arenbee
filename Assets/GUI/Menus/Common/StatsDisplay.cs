@@ -17,6 +17,7 @@ namespace Arenbee.Assets.GUI.Menus.Common
         private GridContainer _gridContainer;
         private HBoxContainer _elementAtkContainer;
         private HBoxContainer _elementDefContainer;
+
         public override void _Ready()
         {
             base._Ready();
@@ -28,32 +29,31 @@ namespace Arenbee.Assets.GUI.Menus.Common
             _elementDefContainer = GetNode<HBoxContainer>("VBoxContainer/EDef");
         }
 
-        public void Update(Actor actor)
+        public void UpdateStatsDisplay(Actor actor)
         {
-            Update(actor, null, null);
+            if (actor == null) return;
+            UpdateStatsDisplay(actor.Stats, actor.Stats);
         }
 
-        public void Update(Actor actor, EquipmentSlot slot, string itemId)
+        public void UpdateStatsDisplay(Stats stats, Stats mockStats)
         {
-            var mockStats = actor.Stats;
-            if (slot != null)
-                mockStats = slot.GetMockStats(mockStats, itemId);
-            _gridContainer.RemoveAllChildren();
-            AddStatContainer(actor.Stats, mockStats, AttributeType.Level);
+            if (stats == null) return;
+            _gridContainer.QueueFreeAllChildren();
+            AddStatContainer(stats, mockStats, AttributeType.Level);
             _gridContainer.AddChild(new MarginContainer());
-            AddPointContainer(actor.Stats, mockStats, AttributeType.HP);
-            AddPointContainer(actor.Stats, mockStats, AttributeType.MP);
-            AddStatContainer(actor.Stats, mockStats, AttributeType.Attack);
-            AddStatContainer(actor.Stats, mockStats, AttributeType.Defense);
-            AddStatContainer(actor.Stats, mockStats, AttributeType.MagicAttack);
-            AddStatContainer(actor.Stats, mockStats, AttributeType.MagicDefense);
+            AddPointContainer(stats, mockStats, AttributeType.HP);
+            AddPointContainer(stats, mockStats, AttributeType.MP);
+            AddStatContainer(stats, mockStats, AttributeType.Attack);
+            AddStatContainer(stats, mockStats, AttributeType.Defense);
+            AddStatContainer(stats, mockStats, AttributeType.MagicAttack);
+            AddStatContainer(stats, mockStats, AttributeType.MagicDefense);
             AddEAtkContainer(mockStats);
             AddEDefContainer(mockStats);
         }
 
         private void AddEAtkContainer(Stats stats)
         {
-            _elementAtkContainer.RemoveAllChildren();
+            _elementAtkContainer.QueueFreeAllChildren();
             var atkLabel = new Label() { Text = "E.Atk:" };
             _elementAtkContainer.AddChild(atkLabel);
             var element = stats.ElementOffs.CurrentElement;
@@ -67,7 +67,7 @@ namespace Arenbee.Assets.GUI.Menus.Common
 
         private void AddEDefContainer(Stats stats)
         {
-            _elementDefContainer.RemoveAllChildren();
+            _elementDefContainer.QueueFreeAllChildren();
             var defLabel = new Label() { Text = "E.Def:" };
             _elementDefContainer.AddChild(defLabel);
             foreach (var element in Enum<ElementType>.Values())

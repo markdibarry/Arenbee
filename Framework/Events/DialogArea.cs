@@ -1,5 +1,4 @@
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Utility;
@@ -12,12 +11,12 @@ namespace Arenbee.Framework.Events
     {
         public DialogArea()
         {
-            _currentGame = Locator.GetCurrentGame();
+            _gameSession = Locator.GetGameSession();
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
         private Actor _actor;
-        private readonly GameSessionBase _currentGame;
+        private readonly GameSession _gameSession;
         private bool _canTrigger;
         private ColorRect _colorRect;
         [Export]
@@ -68,7 +67,7 @@ namespace Arenbee.Framework.Events
                 if (IsInstanceValid(_actor))
                 {
                     if (_actor.InputHandler.Attack.IsActionJustPressed)
-                        _currentGame.OpenDialog(DialogPath);
+                        _gameSession?.OpenDialog(DialogPath);
                 }
                 else
                 {

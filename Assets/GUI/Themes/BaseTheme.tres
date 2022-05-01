@@ -3,16 +3,16 @@
 [ext_resource type="Font" path="res://Assets/GUI/Fonts/3x6.tres" id="1_u83ku"]
 [ext_resource type="Texture2D" uid="uid://byuyho3cgvq6o" path="res://Assets/GUI/Borders/border2.png" id="2_wie4d"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fggq6"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og6dl"]
 content_margin_left = 7.0
-content_margin_right = 7.0
 content_margin_top = 7.0
+content_margin_right = 7.0
 content_margin_bottom = 7.0
 texture = ExtResource( "2_wie4d" )
 region_rect = Rect2(0, 0, 16, 16)
 margin_left = 5.0
-margin_right = 5.0
 margin_top = 5.0
+margin_right = 5.0
 margin_bottom = 5.0
 modulate_color = Color(1, 0.988235, 0.694118, 1)
 
@@ -21,7 +21,7 @@ Label/colors/font_outline_color = Color(0, 0, 0, 1)
 Label/constants/line_spacing = 1
 Label/constants/outline_size = 2
 Label/fonts/font = ExtResource( "1_u83ku" )
-PanelContainer/styles/panel = SubResource( "StyleBoxTexture_fggq6" )
+PanelContainer/styles/panel = SubResource( "StyleBoxTexture_og6dl" )
 RichTextLabel/colors/font_outline_color = Color(0.12549, 0.12549, 0.12549, 1)
 RichTextLabel/constants/line_separation = 1
 RichTextLabel/constants/outline_size = 2

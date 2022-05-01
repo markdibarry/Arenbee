@@ -12,75 +12,68 @@ namespace Arenbee.Framework.GUI
     public partial class OptionSubMenu : SubMenu
     {
         public OptionSubMenu()
-            : base()
         {
             OptionContainers = new List<OptionContainer>();
             _currentDirection = Direction.None;
         }
+
         private Cursor _cursor;
         public OptionContainer CurrentContainer { get; private set; }
         public List<OptionContainer> OptionContainers { get; private set; }
         public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
         public event ItemSelectedHandler ItemSelected;
 
-        public override async Task CloseSubMenuAsync(string cascadeTo = null)
+        public override void CloseSubMenu(Action callback = null, string cascadeTo = null)
         {
             foreach (var container in OptionContainers)
-            {
                 UnsubscribeEvents(container);
-            }
-            await base.CloseSubMenuAsync(cascadeTo);
+            base.CloseSubMenu(cascadeTo: cascadeTo);
+            GD.Print("");
         }
 
-        public override async void ResumeSubMenu(bool isCascading)
+        public override async void ResumeSubMenu()
         {
             await ToSignal(GetTree(), "process_frame");
             CurrentContainer.RefocusItem();
-            base.ResumeSubMenu(isCascading);
+            base.ResumeSubMenu();
         }
 
-        protected override void PreLoadSetup()
+        protected override void PreWaitFrameSetup()
         {
             if (!this.IsToolDebugMode())
-                CustomOptionsSetup();
-            if (OptionContainers.Count > 0)
-            {
-                foreach (var optionContainer in OptionContainers)
-                {
-                    optionContainer.InitItems();
-                    SubscribeToEvents(optionContainer);
-                }
-            }
-            base.PreLoadSetup();
+                ReplaceDefaultOptions();
+            base.PreWaitFrameSetup();
         }
 
-        protected override async Task PostLoadSetupAsync()
+        protected override async Task PostWaitFrameSetup()
         {
-            if (OptionContainers.Count > 0)
+            foreach (var optionContainer in OptionContainers)
             {
-                foreach (var optionContainer in OptionContainers)
-                {
-                    if (optionContainer.FitContainer)
-                        optionContainer.FitToContent();
-                }
-                FocusContainer(OptionContainers.FirstOrDefault());
+                if (optionContainer.FitContainer)
+                    optionContainer.FitToContent();
             }
-            await base.PostLoadSetupAsync();
+            Visible = true;
+            await TransitionOpenAsync();
+            OptionContainers.ForEach(x => SubscribeToEvents(x));
+            _cursor.Visible = true;
+            FocusContainer(OptionContainers.FirstOrDefault());
         }
 
         /// <summary>
         /// Overrides the items that should display
         /// </summary>
-        protected virtual void CustomOptionsSetup() { }
+        protected virtual void ReplaceDefaultOptions() { }
 
         protected void FocusContainerClosestItem(OptionContainer optionContainer)
         {
+            if (optionContainer == null) return;
             int index = CurrentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
             FocusContainer(optionContainer, index);
         }
 
         protected void FocusContainer(OptionContainer optionContainer)
         {
+            if (optionContainer == null) return;
             FocusContainer(optionContainer, optionContainer.ItemIndex);
         }
 
@@ -125,22 +118,21 @@ namespace Arenbee.Framework.GUI
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
+            OptionContainers = Foreground.GetChildren<OptionContainer>().ToList();
             _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
             if (_cursor == null)
             {
                 _cursor = GD.Load<PackedScene>(HandCursor.GetScenePath()).Instantiate<HandCursor>();
                 Foreground.AddChild(_cursor);
             }
+            _cursor.Visible = false;
         }
 
         protected void SubscribeToEvents(OptionContainer optionContainer)
         {
-            if (!this.IsToolDebugMode())
-            {
-                optionContainer.ItemSelected += OnItemSelected;
-                optionContainer.ItemFocused += OnItemFocused;
-                optionContainer.FocusOOB += OnFocusOOB;
-            }
+            optionContainer.ItemSelected += OnItemSelected;
+            optionContainer.ItemFocused += OnItemFocused;
+            optionContainer.FocusOOB += OnFocusOOB;
             optionContainer.ContainerUpdated += OnContainerChanged;
         }
 
@@ -161,7 +153,7 @@ namespace Arenbee.Framework.GUI
 
         private void OnContainerChanged(OptionContainer optionContainer)
         {
-            if (CurrentContainer == optionContainer)
+            if (optionContainer == CurrentContainer)
                 MoveCursorToItem(optionContainer.CurrentItem);
         }
     }

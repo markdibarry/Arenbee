@@ -3,26 +3,24 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies.BaseStates
 {
-    public class Idle : State<Actor>
+    public class Idle : ActorState
     {
         public override void Enter() { }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions()
+        public override ActorState CheckForTransitions()
         {
             if (Actor.IsRunStuck > 0)
-            {
-                StateMachine.TransitionTo(new Run());
-                return;
-            }
-            if (InputHandler.Left.IsActionPressed || InputHandler.Right.IsActionPressed)
-                StateMachine.TransitionTo(new Walk());
+                return new Run();
+            if (!Actor.IsWalkDisabled && Actor.InputHandler.GetLeftAxis().x != 0)
+                return new Walk();
+            return null;
         }
     }
 }

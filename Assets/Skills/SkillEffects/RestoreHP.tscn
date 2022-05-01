@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://h7clu0apa6k2"]
+
+[ext_resource type="PackedScene" uid="uid://fgo4e48fm1i5" path="res://Framework/Skills/SkillEffect.tscn" id="1_1an28"]
+[ext_resource type="Script" path="res://Assets/Skills/SkillEffects/RestoreHP.cs" id="2_50k7f"]
+
+[node name="RestoreHP" instance=ExtResource( "1_1an28" )]
+script = ExtResource( "2_50k7f" )

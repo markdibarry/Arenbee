@@ -37,15 +37,15 @@ namespace Arenbee.Framework.Statistics
 
         public int BaseValue { get; set; }
         [JsonIgnore]
-        public int DisplayValue { get; set; }
+        public int DisplayValue { get { return CalculateStat(true); } }
         public int MaxValue { get; set; }
         [JsonIgnore]
-        public int ModifiedValue { get; set; }
+        public int ModifiedValue { get { return CalculateStat(); } }
         [JsonIgnore]
         public List<Modifier> Modifiers { get; set; }
         [JsonIgnore]
         public int SubType { get; protected set; }
 
-        public abstract void UpdateStat();
+        public abstract int CalculateStat(bool ignoreHidden = false);
     }
 }

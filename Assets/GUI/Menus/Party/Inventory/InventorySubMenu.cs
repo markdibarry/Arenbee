@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
+using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -18,28 +19,22 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private OptionContainer _typeList;
         private PackedScene _keyValueOptionScene;
 
-        public override void _Process(float delta)
+        public override void HandleInput(GUIInputHandler input, float delta)
         {
-            if (this.IsToolDebugMode() || !IsActive) return;
-            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
+            if (input.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
                 FocusContainer(_typeList);
             else
-                base._Process(delta);
+                base.HandleInput(input, delta);
         }
 
-        protected override void CustomOptionsSetup()
+        protected override void ReplaceDefaultOptions()
         {
-            _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
-            _inventory = Locator.GetCurrentGame().Party.Inventory;
-            _inventoryList?.ReplaceChildren(GetItemOptions());
+            var typeOptions = GetItemTypeOptions();
+            _typeList.GridContainer.Columns = typeOptions.Count;
+            _typeList.ReplaceChildren(typeOptions);
 
-            if (_typeList != null)
-            {
-                var typeOptions = GetItemTypeOptions();
-                _typeList.GridContainer.Columns = typeOptions.Count;
-                _typeList.ReplaceChildren(typeOptions);
-            }
-            base.CustomOptionsSetup();
+            var itemOptions = GetItemOptions(ItemType.None);
+            _inventoryList.ReplaceChildren(itemOptions);
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
@@ -57,16 +52,18 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.OnItemSelected(optionContainer, optionItem);
             if (optionContainer == _typeList)
                 FocusContainer(_inventoryList);
+            else if (optionContainer == _inventoryList)
+                OpenUseSubMenu(optionItem);
         }
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
-            _typeList = Foreground.GetNode<OptionContainer>("TypeList");
-            OptionContainers.Add(_typeList);
-            _inventoryList = Foreground.GetNode<OptionContainer>("InventoryList");
-            OptionContainers.Add(_inventoryList);
+            _typeList = OptionContainers.Find(x => x.Name == "TypeList");
+            _inventoryList = OptionContainers.Find(x => x.Name == "InventoryList");
             _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
+            _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
+            _inventory = Locator.GetParty()?.Inventory;
         }
 
         private List<TextOption> GetItemTypeOptions()
@@ -92,9 +89,9 @@ namespace Arenbee.Assets.GUI.Menus.Party
             var options = new List<KeyValueOption>();
             ICollection<ItemStack> itemStacks;
             if (itemType == ItemType.None)
-                itemStacks = _inventory.Items;
+                itemStacks = _inventory?.Items;
             else
-                itemStacks = _inventory.GetItemsByType(itemType);
+                itemStacks = _inventory?.GetItemsByType(itemType);
 
             foreach (var itemStack in itemStacks)
             {
@@ -107,23 +104,35 @@ namespace Arenbee.Assets.GUI.Menus.Party
             return options;
         }
 
+        private void OpenUseSubMenu(OptionItem optionItem)
+        {
+            if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
+                return;
+            Item item = _inventory?.GetItemStack(itemId)?.Item;
+            if (item == null)
+                return;
+            var useSubMenu = GDEx.Instantiate<UseSubMenu>(UseSubMenu.GetScenePath());
+            useSubMenu.Item = item;
+            RaiseRequestedAdd(useSubMenu);
+        }
+
         private void UpdateItemDescription(OptionItem optionItem)
         {
             if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
                 return;
-            Item item = _inventory.GetItemStack(itemId)?.Item;
+            Item item = _inventory?.GetItemStack(itemId)?.Item;
             if (item != null)
             {
                 var message = item.Description;
-                if (item.ItemStats != null)
-                    message += $"\n{item.ItemStats.GetStatDescription()}";
+                if (item.Modifiers != null)
+                    message += $"\n{item.GetStatDescription()}";
                 _itemInfo.UpdateText(message);
             }
         }
 
         private void UpdateItemList(OptionItem optionItem)
         {
-            _inventoryList.ResetContainer();
+            _inventoryList.ResetContainerFocus();
             ItemType itemType = ItemType.None;
             if (!optionItem.OptionData.TryGetValue("typeName", out string typeName))
                 return;
@@ -131,7 +140,6 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 itemType = Enum.Parse<ItemType>(typeName);
             var options = GetItemOptions(itemType);
             _inventoryList.ReplaceChildren(options);
-            _inventoryList.InitItems();
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
             {
                 if (distance > _maxChaseDistance)
                 {
-                    Actor.InputHandler.Right.SimulateRelease();
-                    Actor.InputHandler.Left.SimulateRelease();
-                    Actor.InputHandler.Run.SimulateRelease();
+                    Actor.InputHandler.Right.IsActionPressed = false;
+                    Actor.InputHandler.Left.IsActionPressed = false;
+                    Actor.InputHandler.Run.IsActionPressed = false;
                     ClearData("Target");
                     State = NodeState.Failure;
                     return State;
@@ -26,22 +26,22 @@ namespace Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround
                 Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
                 if (direction.x > 0)
                 {
-                    Actor.InputHandler.Left.SimulateRelease();
-                    Actor.InputHandler.Right.SimulatePress();
-                    Actor.InputHandler.Run.SimulatePress();
+                    Actor.InputHandler.Left.IsActionPressed = false;
+                    Actor.InputHandler.Right.IsActionPressed = true;
+                    Actor.InputHandler.Run.IsActionPressed = true;
                 }
                 else if (direction.x < 0)
                 {
-                    Actor.InputHandler.Right.SimulateRelease();
-                    Actor.InputHandler.Left.SimulatePress();
-                    Actor.InputHandler.Run.SimulatePress();
+                    Actor.InputHandler.Right.IsActionPressed = false;
+                    Actor.InputHandler.Left.IsActionPressed = true;
+                    Actor.InputHandler.Run.IsActionPressed = true;
                 }
             }
             else
             {
-                Actor.InputHandler.Right.SimulateRelease();
-                Actor.InputHandler.Left.SimulateRelease();
-                Actor.InputHandler.Run.SimulateRelease();
+                Actor.InputHandler.Right.IsActionPressed = false;
+                Actor.InputHandler.Left.IsActionPressed = false;
+                Actor.InputHandler.Run.IsActionPressed = false;
             }
 
             State = NodeState.Running;

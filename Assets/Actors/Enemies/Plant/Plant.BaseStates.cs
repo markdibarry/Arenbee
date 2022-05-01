@@ -5,7 +5,7 @@ namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Plant : Actor
     {
-        private class Idle : State<Plant>
+        private class Idle : ActorState
         {
             public Idle() { AnimationName = "Idle"; }
             public override void Enter()
@@ -13,11 +13,17 @@ namespace Arenbee.Assets.Actors.Enemies
                 PlayAnimation(AnimationName);
             }
 
-            public override void Update(float delta) { }
+            public override ActorState Update(float delta)
+            {
+                return CheckForTransitions();
+            }
 
             public override void Exit() { }
 
-            public override void CheckForTransitions() { }
+            public override ActorState CheckForTransitions()
+            {
+                return null;
+            }
         }
     }
 }

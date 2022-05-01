@@ -1,0 +1,86 @@
+lightning
+----
+select enemy
+close menu
+stop process
+chant/use item
+-
+lightning animation
+enemy stagger animation
+lightning damage logic
+-
+
+absorb
+----
+select enemy
+close menu
+stop process
+chant/use item
+-
+enemy drain animation
+enemy stagger animation
+enemy drain logic
+-
+player absorb animation
+player absorb logic
+-
+
+bomb
+----
+select enemy
+close menu
+stop process
+chant/use item
+-
+bomb animation
+enemy stagger animation
+bomb damage logic
+-
+
+potion
+----
+select party member
+heal animation
+heal logic
+
+antidote
+---
+select party member
+-
+antidote animation
+antidote logic
+-
+
+elixer
+---
+select party member
+heal animation
+heal logic
+mpRestore animation
+mpRestore logic
+-
+
+tent
+---
+partymember
+-heal animation
+-heal logic
+partymember
+-mpRestore animation
+-mpRestore Logic
+
+eventItem
+---
+close menu
+-
+trigger event
+-
+
+clock
+---
+close menu
+stop process
+-
+clock animation
+clock logic
+-

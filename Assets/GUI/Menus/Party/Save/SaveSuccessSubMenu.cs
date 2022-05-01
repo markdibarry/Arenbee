@@ -8,7 +8,6 @@ namespace Arenbee.Assets.GUI.Menus.Party
     public partial class SaveSuccessSubMenu : PromptSubMenu
     {
         public SaveSuccessSubMenu()
-            : base()
         {
             PreventCloseAll = true;
             PreventCancel = true;
@@ -16,10 +15,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         public static string GetScenePath() => GDEx.GetScenePath();
 
-        protected override async void OnTimeOut()
+        protected override void OnTimeOut()
         {
             base.OnTimeOut();
-            await CloseSubMenuAsync(nameof(MainSubMenu));
+            RaiseRequestedClose(cascadeTo: nameof(MainSubMenu));
         }
     }
 }

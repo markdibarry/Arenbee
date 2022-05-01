@@ -4,9 +4,9 @@ namespace Arenbee.Framework.Input
     {
         protected ActorInputHandler()
         {
-            Jump = new InputAction();
-            Attack = new InputAction();
-            Run = new InputAction();
+            Jump = new InputAction(this);
+            Attack = new InputAction(this);
+            Run = new InputAction(this);
         }
 
         public InputAction Jump { get; protected set; }
@@ -19,14 +19,6 @@ namespace Arenbee.Framework.Input
             Jump.ClearOneTimeActions();
             Attack.ClearOneTimeActions();
             Run.ClearOneTimeActions();
-        }
-
-        protected override void DisableUserInput(bool disable)
-        {
-            base.DisableUserInput(disable);
-            Jump.UserInputDisabled = disable;
-            Attack.UserInputDisabled = disable;
-            Run.UserInputDisabled = disable;
         }
     }
 }

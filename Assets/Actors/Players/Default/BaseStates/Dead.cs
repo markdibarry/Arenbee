@@ -3,7 +3,7 @@ using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Players.BaseStates
 {
-    public class Dead : State<Actor>
+    public class Dead : ActorState
     {
         public Dead() { AnimationName = "Dead"; }
         public override void Enter()
@@ -16,13 +16,16 @@ namespace Arenbee.Assets.Actors.Players.BaseStates
             PlayAnimation(AnimationName, true);
         }
 
-        public override void Update(float delta)
+        public override ActorState Update(float delta)
         {
-            CheckForTransitions();
+            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override void CheckForTransitions() { }
+        public override ActorState CheckForTransitions()
+        {
+            return null;
+        }
     }
 }

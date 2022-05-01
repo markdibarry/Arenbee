@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Framework/Scenery/Breakable/Breakable.cs" id="1_qjguc"]
 
 [sub_resource type="RectangleShape2D" id="2"]
+resource_local_to_scene = true
 size = Vector2(12, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_07hay"]
