@@ -1,6 +1,7 @@
 using System;
 using Arenbee.Assets.Input;
 using Arenbee.Assets.Items;
+using Arenbee.Framework.Audio;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.GUI;
@@ -25,6 +26,7 @@ namespace Arenbee.Framework.Game
         private GUIInputHandler _menuInput;
         public static GameRoot Instance => s_instance;
         public ColorAdjustment ColorAdjustment { get; set; }
+        public AudioController AudioController { get; private set; }
         public DialogController DialogController { get; private set; }
         public GameCamera GameCamera { get; private set; }
         public Node2D GameDisplay { get; set; }
@@ -51,7 +53,8 @@ namespace Arenbee.Framework.Game
             _menuInput = GetNodeOrNull<MenuInputHandler>("InputHandlers/MenuInputHandler");
             PlayerOneInput = GetNodeOrNull<Player1InputHandler>("InputHandlers/PlayerOneInputHandler");
             GameDisplay = GetNodeOrNull<Node2D>("GameDisplay");
-            DialogController = GameDisplay.GetNode<DialogController>("DialogController");
+            AudioController = GameDisplay.GetNodeOrNull<AudioController>("AudioController");
+            DialogController = GameDisplay.GetNodeOrNull<DialogController>("DialogController");
             GameSessionContainer = GameDisplay.GetNodeOrNull<Node2D>("GameSessionContainer");
             MenuController = GameDisplay.GetNodeOrNull<MenuController>("MenuController");
             Transition = GameDisplay.GetNodeOrNull<CanvasLayer>("Transition");
@@ -61,6 +64,7 @@ namespace Arenbee.Framework.Game
 
         private void Init()
         {
+            Locator.ProvideAudioController(AudioController);
             Locator.ProvideItemDB(new ItemDB());
             Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
@@ -87,6 +91,7 @@ namespace Arenbee.Framework.Game
         {
             if (IsInstanceValid(GameSession))
             {
+                UnsubscribeSessionEvents(GameSession);
                 GameSession.QueueFree();
                 GameSession = null;
             }
@@ -97,7 +102,18 @@ namespace Arenbee.Framework.Game
             var newSession = GDEx.Instantiate<GameSession>(GameSession.GetScenePath());
             Locator.ProvideGameSession(newSession);
             GameSessionContainer.AddChild(newSession);
+            SubscribeSessionEvents(newSession);
             newSession.Init(gameSave);
+        }
+
+        public void SubscribeSessionEvents(GameSession session)
+        {
+            session.PauseChanged += AudioController.OnPauseChanged;
+        }
+
+        public void UnsubscribeSessionEvents(GameSession session)
+        {
+            session.PauseChanged -= AudioController.OnPauseChanged;
         }
     }
 }

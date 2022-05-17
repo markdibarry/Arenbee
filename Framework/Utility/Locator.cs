@@ -1,7 +1,9 @@
+using Arenbee.Framework.Audio;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
+using Godot;
 
 namespace Arenbee.Framework.Utility
 {
@@ -16,15 +18,23 @@ namespace Arenbee.Framework.Utility
         }
 
         private static GameSession s_gameSession;
+        private static AudioControllerNull s_audioController;
         private static IItemDB s_itemDB;
         private static GUIInputHandler s_menuInput;
         private static IStatusEffectDB s_statusEffectDB;
 
         public static void ProvideGameSession(GameSession gameSession)
         {
-            if (Godot.Object.IsInstanceValid(s_gameSession))
+            if (Object.IsInstanceValid(s_gameSession))
                 s_gameSession.Free();
             s_gameSession = gameSession;
+        }
+
+        public static void ProvideAudioController(AudioControllerNull audioController)
+        {
+            if (Object.IsInstanceValid(s_audioController))
+                s_audioController.Free();
+            s_audioController = audioController;
         }
 
         public static void ProvideItemDB(IItemDB itemDB)
@@ -34,7 +44,7 @@ namespace Arenbee.Framework.Utility
 
         public static void ProvideMenuInput(GUIInputHandler menuInput)
         {
-            if (Godot.Object.IsInstanceValid(s_menuInput))
+            if (Object.IsInstanceValid(s_menuInput))
                 s_menuInput.Free();
             s_menuInput = menuInput ?? new MenuInputHandlerNull();
         }
@@ -47,6 +57,11 @@ namespace Arenbee.Framework.Utility
         public static GameSession GetGameSession()
         {
             return s_gameSession;
+        }
+
+        public static AudioControllerNull GetAudio()
+        {
+            return s_audioController;
         }
 
         public static PlayerParty GetParty()

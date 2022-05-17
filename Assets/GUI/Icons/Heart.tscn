@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cd53eolb8ut6"]
 
-[ext_resource type="Texture2D" uid="uid://d26quaeidl65d" path="res://Assets/GUI/Icons/Heart.png" id="1_343ba"]
+[ext_resource type="Texture2D" uid="uid://lc4bpjq7024u" path="res://Assets/GUI/Icons/Heart.png" id="1_343ba"]
 [ext_resource type="PackedScene" uid="uid://dc2o0ar6blunv" path="res://Framework/GUI/Containers/Sprite2DContainer.tscn" id="1_ax7c5"]
 
 [node name="Heart" instance=ExtResource( "1_ax7c5" )]

@@ -33,28 +33,6 @@ namespace Arenbee.Framework.Statistics
         public delegate void ModChangedHandler(ModChangeData modChangeData);
         public event ModChangedHandler ModChanged;
 
-        public void ApplyStats(List<TempModifier> tempMods)
-        {
-            if (tempMods == null) return;
-            foreach (var tempMod in tempMods)
-                AddTempMod(tempMod);
-        }
-
-        protected override StatusEffect GetNewStat(int type)
-        {
-            return new StatusEffect(_stats, type);
-        }
-
-        public StatusEffect GetStat(StatusEffectType type)
-        {
-            return GetStat((int)type);
-        }
-
-        public void OnModExpired(TempModifier tempModifier)
-        {
-            RemoveTempMod(tempModifier);
-        }
-
         public void AddStatusMods(List<Modifier> mods)
         {
             foreach (var mod in mods)
@@ -88,9 +66,21 @@ namespace Arenbee.Framework.Statistics
             stat.UpdateEffect();
         }
 
-        public void RaiseModChanged(ModChangeData data)
+        public void ApplyStats(List<TempModifier> tempMods)
         {
-            ModChanged?.Invoke(data);
+            if (tempMods == null) return;
+            foreach (var tempMod in tempMods)
+                AddTempMod(tempMod);
+        }
+
+        public StatusEffect GetStat(StatusEffectType type)
+        {
+            return GetStat((int)type);
+        }
+
+        public bool HasEffect(StatusEffectType type)
+        {
+            return GetStat(type)?.IsEffectActive == true;
         }
 
         public override void RemoveMod(Modifier mod)
@@ -128,6 +118,21 @@ namespace Arenbee.Framework.Statistics
         public void UpdateEffect(StatusEffectType statusEffectType)
         {
             GetStat(statusEffectType)?.UpdateEffect();
+        }
+
+        protected override StatusEffect GetNewStat(int type)
+        {
+            return new StatusEffect(_stats, type);
+        }
+
+        private void OnModExpired(TempModifier tempModifier)
+        {
+            RemoveTempMod(tempModifier);
+        }
+
+        private void RaiseModChanged(ModChangeData data)
+        {
+            ModChanged?.Invoke(data);
         }
     }
 

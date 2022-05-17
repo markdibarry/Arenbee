@@ -1,9 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://d1sljxf2dgi1v"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" uid="uid://cc5gui1c235ye" path="res://Assets/Items/HockeyStick/HockeyStick.tscn" id="1_bqbp3"]
+[ext_resource type="PackedScene" path="res://Assets/Items/HockeyStick/HockeyStick.tscn" id="1_bqbp3"]
 [ext_resource type="Script" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStick.cs" id="2_lcd6o"]
 [ext_resource type="Shader" path="res://Framework/Shaders/Weapon.gdshader" id="3_g161r"]
-[ext_resource type="Texture2D" uid="uid://bf04hvdc1ca87" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStickPalette.png" id="4_5qvd7"]
+[ext_resource type="Texture2D" uid="uid://dkwuy3ow2ys70" path="res://Assets/Items/MetalHockeyStick/MetalHockeyStickPalette.png" id="4_5qvd7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d32fs"]
 resource_local_to_scene = true

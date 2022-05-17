@@ -31,10 +31,11 @@ namespace Arenbee.Framework.Extensions
 
         public static Vector2 GetFrameSize(this Sprite2D sprite2D)
         {
-            Texture2D texture2D = sprite2D.Texture;
-            if (texture2D == null) return new Vector2();
+            if (sprite2D.Texture == null)
+                return new Vector2();
             Vector2 textureSize = sprite2D.Texture.GetSize();
-            if (textureSize == default) return new Vector2();
+            if (textureSize == default)
+                return textureSize;
             return new Vector2(textureSize.x / sprite2D.Hframes, textureSize.y / sprite2D.Vframes);
         }
 
@@ -156,7 +157,7 @@ namespace Arenbee.Framework.Extensions
 
         public static float LerpClamp(this float val, float target, float maxMove)
         {
-            return val > target ? Math.Max(val - maxMove, target) : Math.Min(val + maxMove, target);
+            return val < target ? Math.Min(val + maxMove, target) : Math.Max(val - maxMove, target);
         }
 
         public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)

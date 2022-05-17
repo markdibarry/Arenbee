@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=3 format=3 uid="uid://ls47we5pcnrr"]
 
-[ext_resource type="Texture2D" uid="uid://coqa0e2uckncq" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png" id="1_fvp8l"]
+[ext_resource type="Texture2D" uid="uid://d1yjajwjruirw" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png" id="1_fvp8l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_norm2"]
 texture = ExtResource( "1_fvp8l" )

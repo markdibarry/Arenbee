@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_uqw5y"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Title/TitleMenu.cs" id="2_mnifr"]
-[ext_resource type="Texture2D" uid="uid://k2iy1ku4rye1" path="res://Assets/GUI/Backgrounds/star.png" id="3_nxcs5"]
+[ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Assets/GUI/Backgrounds/star.png" id="3_nxcs5"]
 
 [node name="TitleMenu" instance=ExtResource( "1_uqw5y" )]
-layer = 20
+visible = true
 script = ExtResource( "2_mnifr" )
 
 [node name="TextureRect" type="TextureRect" parent="ContentGroup/Content/Background" index="0"]

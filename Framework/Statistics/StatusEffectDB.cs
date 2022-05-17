@@ -43,18 +43,6 @@ namespace Arenbee.Framework.Statistics
                 AbbrName = "Brn",
                 PastTenseName = "Burned",
                 Description = "Character takes fire damage and runs to put out the flames!",
-                EnterEffect = (stats) =>
-                {
-                    if (stats.StatsOwner is not Actor actor)
-                        return;
-                    actor.IsRunStuck++;
-                },
-                ExitEffect = (stats) =>
-                {
-                    if (stats.StatsOwner is not Actor actor)
-                        return;
-                    actor.IsRunStuck--;
-                },
                 ExpireNotifier = new TimedNotifier(10f, true),
                 TickNotifier = new TimedNotifier(3f, false),
                 TickEffect = (statusEffect) =>
@@ -96,19 +84,7 @@ namespace Arenbee.Framework.Statistics
                 Name = "Poison",
                 AbbrName = "Psn",
                 PastTenseName = "Poisoned",
-                Description = "Feel nauseous and hurt??",
-                EnterEffect = (stats) =>
-                {
-                    if (stats.StatsOwner is not Actor actor)
-                        return;
-                    actor.HalfSpeed++;
-                },
-                ExitEffect = (stats) =>
-                {
-                    if (stats.StatsOwner is not Actor actor)
-                        return;
-                    actor.HalfSpeed--;
-                },
+                Description = "Feel nauseous.",
                 ExpireNotifier = new TimedNotifier(10f, true),
                 TickNotifier = new TimedNotifier(3f),
                 TickEffect = (statusEffect) =>

@@ -44,7 +44,7 @@ namespace Arenbee.Framework.Events
                 && actor.ActorType == ActorType.Player)
             {
                 _actor = actor;
-                _actor.IsAttackDisabled = true;
+                _actor.ContextAreasActive++;
                 _canTrigger = true;
             }
         }
@@ -53,7 +53,7 @@ namespace Arenbee.Framework.Events
         {
             if (body == _actor)
             {
-                _actor.IsAttackDisabled = false;
+                _actor.ContextAreasActive--;
                 _actor = null;
                 _canTrigger = false;
             }

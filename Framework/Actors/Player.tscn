@@ -1,6 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://bj28sv5vq5vnv"]
+[gd_scene load_steps=5 format=3 uid="uid://bj28sv5vq5vnv"]
 
 [ext_resource type="PackedScene" uid="uid://dlw363v3qsmge" path="res://Framework/Actors/Actor.tscn" id="1"]
+[ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="2_nvv46"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qef7"]
+resource_local_to_scene = true
+shader = ExtResource( "2_nvv46" )
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
+shader_param/flash_mix = 0.0
+shader_param/speed = null
+shader_param/cycle_start = null
+shader_param/cycle_end = null
+shader_param/cycle_direction = null
+shader_param/use_palette1 = null
+shader_param/use_palette2 = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5hcfj"]
 resource_local_to_scene = true
@@ -11,17 +24,16 @@ collision_mask = 276
 ActorType = 0
 WalkSpeed = 100
 
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_1qef7" )
+
 [node name="HurtBox" parent="Body/BodySprite" index="0"]
 collision_mask = 160
 
 [node name="HitBox" parent="Body/BodySprite" index="1"]
 collision_layer = 0
 collision_mask = 0
-monitoring = false
 monitorable = false
 
-[node name="Blinker" parent="." index="2"]
-IFrameDuration = 1.0
-
-[node name="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" parent="." index="2"]
 shape = SubResource( "RectangleShape2D_5hcfj" )

@@ -1,20 +1,23 @@
+using Arenbee.Assets.Actors.Default.State;
+using Arenbee.Assets.Actors.Players.Default.State;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Statistics;
-using Godot;
 
 namespace Arenbee.Assets.Actors.Players
 {
     public partial class Ady : Actor
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+
         public override void Init()
         {
-            base.Init();
-            StateController.Init(
-                new BaseStates.Idle(),
-                new JumpStates.Grounded(),
-                new ActionStates.NotAttacking());
+            StateController.Init<Standing, Grounded, Normal>();
+        }
+
+        public override void InitActionState()
+        {
+            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
         }
 
         protected override void ApplyDefaultStats()

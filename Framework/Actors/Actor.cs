@@ -1,20 +1,20 @@
-﻿using Arenbee.Framework.Statistics;
+﻿using Arenbee.Assets.Input;
 using Arenbee.Framework.Items;
+using Arenbee.Framework.Statistics;
 using Godot;
-using Arenbee.Assets.Input;
 
 namespace Arenbee.Framework.Actors
 {
     /// <summary>
     /// Base character object.
     /// </summary>
-    public partial class Actor : CharacterBody2D, IDamageable
+    public abstract partial class Actor : CharacterBody2D, IDamageable
     {
         protected Actor()
         {
             UpDirection = Vector2.Up;
-            Acceleration = 1000f;
-            Friction = 1000f;
+            Acceleration = 600f;
+            Friction = 600f;
             WalkSpeed = 100;
             _jumpHeight = 64;
             _timeToJumpPeak = 0.4f;
@@ -24,12 +24,13 @@ namespace Arenbee.Framework.Actors
             ApplyDefaultStats();
             Inventory = new Inventory();
             Equipment = new Equipment(this);
+            StateController = new StateController(this);
+            IFrameController = new IFrameController(this);
         }
 
         private Node2D _body;
         private Equipment _equipment;
         private HurtBox _hurtBox;
-        private bool _isReady;
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
         public Inventory Inventory { get; set; }
@@ -63,8 +64,11 @@ namespace Arenbee.Framework.Actors
         public override void _Ready()
         {
             SetNodeReferences();
+            _floatPosition = GlobalPosition;
+            InitMovement();
+            InitState();
             Init();
-            _isReady = true;
+            WeaponSlot.Init(this);
         }
 
         private void SetNodeReferences()
@@ -78,16 +82,9 @@ namespace Arenbee.Framework.Actors
             AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             DummyInputHandler = GetNode<DummyInputHandler>("DummyInputHandler");
             _inputHandler ??= DummyInputHandler;
-            _blinker = GetNode<Blinker>("Blinker");
         }
 
-        public virtual void Init()
-        {
-            _floatPosition = GlobalPosition;
-            InitMovement();
-            InitState();
-            WeaponSlot.Init(this);
-        }
+        public virtual void Init() { }
 
         public override void _PhysicsProcess(float delta)
         {
@@ -95,16 +92,12 @@ namespace Arenbee.Framework.Actors
             _move = Vector2.Zero;
             Stats.Process(delta);
             StateController.UpdateStates(delta);
+            IFrameController.Process(delta);
             HandleMove(delta);
             MoveAndSlide();
             _floatPosition = GlobalPosition;
             GlobalPosition = GlobalPosition.Round();
             HandleInput(delta);
-        }
-
-        public override void _ExitTree()
-        {
-            ActorRemoved?.Invoke(this);
         }
 
         private void HandleInput(float delta)

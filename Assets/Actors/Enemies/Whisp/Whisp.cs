@@ -1,7 +1,8 @@
-using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseAir;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Extensions;
+using Arenbee.Assets.Actors.Enemies.Default.Behavior.PatrolChaseAir;
+using Arenbee.Assets.Actors.Enemies.Default.State;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
@@ -10,20 +11,19 @@ namespace Arenbee.Assets.Actors.Enemies
         public Whisp()
         {
             IsFloater = true;
-            Friction = 50f;
-            Acceleration = 1000f;
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
 
         public override void Init()
         {
-            base.Init();
-            StateController.Init(
-                new Idle(),
-                new JumpStates.Float(),
-                new ActionStates.NotAttacking());
+            StateController.Init<Idle, Floating, Normal>();
             BehaviorTree = new PatrolChaseAirBT(this);
+        }
+
+        public override void InitActionState()
+        {
+            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
         }
 
         protected override void ApplyDefaultStats()

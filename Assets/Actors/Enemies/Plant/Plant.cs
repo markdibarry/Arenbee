@@ -1,6 +1,7 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Extensions;
+using Arenbee.Assets.Actors.Enemies.Default.State;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
@@ -10,10 +11,12 @@ namespace Arenbee.Assets.Actors.Enemies
         public override void Init()
         {
             base.Init();
-            StateController.Init(
-                new Idle(),
-                new JumpStates.Grounded(),
-                new ActionStates.NotAttacking());
+            StateController.Init<Idle, Grounded, Normal>();
+        }
+
+        public override void InitActionState()
+        {
+            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
         }
 
         protected override void ApplyDefaultStats()

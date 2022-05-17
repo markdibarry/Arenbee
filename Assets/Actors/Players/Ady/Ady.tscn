@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://Assets/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
 [ext_resource type="AnimationLibrary" uid="uid://0t0ca6phh7jd" path="res://Assets/Actors/Players/Ady/Animation/AdyLibrary.res" id="3_1pauw"]
 [ext_resource type="AnimationLibrary" uid="uid://bsb3k1lmvuc0m" path="res://Assets/Actors/Players/Ady/Animation/LongStick/LongStickLibrary.res" id="4_cmo6m"]
-[ext_resource type="Texture2D" uid="uid://vnmqhrjhbtq8" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="7_28ga8"]
+[ext_resource type="Texture2D" uid="uid://2scw3nw6a42u" path="res://Assets/Actors/Players/Ady/Animation/Ady.png" id="7_28ga8"]
 [ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="12_3qfsg"]
-[ext_resource type="Texture2D" uid="uid://dhvumgci5ai1q" path="res://Assets/Actors/Players/Ady/Animation/AdyPalette.png" id="13_txydx"]
+[ext_resource type="Texture2D" uid="uid://bculi1gmgh7pl" path="res://Assets/Actors/Players/Ady/Animation/AdyPalette.png" id="13_txydx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
 resource_local_to_scene = true
@@ -53,7 +53,7 @@ visible = false
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_niveh" )
 
-[node name="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" parent="." index="2"]
 visible = false
 position = Vector2(0, 3)
 shape = SubResource( "RectangleShape2D_53s3l" )

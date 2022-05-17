@@ -108,6 +108,8 @@ namespace Arenbee.Framework.Statistics
 
         public int GetMaxMP() => Attributes.GetStat((int)AttributeType.MaxMP).ModifiedValue;
 
+        public bool HasEffect(StatusEffectType type) => StatusEffects.HasEffect(type);
+
         public bool HasFullHP() => GetHP() >= GetMaxHP();
 
         public bool IsKO() => GetHP() <= 0;

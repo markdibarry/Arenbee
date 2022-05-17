@@ -8,7 +8,7 @@ namespace Arenbee.Framework.Game
 
         public override void _PhysicsProcess(float delta)
         {
-            if (CurrentTarget != null)
+            if (IsInstanceValid(CurrentTarget))
                 GlobalPosition = CurrentTarget.GlobalPosition;
         }
     }

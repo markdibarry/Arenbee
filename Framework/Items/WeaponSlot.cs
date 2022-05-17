@@ -20,21 +20,16 @@ namespace Arenbee.Framework.Items
         public void SetWeapon(Item item)
         {
             if (item != null)
-                SetWeapon(item.Id);
+                AttachWeapon(item.Id);
             else
                 DetachWeapon();
         }
 
-        public void SetWeapon(string itemId)
+        private void AttachWeapon(string itemId)
         {
             DetachWeapon();
             if (string.IsNullOrEmpty(itemId))
                 return;
-            AttachWeapon(itemId);
-        }
-
-        private void AttachWeapon(string itemId)
-        {
             var weapon = GDEx.Instantiate<Weapon>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
             if (weapon == null)
             {
@@ -44,7 +39,8 @@ namespace Arenbee.Framework.Items
             weapon.Init(_holder);
             CurrentWeapon = weapon;
             AddChild(weapon);
-            _holder.StateController.ActionStateMachine.Init(weapon.InitialState);
+            _holder.StateController.ActionStateMachine.ClearCache();
+            weapon.InitActionState();
         }
 
         private void DetachWeapon()
@@ -55,7 +51,8 @@ namespace Arenbee.Framework.Items
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;
-                _holder.StateController.ActionStateMachine.Init(_holder.StateController.UnarmedInitialState);
+                _holder.StateController.ActionStateMachine.ClearCache();
+                _holder.InitActionState();
             }
         }
     }

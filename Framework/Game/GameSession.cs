@@ -1,11 +1,16 @@
+﻿using Arenbee.Assets.GUI;
+using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
+using Arenbee.Framework.GUI;
+using Arenbee.Framework.GUI.Dialog;
 using Arenbee.Framework.Input;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
-using Arenbee.Assets.GUI;
 using Godot;
+using static Arenbee.Framework.Actors.Actor;
 
 namespace Arenbee.Framework.Game
 {
@@ -21,11 +26,20 @@ namespace Arenbee.Framework.Game
         public static string GetScenePath() => GDEx.GetScenePath();
         private readonly GUIInputHandler _menuInput;
         private Node2D _areaSceneContainer;
+        private DialogController _dialogController;
         private HUD _hud;
+        private MenuController _menuController;
         public AreaScene CurrentAreaScene { get; private set; }
         public PlayerParty Party { get; private set; }
         public SessionState SessionState { get; private set; }
         public CanvasLayer Transition { get; private set; }
+        public delegate void AreaSceneHandler(AreaScene newScene);
+        public delegate void PauseChangedHandler(ProcessModeEnum processMode);
+        public event ActorHandler ActorAddedToArea;
+        public event ActorHandler ActorRemovedFromArea;
+        public event AreaSceneHandler AreaSceneAdded;
+        public event AreaSceneHandler AreaSceneRemoved;
+        public event PauseChangedHandler PauseChanged;
 
         public override void _ExitTree()
         {
@@ -52,8 +66,9 @@ namespace Arenbee.Framework.Game
             }
             CurrentAreaScene = areaScene;
             _areaSceneContainer.AddChild(areaScene);
+            SubscribeAreaEvents(areaScene);
+            AreaSceneAdded?.Invoke(areaScene);
             areaScene.AddPlayer(0);
-            _hud.SubscribeAreaSceneEvents(areaScene);
         }
 
         public void Init(GameSave gameSave)
@@ -65,17 +80,19 @@ namespace Arenbee.Framework.Game
 
         public void OpenDialog(string path)
         {
-            GameRoot.Instance.DialogController.StartDialog(path);
+            _dialogController.StartDialog(path);
         }
 
         public void Pause()
         {
+            PauseChanged?.Invoke(ProcessModeEnum.Disabled);
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
             _hud.ProcessMode = ProcessModeEnum.Disabled;
         }
 
         public void Resume()
         {
+            PauseChanged?.Invoke(ProcessModeEnum.Inherit);
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
             _hud.ProcessMode = ProcessModeEnum.Inherit;
         }
@@ -86,6 +103,8 @@ namespace Arenbee.Framework.Game
                 return;
             CurrentAreaScene.RemovePlayer();
             _areaSceneContainer.RemoveChild(CurrentAreaScene);
+            UnsubscribeAreaEvents(CurrentAreaScene);
+            AreaSceneRemoved?.Invoke(CurrentAreaScene);
             CurrentAreaScene.QueueFree();
             CurrentAreaScene = null;
         }
@@ -109,9 +128,42 @@ namespace Arenbee.Framework.Game
             }
         }
 
+        private void OnActorAdded(Actor actor)
+        {
+            _hud.OnActorAdded(actor);
+            ActorAddedToArea?.Invoke(actor);
+        }
+
+        private void OnActorDamaged(Actor actor, DamageData damageData)
+        {
+            _hud.OnActorDamaged(actor, damageData);
+            SessionState.OnActorDamaged(actor, damageData);
+        }
+
+        private void OnActorDefeated(Actor actor)
+        {
+            _hud.OnActorDefeated(actor);
+            SessionState.OnActorDefeated(actor);
+        }
+
+        private void OnActorRemoved(Actor actor)
+        {
+            ActorRemovedFromArea?.Invoke(actor);
+        }
+
+        private void OnPlayerModChanged(Actor actor, ModChangeData modChangeData)
+        {
+            _hud.OnPlayerModChanged(actor, modChangeData);
+        }
+
+        private void OnPlayerStatsChanged(Actor actor)
+        {
+            _hud.OnPlayerStatsChanged(actor);
+        }
+
         private void OpenPartyMenu()
         {
-            GameRoot.Instance.MenuController.OpenPartyMenu();
+            _menuController.OpenPartyMenu();
         }
 
         private void SetNodeReferences()
@@ -119,6 +171,27 @@ namespace Arenbee.Framework.Game
             _hud = GetNode<HUD>("HUD");
             _areaSceneContainer = GetNode<Node2D>("AreaSceneContainer");
             Transition = GetNode<CanvasLayer>("Transition");
+            _dialogController = GameRoot.Instance.DialogController;
+            _menuController = GameRoot.Instance.MenuController;
+        }
+
+        private void SubscribeAreaEvents(AreaScene areaScene)
+        {
+            areaScene.ActorAdded += OnActorAdded;
+            areaScene.ActorRemoved += OnActorRemoved;
+            areaScene.ActorDamaged += OnActorDamaged;
+            areaScene.ActorDefeated += OnActorDefeated;
+            areaScene.PlayerModChanged += OnPlayerModChanged;
+            areaScene.PlayerStatsChanged += OnPlayerStatsChanged;
+        }
+        private void UnsubscribeAreaEvents(AreaScene areaScene)
+        {
+            areaScene.ActorAdded -= OnActorAdded;
+            areaScene.ActorRemoved -= OnActorRemoved;
+            areaScene.ActorDamaged -= OnActorDamaged;
+            areaScene.ActorDefeated -= OnActorDefeated;
+            areaScene.PlayerModChanged -= OnPlayerModChanged;
+            areaScene.PlayerStatsChanged -= OnPlayerStatsChanged;
         }
     }
 }

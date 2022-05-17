@@ -1,8 +1,24 @@
-[gd_scene load_steps=11 format=3 uid="uid://3tu1uhllhg11"]
+[gd_scene load_steps=13 format=3 uid="uid://3tu1uhllhg11"]
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
-[ext_resource type="Texture2D" uid="uid://wq7i1jgih14x" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
+[ext_resource type="Texture2D" uid="uid://bryfxg1olnhug" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
+[ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="3_mqnde"]
+
+[sub_resource type="Animation" id="Animation_cwund"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodySprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1]
+}
 
 [sub_resource type="Animation" id="Animation_8v7pu"]
 resource_name = "Idle"
@@ -22,26 +38,23 @@ tracks/0/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 }
 
-[sub_resource type="Animation" id="Animation_cwund"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body/BodySprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bu72h"]
 _data = {
 "Idle": SubResource( "Animation_8v7pu" ),
 "RESET": SubResource( "Animation_cwund" )
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dyyga"]
+resource_local_to_scene = true
+shader = ExtResource( "3_mqnde" )
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
+shader_param/flash_mix = 0.0
+shader_param/speed = null
+shader_param/cycle_start = null
+shader_param/cycle_end = null
+shader_param/cycle_direction = null
+shader_param/use_palette1 = null
+shader_param/use_palette2 = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
 size = Vector2(16, 18)
@@ -60,7 +73,6 @@ radius = 78.0
 collision_layer = 1024
 collision_mask = 0
 script = ExtResource( "2_smssj" )
-_jumpHeight = 30.0
 
 [node name="AnimationPlayer" parent="." index="0"]
 libraries = {
@@ -68,6 +80,7 @@ libraries = {
 }
 
 [node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_dyyga" )
 scale = Vector2(-1, 1)
 texture = ExtResource( "3_gge5r" )
 hframes = 21
@@ -77,14 +90,11 @@ frame = 1
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_r0tkl" )
 
-[node name="HitBox" parent="Body/BodySprite" index="1"]
-monitoring = false
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBox" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_xujb8" )
 
-[node name="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" parent="." index="2"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_2djvb" )
 

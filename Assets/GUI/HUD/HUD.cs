@@ -1,21 +1,21 @@
 ﻿using System;
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Statistics;
-using Arenbee.Framework.AreaScenes;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
-using Godot;
-using Arenbee.Framework.Enums;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
+using Godot;
 
 namespace Arenbee.Assets.GUI
 {
     public partial class HUD : CanvasLayer
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private MessageBoxList _messageBoxList;
+
         private Label _fpsDisplay;
         private HeartDisplay _heartDisplay;
+        private MessageBoxList _messageBoxList;
         private IStatusEffectDB _statusEffectDB;
 
         public override void _Ready()
@@ -31,52 +31,14 @@ namespace Arenbee.Assets.GUI
             _fpsDisplay.Text = Performance.GetMonitor(Performance.Monitor.TimeFps).ToString();
         }
 
-        public void SubscribeAreaSceneEvents(AreaScene areaScene)
+        public void OnActorAdded(Actor actor)
         {
-            foreach (Actor actor in areaScene.GetAllActors())
-                SubscribeActorEvents(actor);
-            areaScene.ActorAdded += OnActorAddedToAreaScene;
-        }
-
-        private void OnActorAddedToAreaScene(Actor actor)
-        {
-            SubscribeActorEvents(actor);
-        }
-
-        private void SubscribeActorEvents(Actor actor)
-        {
-            actor.DamageRecieved += OnDamageRecieved;
-            actor.ActorDefeated += OnActorDefeated;
-            actor.ActorRemoved += OnActorRemoved;
             if (actor.ActorType == ActorType.Player)
-            {
                 UpdatePlayerStatsDisplay(actor);
-                actor.StatsChanged += OnPlayerStatsChanged;
-                actor.ModChanged += OnPlayerModChanged;
-            }
         }
 
-        private void UnsubscribeActorEvents(Actor actor)
+        public void OnActorDamaged(Actor actor, DamageData data)
         {
-            actor.DamageRecieved -= OnDamageRecieved;
-            actor.ActorDefeated -= OnActorDefeated;
-            actor.ActorRemoved -= OnActorRemoved;
-            if (actor.ActorType == ActorType.Player)
-            {
-                actor.ModChanged -= OnPlayerModChanged;
-                actor.StatsChanged -= OnPlayerStatsChanged;
-            }
-        }
-
-        private void OnPlayerStatsChanged(Actor actor)
-        {
-            if (ProcessMode == ProcessModeEnum.Disabled) return;
-            UpdatePlayerStatsDisplay(actor);
-        }
-
-        private void OnDamageRecieved(DamageData data)
-        {
-            if (ProcessMode == ProcessModeEnum.Disabled) return;
             switch (data.ActionType)
             {
                 case ActionType.Status:
@@ -88,20 +50,14 @@ namespace Arenbee.Assets.GUI
             }
         }
 
-        private void OnActorDefeated(Actor actor)
+        public void OnActorDefeated(Actor actor)
         {
             string defeatedMessage = $"{actor.Name} was defeated!";
             _messageBoxList.AddMessageToTop(defeatedMessage);
         }
 
-        private void OnActorRemoved(Actor actor)
+        public void OnPlayerModChanged(Actor actor, ModChangeData data)
         {
-            UnsubscribeActorEvents(actor);
-        }
-
-        private void OnPlayerModChanged(ModChangeData data)
-        {
-            if (ProcessMode == ProcessModeEnum.Disabled) return;
             if (data.Modifier.StatType == StatType.StatusEffect)
             {
                 string message;
@@ -112,6 +68,11 @@ namespace Arenbee.Assets.GUI
 
                 _messageBoxList.AddMessageToTop(message);
             }
+        }
+
+        public void OnPlayerStatsChanged(Actor actor)
+        {
+            UpdatePlayerStatsDisplay(actor);
         }
 
         private void DisplayMeleeMessage(DamageData data)

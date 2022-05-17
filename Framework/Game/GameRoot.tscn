@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhvd6tksglcdf"]
+[gd_scene load_steps=9 format=3 uid="uid://dhvd6tksglcdf"]
 
 [ext_resource type="Script" path="res://Framework/Game/GameRoot.cs" id="1_6aro1"]
 [ext_resource type="Script" path="res://Assets/Input/MenuInputHandler.cs" id="2_103x3"]
 [ext_resource type="PackedScene" uid="uid://dhwyc83vt5s70" path="res://Framework/GUI/Dialog/DialogController.tscn" id="3_83vvo"]
 [ext_resource type="Script" path="res://Assets/Input/Player1InputHandler.cs" id="3_bax5s"]
 [ext_resource type="Script" path="res://Framework/GUI/Menus/MenuController.cs" id="3_rl0ho"]
+[ext_resource type="Script" path="res://Framework/Audio/AudioController.cs" id="4_j4llg"]
 [ext_resource type="PackedScene" uid="uid://b7btk4atcpbwy" path="res://Framework/Utility/ColorAdjustment.tscn" id="5_bcxdk"]
 [ext_resource type="Script" path="res://Framework/Game/GameCamera.cs" id="7_s1nbx"]
 
@@ -29,6 +30,13 @@ script = ExtResource( "2_103x3" )
 script = ExtResource( "3_bax5s" )
 
 [node name="GameDisplay" type="Node2D" parent="."]
+
+[node name="AudioController" type="Node2D" parent="GameDisplay"]
+script = ExtResource( "4_j4llg" )
+
+[node name="Music" type="Node2D" parent="GameDisplay/AudioController"]
+
+[node name="FX" type="Node2D" parent="GameDisplay/AudioController"]
 
 [node name="GameSessionContainer" type="Node2D" parent="GameDisplay"]
 

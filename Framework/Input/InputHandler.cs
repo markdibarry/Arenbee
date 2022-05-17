@@ -33,10 +33,10 @@ namespace Arenbee.Framework.Input
 
         public void SetLeftAxis(Vector2 newVector)
         {
-            Down.ActionStrength = newVector.y > 0 ? newVector.y : 0;
-            Up.ActionStrength = newVector.y < 0 ? -newVector.y : 0;
-            Right.ActionStrength = newVector.x > 0 ? newVector.x : 0;
-            Left.ActionStrength = newVector.x < 0 ? -newVector.x : 0;
+            Down.ActionStrength = Mathf.Max(newVector.y, 0);
+            Up.ActionStrength = Mathf.Min(newVector.y, 0) * -1;
+            Right.ActionStrength = Mathf.Max(newVector.x, 0);
+            Left.ActionStrength = Mathf.Min(newVector.x, 0) * -1;
         }
 
         public virtual void Update()

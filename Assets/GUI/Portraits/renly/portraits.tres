@@ -1,6 +1,6 @@
 [gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://bxpyk7hmn0i7x"]
 
-[ext_resource type="Texture2D" uid="uid://cw7gnuvenmryq" path="res://Assets/GUI/Portraits/renly/renly_neutral.png" id="1_35cwe"]
+[ext_resource type="Texture2D" uid="uid://m2j5jvfm4obx" path="res://Assets/GUI/Portraits/renly/renly_neutral.png" id="1_35cwe"]
 
 [resource]
 animations = [{

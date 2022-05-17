@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://bbsqi3lsm2pby"]
 
-[ext_resource type="Texture2D" path="res://Assets/Actors/Enemies/Default/Animation/default_destroy.png" id="1_6jtp1"]
+[ext_resource type="Texture2D" uid="uid://c0y2ff4tqir5o" path="res://Assets/Actors/Enemies/Default/Animation/default_destroy.png" id="1_6jtp1"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Default/Animation/EnemyDeathEffect.cs" id="2_huydp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o58t6"]

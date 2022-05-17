@@ -1,4 +1,4 @@
-using Arenbee.Framework.Enums;
+using System;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Items;
@@ -11,137 +11,25 @@ namespace Arenbee.Framework.Actors
         public StateController(Actor actor)
         {
             _actor = actor;
-            BaseStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Base);
-            JumpStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Jump);
-            ActionStateMachine = new ActorStateMachine(_actor, this, StateMachineType.Action);
-            CreateStateDisplay();
+            MoveStateMachine = new ActorStateMachine(_actor, this);
+            JumpStateMachine = new ActorStateMachine(_actor, this);
+            ActionStateMachine = new ActorStateMachine(_actor, this);
+            HealthStateMachine = new ActorStateMachine(_actor, this);
         }
 
-        public ActorStateMachine JumpStateMachine { get; }
-        public ActorStateMachine BaseStateMachine { get; }
-        public ActorStateMachine ActionStateMachine { get; }
-        public ActorState UnarmedInitialState { get; private set; }
-        public bool AnimationOverride { get; set; }
         private readonly Actor _actor;
-        public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
-        public Weapon CurrentWeapon => _actor.WeaponSlot.CurrentWeapon;
-        public AnimationPlayer WeaponAnimationPlayer => CurrentWeapon?.AnimationPlayer;
         private Label _jumpStateDisplay;
         private Label _moveStateDisplay;
         private Label _actionStateDisplay;
+        public ActorStateMachine JumpStateMachine { get; }
+        public ActorStateMachine MoveStateMachine { get; }
+        public ActorStateMachine ActionStateMachine { get; }
+        public ActorStateMachine HealthStateMachine { get; }
+        public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
+        public Weapon CurrentWeapon => _actor.WeaponSlot.CurrentWeapon;
+        public AnimationPlayer WeaponAnimationPlayer => CurrentWeapon?.AnimationPlayer;
 
-        public void Init(ActorState baseState, ActorState jumpState, ActorState actionState)
-        {
-            BaseStateMachine.Init(baseState);
-            JumpStateMachine.Init(jumpState);
-            UnarmedInitialState = actionState;
-            if (CurrentWeapon == null)
-                ActionStateMachine.Init(actionState);
-        }
-
-        public void ResetMachines()
-        {
-            BaseStateMachine.TransitionTo(BaseStateMachine.InitialState);
-            JumpStateMachine.TransitionTo(JumpStateMachine.InitialState);
-            ActionStateMachine.TransitionTo(ActionStateMachine.InitialState);
-        }
-
-        public bool PlayAnimation(ActorStateMachine stateMachine, ActorState state, string animationName, bool force = false)
-        {
-            if (force)
-            {
-                if (!PlayIfAvailable(animationName))
-                    return false;
-
-                AnimationOverride = true;
-                return true;
-            }
-
-            if (AnimationOverride)
-                return false;
-
-            return stateMachine.StateMachineType switch
-            {
-                StateMachineType.Action => PlayActionAnimation(animationName),
-                StateMachineType.Jump => PlayJumpAnimation(animationName),
-                StateMachineType.Base => PlayBaseAnimation(animationName),
-                _ => false,
-            };
-        }
-
-        public bool PlayActionAnimation(string animationName)
-        {
-            if (CurrentWeapon == null)
-                return PlayIfAvailable(animationName);
-
-            ActorAnimationPlayer.Stop();
-            CurrentWeapon.AnimationPlayer.Stop();
-            string playerAnimPath = $"{CurrentWeapon.WeaponTypeName}/{animationName}";
-            if (!ActorAnimationPlayer.HasAnimation(playerAnimPath)
-                || !CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
-            {
-                return false;
-            }
-
-            CurrentWeapon.AnimationPlayer.Play(animationName);
-            return PlayIfAvailable(playerAnimPath);
-        }
-
-        public bool PlayJumpAnimation(string animationName)
-        {
-            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
-                return false;
-            return PlayIfAvailable(animationName);
-        }
-
-        public bool PlayBaseAnimation(string animationName)
-        {
-            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName)
-                || !string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
-            {
-                return false;
-            }
-            return PlayIfAvailable(animationName);
-        }
-
-        // public void PlaySubWeaponAttack(string animationName)
-        // {
-        // }
-
-        public bool PlayIfAvailable(string animationName)
-        {
-            if (!ActorAnimationPlayer.HasAnimation(animationName))
-                return false;
-            ActorAnimationPlayer.Play(animationName);
-            return true;
-        }
-
-        public bool PlayFallbackAnimation()
-        {
-            string animation = null;
-            if (!string.IsNullOrEmpty(ActionStateMachine.State.AnimationName))
-                animation = ActionStateMachine.State.AnimationName;
-            else if (!string.IsNullOrEmpty(JumpStateMachine.State.AnimationName))
-                animation = JumpStateMachine.State.AnimationName;
-            else if (!string.IsNullOrEmpty(BaseStateMachine.State.AnimationName))
-                animation = BaseStateMachine.State.AnimationName;
-
-            if (animation != null)
-                return PlayIfAvailable(animation);
-            return false;
-        }
-
-        public void UpdateStates(float delta)
-        {
-            BaseStateMachine.Update(delta);
-            JumpStateMachine.Update(delta);
-            ActionStateMachine.Update(delta);
-            _moveStateDisplay.Text = BaseStateMachine.State.GetType().Name;
-            _jumpStateDisplay.Text = JumpStateMachine.State.GetType().Name;
-            _actionStateDisplay.Text = ActionStateMachine.State.GetType().Name;
-        }
-
-        private void CreateStateDisplay()
+        public void CreateStateDisplay()
         {
             //Debug Only
             var stateDisplay = GDEx.Instantiate<Control>(StateDisplay.GetScenePath());
@@ -155,5 +43,124 @@ namespace Arenbee.Framework.Actors
             Vector2 frameSize = _actor.BodySprite.GetFrameSize();
             stateDisplay.Position = new Vector2(_actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + _actor.BodySprite.Position.y);
         }
+
+        public void Init<TMoveState, TJumpState, THealthState>()
+            where TMoveState : MoveState, new()
+            where TJumpState : JumpState, new()
+            where THealthState : HealthState, new()
+        {
+            HealthStateMachine.TransitionTo<THealthState>();
+            MoveStateMachine.TransitionTo<TMoveState>();
+            JumpStateMachine.TransitionTo<TJumpState>();
+            if (CurrentWeapon == null)
+                _actor.InitActionState();
+        }
+
+        public bool IsBlocked(ActorStateType stateType)
+        {
+            if (Array.IndexOf(HealthStateMachine.State.BlockedStates, stateType) != -1)
+                return true;
+            if (Array.IndexOf(MoveStateMachine.State.BlockedStates, stateType) != -1)
+                return true;
+            else if (Array.IndexOf(ActionStateMachine.State.BlockedStates, stateType) != -1)
+                return true;
+            else if (Array.IndexOf(JumpStateMachine.State.BlockedStates, stateType) != -1)
+                return true;
+            return false;
+        }
+
+        public bool PlayHealthAnimation(string animationName)
+        {
+            if (!ActorAnimationPlayer.HasAnimation(animationName))
+                return false;
+            if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
+                CurrentWeapon.AnimationPlayer.Play("RESET");
+            ActorAnimationPlayer.Play(animationName);
+            return true;
+        }
+
+        public bool PlayActionAnimation(string animationName)
+        {
+            if (HealthStateMachine.State.AnimationName != null)
+                return false;
+            string playerAnimPath = animationName;
+            if (CurrentWeapon == null)
+            {
+                if (!ActorAnimationPlayer.HasAnimation(playerAnimPath))
+                    return false;
+            }
+            else
+            {
+                playerAnimPath = $"{CurrentWeapon.WeaponTypeName}/{animationName}";
+                if (!ActorAnimationPlayer.HasAnimation(playerAnimPath)
+                    || !CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
+                    return false;
+            }
+            CurrentWeapon.AnimationPlayer.Play(animationName);
+            ActorAnimationPlayer.Play(playerAnimPath);
+            return true;
+        }
+
+        public bool PlayJumpAnimation(string animationName)
+        {
+            if (HealthStateMachine.State.AnimationName != null
+                || ActionStateMachine.State.AnimationName != null)
+                return false;
+            if (!ActorAnimationPlayer.HasAnimation(animationName))
+                return false;
+            if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
+                CurrentWeapon.AnimationPlayer.Play("RESET");
+            ActorAnimationPlayer.Play(animationName);
+            return true;
+        }
+
+        public bool PlayMoveAnimation(string animationName)
+        {
+            if (HealthStateMachine.State.AnimationName != null
+                || ActionStateMachine.State.AnimationName != null
+                || JumpStateMachine.State.AnimationName != null)
+                return false;
+            if (!ActorAnimationPlayer.HasAnimation(animationName))
+                return false;
+            if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
+                CurrentWeapon.AnimationPlayer.Play("RESET");
+            ActorAnimationPlayer.Play(animationName);
+            return true;
+        }
+
+        // public void PlaySubWeaponAttack(string animationName)
+        // {
+        // }
+
+        public bool PlayFallbackAnimation()
+        {
+            if (HealthStateMachine.State.AnimationName != null)
+                return PlayHealthAnimation(HealthStateMachine.State.AnimationName);
+            if (ActionStateMachine.State.AnimationName != null)
+                return PlayActionAnimation(ActionStateMachine.State.AnimationName);
+            else if (JumpStateMachine.State.AnimationName != null)
+                return PlayJumpAnimation(JumpStateMachine.State.AnimationName);
+            else if (MoveStateMachine.State.AnimationName != null)
+                return PlayMoveAnimation(MoveStateMachine.State.AnimationName);
+            return false;
+        }
+
+        public void UpdateStates(float delta)
+        {
+            MoveStateMachine.Update(delta);
+            JumpStateMachine.Update(delta);
+            ActionStateMachine.Update(delta);
+            HealthStateMachine.Update(delta);
+            _moveStateDisplay.Text = MoveStateMachine.State.GetType().Name;
+            _jumpStateDisplay.Text = JumpStateMachine.State.GetType().Name;
+            _actionStateDisplay.Text = ActionStateMachine.State.GetType().Name;
+        }
+    }
+
+    public enum StateMachineType
+    {
+        Move,
+        Jump,
+        Action
     }
 }

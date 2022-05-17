@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_h1eqx"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/PartyMenu.cs" id="2_uav68"]
 [ext_resource type="Shader" path="res://Framework/Shaders/Scroll.gdshader" id="3_c8k6s"]
-[ext_resource type="Texture2D" uid="uid://k2iy1ku4rye1" path="res://Assets/GUI/Backgrounds/star.png" id="4_7v3px"]
+[ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Assets/GUI/Backgrounds/star.png" id="4_7v3px"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1f80b"]
 shader = ExtResource( "3_c8k6s" )
@@ -11,7 +11,7 @@ shader_param/scroll_speed = 0.3
 shader_param/tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
 
 [node name="PartyMenu" instance=ExtResource( "1_h1eqx" )]
-layer = 20
+visible = true
 script = ExtResource( "2_uav68" )
 
 [node name="TextureRect" type="TextureRect" parent="ContentGroup/Content/Background" index="0"]

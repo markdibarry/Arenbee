@@ -13,4 +13,3 @@ export_presets.cfg
 data_*/
 .vs/
 .vscode/
-*.import

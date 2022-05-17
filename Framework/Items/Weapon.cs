@@ -14,7 +14,6 @@ namespace Arenbee.Framework.Items
         private readonly IItemDB _itemDB;
         private Item _item;
         public AnimationPlayer AnimationPlayer { get; set; }
-        public ActorState InitialState { get; set; }
         public Item Item
         {
             get
@@ -35,9 +34,9 @@ namespace Arenbee.Framework.Items
 
         public override void _Ready()
         {
-            base._Ready();
             SetNodeReferences();
             SetHitBoxes();
+            InitActionState();
         }
 
         public void Init(Actor holder)
@@ -45,7 +44,19 @@ namespace Arenbee.Framework.Items
             Holder = holder;
         }
 
+        public abstract void InitActionState();
+
         public virtual void DisableHitBoxes(int hitboxNum) { }
+
+        public void PlaySoundFX(string soundPath)
+        {
+            Holder.PlaySoundFX(soundPath);
+        }
+
+        public void PlaySoundFX(AudioStream sound)
+        {
+            Holder.PlaySoundFX(sound);
+        }
 
         protected virtual void SetHitBoxes() { }
 

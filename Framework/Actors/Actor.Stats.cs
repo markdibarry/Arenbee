@@ -27,17 +27,16 @@ namespace Arenbee.Framework.Actors
                 }
             }
         }
-        public delegate void ModChangedHandler(ModChangeData modChangeData);
-        public delegate void StatsChangedHandler(Actor actor);
+        public delegate void ModChangedHandler(Actor actor, ModChangeData modChangeData);
         public event ModChangedHandler ModChanged;
-        public event StatsChangedHandler StatsChanged;
+        public event ActorHandler StatsChanged;
 
         protected virtual void ApplyDefaultStats() { }
 
         private void OnModChanged(ModChangeData modChangeData)
         {
             modChangeData.Actor = this;
-            ModChanged?.Invoke(modChangeData);
+            ModChanged?.Invoke(this, modChangeData);
         }
 
         private void OnStatsChanged()

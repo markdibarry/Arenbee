@@ -10,6 +10,7 @@ namespace Arenbee.Framework.Actors
         private Vector2 _floatPosition;
         private ActorInputHandler _inputHandler;
         private Vector2 _move;
+        private readonly float _fallMultiplier = 2f;
         [Export]
         private readonly float _jumpHeight;
         [Export]
@@ -31,7 +32,7 @@ namespace Arenbee.Framework.Actors
             get { return Velocity.y; }
             set { Velocity = new Vector2(Velocity.x, value); }
         }
-        public int HalfSpeed { get; set; }
+        public int IsHalfSpeed { get; set; }
         public bool IsFloater { get; protected set; }
         public int IsRunStuck { get; set; }
         public float JumpVelocity { get; protected set; }
@@ -46,10 +47,25 @@ namespace Arenbee.Framework.Actors
         public DummyInputHandler DummyInputHandler { get; private set; }
         protected BehaviorTree BehaviorTree { get; set; }
 
+        public void ApplyFallGravity(float delta)
+        {
+            VelocityY = Velocity.y.LerpClamp(JumpGravity * _fallMultiplier, JumpGravity * delta);
+        }
+
+        public void ApplyJumpGravity(float delta)
+        {
+            VelocityY = Velocity.y + (JumpGravity * delta);
+        }
+
         public void ChangeDirectionX()
         {
             Direction = Direction.SetX(Direction.x * -1);
             _body.FlipScaleX();
+        }
+
+        public bool IsMovingDown()
+        {
+            return Velocity.Dot(UpDirection) < 0;
         }
 
         public void Jump()
@@ -74,31 +90,21 @@ namespace Arenbee.Framework.Actors
                 Direction = Direction.SetY(velocity.y);
         }
 
-        public bool ShouldWalk()
-        {
-            return !IsWalkDisabled && InputHandler.GetLeftAxis().x != 0;
-        }
-
-        public bool ShouldRun()
-        {
-            return ShouldWalk()
-                && !IsRunDisabled
-                && InputHandler.Run.IsActionPressed;
-        }
-
         private void HandleMove(float delta)
         {
-            var maxSpeed = HalfSpeed > 0 ? (int)(MaxSpeed * 0.5) : MaxSpeed;
+            var maxSpeed = IsHalfSpeed > 0 ? (int)(MaxSpeed * 0.5) : MaxSpeed;
             var newVelocity = Velocity;
             if (_move != Vector2.Zero)
             {
-                newVelocity.x = Velocity.x.LerpClamp(_move.x * maxSpeed, Acceleration * delta);
-                if (IsFloater) newVelocity.y = Velocity.y.LerpClamp(_move.y * maxSpeed, Acceleration * delta);
+                newVelocity.x = Mathf.MoveToward(VelocityX, _move.x * maxSpeed, Acceleration * delta);
+                if (IsFloater)
+                    newVelocity.y = Mathf.MoveToward(VelocityY, _move.y * maxSpeed, Acceleration * delta);
             }
             else
             {
-                newVelocity.x = Velocity.x.LerpClamp(0, Friction * delta);
-                if (IsFloater) newVelocity.y = Velocity.y.LerpClamp(0, Friction * delta);
+                newVelocity.x = Mathf.MoveToward(VelocityX, 0, Friction * delta);
+                if (IsFloater)
+                    newVelocity.y = Mathf.MoveToward(VelocityY, 0, Friction * delta);
             }
             Velocity = newVelocity;
         }

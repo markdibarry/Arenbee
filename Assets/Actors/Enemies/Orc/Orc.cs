@@ -1,21 +1,24 @@
-﻿using Arenbee.Assets.Actors.Enemies.Behavior.PatrolChaseGround;
-using Arenbee.Framework.Actors;
+﻿using Arenbee.Framework.Actors;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Extensions;
+using Arenbee.Assets.Actors.Enemies.Default.State;
+using Arenbee.Assets.Actors.Enemies.Default.Behavior.PatrolChaseGround;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Orc : Actor
     {
         public static string GetScenePath() => GDEx.GetScenePath();
+
         public override void Init()
         {
-            base.Init();
-            StateController.Init(
-                new BaseStates.Idle(),
-                new JumpStates.Grounded(),
-                new ActionStates.NotAttacking());
+            StateController.Init<Standing, Grounded, Normal>();
             BehaviorTree = new PatrolChaseGroundBT(this);
+        }
+
+        public override void InitActionState()
+        {
+            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
         }
 
         protected override void ApplyDefaultStats()

@@ -1,7 +1,7 @@
 using Arenbee.Framework.Extensions;
 using Godot;
 
-namespace Arenbee.Assets.Actors.Enemies.ActionStates
+namespace Arenbee.Assets.Actors.Enemies.Default.Animation
 {
     public partial class EnemyDeathEffect : AnimatedSprite2D
     {

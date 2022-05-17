@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dlw363v3qsmge"]
+[gd_scene load_steps=9 format=3 uid="uid://dlw363v3qsmge"]
 
 [ext_resource type="Script" path="res://Framework/Items/WeaponSlot.cs" id="1"]
 [ext_resource type="PackedScene" path="res://Framework/Statistics/HurtBox.tscn" id="2"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://Framework/Actors/Actor.cs" id="3"]
 [ext_resource type="PackedScene" uid="uid://db8n72b70al36" path="res://Framework/Statistics/HitBox.tscn" id="4_vgqdp"]
 [ext_resource type="Script" path="res://Assets/Input/DummyInputHandler.cs" id="7_vkb1i"]
-[ext_resource type="PackedScene" uid="uid://d4at3vj6l08gv" path="res://Framework/Actors/Animation/Blinker.tscn" id="8_ddi1u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4xqgv"]
 resource_local_to_scene = true
@@ -50,9 +49,6 @@ modulate = Color(1, 0, 0, 1)
 
 [node name="WeaponSlot" type="Node2D" parent="Body"]
 script = ExtResource( "1" )
-
-[node name="Blinker" parent="." instance=ExtResource( "8_ddi1u" )]
-IFrameDuration = 0.6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 modulate = Color(0, 0, 1, 1)
