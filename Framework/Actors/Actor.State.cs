@@ -9,7 +9,7 @@ namespace Arenbee.Framework.Actors
         public int ContextAreasActive { get; set; }
         public Sprite2D BodySprite { get; private set; }
         public AnimationPlayer AnimationPlayer { get; private set; }
-        public StateController StateController { get; private set; }
+        public StateController StateController { get; protected set; }
         public IFrameController IFrameController { get; }
         public delegate void ActorHandler(Actor actor);
         public delegate void DamageReceivedHandler(Actor actor, DamageData damageRecievedData);
@@ -32,11 +32,11 @@ namespace Arenbee.Framework.Actors
             Locator.GetAudio().PlaySoundFX(this, sound);
         }
 
-        public abstract void InitActionState();
+        public abstract ActionStateMachineBase GetActionStateMachine();
 
         private void InitState()
         {
-            StateController.CreateStateDisplay();
+            StateController.Init();
             IFrameController.Init();
         }
 
@@ -45,7 +45,7 @@ namespace Arenbee.Framework.Actors
         private void OnDamageRecieved(DamageData damageData)
         {
             damageData.RecieverName = Name;
-            ((HealthState)StateController.HealthStateMachine.State).HandleDamage(damageData);
+            StateController.HealthStateMachine.State.HandleDamage(damageData);
             DamageRecieved?.Invoke(this, damageData);
         }
 

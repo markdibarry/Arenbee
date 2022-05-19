@@ -2,13 +2,13 @@ using Arenbee.Framework.Utility;
 
 namespace Arenbee.Framework.Actors
 {
-    public class ActorStateMachine : StateMachine<ActorState, ActorStateMachine>
+    public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TState, TStateMachine>
+        where TState : ActorState<TState, TStateMachine>
+        where TStateMachine : ActorStateMachine<TState, TStateMachine>
     {
-        public ActorStateMachine(Actor actor, StateController stateController)
+        protected ActorStateMachine(Actor actor)
         {
-            State = new None();
             Actor = actor;
-            StateController = stateController;
         }
 
         /// <summary>
@@ -16,19 +16,6 @@ namespace Arenbee.Framework.Actors
         /// </summary>
         /// <value></value>
         public Actor Actor { get; set; }
-        public StateController StateController { get; set; }
-    }
-
-    public class None : ActorState
-    {
-        public override ActorState CheckForTransitions() => null;
-
-        public override void Enter() { }
-
-        public override void Exit() { }
-
-        public override ActorState Update(float delta) => null;
-
-        protected override void PlayAnimation(string animationName) { }
+        public StateController StateController => Actor.StateController;
     }
 }

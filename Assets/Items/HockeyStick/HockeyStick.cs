@@ -1,5 +1,3 @@
-using Arenbee.Assets.Actors.Default.State;
-using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
@@ -19,10 +17,7 @@ namespace Arenbee.Assets.Items
         public HitBox WeakAttack1HitBox { get; set; }
         public HitBox WeakAttack2HitBox { get; set; }
 
-        public override void InitActionState()
-        {
-            Holder.StateController.ActionStateMachine.TransitionTo<NotAttacking>();
-        }
+        public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(Holder);
 
         public override void DisableHitBoxes(int hitboxNum)
         {
@@ -66,33 +61,44 @@ namespace Arenbee.Assets.Items
             WeakAttack1HitBox = GetNode<HitBox>("WeakAttack1");
             WeakAttack2HitBox = GetNode<HitBox>("WeakAttack2");
         }
+    }
 
-        protected class NotAttacking : NotAttackingState
+    public class ActionStateMachine : ActionStateMachineBase
+    {
+        public ActionStateMachine(Actor actor)
+            : base(actor)
+        {
+            AddState<NotAttacking>();
+            AddState<WeakAttack1>();
+            AddState<WeakAttack2>();
+            InitStates(this);
+        }
+
+        protected class NotAttacking : ActionState
         {
             public override void Enter()
             {
                 StateController.PlayFallbackAnimation();
             }
 
-            public override ActorState Update(float delta)
+            public override ActionState Update(float delta)
             {
                 return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override ActorState CheckForTransitions()
+            public override ActionState CheckForTransitions()
             {
-                var result = CheckForBaseTransitions(out bool returnEarly);
-                if (returnEarly)
-                    return result;
+                if (StateController.IsBlocked(BlockableState.Attack) || Actor.ContextAreasActive > 0)
+                    return null;
                 if (InputHandler.Attack.IsActionJustPressed)
                     return GetState<WeakAttack1>();
                 return null;
             }
         }
 
-        protected class WeakAttack1 : AttackingState
+        protected class WeakAttack1 : ActionState
         {
             public WeakAttack1() { AnimationName = "WeakAttack1"; }
 
@@ -101,7 +107,7 @@ namespace Arenbee.Assets.Items
                 PlayAnimation(AnimationName);
             }
 
-            public override ActorState Update(float delta)
+            public override ActionState Update(float delta)
             {
                 return CheckForTransitions();
             }
@@ -111,12 +117,10 @@ namespace Arenbee.Assets.Items
                 Actor.WeaponSlot.CurrentWeapon.DisableHitBoxes(1);
             }
 
-            public override ActorState CheckForTransitions()
+            public override ActionState CheckForTransitions()
             {
-                var result = CheckForBaseTransitions(out bool returnEarly);
-                if (returnEarly)
-                    return result;
-                if (Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                if (StateController.IsBlocked(BlockableState.Attack)
+                    || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
                 if (InputHandler.Attack.IsActionJustPressed)
                     return GetState<WeakAttack2>();
@@ -124,7 +128,7 @@ namespace Arenbee.Assets.Items
             }
         }
 
-        protected class WeakAttack2 : AttackingState
+        protected class WeakAttack2 : ActionState
         {
             public WeakAttack2() { AnimationName = "WeakAttack2"; }
 
@@ -133,7 +137,7 @@ namespace Arenbee.Assets.Items
                 PlayAnimation(AnimationName);
             }
 
-            public override ActorState Update(float delta)
+            public override ActionState Update(float delta)
             {
                 return CheckForTransitions();
             }
@@ -143,12 +147,10 @@ namespace Arenbee.Assets.Items
                 Actor.WeaponSlot.CurrentWeapon.DisableHitBoxes(2);
             }
 
-            public override ActorState CheckForTransitions()
+            public override ActionState CheckForTransitions()
             {
-                var result = CheckForBaseTransitions(out bool returnEarly);
-                if (returnEarly)
-                    return result;
-                if (Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                if (StateController.IsBlocked(BlockableState.Attack)
+                    || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
                 return null;
             }

@@ -36,7 +36,7 @@ namespace Arenbee.Framework.Items
         {
             SetNodeReferences();
             SetHitBoxes();
-            InitActionState();
+            GetActionStateMachine();
         }
 
         public void Init(Actor holder)
@@ -44,7 +44,7 @@ namespace Arenbee.Framework.Items
             Holder = holder;
         }
 
-        public abstract void InitActionState();
+        public abstract ActionStateMachineBase GetActionStateMachine();
 
         public virtual void DisableHitBoxes(int hitboxNum) { }
 

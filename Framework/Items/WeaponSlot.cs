@@ -39,8 +39,7 @@ namespace Arenbee.Framework.Items
             weapon.Init(_holder);
             CurrentWeapon = weapon;
             AddChild(weapon);
-            _holder.StateController.ActionStateMachine.ClearCache();
-            weapon.InitActionState();
+            _holder.StateController.SwitchActionStateMachine(weapon.GetActionStateMachine());
         }
 
         private void DetachWeapon()
@@ -51,8 +50,7 @@ namespace Arenbee.Framework.Items
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;
-                _holder.StateController.ActionStateMachine.ClearCache();
-                _holder.InitActionState();
+                _holder.StateController.SwitchActionStateMachine(_holder.GetActionStateMachine());
             }
         }
     }

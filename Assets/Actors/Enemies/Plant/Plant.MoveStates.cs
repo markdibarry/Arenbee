@@ -1,28 +1,54 @@
-using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Plant : Actor
     {
-        private class Idle : MoveState
+        public class MoveStateMachine : MoveStateMachineBase
         {
-            public Idle() { AnimationName = "Idle"; }
-            public override void Enter()
+            public MoveStateMachine(Actor actor)
+                : base(actor)
             {
-                PlayAnimation(AnimationName);
+                AddState<Standing>();
+                InitStates(this);
             }
 
-            public override ActorState Update(float delta)
+            public class NotAttacking : ActionState
             {
-                return CheckForTransitions();
+                public override void Enter() { }
+
+                public override ActionState Update(float delta)
+                {
+                    return CheckForTransitions();
+                }
+
+                public override void Exit() { }
+
+                public override ActionState CheckForTransitions()
+                {
+                    return null;
+                }
             }
 
-            public override void Exit() { }
-
-            public override ActorState CheckForTransitions()
+            private class Standing : MoveState
             {
-                return null;
+                public Standing() { AnimationName = "Standing"; }
+                public override void Enter()
+                {
+                    PlayAnimation(AnimationName);
+                }
+
+                public override MoveState Update(float delta)
+                {
+                    return CheckForTransitions();
+                }
+
+                public override void Exit() { }
+
+                public override MoveState CheckForTransitions()
+                {
+                    return null;
+                }
             }
         }
     }

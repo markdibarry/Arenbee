@@ -68,11 +68,13 @@ namespace Arenbee.Framework.Game
             Locator.ProvideItemDB(new ItemDB());
             Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
+            MenuController.Init(_menuInput);
+            DialogController.Init(_menuInput);
             GameState.Init(MenuController);
             ResetToTitleScreen();
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void _Process(float delta)
         {
             _menuInput.Update();
             PlayerOneInput.Update();

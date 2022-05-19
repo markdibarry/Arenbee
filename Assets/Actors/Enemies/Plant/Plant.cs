@@ -7,17 +7,19 @@ namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Plant : Actor
     {
-        public static string GetScenePath() => GDEx.GetScenePath();
-        public override void Init()
+        public Plant()
         {
-            base.Init();
-            StateController.Init<Idle, Grounded, Normal>();
+            StateController = new StateController(
+                this,
+                new MoveStateMachine(this),
+                new AirStateMachine(this),
+                new HealthStateMachine(this),
+                GetActionStateMachine());
         }
 
-        public override void InitActionState()
-        {
-            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
-        }
+        public static string GetScenePath() => GDEx.GetScenePath();
+
+        public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(this);
 
         protected override void ApplyDefaultStats()
         {

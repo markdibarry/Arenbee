@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Godot;
 using Arenbee.Framework.Input;
-using Arenbee.Framework.Utility;
 using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Framework.GUI
@@ -13,10 +12,9 @@ namespace Arenbee.Framework.GUI
         public Menu()
         {
             Visible = false;
-            _menuInput = Locator.GetMenuInput();
         }
 
-        private readonly GUIInputHandler _menuInput;
+        private GUIInputHandler _menuInput;
         private SubMenu _currentSubMenu;
         private SubMenu CurrentSubMenu
         {
@@ -76,6 +74,11 @@ namespace Arenbee.Framework.GUI
         public virtual async Task InitAsync()
         {
             await TransitionOpenAsync();
+        }
+
+        public void Init(GUIInputHandler menuInput)
+        {
+            _menuInput = menuInput;
         }
 
         public virtual Task TransitionOpenAsync()

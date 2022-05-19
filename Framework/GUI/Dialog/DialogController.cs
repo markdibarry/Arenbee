@@ -8,16 +8,11 @@ namespace Arenbee.Framework.GUI.Dialog
 {
     public partial class DialogController : CanvasLayer
     {
-        public DialogController()
-        {
-            _menuInput = Locator.GetMenuInput();
-        }
-
         private int _currentPart;
         private PackedScene _dialogBoxScene;
         private PackedScene _dialogOptionSubMenuScene;
         private DialogOptionSubMenu _dialogOptionSubMenu;
-        private readonly GUIInputHandler _menuInput;
+        private GUIInputHandler _menuInput;
         public bool CanProceed { get; set; }
         public bool DialogActive { get; set; }
         public DialogPart[] DialogParts { get; set; }
@@ -30,8 +25,8 @@ namespace Arenbee.Framework.GUI.Dialog
 
         public override void _Process(float delta)
         {
-            if (!DialogActive) return;
-
+            if (!DialogActive)
+                return;
             if (_menuInput.Enter.IsActionJustPressed)
                 Proceed();
             else if (_menuInput.Enter.IsActionPressed)
@@ -65,6 +60,11 @@ namespace Arenbee.Framework.GUI.Dialog
             FocusedBox = null;
             DialogActive = false;
             DialogEnded?.Invoke();
+        }
+
+        public void Init(GUIInputHandler menuInput)
+        {
+            _menuInput = menuInput;
         }
 
         public void NextDialogPart()

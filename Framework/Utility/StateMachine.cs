@@ -8,11 +8,6 @@ namespace Arenbee.Framework.Utility
         where TStateMachine : StateMachine<TState, TStateMachine>
     {
         /// <summary>
-        /// Cache of the states
-        /// </summary>
-        /// <returns></returns>
-        private readonly Dictionary<Type, TState> _stateCache = new();
-        /// <summary>
         /// The current State.
         /// </summary>
         /// <value></value>
@@ -22,13 +17,28 @@ namespace Arenbee.Framework.Utility
         /// </summary>
         /// <value></value>
         public TState FallbackState { get; set; }
-
         /// <summary>
-        /// Clears the state cache.
+        /// Cache of the states
         /// </summary>
-        public void ClearCache()
+        /// <returns></returns>
+        protected readonly Dictionary<Type, TState> States = new();
+
+        public void AddState<T>() where T : TState, new()
         {
-            _stateCache.Clear();
+            // Find state in cache
+            var type = typeof(T);
+            var state = new T();
+            States[type] = state;
+            if (States.Count == 1)
+            {
+                State = state;
+                FallbackState = state;
+            }
+        }
+
+        public void ExitState()
+        {
+            State.Exit();
         }
 
         /// <summary>
@@ -40,15 +50,20 @@ namespace Arenbee.Framework.Utility
         {
             // Find state in cache
             var type = typeof(T);
-            if (_stateCache.TryGetValue(type, out TState newState))
+            if (States.TryGetValue(type, out TState newState))
                 return newState;
-            // If not in cache, init new one
-            newState = new T() { StateMachine = (TStateMachine)this };
-            newState.Init();
-            if (_stateCache.Count == 0)
-                FallbackState = newState;
-            _stateCache[type] = newState;
-            return newState;
+            return null;
+        }
+
+        protected virtual void InitStates(TStateMachine stateMachine)
+        {
+            foreach (var statePair in States)
+                statePair.Value.Init(stateMachine);
+        }
+
+        public void Init()
+        {
+            TransitionTo(FallbackState, null);
         }
 
         /// <summary>

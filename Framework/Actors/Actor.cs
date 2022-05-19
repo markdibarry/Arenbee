@@ -24,7 +24,6 @@ namespace Arenbee.Framework.Actors
             ApplyDefaultStats();
             Inventory = new Inventory();
             Equipment = new Equipment(this);
-            StateController = new StateController(this);
             IFrameController = new IFrameController(this);
         }
 

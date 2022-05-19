@@ -1,34 +1,32 @@
-using Arenbee.Framework.Actors;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Utility;
 
-namespace Arenbee.Framework
+namespace Arenbee.Framework.Actors
 {
-    public abstract class ActorState : State<ActorState, ActorStateMachine>
+    public abstract class ActorState<TState, TStateMachine> : State<TState, TStateMachine>
+        where TState : ActorState<TState, TStateMachine>
+        where TStateMachine : ActorStateMachine<TState, TStateMachine>
     {
-        public ActorStateType[] BlockedStates { get; set; }
-        public bool IsActionBlocking { get; set; }
-        public bool IsJumpBlocking { get; set; }
-        public bool IsMoveBlocking { get; set; }
-        public ActorInputHandler InputHandler => Actor.InputHandler;
         public string AnimationName { get; protected set; }
-        public StateController StateController { get; set; }
+        public BlockableState[] BlockedStates { get; set; }
+        public ActorInputHandler InputHandler => Actor.InputHandler;
+        public StateController StateController => Actor.StateController;
         protected Actor Actor { get; private set; }
 
-        public override void Init()
+        public override void Init(TStateMachine stateMachine)
         {
-            BlockedStates ??= new ActorStateType[0];
-            Actor = StateMachine.Actor;
-            StateController = StateMachine.StateController;
+            base.Init(stateMachine);
+            Actor = stateMachine.Actor;
+            BlockedStates ??= new BlockableState[0];
         }
 
         protected abstract void PlayAnimation(string animationName);
     }
 
-    public enum ActorStateType
+    public enum BlockableState
     {
         Move,
-        Jump,
+        Jumping,
         Attack
     }
 }

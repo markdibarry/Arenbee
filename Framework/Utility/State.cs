@@ -4,14 +4,13 @@ namespace Arenbee.Framework.Utility
         where TState : State<TState, TStateMachine>
         where TStateMachine : StateMachine<TState, TStateMachine>
     {
-        public TStateMachine StateMachine { get; set; }
+        public TStateMachine StateMachine { get; private set; }
 
-        public virtual void Init() { }
-        public virtual TState CheckForBaseTransitions(out bool returnEarly)
+        public virtual void Init(TStateMachine stateMachine)
         {
-            returnEarly = false;
-            return null;
+            StateMachine = stateMachine;
         }
+
         public virtual void Enter() { }
         public virtual void Enter(object[] args = null) { Enter(); }
         public abstract TState Update(float delta);

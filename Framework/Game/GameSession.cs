@@ -20,11 +20,10 @@ namespace Arenbee.Framework.Game
         {
             Party = new PlayerParty();
             SessionState = new SessionState();
-            _menuInput = Locator.GetMenuInput();
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
-        private readonly GUIInputHandler _menuInput;
+        private GUIInputHandler _menuInput;
         private Node2D _areaSceneContainer;
         private DialogController _dialogController;
         private HUD _hud;
@@ -73,6 +72,9 @@ namespace Arenbee.Framework.Game
 
         public void Init(GameSave gameSave)
         {
+            _menuInput = Locator.GetMenuInput();
+            _dialogController = GameRoot.Instance.DialogController;
+            _menuController = GameRoot.Instance.MenuController;
             Party = new PlayerParty(gameSave.ActorData, gameSave.Items);
             SessionState = gameSave.SessionState;
             InitAreaScene();
@@ -171,8 +173,6 @@ namespace Arenbee.Framework.Game
             _hud = GetNode<HUD>("HUD");
             _areaSceneContainer = GetNode<Node2D>("AreaSceneContainer");
             Transition = GetNode<CanvasLayer>("Transition");
-            _dialogController = GameRoot.Instance.DialogController;
-            _menuController = GameRoot.Instance.MenuController;
         }
 
         private void SubscribeAreaEvents(AreaScene areaScene)

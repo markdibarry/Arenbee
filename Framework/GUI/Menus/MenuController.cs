@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Arenbee.Assets.GUI.Menus;
+using Arenbee.Framework.Input;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -12,6 +14,7 @@ namespace Arenbee.Framework.GUI
             _titleMenuScene = GD.Load<PackedScene>(TitleMenu.GetScenePath());
         }
 
+        private GUIInputHandler _menuInput;
         private readonly PackedScene _partyMenuScene;
         private readonly PackedScene _titleMenuScene;
         private Menu _menu;
@@ -29,34 +32,6 @@ namespace Arenbee.Framework.GUI
         public delegate void MenuStatusChangedHandler(bool isActive);
         public event MenuStatusChangedHandler MenuStatusChanged;
 
-        public async void OpenPartyMenu()
-        {
-            if (Menu == null)
-            {
-                Menu = _partyMenuScene.Instantiate<Menu>();
-                Menu.RequestedCloseMenu += OnRequestedCloseMenu;
-                AddChild(Menu);
-                await Menu.InitAsync();
-            }
-        }
-
-        public async void OpenTitleMenu()
-        {
-            if (Menu == null)
-            {
-                Menu = _titleMenuScene.Instantiate<Menu>();
-                Menu.RequestedCloseMenu += OnRequestedCloseMenu;
-                AddChild(Menu);
-                await Menu.InitAsync();
-            }
-        }
-
-        public void OnRequestedCloseMenu(Action callback)
-        {
-            CloseMenu();
-            callback?.Invoke();
-        }
-
         public void CloseMenu()
         {
             if (Menu != null)
@@ -67,6 +42,38 @@ namespace Arenbee.Framework.GUI
                 menu.QueueFree();
                 Menu = null;
             }
+        }
+
+        public void Init(GUIInputHandler menuInput)
+        {
+            _menuInput = menuInput;
+        }
+
+        public async Task OpenMenu(PackedScene menuScene)
+        {
+            Menu = menuScene.Instantiate<Menu>();
+            Menu.RequestedCloseMenu += OnRequestedCloseMenu;
+            Menu.Init(_menuInput);
+            AddChild(Menu);
+            await Menu.InitAsync();
+        }
+
+        public async void OpenPartyMenu()
+        {
+            if (Menu == null)
+                await OpenMenu(_partyMenuScene);
+        }
+
+        public async void OpenTitleMenu()
+        {
+            if (Menu == null)
+                await OpenMenu(_titleMenuScene);
+        }
+
+        public void OnRequestedCloseMenu(Action callback)
+        {
+            CloseMenu();
+            callback?.Invoke();
         }
     }
 }

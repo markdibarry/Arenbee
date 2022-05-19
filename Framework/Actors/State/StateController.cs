@@ -8,23 +8,29 @@ namespace Arenbee.Framework.Actors
 {
     public class StateController
     {
-        public StateController(Actor actor)
+        public StateController(
+            Actor actor,
+            MoveStateMachineBase moveStateMachineBase,
+            AirStateMachineBase airStateMachineBase,
+            HealthStateMachineBase healthStateMachineBase,
+            ActionStateMachineBase actionStateMachineBase)
         {
             _actor = actor;
-            MoveStateMachine = new ActorStateMachine(_actor, this);
-            JumpStateMachine = new ActorStateMachine(_actor, this);
-            ActionStateMachine = new ActorStateMachine(_actor, this);
-            HealthStateMachine = new ActorStateMachine(_actor, this);
+            HealthStateMachine = healthStateMachineBase;
+            AirStateMachine = airStateMachineBase;
+            MoveStateMachine = moveStateMachineBase;
+            ActionStateMachine = actionStateMachineBase;
         }
 
         private readonly Actor _actor;
-        private Label _jumpStateDisplay;
+        private Label _airStateDisplay;
         private Label _moveStateDisplay;
         private Label _actionStateDisplay;
-        public ActorStateMachine JumpStateMachine { get; }
-        public ActorStateMachine MoveStateMachine { get; }
-        public ActorStateMachine ActionStateMachine { get; }
-        public ActorStateMachine HealthStateMachine { get; }
+        private Label _healthStateDisplay;
+        public AirStateMachineBase AirStateMachine { get; }
+        public MoveStateMachineBase MoveStateMachine { get; }
+        public ActionStateMachineBase ActionStateMachine { get; private set; }
+        public HealthStateMachineBase HealthStateMachine { get; }
         public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
         public Weapon CurrentWeapon => _actor.WeaponSlot.CurrentWeapon;
         public AnimationPlayer WeaponAnimationPlayer => CurrentWeapon?.AnimationPlayer;
@@ -33,30 +39,36 @@ namespace Arenbee.Framework.Actors
         {
             //Debug Only
             var stateDisplay = GDEx.Instantiate<Control>(StateDisplay.GetScenePath());
-            _jumpStateDisplay = stateDisplay.GetNode<Label>("JumpState");
+            _airStateDisplay = stateDisplay.GetNode<Label>("AirState");
             _moveStateDisplay = stateDisplay.GetNode<Label>("MoveState");
             _actionStateDisplay = stateDisplay.GetNode<Label>("ActionState");
+            _healthStateDisplay = stateDisplay.GetNode<Label>("HealthState");
             _moveStateDisplay.Text = string.Empty;
-            _jumpStateDisplay.Text = string.Empty;
+            _airStateDisplay.Text = string.Empty;
             _actionStateDisplay.Text = string.Empty;
+            _healthStateDisplay.Text = string.Empty;
             _actor.AddChild(stateDisplay);
             Vector2 frameSize = _actor.BodySprite.GetFrameSize();
             stateDisplay.Position = new Vector2(_actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + _actor.BodySprite.Position.y);
         }
 
-        public void Init<TMoveState, TJumpState, THealthState>()
-            where TMoveState : MoveState, new()
-            where TJumpState : JumpState, new()
-            where THealthState : HealthState, new()
+        public void SwitchActionStateMachine(ActionStateMachineBase actionStateMachineBase)
         {
-            HealthStateMachine.TransitionTo<THealthState>();
-            MoveStateMachine.TransitionTo<TMoveState>();
-            JumpStateMachine.TransitionTo<TJumpState>();
-            if (CurrentWeapon == null)
-                _actor.InitActionState();
+            ActionStateMachine?.ExitState();
+            ActionStateMachine = actionStateMachineBase;
+            ActionStateMachine.Init();
         }
 
-        public bool IsBlocked(ActorStateType stateType)
+        public void Init()
+        {
+            HealthStateMachine.Init();
+            AirStateMachine.Init();
+            MoveStateMachine.Init();
+            ActionStateMachine.Init();
+            CreateStateDisplay();
+        }
+
+        public bool IsBlocked(BlockableState stateType)
         {
             if (Array.IndexOf(HealthStateMachine.State.BlockedStates, stateType) != -1)
                 return true;
@@ -64,7 +76,7 @@ namespace Arenbee.Framework.Actors
                 return true;
             else if (Array.IndexOf(ActionStateMachine.State.BlockedStates, stateType) != -1)
                 return true;
-            else if (Array.IndexOf(JumpStateMachine.State.BlockedStates, stateType) != -1)
+            else if (Array.IndexOf(AirStateMachine.State.BlockedStates, stateType) != -1)
                 return true;
             return false;
         }
@@ -101,7 +113,7 @@ namespace Arenbee.Framework.Actors
             return true;
         }
 
-        public bool PlayJumpAnimation(string animationName)
+        public bool PlayAirAnimation(string animationName)
         {
             if (HealthStateMachine.State.AnimationName != null
                 || ActionStateMachine.State.AnimationName != null)
@@ -118,7 +130,7 @@ namespace Arenbee.Framework.Actors
         {
             if (HealthStateMachine.State.AnimationName != null
                 || ActionStateMachine.State.AnimationName != null
-                || JumpStateMachine.State.AnimationName != null)
+                || AirStateMachine.State.AnimationName != null)
                 return false;
             if (!ActorAnimationPlayer.HasAnimation(animationName))
                 return false;
@@ -138,8 +150,8 @@ namespace Arenbee.Framework.Actors
                 return PlayHealthAnimation(HealthStateMachine.State.AnimationName);
             if (ActionStateMachine.State.AnimationName != null)
                 return PlayActionAnimation(ActionStateMachine.State.AnimationName);
-            else if (JumpStateMachine.State.AnimationName != null)
-                return PlayJumpAnimation(JumpStateMachine.State.AnimationName);
+            else if (AirStateMachine.State.AnimationName != null)
+                return PlayAirAnimation(AirStateMachine.State.AnimationName);
             else if (MoveStateMachine.State.AnimationName != null)
                 return PlayMoveAnimation(MoveStateMachine.State.AnimationName);
             return false;
@@ -148,19 +160,13 @@ namespace Arenbee.Framework.Actors
         public void UpdateStates(float delta)
         {
             MoveStateMachine.Update(delta);
-            JumpStateMachine.Update(delta);
+            AirStateMachine.Update(delta);
             ActionStateMachine.Update(delta);
             HealthStateMachine.Update(delta);
             _moveStateDisplay.Text = MoveStateMachine.State.GetType().Name;
-            _jumpStateDisplay.Text = JumpStateMachine.State.GetType().Name;
+            _airStateDisplay.Text = AirStateMachine.State.GetType().Name;
             _actionStateDisplay.Text = ActionStateMachine.State.GetType().Name;
+            _healthStateDisplay.Text = HealthStateMachine.State.GetType().Name;
         }
-    }
-
-    public enum StateMachineType
-    {
-        Move,
-        Jump,
-        Action
     }
 }

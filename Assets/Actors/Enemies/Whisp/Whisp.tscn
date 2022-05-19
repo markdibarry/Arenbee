@@ -40,8 +40,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_bu72h"]
 _data = {
-"Idle": SubResource( "Animation_8v7pu" ),
-"RESET": SubResource( "Animation_cwund" )
+"RESET": SubResource( "Animation_cwund" ),
+"Standing": SubResource( "Animation_8v7pu" )
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dyyga"]

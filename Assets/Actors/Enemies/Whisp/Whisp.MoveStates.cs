@@ -1,84 +1,95 @@
-using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
     public partial class Whisp : Actor
     {
-        private class Idle : MoveState
+        public class MoveStateMachine : MoveStateMachineBase
         {
-            public Idle() { AnimationName = "Idle"; }
-            public override void Enter()
+            public MoveStateMachine(Actor actor)
+                : base(actor)
             {
-                PlayAnimation(AnimationName);
+                AddState<Standing>();
+                AddState<Walking>();
+                AddState<Running>();
+                InitStates(this);
             }
 
-            public override ActorState Update(float delta)
+            private class Standing : MoveState
             {
-                return CheckForTransitions();
-            }
+                public Standing() { AnimationName = "Standing"; }
+                public override void Enter()
+                {
+                    PlayAnimation(AnimationName);
+                }
 
-            public override void Exit() { }
+                public override MoveState Update(float delta)
+                {
+                    return CheckForTransitions();
+                }
 
-            public override ActorState CheckForTransitions()
-            {
-                if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                    return null;
-                if (InputHandler.Run.IsActionPressed)
-                    return GetState<Running>();
-                return GetState<Walking>();
-            }
-        }
+                public override void Exit() { }
 
-        private class Running : MoveState
-        {
-            public override void Enter()
-            {
-                Actor.MaxSpeed = Actor.RunSpeed;
-            }
-
-            public override ActorState Update(float delta)
-            {
-                Actor.UpdateDirection();
-                Actor.Move();
-                return CheckForTransitions();
-            }
-
-            public override void Exit() { }
-
-            public override ActorState CheckForTransitions()
-            {
-                if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                    return GetState<Idle>();
-                else if (!InputHandler.Run.IsActionPressed)
+                public override MoveState CheckForTransitions()
+                {
+                    if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
+                        return null;
+                    if (InputHandler.Run.IsActionPressed)
+                        return GetState<Running>();
                     return GetState<Walking>();
-                return null;
-            }
-        }
-
-        private class Walking : MoveState
-        {
-            public override void Enter()
-            {
-                Actor.MaxSpeed = Actor.WalkSpeed;
+                }
             }
 
-            public override ActorState Update(float delta)
+            private class Running : MoveState
             {
-                Actor.UpdateDirection();
-                Actor.Move();
-                return CheckForTransitions();
+                public override void Enter()
+                {
+                    Actor.MaxSpeed = Actor.RunSpeed;
+                }
+
+                public override MoveState Update(float delta)
+                {
+                    Actor.UpdateDirection();
+                    Actor.Move();
+                    return CheckForTransitions();
+                }
+
+                public override void Exit() { }
+
+                public override MoveState CheckForTransitions()
+                {
+                    if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
+                        return GetState<Standing>();
+                    else if (!InputHandler.Run.IsActionPressed)
+                        return GetState<Walking>();
+                    return null;
+                }
             }
 
-            public override void Exit() { }
-
-            public override ActorState CheckForTransitions()
+            private class Walking : MoveState
             {
-                if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
-                    return GetState<Idle>();
-                else if (InputHandler.Run.IsActionPressed)
-                    return GetState<Running>();
-                return null;
+                public override void Enter()
+                {
+                    Actor.MaxSpeed = Actor.WalkSpeed;
+                }
+
+                public override MoveState Update(float delta)
+                {
+                    Actor.UpdateDirection();
+                    Actor.Move();
+                    return CheckForTransitions();
+                }
+
+                public override void Exit() { }
+
+                public override MoveState CheckForTransitions()
+                {
+                    if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
+                        return GetState<Standing>();
+                    else if (InputHandler.Run.IsActionPressed)
+                        return GetState<Running>();
+                    return null;
+                }
             }
         }
     }

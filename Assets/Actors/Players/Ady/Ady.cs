@@ -1,5 +1,4 @@
 using Arenbee.Assets.Actors.Default.State;
-using Arenbee.Assets.Actors.Players.Default.State;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Statistics;
@@ -8,17 +7,19 @@ namespace Arenbee.Assets.Actors.Players
 {
     public partial class Ady : Actor
     {
+        public Ady()
+        {
+            StateController = new StateController(
+                this,
+                new MoveStateMachine(this),
+                new AirStateMachine(this),
+                new HealthStateMachine(this),
+                GetActionStateMachine());
+        }
+
         public static string GetScenePath() => GDEx.GetScenePath();
 
-        public override void Init()
-        {
-            StateController.Init<Standing, Grounded, Normal>();
-        }
-
-        public override void InitActionState()
-        {
-            StateController.ActionStateMachine.TransitionTo<NotAttacking>();
-        }
+        public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(this);
 
         protected override void ApplyDefaultStats()
         {
