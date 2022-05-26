@@ -51,10 +51,18 @@ layer = 60
 layer = 90
 
 [node name="ColorAdjustment" parent="GameDisplay" instance=ExtResource( "5_bcxdk" )]
-TintColor = Color(1, 0.0823529, 0, 1)
+Brightness = null
+Contrast = null
+Saturation = null
+TintColor = null
+TintAmount = null
 
 [node name="GameCamera" type="Camera2D" parent="GameDisplay"]
 current = true
 limit_left = 0
 limit_bottom = 270
+limit_smoothed = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+editor_draw_screen = false
 script = ExtResource( "7_s1nbx" )

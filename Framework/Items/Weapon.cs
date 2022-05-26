@@ -46,8 +46,6 @@ namespace Arenbee.Framework.Items
 
         public abstract ActionStateMachineBase GetActionStateMachine();
 
-        public virtual void DisableHitBoxes(int hitboxNum) { }
-
         public void PlaySoundFX(string soundPath)
         {
             Holder.PlaySoundFX(soundPath);

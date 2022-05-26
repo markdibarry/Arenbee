@@ -4,5 +4,6 @@ namespace Arenbee.Framework.Constants
     {
         public const string LongStick = "LongStick";
         public const string Sword = "Sword";
+        public const string Wand = "Wand";
     }
 }

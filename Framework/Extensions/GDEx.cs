@@ -160,6 +160,13 @@ namespace Arenbee.Framework.Extensions
             return val < target ? Math.Min(val + maxMove, target) : Math.Max(val - maxMove, target);
         }
 
+        public static int MoveTowards(this int current, int target, int delta)
+        {
+            if (Math.Abs(target - current) <= delta)
+                return target;
+            return current + Math.Sign(target - current) * delta;
+        }
+
         public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
         {
             return source ?? Enumerable.Empty<T>();

@@ -82,5 +82,11 @@ namespace Arenbee.Framework.Utility
             var rect = GetNodeOrNull<ColorRect>("ColorRect");
             _colorShader = rect.Material as ShaderMaterial;
         }
+
+        public override void _Notification(int what)
+        {
+            if (what == NotificationPredelete)
+                _colorShader.Dispose();
+        }
     }
 }

@@ -1,21 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://dlw363v3qsmge"]
+[gd_scene load_steps=8 format=3 uid="uid://dlw363v3qsmge"]
 
 [ext_resource type="Script" path="res://Framework/Items/WeaponSlot.cs" id="1"]
-[ext_resource type="PackedScene" path="res://Framework/Statistics/HurtBox.tscn" id="2"]
 [ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="2_su1ek"]
 [ext_resource type="Script" path="res://Framework/Actors/Actor.cs" id="3"]
-[ext_resource type="PackedScene" uid="uid://db8n72b70al36" path="res://Framework/Statistics/HitBox.tscn" id="4_vgqdp"]
+[ext_resource type="Script" path="res://Framework/Statistics/AreaBoxContainer.cs" id="3_esrhm"]
 [ext_resource type="Script" path="res://Assets/Input/DummyInputHandler.cs" id="7_vkb1i"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4xqgv"]
 resource_local_to_scene = true
 shader = ExtResource( "2_su1ek" )
+shader_param/cycle_direction = null
+shader_param/cycle_end = null
+shader_param/cycle_start = null
 shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
 shader_param/flash_mix = 0.0
 shader_param/speed = null
-shader_param/cycle_start = null
-shader_param/cycle_end = null
-shader_param/cycle_direction = null
 shader_param/use_palette1 = null
 shader_param/use_palette2 = null
 
@@ -38,14 +37,11 @@ WalkSpeed = 50
 modulate = Color(10, 10, 10, 1)
 material = SubResource( "ShaderMaterial_4xqgv" )
 
-[node name="HurtBox" parent="Body/BodySprite" instance=ExtResource( "2" )]
-modulate = Color(0, 1, 0, 1)
-collision_layer = 0
-collision_mask = 0
-monitorable = false
+[node name="HurtBoxes" type="Node2D" parent="Body/BodySprite"]
+script = ExtResource( "3_esrhm" )
 
-[node name="HitBox" parent="Body/BodySprite" instance=ExtResource( "4_vgqdp" )]
-modulate = Color(1, 0, 0, 1)
+[node name="HitBoxes" type="Node2D" parent="Body/BodySprite"]
+script = ExtResource( "3_esrhm" )
 
 [node name="WeaponSlot" type="Node2D" parent="Body"]
 script = ExtResource( "1" )

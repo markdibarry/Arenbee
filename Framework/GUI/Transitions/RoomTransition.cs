@@ -28,15 +28,19 @@ namespace Arenbee.Framework.GUI
             _loader.Modulate = Colors.Transparent;
             Locator.GetGameSession()?.Transition.AddChild(_loader);
             var tween = _loader.GetTree().CreateTween();
-            tween.TweenProperty(_loader, "modulate:a", 1f, 0.2f);
+            var prop = tween.TweenProperty(_loader, "modulate:a", 1f, 0.2f);
             await _loader.ToSignal(tween, "finished");
+            tween.Dispose();
+            prop.Dispose();
         }
 
         public override async Task TransitionToScene()
         {
             var tween = _loader.GetTree().CreateTween();
-            tween.TweenProperty(_loader, "modulate:a", 0f, 0.2f);
+            var prop = tween.TweenProperty(_loader, "modulate:a", 0f, 0.2f);
             await _loader.ToSignal(tween, "finished");
+            tween.Dispose();
+            prop.Dispose();
             Locator.GetGameSession()?.Transition.QueueFreeAllChildren();
         }
     }

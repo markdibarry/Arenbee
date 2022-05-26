@@ -34,14 +34,13 @@ namespace Arenbee.Framework.GUI
 
         public void CloseMenu()
         {
-            if (Menu != null)
-            {
-                var menu = Menu;
-                menu.RequestedCloseMenu -= OnRequestedCloseMenu;
-                RemoveChild(menu);
-                menu.QueueFree();
-                Menu = null;
-            }
+            if (Menu == null)
+                return;
+            var menu = Menu;
+            menu.RequestedCloseMenu -= OnRequestedCloseMenu;
+            RemoveChild(menu);
+            menu.QueueFree();
+            Menu = null;
         }
 
         public void Init(GUIInputHandler menuInput)
@@ -53,9 +52,8 @@ namespace Arenbee.Framework.GUI
         {
             Menu = menuScene.Instantiate<Menu>();
             Menu.RequestedCloseMenu += OnRequestedCloseMenu;
-            Menu.Init(_menuInput);
             AddChild(Menu);
-            await Menu.InitAsync();
+            await Menu.InitAsync(_menuInput);
         }
 
         public async void OpenPartyMenu()

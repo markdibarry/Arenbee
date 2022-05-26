@@ -1,6 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://cmwindadvvm2l"]
+[gd_scene load_steps=5 format=3 uid="uid://cmwindadvvm2l"]
 
 [ext_resource type="PackedScene" uid="uid://dlw363v3qsmge" path="res://Framework/Actors/Actor.tscn" id="2"]
+[ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="2_i3y1y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m5khv"]
+resource_local_to_scene = true
+shader = ExtResource( "2_i3y1y" )
+shader_param/cycle_direction = null
+shader_param/cycle_end = null
+shader_param/cycle_start = null
+shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
+shader_param/flash_mix = 0.0
+shader_param/speed = null
+shader_param/use_palette1 = null
+shader_param/use_palette2 = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a78m3"]
 resource_local_to_scene = true
@@ -11,12 +24,8 @@ collision_layer = 256
 collision_mask = 21
 ActorType = 1
 
-[node name="HurtBox" parent="Body/BodySprite" index="0"]
-collision_mask = 40
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_m5khv" )
 
-[node name="HitBox" parent="Body/BodySprite" index="1"]
-collision_layer = 128
-collision_mask = 0
-
-[node name="CollisionShape2D" parent="." index="3"]
+[node name="CollisionShape2D" parent="." index="2"]
 shape = SubResource( "RectangleShape2D_a78m3" )

@@ -24,15 +24,19 @@ namespace Arenbee.Assets.GUI.Menus
             Visible = true;
             ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
             var tween = GetTree().CreateTween();
-            tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 0.1f);
+            var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 0.1f);
             await ToSignal(tween, "finished");
+            tween.Dispose();
+            prop.Dispose();
         }
 
         public override async Task TransitionCloseAsync()
         {
             var tween = GetTree().CreateTween();
-            tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 0.1f);
+            var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 0.1f);
             await ToSignal(tween, "finished");
+            tween.Dispose();
+            prop.Dispose();
             Visible = false;
         }
     }

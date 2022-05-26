@@ -45,6 +45,7 @@ namespace Arenbee.Framework.Statistics
                 ActionType.Environment => Math.Max(TotalDamage, 1),
                 ActionType.Status => Math.Max(TotalDamage, 1),
                 ActionType.Melee => Math.Max(TotalDamage - stats.Attributes.GetStat(AttributeType.Defense).ModifiedValue, 1),
+                ActionType.Magic => Math.Max(TotalDamage - stats.Attributes.GetStat(AttributeType.MagicDefense).ModifiedValue, 1),
                 _ => TotalDamage
             };
         }

@@ -60,8 +60,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private void QuitToTitle()
         {
             IsActive = false;
-            GameRoot.Instance?.EndCurrentgame();
-            GameRoot.Instance.ResetToTitleScreen();
+            GameRoot.Instance.QueueReset();
         }
     }
 }

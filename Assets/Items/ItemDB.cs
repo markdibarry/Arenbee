@@ -69,6 +69,21 @@ namespace Arenbee.Assets.Items
                     new(StatType.ElementOff, (int)ElementType.Water, ModOperator.Add, 2)
                 }
             });
+
+            _items.Add(new("Wand", ItemType.Weapon)
+            {
+                DisplayName = "Magic Wand",
+                Description = "Boom! Blast!",
+                MaxStack = 9,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 10,
+                Modifiers = new Modifier[]
+                {
+                    new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1),
+                    new(StatType.ElementOff, (int)ElementType.Fire, ModOperator.Add, 2)
+                }
+            });
         }
 
         private void BuildHeadGear()

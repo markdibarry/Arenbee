@@ -8,12 +8,13 @@ shader = ExtResource( "1_b70dx" )
 shader_param/_brightness = 0.0
 shader_param/_contrast = 1.0
 shader_param/_saturation = 1.0
-shader_param/_tint_color = Color(1, 0.0823529, 0, 1)
 shader_param/_tint_amount = 0.0
+shader_param/_tint_color = Color(1, 0.0823529, 0, 1)
 
 [node name="ColorAdjustment" type="CanvasLayer"]
 layer = 100
 script = ExtResource( "1_l5xii" )
+TintColor = Color(1, 0.0823529, 0, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource( "ShaderMaterial_u7eke" )

@@ -8,6 +8,8 @@ script = ExtResource( "1_bjmkr" )
 
 [node name="Scenery" type="Node2D" parent="."]
 
+[node name="CameraLimits" type="Node2D" parent="."]
+
 [node name="SpawnPoints" type="Node2D" parent="."]
 
 [node name="Events" type="Node2D" parent="."]
@@ -20,4 +22,3 @@ script = ExtResource( "1_bjmkr" )
 
 [node name="ColorAdjustment" parent="." instance=ExtResource( "2_rv66l" )]
 layer = 20
-TintColor = Color(1, 0.0823529, 0, 1)

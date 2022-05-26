@@ -57,6 +57,7 @@ namespace Arenbee.Framework.Statistics
         [JsonIgnore] public StatusEffectDefs StatusEffectDefs { get; }
         [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
         public StatusEffects StatusEffects { get; }
+        public Func<int> MinHP { get; set; } = () => 0;
         public delegate void DamageRecievedHandler(DamageData damageRecievedData);
         public delegate void HPDepletedHandler();
         public delegate void ModChangedHandler(ModChangeData modChangeData);
@@ -68,17 +69,15 @@ namespace Arenbee.Framework.Statistics
         public event ProcessedHandler Processed;
         public event StatsChangedHandler StatsChanged;
 
-        public void AddKO()
+        public void AddKOStatus()
         {
             var koMod = StatusEffects.GetStat(StatusEffectType.KO)?.TempModifier;
-            if (koMod == null)
-            {
-                StatusEffects.AddTempMod(
-                    new TempModifier(
-                        new Modifier(StatType.StatusEffect, (int)StatusEffectType.KO),
-                        null));
-                HPDepleted?.Invoke();
-            }
+            if (koMod != null)
+                return;
+            StatusEffects.AddTempMod(
+                new TempModifier(
+                    new Modifier(StatType.StatusEffect, (int)StatusEffectType.KO),
+                    null));
         }
 
         public void AddMod(Modifier mod)
@@ -95,11 +94,6 @@ namespace Arenbee.Framework.Statistics
             StatusEffects.ApplyStats(stats.StatusEffects.TempModifiers);
         }
 
-        public void DepleteHP()
-        {
-            ModifyHP(GetHP());
-        }
-
         public int GetHP() => Attributes.GetStat((int)AttributeType.HP).BaseValue;
 
         public int GetMP() => Attributes.GetStat((int)AttributeType.MP).BaseValue;
@@ -112,7 +106,7 @@ namespace Arenbee.Framework.Statistics
 
         public bool HasFullHP() => GetHP() >= GetMaxHP();
 
-        public bool IsKO() => GetHP() <= 0;
+        public bool HasNoHP() => GetHP() <= 0;
 
         public void HandleHitBoxAction(HitBox hitBox)
         {
@@ -147,16 +141,19 @@ namespace Arenbee.Framework.Statistics
 
         public void ReceiveAction(ActionData actionData)
         {
-            if (IsKO()) return;
             var damageData = new DamageData(this, actionData);
-            DamageReceived?.Invoke(damageData);
-            StatusEffects.AddStatusMods(damageData.StatusEffects);
             ModifyHP(damageData.TotalDamage);
+            DamageReceived?.Invoke(damageData);
+            if (HasNoHP())
+                HPDepleted?.Invoke();
+            else
+                StatusEffects.AddStatusMods(damageData.StatusEffects);
+            RaiseStatsChanged();
         }
 
         public void RemoveKOStatus()
         {
-            var koMod = StatusEffects.GetStat(StatusEffectType.KO).TempModifier;
+            var koMod = StatusEffects.GetStat(StatusEffectType.KO)?.TempModifier;
             if (koMod != null)
                 StatusEffects.RemoveTempMod(koMod);
         }
@@ -190,15 +187,11 @@ namespace Arenbee.Framework.Statistics
 
         private void ModifyHP(int amount)
         {
-            if (IsKO()) return;
             var oldHP = GetHP();
-            var newHP = Math.Clamp(oldHP - amount, 0, GetMaxHP());
+            var newHP = Math.Clamp(oldHP - amount, MinHP(), GetMaxHP());
             if (oldHP == newHP)
                 return;
             Attributes.GetStat(AttributeType.HP).BaseValue = newHP;
-            RaiseStatsChanged();
-            if (newHP <= 0)
-                AddKO();
         }
 
         private void ModifyMP(int amount)
@@ -208,7 +201,6 @@ namespace Arenbee.Framework.Statistics
             if (oldMP == newMP)
                 return;
             Attributes.GetStat(AttributeType.MP).BaseValue = newMP;
-            RaiseStatsChanged();
         }
 
         private void OnModChanged(ModChangeData modChangeData)

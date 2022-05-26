@@ -28,13 +28,14 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
 
             public override HealthState CheckForTransitions()
             {
-                if (Actor.Stats.IsKO())
-                    return GetState<Dead>();
                 return null;
             }
 
             public override void HandleDamage(DamageData damageData)
             {
+                if (Actor.Stats.HasNoHP())
+                    return;
+
                 bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
                 Actor.IFrameController.Start(damageData, overDamageThreshold);
                 if (overDamageThreshold)
@@ -44,6 +45,11 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
                     Actor.Velocity = direction * 200;
                     StateMachine.TransitionTo<Stagger>(new[] { damageData });
                 }
+            }
+
+            public override void HandleHPDepleted()
+            {
+                StateMachine.TransitionTo<Dead>();
             }
         }
 
@@ -84,11 +90,14 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
 
             public override HealthState CheckForTransitions()
             {
-                if (Actor.Stats.IsKO())
-                    return GetState<Dead>();
                 if (!_isStaggered)
                     return GetState<Normal>();
                 return null;
+            }
+
+            public override void HandleHPDepleted()
+            {
+                StateMachine.TransitionTo<Dead>();
             }
         }
 

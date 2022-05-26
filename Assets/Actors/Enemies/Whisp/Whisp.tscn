@@ -1,9 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://3tu1uhllhg11"]
+[gd_scene load_steps=15 format=3 uid="uid://3tu1uhllhg11"]
 
 [ext_resource type="PackedScene" uid="uid://cmwindadvvm2l" path="res://Framework/Actors/Enemy.tscn" id="1_0h21x"]
 [ext_resource type="Script" path="res://Assets/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
 [ext_resource type="Texture2D" uid="uid://bryfxg1olnhug" path="res://Assets/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
 [ext_resource type="Shader" path="res://Framework/Shaders/Actor.gdshader" id="3_mqnde"]
+[ext_resource type="PackedScene" path="res://Framework/Statistics/HurtBox.tscn" id="5_uvkvh"]
+[ext_resource type="PackedScene" uid="uid://db8n72b70al36" path="res://Framework/Statistics/HitBox.tscn" id="6_ttdw0"]
 
 [sub_resource type="Animation" id="Animation_cwund"]
 length = 0.001
@@ -47,12 +49,12 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dyyga"]
 resource_local_to_scene = true
 shader = ExtResource( "3_mqnde" )
+shader_param/cycle_direction = null
+shader_param/cycle_end = null
+shader_param/cycle_start = null
 shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
 shader_param/flash_mix = 0.0
 shader_param/speed = null
-shader_param/cycle_start = null
-shader_param/cycle_end = null
-shader_param/cycle_direction = null
 shader_param/use_palette1 = null
 shader_param/use_palette2 = null
 
@@ -62,12 +64,12 @@ size = Vector2(16, 18)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xujb8"]
 size = Vector2(14, 16)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_ip5ud"]
+radius = 78.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2djvb"]
 resource_local_to_scene = true
 size = Vector2(16, 18)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_ip5ud"]
-radius = 78.0
 
 [node name="Whisp" instance=ExtResource( "1_0h21x" )]
 collision_layer = 1024
@@ -86,22 +88,33 @@ texture = ExtResource( "3_gge5r" )
 hframes = 21
 frame = 1
 
-[node name="BodyBox" type="CollisionShape2D" parent="Body/BodySprite/HurtBox" index="0"]
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource( "5_uvkvh" )]
+modulate = Color(0, 1, 0, 1)
+collision_layer = 0
+collision_mask = 40
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_r0tkl" )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBox" index="0"]
+[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource( "6_ttdw0" )]
+modulate = Color(1, 0, 0, 1)
+collision_layer = 128
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "RectangleShape2D_xujb8" )
 
-[node name="CollisionShape2D" parent="." index="2"]
-position = Vector2(0, 6)
-shape = SubResource( "RectangleShape2D_2djvb" )
-
-[node name="DetectTargetZone" type="Area2D" parent="." index="4"]
+[node name="DetectTargetZone" type="Area2D" parent="." index="2"]
 collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectTargetZone" index="0"]
 position = Vector2(0, 6)
 shape = SubResource( "CircleShape2D_ip5ud" )
+
+[node name="CollisionShape2D" parent="." index="3"]
+position = Vector2(0, 6)
+shape = SubResource( "RectangleShape2D_2djvb" )

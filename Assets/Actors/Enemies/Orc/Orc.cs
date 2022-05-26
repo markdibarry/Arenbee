@@ -3,6 +3,7 @@ using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Extensions;
 using Arenbee.Assets.Actors.Enemies.Default.State;
 using Arenbee.Assets.Actors.Enemies.Default.Behavior.PatrolChaseGround;
+using Arenbee.Framework.Enums;
 
 namespace Arenbee.Assets.Actors.Enemies
 {
@@ -35,6 +36,12 @@ namespace Arenbee.Assets.Actors.Enemies
             Stats.SetAttribute(AttributeType.HP, 6);
             Stats.SetAttribute(AttributeType.Attack, 4);
             Stats.SetAttribute(AttributeType.Defense, 0);
+        }
+
+        protected override void SetHitBoxes()
+        {
+            var bodybox = HitBoxes.GetNode<HitBox>("BodyBox");
+            bodybox.SetBasicMeleeBox(this);
         }
     }
 }

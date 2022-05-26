@@ -40,8 +40,6 @@ namespace Arenbee.Framework.Actors
             IFrameController.Init();
         }
 
-        protected virtual void HandleHPDepleted() { }
-
         private void OnDamageRecieved(DamageData damageData)
         {
             damageData.RecieverName = Name;
@@ -51,7 +49,7 @@ namespace Arenbee.Framework.Actors
 
         private void OnHPDepleted()
         {
-            HandleHPDepleted();
+            StateController.HealthStateMachine.State.HandleHPDepleted();
             Defeated?.Invoke(this);
         }
     }

@@ -24,8 +24,10 @@ namespace Arenbee.Assets.GUI.Menus.Title
             var pos = _startOptions.Position;
             _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);
             var tween = GetTree().CreateTween();
-            tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
+            var prop = tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
             await ToSignal(tween, "finished");
+            tween.Dispose();
+            prop.Dispose();
         }
 
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)

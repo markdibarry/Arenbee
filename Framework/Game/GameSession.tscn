@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://bgsks88wtwlao"]
+[gd_scene load_steps=3 format=3 uid="uid://bgsks88wtwlao"]
 
 [ext_resource type="Script" path="res://Framework/Game/GameSession.cs" id="1_wqoak"]
-[ext_resource type="PackedScene" uid="uid://b7btk4atcpbwy" path="res://Framework/Utility/ColorAdjustment.tscn" id="2_4ud4a"]
 [ext_resource type="PackedScene" uid="uid://b2cj1fd6ummfq" path="res://Assets/GUI/HUD/HUD.tscn" id="2_ii0go"]
 
 [node name="GameSession" type="Node2D"]
@@ -13,12 +12,7 @@ script = ExtResource( "1_wqoak" )
 [node name="Transition" type="CanvasLayer" parent="."]
 layer = 25
 
-[node name="ColorAdjustment" parent="." instance=ExtResource( "2_4ud4a" )]
-layer = 30
-TintColor = Color(1, 0.0823529, 0, 1)
-
 [node name="HUD" parent="." instance=ExtResource( "2_ii0go" )]
-layer = 40
 
 [node name="SkillController" type="CanvasLayer" parent="."]
 layer = 45

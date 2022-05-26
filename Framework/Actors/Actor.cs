@@ -29,7 +29,6 @@ namespace Arenbee.Framework.Actors
 
         private Node2D _body;
         private Equipment _equipment;
-        private HurtBox _hurtBox;
         [Export(PropertyHint.Enum)]
         public ActorType ActorType { get; set; }
         public Inventory Inventory { get; set; }
@@ -46,44 +45,19 @@ namespace Arenbee.Framework.Actors
             }
         }
         public WeaponSlot WeaponSlot { get; private set; }
-        public HurtBox HurtBox
-        {
-            get { return _hurtBox; }
-            private set
-            {
-                if (_hurtBox != null)
-                    _hurtBox.AreaEntered -= Stats.OnHurtBoxEntered;
-                _hurtBox = value;
-                if (_hurtBox != null)
-                    _hurtBox.AreaEntered += Stats.OnHurtBoxEntered;
-            }
-        }
-        public HitBox HitBox { get; private set; }
+        public AreaBoxContainer HurtBoxes { get; private set; }
+        public AreaBoxContainer HitBoxes { get; private set; }
 
         public override void _Ready()
         {
             SetNodeReferences();
             _floatPosition = GlobalPosition;
+            InitBoxes();
             InitMovement();
             InitState();
             Init();
             WeaponSlot.Init(this);
         }
-
-        private void SetNodeReferences()
-        {
-            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
-            _body = GetNode<Node2D>("Body");
-            BodySprite = _body.GetNode<Sprite2D>("BodySprite");
-            WeaponSlot = _body.GetNode<WeaponSlot>("WeaponSlot");
-            HurtBox = BodySprite.GetNode<HurtBox>("HurtBox");
-            HitBox = BodySprite.GetNode<HitBox>("HitBox");
-            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-            DummyInputHandler = GetNode<DummyInputHandler>("DummyInputHandler");
-            _inputHandler ??= DummyInputHandler;
-        }
-
-        public virtual void Init() { }
 
         public override void _PhysicsProcess(float delta)
         {
@@ -98,6 +72,17 @@ namespace Arenbee.Framework.Actors
             GlobalPosition = GlobalPosition.Round();
             HandleInput(delta);
         }
+
+        public virtual void Init() { }
+
+        public void InitBoxes()
+        {
+            SetHitBoxes();
+            foreach (HurtBox hurtbox in HurtBoxes.GetChildren())
+                hurtbox.AreaEntered += Stats.OnHurtBoxEntered;
+        }
+
+        protected virtual void SetHitBoxes() { }
 
         private void HandleInput(float delta)
         {
@@ -114,6 +99,19 @@ namespace Arenbee.Framework.Actors
             newItem?.AddToStats(Stats);
             if (slot.SlotName == EquipSlotName.Weapon)
                 WeaponSlot?.SetWeapon(newItem);
+        }
+
+        private void SetNodeReferences()
+        {
+            CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
+            _body = GetNode<Node2D>("Body");
+            BodySprite = _body.GetNode<Sprite2D>("BodySprite");
+            WeaponSlot = _body.GetNode<WeaponSlot>("WeaponSlot");
+            HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
+            HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");
+            AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+            DummyInputHandler = GetNode<DummyInputHandler>("DummyInputHandler");
+            _inputHandler ??= DummyInputHandler;
         }
     }
 

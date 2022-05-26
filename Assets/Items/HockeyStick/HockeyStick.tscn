@@ -11,15 +11,15 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6q8jj"]
 resource_local_to_scene = true
 shader = ExtResource( "3_1hq1e" )
+shader_param/cycle_direction = null
+shader_param/cycle_end = null
+shader_param/cycle_start = null
 shader_param/flash_color = null
 shader_param/flash_mix = null
+shader_param/palette1 = ExtResource( "4_55wtb" )
 shader_param/speed = null
-shader_param/cycle_start = null
-shader_param/cycle_end = null
-shader_param/cycle_direction = null
 shader_param/use_palette1 = true
 shader_param/use_palette2 = null
-shader_param/palette1 = ExtResource( "4_55wtb" )
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_an0em"]
 size = Vector2(16, 12)

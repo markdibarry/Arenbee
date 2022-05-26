@@ -4,7 +4,7 @@ render_mode blend_mix,unshaded;
 uniform float _brightness : hint_range(-1, 1) = 0;
 uniform float _contrast : hint_range(0, 3) = 1.0;
 uniform float _saturation : hint_range(0, 3) = 1.0;
-uniform vec4 _tint_color : hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 _tint_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform float _tint_amount : hint_range(0, 1) = 0.0;
 
 vec3 get_contrast(vec3 color, float contrast_amount) {

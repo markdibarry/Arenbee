@@ -1,6 +1,6 @@
 shader_type canvas_item;
 uniform float scroll_speed;
-uniform vec4 tint : hint_color;
+uniform vec4 tint : source_color;
 
 void fragment() {
 	vec2 shifteduv = UV;

@@ -14,5 +14,5 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.0416667, 0.0833333, 0.166667, 0.25, 0.333333),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [30, 31, 32, 33, 34, 35]
+"values": [42, 43, 44, 45, 46, 47]
 }

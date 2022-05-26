@@ -47,10 +47,10 @@ namespace Arenbee.Framework.Items
             Weapon weapon = this.GetChildOrNullButActually<Weapon>(0);
             if (weapon != null)
             {
+                _holder.StateController.SwitchActionStateMachine(_holder.GetActionStateMachine());
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;
-                _holder.StateController.SwitchActionStateMachine(_holder.GetActionStateMachine());
             }
         }
     }

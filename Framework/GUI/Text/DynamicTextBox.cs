@@ -47,7 +47,7 @@ namespace Arenbee.Framework.GUI.Text
         [Export]
         public bool ShouldWrite
         {
-            get { return _dynamicText?.ShouldWrite ?? false; }
+            get { return _dynamicText?.WriteEnabled ?? false; }
             set { WritePage(value); }
         }
         [Export]
@@ -143,7 +143,7 @@ namespace Arenbee.Framework.GUI.Text
         public void WritePage(bool shouldWrite)
         {
             if (_dynamicText != null)
-                _dynamicText.ShouldWrite = shouldWrite;
+                _dynamicText.WriteEnabled = shouldWrite;
         }
 
         private int GetAdjustedPageIndex(int page)

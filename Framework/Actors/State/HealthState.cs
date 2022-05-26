@@ -10,5 +10,7 @@ namespace Arenbee.Framework.Actors
         }
 
         public virtual void HandleDamage(DamageData damageData) { }
+
+        public virtual void HandleHPDepleted() { }
     }
 }

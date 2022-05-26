@@ -12,6 +12,7 @@ namespace Arenbee.Framework.GUI.Dialog
 
         private MarginContainer _dialogMargin;
         private PanelContainer _dialogPanel;
+        private bool _dim;
         private DynamicTextBox _dynamicTextBox;
         private Label _nameLabel;
         private PanelContainer _namePanel;
@@ -34,6 +35,15 @@ namespace Arenbee.Framework.GUI.Dialog
             {
                 if (_dynamicTextBox != null)
                     _dynamicTextBox.CustomText = value;
+            }
+        }
+        public bool Dim
+        {
+            get => _dim;
+            set
+            {
+                _dim = value;
+                Modulate = value ? Colors.White.Darkened(0.5f) : Colors.White;
             }
         }
         [Export]
@@ -112,14 +122,6 @@ namespace Arenbee.Framework.GUI.Dialog
                 portrait.Play(newMood);
         }
 
-        public void Dim(bool shouldDim)
-        {
-            if (shouldDim)
-                Modulate = Colors.White.Darkened(0.5f);
-            else
-                Modulate = Colors.White;
-        }
-
         public AnimatedSprite2D GetPortrait(string character)
         {
             if (string.IsNullOrEmpty(character)) return null;
@@ -160,7 +162,8 @@ namespace Arenbee.Framework.GUI.Dialog
                 {
                     _portraitContainer.AddChild(portrait);
                     _portraitContainer.MoveChild(portrait, 0);
-                    if (Engine.IsEditorHint()) portrait.Owner = GetTree().EditedSceneRoot;
+                    if (Engine.IsEditorHint())
+                        portrait.Owner = GetTree().EditedSceneRoot;
                 }
                 if (speaker.DisplayName != null)
                 {
@@ -184,13 +187,11 @@ namespace Arenbee.Framework.GUI.Dialog
             }
 
             SetPortraits();
-
-            if (CurrentDialogPart.Text != null)
-            {
-                _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;
-                _dynamicTextBox.CustomText = CurrentDialogPart.Text;
-                _dynamicTextBox.UpdateText();
-            }
+            if (CurrentDialogPart.Text == null)
+                return;
+            _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;
+            _dynamicTextBox.CustomText = CurrentDialogPart.Text;
+            _dynamicTextBox.UpdateText();
         }
 
         public void UpdateText()

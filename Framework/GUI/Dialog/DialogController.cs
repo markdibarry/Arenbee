@@ -43,13 +43,12 @@ namespace Arenbee.Framework.GUI.Dialog
 
         public void CloseBox(DialogBox box)
         {
-            if (box != null)
-            {
-                box.DialogBoxLoaded -= OnDialogBoxLoaded;
-                box.TextEventTriggered -= OnTextEventTriggered;
-                box.StoppedWriting -= OnStoppedWriting;
-                box.QueueFree();
-            }
+            if (box == null)
+                return;
+            box.DialogBoxLoaded -= OnDialogBoxLoaded;
+            box.TextEventTriggered -= OnTextEventTriggered;
+            box.StoppedWriting -= OnStoppedWriting;
+            box.QueueFree();
         }
 
         public void EndDialog()
@@ -74,79 +73,84 @@ namespace Arenbee.Framework.GUI.Dialog
 
         public void NextDialogPart(int partId)
         {
-            var previousPart = DialogParts[_currentPart];
+            DialogPart previousPart = DialogParts[_currentPart];
             _currentPart = partId;
             if (partId >= DialogParts.Length)
             {
                 EndDialog();
                 return;
             }
-            var newPart = DialogParts[partId];
+            DialogPart newPart = DialogParts[partId];
+            DialogBox nextBox = FocusedBox;
 
+            // Reuse current box if next speaker(s) is same as current speaker(s).
             if (Speaker.SameSpeakers(newPart.Speakers, previousPart.Speakers))
             {
-                // Same speakers as current dialog Box
-                FocusedBox.CurrentDialogPart = newPart;
-                FocusedBox.UpdateDialogPart();
+                nextBox.CurrentDialogPart = newPart;
+                nextBox.UpdateDialogPart();
                 return;
             }
 
+            // Remove current box if a speaker in the current box is needed in the next one.
             if (Speaker.AnySpeakers(newPart.Speakers, previousPart.Speakers))
             {
-                // New speakers features a current speaker
-                FocusedBox.QueueFree();
-                FocusedBox = null;
+                CloseBox(nextBox);
+                nextBox = null;
             }
             else
             {
-                FocusedBox.Dim(true);
+                nextBox.Dim = true;
             }
 
-            // Swap boxes
-            (UnfocusedBox, FocusedBox) = (FocusedBox, UnfocusedBox);
-            if (FocusedBox != null)
+            // Current box cannot be reused, try old unfocused box if there is one
+            DialogBox oldBox = nextBox;
+            nextBox = UnfocusedBox;
+
+            if (nextBox != null)
             {
-                // Same speakers as unfocused dialog box
-                if (Speaker.SameSpeakers(newPart.Speakers, FocusedBox.CurrentDialogPart.Speakers))
+                // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
+                if (Speaker.SameSpeakers(newPart.Speakers, nextBox.CurrentDialogPart.Speakers))
                 {
-                    FocusedBox.CurrentDialogPart = newPart;
-                    FocusedBox.Dim(false);
-                    FocusedBox.Raise();
-                    FocusedBox.UpdateDialogPart();
-                    return;
+                    nextBox.Raise();
+                    nextBox.CurrentDialogPart = newPart;
+                    nextBox.UpdateDialogPart();
+                    nextBox.Dim = false;
                 }
                 else
                 {
-                    FocusedBox.QueueFree();
-                    FocusedBox = null;
+                    CloseBox(nextBox);
+                    nextBox = null;
                 }
             }
-            CreateDialogBox(newPart, !UnfocusedBox?.ReverseDisplay ?? false);
+
+            nextBox ??= CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
+
+            UnfocusedBox = oldBox;
+            FocusedBox = nextBox;
         }
 
         public void Proceed()
         {
-            if (CanProceed && FocusedBox.IsAtPageEnd())
+            if (!CanProceed || !FocusedBox.IsAtPageEnd())
+                return;
+            CanProceed = false;
+            FocusedBox.NextArrow.Hide();
+            if (!FocusedBox.IsAtLastPage())
             {
-                FocusedBox.NextArrow.Hide();
-                if (FocusedBox.IsAtLastPage())
-                {
-                    if (FocusedBox.CurrentDialogPart.Next != null)
-                        NextDialogPart((int)FocusedBox.CurrentDialogPart.Next);
-                    else
-                        NextDialogPart();
-                }
-                else
-                {
-                    FocusedBox.NextPage();
-                }
-                CanProceed = false;
+                FocusedBox.NextPage();
+                return;
             }
+
+            if (FocusedBox.CurrentDialogPart.Next != null)
+                NextDialogPart((int)FocusedBox.CurrentDialogPart.Next);
+            else
+                NextDialogPart();
         }
 
         public void StartDialog(string path)
         {
-            if (DialogActive || string.IsNullOrEmpty(path)) return;
+            if (DialogActive || string.IsNullOrEmpty(path))
+                return;
             DialogStarted?.Invoke();
             DialogActive = true;
             _currentPart = 0;
@@ -157,19 +161,20 @@ namespace Arenbee.Framework.GUI.Dialog
                 EndDialog();
                 return;
             }
-            CreateDialogBox(DialogParts[0], false);
+            FocusedBox = CreateDialogBox(DialogParts[0], false);
         }
 
-        public void CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
+        public DialogBox CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
         {
-            FocusedBox = _dialogBoxScene.Instantiate<DialogBox>();
-            FocusedBox.TextEventTriggered += OnTextEventTriggered;
-            FocusedBox.StoppedWriting += OnStoppedWriting;
-            FocusedBox.DialogBoxLoaded += OnDialogBoxLoaded;
-            FocusedBox.CurrentDialogPart = dialogPart;
-            FocusedBox.ReverseDisplay = reverseDisplay;
-            AddChild(FocusedBox);
-            FocusedBox.UpdateDialogPart();
+            var newBox = _dialogBoxScene.Instantiate<DialogBox>();
+            newBox.TextEventTriggered += OnTextEventTriggered;
+            newBox.StoppedWriting += OnStoppedWriting;
+            newBox.DialogBoxLoaded += OnDialogBoxLoaded;
+            newBox.CurrentDialogPart = dialogPart;
+            newBox.ReverseDisplay = reverseDisplay;
+            AddChild(newBox);
+            newBox.UpdateDialogPart();
+            return newBox;
         }
 
         private void CloseOptionBox()
@@ -203,32 +208,28 @@ namespace Arenbee.Framework.GUI.Dialog
         {
             if (!optionItem.OptionData.TryGetValue("next", out string next))
                 return;
-            if (int.TryParse(next, out int result))
-            {
-                NextDialogPart(result);
-                CloseOptionBox();
-            }
-            else
+            if (!int.TryParse(next, out int result))
             {
                 GD.PrintErr("Next option not valid!");
+                return;
             }
+
+            NextDialogPart(result);
+            CloseOptionBox();
         }
 
         private void OnStoppedWriting(object sender, EventArgs e)
         {
-            if (FocusedBox.IsAtPageEnd())
-            {
-                if (FocusedBox.IsAtLastPage()
-                    && FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
-                {
-                    OpenOptionBoxAsync();
-                }
-                else
-                {
-                    FocusedBox.NextArrow.Show();
-                    CanProceed = true;
-                }
-            }
+            if (!FocusedBox.IsAtPageEnd())
+                return;
+            // if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
+            // {
+            //     OpenOptionBoxAsync();
+            //     return;
+            // }
+
+            FocusedBox.NextArrow.Show();
+            CanProceed = true;
         }
 
         private async void OpenOptionBoxAsync()

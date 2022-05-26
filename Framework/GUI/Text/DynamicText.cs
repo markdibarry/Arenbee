@@ -17,7 +17,7 @@ namespace Arenbee.Framework.GUI.Text
             TextEvents = new Dictionary<int, List<TextEvent>>();
             FitContentHeight = true;
             ScrollActive = false;
-            ShouldWrite = false;
+            WriteEnabled = false;
             //Speed = 0.05f;
             StopAt = -1;
             VisibleCharacters = 0;
@@ -31,7 +31,7 @@ namespace Arenbee.Framework.GUI.Text
         private bool _isTextDirty;
         private int[] _lineBreaks;
         private int _lineCount;
-        private bool _shouldWrite;
+        private bool _writeEnabled;
         [Export]
         public int CurrentLine
         {
@@ -45,21 +45,21 @@ namespace Arenbee.Framework.GUI.Text
         [Export(PropertyHint.MultilineText)]
         public string CustomText { get; set; }
         [Export]
-        public bool ShouldShowAllToStop
+        public bool ShowAllToStopEnabled
         {
             get { return IsAtStop(); }
             set { ShowAllToStop(value); }
         }
         [Export]
-        public bool ShouldUpdateText
+        public bool UpdateTextEnabled
         {
             get { return false; }
             set { if (value) UpdateText(); }
         }
         [Export]
-        public bool ShouldWrite
+        public bool WriteEnabled
         {
-            get { return _shouldWrite; }
+            get { return _writeEnabled; }
             set { Write(value); }
         }
         [Export]
@@ -78,11 +78,13 @@ namespace Arenbee.Framework.GUI.Text
 
         public override void _Process(float delta)
         {
-            if (_isTextDirty) UpdateTextInfo();
-            if (!ShouldWrite) return;
+            if (_isTextDirty)
+                UpdateTextInfo();
+            if (!WriteEnabled)
+                return;
             if (IsAtStop())
             {
-                ShouldWrite = false;
+                WriteEnabled = false;
                 InvokeTextEvents(VisibleCharacters);
                 StoppedWriting?.Invoke(this, EventArgs.Empty);
                 return;
@@ -91,16 +93,15 @@ namespace Arenbee.Framework.GUI.Text
             if (_counter > 0)
             {
                 _counter -= delta;
+                return;
             }
-            else
-            {
-                _counter = Speed;
-                InvokeTextEvents(VisibleCharacters);
-                if (SpeedUpText)
-                    _counter = 0;
-                SpeedUpText = false;
-                VisibleCharacters++;
-            }
+
+            _counter = Speed;
+            InvokeTextEvents(VisibleCharacters);
+            if (SpeedUpText)
+                _counter = 0;
+            SpeedUpText = false;
+            VisibleCharacters++;
         }
 
         public override void _Ready()
@@ -154,7 +155,7 @@ namespace Arenbee.Framework.GUI.Text
 
         public void Write(bool shouldWrite)
         {
-            _shouldWrite = shouldWrite;
+            _writeEnabled = shouldWrite;
         }
 
         private void ExtractEventsFromText()
@@ -167,57 +168,57 @@ namespace Arenbee.Framework.GUI.Text
             var dialogEvents = new Dictionary<int, List<TextEvent>>();
             int pTextEventStart = 0;
             bool inEvent = false;
-            int fTextI = 0;
-            int dTextI = 0;
+            int fTextIndex = 0;
+            int dTextIndex = 0;
             int dTextEventStart = 0;
-            for (int pTextI = 0; pTextI < pText.Length; pTextI++)
+            for (int pTextIndex = 0; pTextIndex < pText.Length; pTextIndex++)
             {
                 // If Bbcode found
-                while (fTextI < fText.Length
-                    && fText[fTextI] != pText[pTextI])
+                while (fTextIndex < fText.Length
+                    && fText[fTextIndex] != pText[pTextIndex])
                 {
-                    fTextI++;
+                    fTextIndex++;
                 }
 
                 if (inEvent)
                 {
-                    if (IsEventClose(pText, pTextI))
+                    if (IsEventClose(pText, pTextIndex))
                     {
                         if (!dialogEvents.ContainsKey(dTextEventStart))
                         {
                             dialogEvents.Add(dTextEventStart, new List<TextEvent>());
                         }
-                        var newEvent = TextEvent.Parse(pText[pTextEventStart..pTextI]);
+                        var newEvent = TextEvent.Parse(pText[pTextEventStart..pTextIndex]);
                         dialogEvents[dTextEventStart].Add(newEvent);
-                        fTextAppendStart = fTextI + 2;
+                        fTextAppendStart = fTextIndex + 2;
                         inEvent = false;
-                        pTextI++;
-                        fTextI++;
+                        pTextIndex++;
+                        fTextIndex++;
                     }
                 }
-                else if (IsEventOpen(pText, pTextI))
+                else if (IsEventOpen(pText, pTextIndex))
                 {
-                    if (pTextI - 1 > 0)
+                    if (pTextIndex - 1 > 0)
                     {
                         // Add non-event text
-                        newTextBuilder.Append(fText[fTextAppendStart..fTextI]);
+                        newTextBuilder.Append(fText[fTextAppendStart..fTextIndex]);
                     }
-                    pTextEventStart = pTextI + 2;
-                    dTextEventStart = dTextI;
+                    pTextEventStart = pTextIndex + 2;
+                    dTextEventStart = dTextIndex;
                     inEvent = true;
-                    pTextI++;
-                    fTextI++;
+                    pTextIndex++;
+                    fTextIndex++;
                 }
-                else if (pTextI == pText.Length - 1)
+                else if (pTextIndex == pText.Length - 1)
                 {
                     // if last iteration, add remaining text
                     newTextBuilder.Append(fText[fTextAppendStart..]);
                 }
                 else
                 {
-                    dTextI++;
+                    dTextIndex++;
                 }
-                fTextI++;
+                fTextIndex++;
             }
             Text = newTextBuilder.ToString();
             TextEvents = dialogEvents;
@@ -225,7 +226,7 @@ namespace Arenbee.Framework.GUI.Text
 
         private int GetValidLine(int line)
         {
-            return line < 0 ? 0 : line >= _lineCount ? _lineCount - 1 : line;
+            return line < 1 ? 0 : line >= _lineCount ? _lineCount - 1 : line;
         }
 
         private int[] GetLineBreaks()
@@ -266,13 +267,10 @@ namespace Arenbee.Framework.GUI.Text
 
         private void InvokeTextEvents(int character)
         {
-            if (TextEvents.ContainsKey(character))
-            {
-                foreach (var textEvent in TextEvents[character])
-                {
-                    HandleTextEvent(textEvent);
-                }
-            }
+            if (!TextEvents.ContainsKey(character))
+                return;
+            foreach (var textEvent in TextEvents[character])
+                HandleTextEvent(textEvent);
         }
 
         private bool IsEventOpen(string text, int index)
@@ -295,7 +293,7 @@ namespace Arenbee.Framework.GUI.Text
             {
                 const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
                 UpdateText(DefaultText);
-                ShouldWrite = true;
+                WriteEnabled = true;
             }
         }
 

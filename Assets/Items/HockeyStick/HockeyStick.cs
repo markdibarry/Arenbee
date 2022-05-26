@@ -1,6 +1,5 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
 
@@ -19,40 +18,10 @@ namespace Arenbee.Assets.Items
 
         public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(Holder);
 
-        public override void DisableHitBoxes(int hitboxNum)
-        {
-            switch (hitboxNum)
-            {
-                case 1:
-                    WeakAttack1HitBox.SetDeferred("monitorable", false);
-                    WeakAttack1HitBox.Visible = false;
-                    break;
-                case 2:
-                    WeakAttack2HitBox.SetDeferred("monitorable", false);
-                    WeakAttack2HitBox.Visible = false;
-                    break;
-            }
-        }
-
         protected override void SetHitBoxes()
         {
-            WeakAttack1HitBox.ActionData = new ActionData()
-            {
-                SourceName = Holder.Name,
-                ActionType = ActionType.Melee,
-                ElementDamage = Holder.Stats.ElementOffs.CurrentElement,
-                StatusEffects = Holder.Stats.StatusEffectOffs.GetModifiers(),
-                Value = Holder.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
-            };
-
-            WeakAttack2HitBox.ActionData = new ActionData()
-            {
-                SourceName = Holder.Name,
-                ActionType = ActionType.Melee,
-                ElementDamage = Holder.Stats.ElementOffs.CurrentElement,
-                StatusEffects = Holder.Stats.StatusEffectOffs.GetModifiers(),
-                Value = Holder.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue
-            };
+            WeakAttack1HitBox.SetBasicMeleeBox(Holder);
+            WeakAttack2HitBox.SetBasicMeleeBox(Holder);
         }
 
         protected override void SetNodeReferences()
@@ -114,7 +83,9 @@ namespace Arenbee.Assets.Items
 
             public override void Exit()
             {
-                Actor.WeaponSlot.CurrentWeapon.DisableHitBoxes(1);
+                var hockeyStick = Weapon as HockeyStick;
+                hockeyStick.WeakAttack1HitBox.SetMonitorableDeferred(false);
+                hockeyStick.WeakAttack1HitBox.Visible = false;
             }
 
             public override ActionState CheckForTransitions()
@@ -144,7 +115,9 @@ namespace Arenbee.Assets.Items
 
             public override void Exit()
             {
-                Actor.WeaponSlot.CurrentWeapon.DisableHitBoxes(2);
+                var hockeyStick = Weapon as HockeyStick;
+                hockeyStick.WeakAttack2HitBox.SetMonitorableDeferred(false);
+                hockeyStick.WeakAttack2HitBox.Visible = false;
             }
 
             public override ActionState CheckForTransitions()

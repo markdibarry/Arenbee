@@ -25,6 +25,7 @@ namespace Arenbee.Framework.Game
         private static GameRoot s_instance;
         private GUIInputHandler _menuInput;
         public static GameRoot Instance => s_instance;
+        public bool _queueReset;
         public ColorAdjustment ColorAdjustment { get; set; }
         public AudioController AudioController { get; private set; }
         public DialogController DialogController { get; private set; }
@@ -78,25 +79,34 @@ namespace Arenbee.Framework.Game
         {
             _menuInput.Update();
             PlayerOneInput.Update();
+            if (_queueReset)
+            {
+                _queueReset = false;
+                ResetToTitleScreen();
+            }
             if (Godot.Input.IsActionJustPressed("collect"))
                 GC.Collect();
-            else if (Godot.Input.IsActionJustPressed("hardReset"))
-                ResetToTitleScreen();
         }
 
         public void ResetToTitleScreen()
         {
+            EndCurrentgame();
+            MenuController.CloseMenu();
             MenuController.OpenTitleMenu();
         }
 
         public void EndCurrentgame()
         {
-            if (IsInstanceValid(GameSession))
-            {
-                UnsubscribeSessionEvents(GameSession);
-                GameSession.QueueFree();
-                GameSession = null;
-            }
+            if (!IsInstanceValid(GameSession))
+                return;
+            UnsubscribeSessionEvents(GameSession);
+            GameSession.Free();
+            GameSession = null;
+        }
+
+        public void QueueReset()
+        {
+            _queueReset = true;
         }
 
         public void StartGame(GameSave gameSave = null)

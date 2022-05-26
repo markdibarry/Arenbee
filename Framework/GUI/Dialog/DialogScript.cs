@@ -77,31 +77,26 @@ namespace Arenbee.Framework.GUI.Dialog
         public AnimatedSprite2D GetPortrait(float shiftAmount, bool reverse)
         {
             string portraitName = PortraitName ?? DisplayName;
-            if (portraitName != null)
+            if (portraitName == null)
+                return null;
+            string path = $"{PathConstants.PortraitsPath}{portraitName.ToLower()}/portraits.tres";
+            if (!ResourceLoader.Exists(path))
+                return null;
+            var portrait = new AnimatedSprite2D()
             {
-                string path = $"{PathConstants.PortraitsPath}{portraitName.ToLower()}/portraits.tres";
-                if (ResourceLoader.Exists(path))
-                {
-                    var portrait = new AnimatedSprite2D()
-                    {
-                        Name = portraitName,
-                        FlipH = reverse,
-                        Frames = GD.Load<SpriteFrames>(path)
-                    };
-                    portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
-                    var mood = Mood?.ToLower() ?? "neutral";
-                    if (portrait.Frames.HasAnimation(mood))
-                    {
-                        portrait.Play(mood);
-                        return portrait;
-                    }
-                    else
-                    {
-                        GD.PrintErr($"No portrait found for {portraitName} {mood}");
-                    }
-                }
+                Name = portraitName,
+                FlipH = reverse,
+                Frames = GD.Load<SpriteFrames>(path)
+            };
+            portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
+            var mood = Mood?.ToLower() ?? "neutral";
+            if (!portrait.Frames.HasAnimation(mood))
+            {
+                GD.PrintErr($"No portrait found for {portraitName} {mood}");
+                return null;
             }
-            return null;
+            portrait.Play(mood);
+            return portrait;
         }
     }
 

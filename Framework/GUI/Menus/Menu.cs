@@ -54,7 +54,7 @@ namespace Arenbee.Framework.GUI
             Background = ContentGroup.GetNode<Control>("Content/Background");
             SubMenus = ContentGroup.GetNode<Control>("Content/SubMenus");
             if (this.IsToolDebugMode())
-                Init();
+                Init(new MenuInputHandlerNull());
         }
 
         public async Task AddSubMenuAsync(SubMenu subMenu)
@@ -66,19 +66,15 @@ namespace Arenbee.Framework.GUI
             CurrentSubMenu.IsActive = true;
         }
 
-        public async void Init()
+        public async void Init(GUIInputHandler menuInput)
         {
-            await InitAsync();
+            await InitAsync(menuInput);
         }
 
-        public virtual async Task InitAsync()
-        {
-            await TransitionOpenAsync();
-        }
-
-        public void Init(GUIInputHandler menuInput)
+        public virtual async Task InitAsync(GUIInputHandler menuInput)
         {
             _menuInput = menuInput;
+            await TransitionOpenAsync();
         }
 
         public virtual Task TransitionOpenAsync()

@@ -1,8 +1,6 @@
-﻿using Godot;
-
-namespace Arenbee.Framework.Statistics
+﻿namespace Arenbee.Framework.Statistics
 {
-    public partial class HurtBox : Area2D
+    public partial class HurtBox : AreaBox
     {
     }
 }

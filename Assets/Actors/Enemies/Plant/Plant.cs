@@ -24,11 +24,17 @@ namespace Arenbee.Assets.Actors.Enemies
         protected override void ApplyDefaultStats()
         {
             Stats.AddMod(new Modifier(StatType.ElementOff, (int)ElementType.Earth, ModOperator.Add, 1));
-            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Earth, ModOperator.Add, ElementDef.Weak));
+            Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Fire, ModOperator.Add, ElementDef.Weak));
             Stats.SetAttribute(AttributeType.MaxHP, 4);
             Stats.SetAttribute(AttributeType.HP, 4);
             Stats.SetAttribute(AttributeType.Attack, 4);
             Stats.SetAttribute(AttributeType.Defense, 0);
+        }
+
+        protected override void SetHitBoxes()
+        {
+            var headbox = HitBoxes.GetNode<HitBox>("HeadBox");
+            headbox.SetBasicMeleeBox(this);
         }
     }
 }

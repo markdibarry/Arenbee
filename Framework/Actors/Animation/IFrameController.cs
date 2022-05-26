@@ -43,7 +43,7 @@ namespace Arenbee.Framework.Actors
 
         public void Start(DamageData damageData, bool overDamageThreshold)
         {
-            _actor.HurtBox.SetDeferred("monitoring", false);
+            _actor.HurtBoxes.SetMonitoringDeferred(false);
             _spriteShader.SetShaderParam("flash_mix", 1);
             SetShaderFlashColor(damageData);
             _flashTimer = FlashDuration;
@@ -57,7 +57,7 @@ namespace Arenbee.Framework.Actors
         public void Stop()
         {
             _spriteShader.SetShaderParam("flash_mix", 0);
-            _actor.HurtBox.SetDeferred("monitoring", true);
+            _actor.HurtBoxes.SetMonitoringDeferred(true);
             _iframeTimerEnabled = false;
             _flashTimerEnabled = false;
             _blinkEnabled = false;

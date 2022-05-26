@@ -2,7 +2,7 @@ shader_type canvas_item;
 const float PALETTE_UNIT = 0.0625;
 uniform sampler2D palette1 : filter_nearest;
 uniform sampler2D palette2 : filter_nearest;
-uniform vec4 flash_color : hint_color = vec4(1.0);
+uniform vec4 flash_color : source_color = vec4(1.0);
 uniform float flash_mix : hint_range(0.0, 1.0) = 0.0;
 uniform float speed : hint_range(0.0, 2.0) = 0.0;
 uniform float cycle_start : hint_range(0.0, 16.0, 1.0) = 0.0;

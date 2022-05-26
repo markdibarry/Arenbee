@@ -1,4 +1,3 @@
-using Arenbee.Framework;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Statistics;
@@ -19,7 +18,10 @@ namespace Arenbee.Assets.Actors.Default.State
 
         public class Normal : HealthState
         {
-            public override void Enter() { }
+            public override void Enter()
+            {
+                StateController.PlayFallbackAnimation();
+            }
 
             public override HealthState Update(float delta)
             {
@@ -28,13 +30,13 @@ namespace Arenbee.Assets.Actors.Default.State
 
             public override HealthState CheckForTransitions()
             {
-                if (Actor.Stats.IsKO())
-                    return GetState<Dead>();
                 return null;
             }
 
             public override void HandleDamage(DamageData damageData)
             {
+                if (Actor.Stats.HasNoHP())
+                    return;
                 bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
                 Actor.IFrameController.Start(damageData, overDamageThreshold);
                 if (overDamageThreshold)
@@ -44,6 +46,11 @@ namespace Arenbee.Assets.Actors.Default.State
                     Actor.Velocity = direction * 200;
                     StateMachine.TransitionTo<Stagger>(new[] { damageData });
                 }
+            }
+
+            public override void HandleHPDepleted()
+            {
+                StateMachine.TransitionTo<Dead>();
             }
         }
 
@@ -84,11 +91,14 @@ namespace Arenbee.Assets.Actors.Default.State
 
             public override HealthState CheckForTransitions()
             {
-                if (Actor.Stats.IsKO())
-                    return GetState<Dead>();
                 if (!_isStaggered)
                     return GetState<Normal>();
                 return null;
+            }
+
+            public override void HandleHPDepleted()
+            {
+                StateMachine.TransitionTo<Dead>();
             }
         }
 
@@ -107,8 +117,9 @@ namespace Arenbee.Assets.Actors.Default.State
 
             public override void Enter()
             {
+                Actor.Stats.AddKOStatus();
                 Actor.IFrameController.Stop();
-                Actor.HurtBox.SetDeferred("monitoring", false);
+                Actor.HurtBoxes.SetMonitoringDeferred(false);
                 Actor.Velocity = new Vector2(0, 0);
                 PlayAnimation(AnimationName);
             }
@@ -120,12 +131,12 @@ namespace Arenbee.Assets.Actors.Default.State
 
             public override void Exit()
             {
-                Actor.HurtBox.SetDeferred("monitoring", true);
+                Actor.HurtBoxes.SetMonitoringDeferred(true);
             }
 
             public override HealthState CheckForTransitions()
             {
-                if (!Actor.Stats.IsKO())
+                if (!Actor.Stats.HasNoHP())
                     return GetState<Normal>();
                 return null;
             }

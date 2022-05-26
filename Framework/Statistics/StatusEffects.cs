@@ -185,7 +185,7 @@ namespace Arenbee.Framework.Statistics
             {
                 foreach (var mod in Modifiers)
                 {
-                    if (ignoreHidden && mod.IsHidden)
+                    if (mod.IsHidden && ignoreHidden)
                         continue;
                     result = mod.Apply(result);
                 }
@@ -195,7 +195,7 @@ namespace Arenbee.Framework.Statistics
                 result = TempModifier.Modifier.Value;
             }
 
-            if (StatusEffectType != StatusEffectType.KO && Stats.IsKO())
+            if (StatusEffectType != StatusEffectType.KO && Stats.HasNoHP())
                 result = 0;
             var statDef = Stats.StatusEffectDefs.GetStat(SubType);
             if (statDef?.ModifiedValue >= 100)

@@ -14,19 +14,18 @@ namespace Arenbee.Framework.GUI.Dialog
 
         protected override void ReplaceDefaultOptions()
         {
-            if (DialogChoices?.Length > 0)
+            if (DialogChoices == null || DialogChoices.Length == 0)
+                return;
+            _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            var options = new List<TextOption>();
+            foreach (var choice in DialogChoices)
             {
-                _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-                var options = new List<TextOption>();
-                foreach (var choice in DialogChoices)
-                {
-                    var textOption = _textOptionScene.Instantiate<TextOption>();
-                    textOption.OptionData.Add("next", choice.Next.ToString());
-                    textOption.LabelText = choice.Text;
-                    options.Add(textOption);
-                }
-                _options.ReplaceChildren(options);
+                var textOption = _textOptionScene.Instantiate<TextOption>();
+                textOption.OptionData.Add("next", choice.Next.ToString());
+                textOption.LabelText = choice.Text;
+                options.Add(textOption);
             }
+            _options.ReplaceChildren(options);
         }
 
         protected override void SetNodeReferences()
@@ -34,8 +33,8 @@ namespace Arenbee.Framework.GUI.Dialog
             base.SetNodeReferences();
             _options = OptionContainers.Find(x => x.Name == "OptionContainer");
             _options.FitContainer = true;
-            _options.HResize = Control.SizeFlags.ShrinkCenter;
-            _options.VResize = Control.SizeFlags.ShrinkCenter;
+            _options.HResize = SizeFlags.ShrinkCenter;
+            _options.VResize = SizeFlags.ShrinkCenter;
         }
     }
 }
