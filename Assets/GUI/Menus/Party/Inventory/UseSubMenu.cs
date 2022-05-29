@@ -23,10 +23,16 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            if (!optionItem.OptionData.TryGetValue("value", out string optionValue))
+            var optionValue = optionItem.GetData<string>("value");
+            if (optionValue == null)
                 return;
-            if (!optionItem.Disabled && optionValue == "use")
-                HandleUse();
+            if (!optionItem.Disabled)
+            {
+                if (optionValue == "use")
+                    HandleUse();
+                else if (optionValue == "drop")
+                    HandleDrop();
+            }
         }
 
         protected override void SetNodeReferences()
@@ -41,7 +47,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             var options = new List<TextOption>();
             var option = _textOptionScene.Instantiate<TextOption>();
             option.LabelText = "Use";
-            option.OptionData.Add("value", "use");
+            option.OptionData["value"] = "use";
             option.Disabled = true;
             if (Item.UseData != null)
             {
@@ -57,10 +63,15 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
             option = _textOptionScene.Instantiate<TextOption>();
             option.LabelText = "Drop";
-            option.OptionData.Add("value", "drop");
+            option.OptionData["value"] = "drop";
             option.Disabled = !Item.IsDroppable;
             options.Add(option);
             _optionContainer.ReplaceChildren(options);
+        }
+
+        private void HandleDrop()
+        {
+
         }
 
         private void HandleUse()
@@ -83,12 +94,14 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void OpenPartyUseSubMenu()
         {
-
+            var usePartySubMenu = GDEx.Instantiate<UsePartySubMenu>(UsePartySubMenu.GetScenePath());
+            usePartySubMenu.Item = Item;
+            RaiseRequestedAdd(usePartySubMenu);
         }
 
         private void OpenEnemyUseSubMenu()
         {
-            
+
         }
     }
 }

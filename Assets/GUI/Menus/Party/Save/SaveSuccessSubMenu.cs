@@ -18,7 +18,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnTimeOut()
         {
             base.OnTimeOut();
-            RaiseRequestedClose(cascadeTo: nameof(MainSubMenu));
+            RaiseRequestedClose(new SubMenuCloseRequest(nameof(MainSubMenu)));
         }
     }
 }

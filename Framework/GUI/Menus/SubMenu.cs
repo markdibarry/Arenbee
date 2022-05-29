@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Input;
+using Arenbee.Framework.Utility;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -31,33 +33,39 @@ namespace Arenbee.Framework.GUI
         public bool IsActive { get; set; }
         protected Control Background { get; set; }
         protected Control Foreground { get; set; }
+        protected GUIInputHandler MenuInput { get; private set; }
         [Export] protected bool PreventCancel { get; set; }
         [Export] protected bool PreventCloseAll { get; set; }
         public delegate void RequestedAddHandler(SubMenu subMenu);
-        public delegate void RequestedCloseHandler(Action callback, string cascadeTo);
-        public delegate void RequestedCloseAllHandler(Action callback);
+        public delegate void RequestedCloseHandler(SubMenuCloseRequest closeRequest);
         public event RequestedAddHandler RequestedAdd;
         public event RequestedCloseHandler RequestedClose;
-        public event RequestedCloseAllHandler RequestedCloseAll;
 
         public override void _Ready()
         {
             SetNodeReferences();
+            MenuInput = Locator.GetMenuInput();
             if (this.IsSceneRoot())
                 Init();
         }
 
-        public virtual void CloseSubMenu(Action callback = null, string cascadeTo = null)
+        public override void _Process(float delta)
         {
-            RaiseRequestedClose(callback, cascadeTo);
+            if (IsActive)
+                HandleInput(delta);
         }
 
-        public virtual void HandleInput(GUIInputHandler input, float delta)
+        public virtual void CloseSubMenu(SubMenuCloseRequest closeRequest)
         {
-            if (input.Cancel.IsActionJustPressed && !PreventCancel)
-                RaiseRequestedClose();
-            else if (input.Start.IsActionJustPressed && !PreventCloseAll)
-                RaiseRequestedCloseAll();
+            RaiseRequestedClose(closeRequest);
+        }
+
+        public virtual void HandleInput(float delta)
+        {
+            if (MenuInput.Cancel.IsActionJustPressed && !PreventCancel)
+                RaiseRequestedClose(new SubMenuCloseRequest());
+            else if (MenuInput.Start.IsActionJustPressed && !PreventCloseAll)
+                RaiseRequestedClose(new SubMenuCloseRequest(closeAll: true));
         }
 
         public async void Init()
@@ -68,7 +76,7 @@ namespace Arenbee.Framework.GUI
         public async Task InitAsync()
         {
             PreWaitFrameSetup();
-            await ToSignal(GetTree(), "process_frame");
+            await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
             await PostWaitFrameSetup();
         }
 
@@ -118,14 +126,14 @@ namespace Arenbee.Framework.GUI
             RequestedAdd?.Invoke(subMenu);
         }
 
-        protected void RaiseRequestedClose(Action callback = null, string cascadeTo = null)
+        protected void RaiseRequestedClose()
         {
-            RequestedClose?.Invoke(callback, cascadeTo);
+            RaiseRequestedClose(new SubMenuCloseRequest());
         }
 
-        protected void RaiseRequestedCloseAll(Action callback = null)
+        protected void RaiseRequestedClose(SubMenuCloseRequest closeRequest)
         {
-            RequestedCloseAll?.Invoke(callback);
+            RequestedClose?.Invoke(closeRequest);
         }
 
         protected virtual void SetNodeReferences()

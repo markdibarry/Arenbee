@@ -21,7 +21,7 @@ namespace Arenbee.Framework.GUI.Dialog
             foreach (var choice in DialogChoices)
             {
                 var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.OptionData.Add("next", choice.Next.ToString());
+                textOption.OptionData["next"] = choice.Next;
                 textOption.LabelText = choice.Text;
                 options.Add(textOption);
             }

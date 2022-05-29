@@ -6,10 +6,10 @@ using Godot;
 
 namespace Arenbee.Assets.Projectiles
 {
-    public partial class Fireball : Node2D
+    public partial class FireballBig : Node2D
     {
         public static string GetScenePath() => GDEx.GetScenePath();
-        private Sprite2D _sprite2D;
+        private AnimatedSprite2D _animatedSprite2D;
         private float _speed = 250;
         private float _expiration = 0.5f;
         public Direction Direction { get; set; }
@@ -17,12 +17,13 @@ namespace Arenbee.Assets.Projectiles
 
         public override void _Ready()
         {
-            _sprite2D = GetNode<Sprite2D>("Sprite2D");
+            _animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _animatedSprite2D.Play();
             HitBox = GetNode<HitBox>("HitBox");
             if (Direction == Direction.Left)
             {
                 _speed *= -1;
-                _sprite2D.FlipH = true;
+                _animatedSprite2D.FlipH = true;
             }
         }
 
@@ -37,7 +38,7 @@ namespace Arenbee.Assets.Projectiles
 
         public static void CreateFireball(Actor actor)
         {
-            var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<Fireball>();
+            var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<FireballBig>();
             var fireballOffset = 10;
             if (actor.Direction.x < 0)
             {
@@ -53,10 +54,10 @@ namespace Arenbee.Assets.Projectiles
             actionData.StatusEffects.Add(new Modifier(
                 statType: StatType.StatusEffectOff,
                 subType: (int)StatusEffectType.Burn,
-                effect: ModOperator.Add,
+                modOperator: ModOperator.Add,
                 value: 1,
                 chance: 50));
-            actionData.Value = actor.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue;
+            actionData.Value = actor.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue + 1;
             fireball.HitBox.GetActionData = () =>
             {
                 fireball.QueueFree();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Framework.Actors;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Skills;
 using Arenbee.Framework.Statistics;
@@ -332,7 +333,8 @@ namespace Arenbee.Assets.Items
                 {
                     SkillEffect = SkillEffectName.RestoreHP,
                     UseType = ItemUseType.PartyMember,
-                    Value1 = 5
+                    Value1 = 5,
+                    CanUse = (Actor actor) => !actor.Stats.HasFullHP() && !actor.Stats.HasNoHP()
                 }
             });
 

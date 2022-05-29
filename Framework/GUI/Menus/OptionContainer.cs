@@ -75,6 +75,17 @@ namespace Arenbee.Framework.GUI
             Init();
         }
 
+        public void AddGridChild(Node node)
+        {
+            GridContainer.AddChild(node);
+        }
+
+        public void Clear()
+        {
+            OptionItems.Clear();
+            GridContainer.QueueFreeAllChildren();
+        }
+
         public void ExpandGridToContainer()
         {
             GridContainer.Size = new Vector2(_control.Size.x, GridContainer.Size.y);
@@ -212,10 +223,9 @@ namespace Arenbee.Framework.GUI
 
         public virtual void ReplaceChildren(IEnumerable<OptionItem> optionItems)
         {
-            OptionItems.Clear();
-            GridContainer.QueueFreeAllChildren();
+            Clear();
             foreach (var item in optionItems)
-                GridContainer.AddChild(item);
+                AddGridChild(item);
             InitItems();
         }
 

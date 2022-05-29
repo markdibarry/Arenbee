@@ -30,15 +30,9 @@ namespace Arenbee.Framework.Actors
             HandleBlinking();
         }
 
-        public void HandleDispose()
-        {
-            _spriteShader.Dispose();
-        }
-
         public void Init()
         {
-            _spriteShader = (ShaderMaterial)_actor.BodySprite.Material;
-            if (_spriteShader == null) GD.PrintErr("ShaderMaterial not provided!");
+            _spriteShader = _actor.BodyShader;
         }
 
         public void Start(DamageData damageData, bool overDamageThreshold)

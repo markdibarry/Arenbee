@@ -180,7 +180,7 @@ namespace Arenbee.Framework.GUI.Dialog
         private void CloseOptionBox()
         {
             _dialogOptionSubMenu.ItemSelected -= OnOptionItemSelected;
-            _dialogOptionSubMenu.CloseSubMenu();
+            _dialogOptionSubMenu.QueueFree();
             _dialogOptionSubMenu = null;
         }
 
@@ -206,15 +206,8 @@ namespace Arenbee.Framework.GUI.Dialog
 
         private void OnOptionItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
-            if (!optionItem.OptionData.TryGetValue("next", out string next))
-                return;
-            if (!int.TryParse(next, out int result))
-            {
-                GD.PrintErr("Next option not valid!");
-                return;
-            }
-
-            NextDialogPart(result);
+            int next = optionItem.GetData<int>("next");
+            NextDialogPart(next);
             CloseOptionBox();
         }
 
@@ -222,11 +215,11 @@ namespace Arenbee.Framework.GUI.Dialog
         {
             if (!FocusedBox.IsAtPageEnd())
                 return;
-            // if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
-            // {
-            //     OpenOptionBoxAsync();
-            //     return;
-            // }
+            if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
+            {
+                OpenOptionBoxAsync();
+                return;
+            }
 
             FocusedBox.NextArrow.Show();
             CanProceed = true;

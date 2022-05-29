@@ -11,14 +11,14 @@ namespace Arenbee.Framework.Statistics
         public Modifier(
             StatType statType,
             int subType,
-            ModOperator effect,
+            ModOperator modOperator,
             int value,
             int chance,
             bool isHidden = false)
         {
             StatType = statType;
             SubType = subType;
-            Operator = effect;
+            ModOperator = modOperator;
             Chance = chance;
             Value = value;
             IsHidden = isHidden;
@@ -27,10 +27,10 @@ namespace Arenbee.Framework.Statistics
         public Modifier(
             StatType statType,
             int subType,
-            ModOperator effect,
+            ModOperator modOperator,
             int value,
             bool isHidden = false)
-            : this(statType, subType, effect, value, 100, isHidden)
+            : this(statType, subType, modOperator, value, 100, isHidden)
         { }
 
         public Modifier(
@@ -44,7 +44,7 @@ namespace Arenbee.Framework.Statistics
         {
             StatType = mod.StatType;
             SubType = mod.SubType;
-            Operator = mod.Operator;
+            ModOperator = mod.ModOperator;
             IsHidden = mod.IsHidden;
             Value = mod.Value;
             Chance = mod.Chance;
@@ -52,16 +52,16 @@ namespace Arenbee.Framework.Statistics
 
         public int Chance { get; set; }
         public bool IsHidden { get; set; }
-        public ModOperator Operator { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ModOperator ModOperator { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public StatType StatType { get; set; }
         public int SubType { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
         public int Value { get; }
 
         public int Apply(int baseValue)
         {
-            return s_methods[Operator](baseValue, Value);
+            return s_methods[ModOperator](baseValue, Value);
         }
 
         /// <summary>

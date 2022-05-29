@@ -20,10 +20,10 @@ namespace Arenbee.Framework.Audio
             AddAudioPlayers();
         }
 
-        public override void _Process(float delta)
+        public void ClearFX()
         {
             foreach (var player in _audioFXPlayers)
-                player.Process(delta);
+                player.Reset();
         }
 
         public override void PlaySoundFX(Node2D node2D, string soundName)
@@ -51,6 +51,12 @@ namespace Arenbee.Framework.Audio
         public void OnPauseChanged(ProcessModeEnum processMode)
         {
             _fx.ProcessMode = processMode;
+        }
+
+        public void Reset()
+        {
+            ClearFX();
+            _fx.ProcessMode = ProcessModeEnum.Inherit;
         }
 
         private void AddAudioPlayers()

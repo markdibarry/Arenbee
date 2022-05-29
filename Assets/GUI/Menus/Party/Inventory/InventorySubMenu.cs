@@ -19,12 +19,12 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private OptionContainer _typeList;
         private PackedScene _keyValueOptionScene;
 
-        public override void HandleInput(GUIInputHandler input, float delta)
+        public override void HandleInput(float delta)
         {
-            if (input.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
+            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
                 FocusContainer(_typeList);
             else
-                base.HandleInput(input, delta);
+                base.HandleInput(delta);
         }
 
         protected override void ReplaceDefaultOptions()
@@ -71,14 +71,14 @@ namespace Arenbee.Assets.GUI.Menus.Party
             var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
             var allOption = textOptionScene.Instantiate<TextOption>();
             allOption.LabelText = "All";
-            allOption.OptionData.Add("typeName", "None");
+            allOption.OptionData["typeName"] = "None";
             var options = new List<TextOption>() { allOption };
             foreach (var itemType in Enum<ItemType>.Values())
             {
                 if (itemType == ItemType.None) continue;
                 var option = textOptionScene.Instantiate<TextOption>();
                 option.LabelText = itemType.Get().Name;
-                option.OptionData.Add("typeName", itemType.Get().Name);
+                option.OptionData["typeName"] = itemType.Get().Name;
                 options.Add(option);
             }
             return options;
@@ -98,7 +98,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
                 option.ValueText = "x" + itemStack.Amount.ToString();
-                option.OptionData.Add("itemId", itemStack.ItemId);
+                option.OptionData["itemStack"] = itemStack;
                 options.Add(option);
             }
             return options;
@@ -106,11 +106,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void OpenUseSubMenu(OptionItem optionItem)
         {
-            if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
+            var itemStack = optionItem.GetData<ItemStack>("itemStack");
+            if (itemStack == null)
                 return;
-            Item item = _inventory?.GetItemStack(itemId)?.Item;
-            if (item == null)
-                return;
+            Item item = itemStack.Item;
             var useSubMenu = GDEx.Instantiate<UseSubMenu>(UseSubMenu.GetScenePath());
             useSubMenu.Item = item;
             RaiseRequestedAdd(useSubMenu);
@@ -118,9 +117,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void UpdateItemDescription(OptionItem optionItem)
         {
-            if (!optionItem.OptionData.TryGetValue("itemId", out string itemId))
+            var itemStack = optionItem.GetData<ItemStack>("itemStack");
+            if (itemStack == null)
                 return;
-            Item item = _inventory?.GetItemStack(itemId)?.Item;
+            Item item = itemStack.Item;
             if (item != null)
             {
                 var message = item.Description;
@@ -134,7 +134,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
         {
             _inventoryList.ResetContainerFocus();
             ItemType itemType = ItemType.None;
-            if (!optionItem.OptionData.TryGetValue("typeName", out string typeName))
+            var typeName = optionItem.GetData<string>("typeName");
+            if (typeName == null)
                 return;
             if (typeName != "All")
                 itemType = Enum.Parse<ItemType>(typeName);

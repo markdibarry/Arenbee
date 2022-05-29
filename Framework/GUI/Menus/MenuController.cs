@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Arenbee.Assets.GUI.Menus;
-using Arenbee.Framework.Input;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -14,7 +13,8 @@ namespace Arenbee.Framework.GUI
             _titleMenuScene = GD.Load<PackedScene>(TitleMenu.GetScenePath());
         }
 
-        private GUIInputHandler _menuInput;
+        private bool _closeRequested;
+        private Action _closeCallback;
         private readonly PackedScene _partyMenuScene;
         private readonly PackedScene _titleMenuScene;
         private Menu _menu;
@@ -32,7 +32,18 @@ namespace Arenbee.Framework.GUI
         public delegate void MenuStatusChangedHandler(bool isActive);
         public event MenuStatusChangedHandler MenuStatusChanged;
 
-        public void CloseMenu()
+        public override void _Process(float delta)
+        {
+            if (_closeRequested)
+            {
+                var closeCallback = _closeCallback;
+                _closeRequested = false;
+                _closeCallback = null;
+                CloseMenu(closeCallback);
+            }
+        }
+
+        public void CloseMenu(Action closeCallback = null)
         {
             if (Menu == null)
                 return;
@@ -41,19 +52,17 @@ namespace Arenbee.Framework.GUI
             RemoveChild(menu);
             menu.QueueFree();
             Menu = null;
+            closeCallback?.Invoke();
         }
 
-        public void Init(GUIInputHandler menuInput)
-        {
-            _menuInput = menuInput;
-        }
+        public void Init() { }
 
         public async Task OpenMenu(PackedScene menuScene)
         {
             Menu = menuScene.Instantiate<Menu>();
             Menu.RequestedCloseMenu += OnRequestedCloseMenu;
             AddChild(Menu);
-            await Menu.InitAsync(_menuInput);
+            await Menu.InitAsync();
         }
 
         public async void OpenPartyMenu()
@@ -70,8 +79,8 @@ namespace Arenbee.Framework.GUI
 
         public void OnRequestedCloseMenu(Action callback)
         {
-            CloseMenu();
-            callback?.Invoke();
+            _closeRequested = true;
+            _closeCallback = callback;
         }
     }
 }

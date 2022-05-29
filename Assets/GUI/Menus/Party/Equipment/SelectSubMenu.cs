@@ -35,7 +35,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             base.OnItemFocused(optionContainer, optionItem);
 
             _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
-            _currentItemId = optionItem.GetData("itemId");
+            _currentItemId = optionItem.GetData<string>("itemId");
             _itemDB.GetItem(_currentItemId)?.AddToStats(_mockStats);
             _statsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
         }
@@ -43,7 +43,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            if (TryEquip(optionItem.GetData("itemId"), Slot))
+            if (TryEquip(optionItem.GetData<string>("itemId"), Slot))
                 RaiseRequestedClose();
         }
 
@@ -70,14 +70,14 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
             unequipOption.KeyText = "<Unequip>";
             unequipOption.ValueText = string.Empty;
-            unequipOption.OptionData.Add("itemId", null);
+            unequipOption.OptionData["itemId"] = null;
             options.Add(unequipOption);
             foreach (var itemStack in _playerParty.Inventory?.GetItemsByType(Slot.SlotType))
             {
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
                 option.ValueText = "x" + itemStack.Amount.ToString();
-                option.OptionData.Add("itemId", itemStack.ItemId);
+                option.OptionData["itemId"] = itemStack.ItemId;
                 if (!itemStack.CanReserve())
                     option.Disabled = true;
                 if (itemStack.ItemId == Slot.ItemId)

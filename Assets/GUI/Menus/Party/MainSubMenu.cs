@@ -14,10 +14,11 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            if (!optionItem.OptionData.TryGetValue("subMenu", out string result))
+            var subMenuName = optionItem.GetData<string>("subMenu");
+            if (subMenuName == null)
                 return;
 
-            switch (result)
+            switch (subMenuName)
             {
                 case "Stats":
                     OpenStatsSubMenu();

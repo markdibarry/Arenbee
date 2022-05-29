@@ -51,11 +51,6 @@ layer = 60
 layer = 90
 
 [node name="ColorAdjustment" parent="GameDisplay" instance=ExtResource( "5_bcxdk" )]
-Brightness = null
-Contrast = null
-Saturation = null
-TintColor = null
-TintAmount = null
 
 [node name="GameCamera" type="Camera2D" parent="GameDisplay"]
 current = true

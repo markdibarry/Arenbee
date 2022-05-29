@@ -1,9 +1,7 @@
 using Arenbee.Assets.Projectiles;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
-using Arenbee.Framework.Enums;
 using Arenbee.Framework.Items;
-using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Assets.Items
@@ -34,6 +32,8 @@ namespace Arenbee.Assets.Items
             {
                 AddState<NotAttacking>();
                 AddState<WeakAttack1>();
+                AddState<Charge>();
+                AddState<BigAttack1>();
                 InitStates(this);
             }
 
@@ -64,10 +64,107 @@ namespace Arenbee.Assets.Items
             protected class WeakAttack1 : ActionState
             {
                 public WeakAttack1() { AnimationName = "WeakAttack1"; }
+                private float _counter;
+                private readonly float _countTime = 0.5f;
+                public override void Enter()
+                {
+                    _counter = _countTime;
+                    PlayAnimation(AnimationName);
+                    Fireball.CreateFireball(Actor);
+                }
+
+                public override ActionState Update(float delta)
+                {
+                    if (_counter > 0)
+                        _counter -= delta;
+                    return CheckForTransitions();
+                }
+
+                public override void Exit() { }
+
+                public override ActionState CheckForTransitions()
+                {
+                    if (StateController.IsBlocked(BlockableState.Attack)
+                        || Weapon.AnimationPlayer.CurrentAnimation != AnimationName
+                        || !InputHandler.Attack.IsActionPressed)
+                        return GetState<NotAttacking>();
+                    if (_counter <= 0)
+                        return GetState<Charge>();
+                    return null;
+                }
+            }
+
+            protected class Charge : ActionState
+            {
+                public Charge()
+                {
+                    AnimationName = "Charge";
+                    BlockedStates = new BlockableState[]
+                    {
+                        BlockableState.Jumping,
+                        BlockableState.Move
+                    };
+                }
+                private float _counter;
+                private readonly float _countTime = 1.2f;
+                private ShaderMaterial _spriteShader;
+                public override void Enter()
+                {
+                    _counter = _countTime;
+                    _spriteShader = Actor.BodyShader;
+                    _spriteShader.SetShaderParam("cycle_start", 2);
+                    _spriteShader.SetShaderParam("cycle_end", 4);
+                    _spriteShader.SetShaderParam("speed", 1);
+                    PlayAnimation(AnimationName);
+                }
+
+                public override ActionState Update(float delta)
+                {
+                    if (_counter > 0)
+                    {
+                        _counter -= delta;
+                        if (_counter <= 0)
+                        {
+                            _spriteShader.SetShaderParam("speed", 1.5f);
+                            _spriteShader.SetShaderParam("cycle_start", 1);
+                        }
+
+                    }
+
+                    return CheckForTransitions();
+                }
+
+                public override void Exit()
+                {
+                    _spriteShader.SetShaderParam("cycle_end", 0);
+                    _spriteShader.SetShaderParam("cycle_start", 0);
+                    _spriteShader.SetShaderParam("speed", 0);
+                }
+
+                public override ActionState CheckForTransitions()
+                {
+                    if (StateController.IsBlocked(BlockableState.Attack)
+                        || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                        return GetState<NotAttacking>();
+                    if (!InputHandler.Attack.IsActionPressed)
+                    {
+                        if (_counter <= 0)
+                            return GetState<BigAttack1>();
+                        else
+                            return GetState<WeakAttack1>();
+                    }
+
+                    return null;
+                }
+            }
+
+            protected class BigAttack1 : ActionState
+            {
+                public BigAttack1() { AnimationName = "BigAttack1"; }
                 public override void Enter()
                 {
                     PlayAnimation(AnimationName);
-                    Fireball.CreateFireball(Actor);
+                    FireballBig.CreateFireball(Actor);
                 }
 
                 public override ActionState Update(float delta)

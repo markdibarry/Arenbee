@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Godot;
@@ -23,17 +24,9 @@ namespace Arenbee.Framework.GUI
         public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
         public event ItemSelectedHandler ItemSelected;
 
-        public override void CloseSubMenu(Action callback = null, string cascadeTo = null)
-        {
-            foreach (var container in OptionContainers)
-                UnsubscribeEvents(container);
-            base.CloseSubMenu(cascadeTo: cascadeTo);
-            GD.Print("");
-        }
-
         public override async void ResumeSubMenu()
         {
-            await ToSignal(GetTree(), "process_frame");
+            await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
             CurrentContainer.RefocusItem();
             base.ResumeSubMenu();
         }
@@ -134,14 +127,6 @@ namespace Arenbee.Framework.GUI
             optionContainer.ItemFocused += OnItemFocused;
             optionContainer.FocusOOB += OnFocusOOB;
             optionContainer.ContainerUpdated += OnContainerChanged;
-        }
-
-        protected void UnsubscribeEvents(OptionContainer optionContainer)
-        {
-            optionContainer.ItemSelected -= OnItemSelected;
-            optionContainer.ItemFocused -= OnItemFocused;
-            optionContainer.FocusOOB -= OnFocusOOB;
-            optionContainer.ContainerUpdated -= OnContainerChanged;
         }
 
         private void MoveCursorToItem(OptionItem optionItem)

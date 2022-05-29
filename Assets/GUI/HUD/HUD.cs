@@ -13,7 +13,6 @@ namespace Arenbee.Assets.GUI
     {
         public static string GetScenePath() => GDEx.GetScenePath();
 
-        private Label _fpsDisplay;
         private HeartDisplay _heartDisplay;
         private MessageBoxList _messageBoxList;
         private IStatusEffectDB _statusEffectDB;
@@ -21,14 +20,8 @@ namespace Arenbee.Assets.GUI
         public override void _Ready()
         {
             _messageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-            _fpsDisplay = GetNode<Label>("FPSDisplay");
             _heartDisplay = GetNode<HeartDisplay>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HeartDisplay");
             _statusEffectDB = Locator.GetStatusEffectDB();
-        }
-
-        public override void _Process(float delta)
-        {
-            _fpsDisplay.Text = Performance.GetMonitor(Performance.Monitor.TimeFps).ToString();
         }
 
         public void OnActorAdded(Actor actor)
@@ -54,7 +47,7 @@ namespace Arenbee.Assets.GUI
         public void OnActorDefeated(Actor actor)
         {
             string defeatedMessage = $"{actor.Name} was defeated!";
-            _messageBoxList.AddMessageToTop(defeatedMessage);
+            AddMessage(defeatedMessage);
         }
 
         public void OnPlayerModChanged(Actor actor, ModChangeData data)
@@ -67,7 +60,7 @@ namespace Arenbee.Assets.GUI
                 else
                     message = $"{data.Actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
 
-                _messageBoxList.AddMessageToTop(message);
+                AddMessage(message);
             }
         }
 
@@ -76,17 +69,24 @@ namespace Arenbee.Assets.GUI
             UpdatePlayerStatsDisplay(actor);
         }
 
+        private void AddMessage(string message)
+        {
+            if (ProcessMode == ProcessModeEnum.Disabled)
+                return;
+            _messageBoxList.AddMessageToTop(message);
+        }
+
         private void DisplayMeleeMessage(DamageData data)
         {
             if (data.ElementMultiplier != ElementDef.None)
             {
                 string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
                 string effectiveMessage = $"{data.RecieverName} {effectiveness} {data.ElementDamage}!";
-                _messageBoxList.AddMessageToTop(effectiveMessage);
+                AddMessage(effectiveMessage);
             }
             string action = data.TotalDamage < 0 ? "healed" : "hurt";
             string actionMessage = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
-            _messageBoxList.AddMessageToTop(actionMessage);
+            AddMessage(actionMessage);
         }
 
         private void DisplayStatusMessage(DamageData data)
@@ -96,7 +96,7 @@ namespace Arenbee.Assets.GUI
                 actionMessage = $"{data.RecieverName} took {data.TotalDamage} {data.SourceName.ToLower()} damage!";
             else
                 actionMessage = $"{data.RecieverName} was healed for {Math.Abs(data.TotalDamage)} HP!";
-            _messageBoxList.AddMessageToTop(actionMessage);
+            AddMessage(actionMessage);
         }
 
         private string GetEffectivenessMessage(int elementMultiplier)
@@ -113,6 +113,8 @@ namespace Arenbee.Assets.GUI
 
         private void UpdatePlayerStatsDisplay(Actor actor)
         {
+            if (ProcessMode == ProcessModeEnum.Disabled)
+                return;
             int hp = actor.Stats.GetHP();
             int maxHP = actor.Stats.GetMaxHP();
             _heartDisplay.UpdateMaxHearts(maxHP);

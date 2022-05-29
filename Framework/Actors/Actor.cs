@@ -47,6 +47,7 @@ namespace Arenbee.Framework.Actors
         public WeaponSlot WeaponSlot { get; private set; }
         public AreaBoxContainer HurtBoxes { get; private set; }
         public AreaBoxContainer HitBoxes { get; private set; }
+        public ShaderMaterial BodyShader { get; set; }
 
         public override void _Ready()
         {
@@ -106,6 +107,7 @@ namespace Arenbee.Framework.Actors
             CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
             _body = GetNode<Node2D>("Body");
             BodySprite = _body.GetNode<Sprite2D>("BodySprite");
+            BodyShader = (ShaderMaterial)BodySprite.Material;
             WeaponSlot = _body.GetNode<WeaponSlot>("WeaponSlot");
             HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
             HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");

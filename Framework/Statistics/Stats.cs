@@ -57,7 +57,7 @@ namespace Arenbee.Framework.Statistics
         [JsonIgnore] public StatusEffectDefs StatusEffectDefs { get; }
         [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
         public StatusEffects StatusEffects { get; }
-        public Func<int> MinHP { get; set; } = () => 0;
+        [JsonIgnore] public Func<int> MinHP { get; set; } = () => 0;
         public delegate void DamageRecievedHandler(DamageData damageRecievedData);
         public delegate void HPDepletedHandler();
         public delegate void ModChangedHandler(ModChangeData modChangeData);

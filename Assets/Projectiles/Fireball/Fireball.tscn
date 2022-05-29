@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3nwxsberyyin"]
+[gd_scene load_steps=5 format=3 uid="uid://b7adjondsmktd"]
 
-[ext_resource type="Script" path="res://Assets/Projectiles/Fireball.cs" id="1_6oopk"]
+[ext_resource type="Script" path="res://Assets/Projectiles/Fireball/Fireball.cs" id="1_6oopk"]
 [ext_resource type="Texture2D" uid="uid://frfwqhwwirma" path="res://Assets/Projectiles/Fireball/Fireball.png" id="1_tqaxo"]
 [ext_resource type="PackedScene" uid="uid://db8n72b70al36" path="res://Framework/Statistics/HitBox.tscn" id="2_n7652"]
 

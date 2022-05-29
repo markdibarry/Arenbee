@@ -12,10 +12,18 @@ namespace Arenbee.Framework.Audio
             Finished += OnFinished;
         }
 
-        public void Process(float delta)
+        public override void _Process(float delta)
         {
             if (IsInstanceValid(SoundSource))
                 GlobalPosition = SoundSource.GlobalPosition;
+        }
+
+        public void Reset()
+        {
+            SoundSource = null;
+            TimeStamp = 0;
+            Stream = null;
+            Stop();
         }
 
         public void OnFinished()

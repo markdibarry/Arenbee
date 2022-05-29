@@ -69,7 +69,7 @@ namespace Arenbee.Framework.Game
             Locator.ProvideItemDB(new ItemDB());
             Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
-            MenuController.Init(_menuInput);
+            MenuController.Init();
             DialogController.Init(_menuInput);
             GameState.Init(MenuController);
             ResetToTitleScreen();
@@ -100,6 +100,7 @@ namespace Arenbee.Framework.Game
             if (!IsInstanceValid(GameSession))
                 return;
             UnsubscribeSessionEvents(GameSession);
+            AudioController.Reset();
             GameSession.Free();
             GameSession = null;
         }

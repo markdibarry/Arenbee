@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
-using Arenbee.Framework.Input;
 using Arenbee.Framework.Extensions;
 
 namespace Arenbee.Framework.GUI
@@ -14,8 +13,8 @@ namespace Arenbee.Framework.GUI
             Visible = false;
         }
 
-        private GUIInputHandler _menuInput;
         private SubMenu _currentSubMenu;
+        private SubMenuCloseRequest _closeRequest;
         private SubMenu CurrentSubMenu
         {
             get { return _currentSubMenu; }
@@ -24,15 +23,13 @@ namespace Arenbee.Framework.GUI
                 if (_currentSubMenu != null)
                 {
                     _currentSubMenu.RequestedAdd -= OnRequestedAdd;
-                    _currentSubMenu.RequestedClose -= OnRequestedCloseAsync;
-                    _currentSubMenu.RequestedCloseAll -= OnRequestedCloseAllAsync;
+                    _currentSubMenu.RequestedClose -= OnRequestedClose;
                 }
                 _currentSubMenu = value;
                 if (_currentSubMenu != null)
                 {
                     _currentSubMenu.RequestedAdd += OnRequestedAdd;
-                    _currentSubMenu.RequestedClose += OnRequestedCloseAsync;
-                    _currentSubMenu.RequestedCloseAll += OnRequestedCloseAllAsync;
+                    _currentSubMenu.RequestedClose += OnRequestedClose;
                 }
             }
         }
@@ -42,19 +39,23 @@ namespace Arenbee.Framework.GUI
         public delegate void RequestedCloseMenuHandler(Action callback);
         public event RequestedCloseMenuHandler RequestedCloseMenu;
 
-        public override void _Process(float delta)
-        {
-            if (CurrentSubMenu?.IsActive == true)
-                CurrentSubMenu.HandleInput(_menuInput, delta);
-        }
-
         public override void _Ready()
         {
             ContentGroup = GetNode<CanvasGroup>("ContentGroup");
             Background = ContentGroup.GetNode<Control>("Content/Background");
             SubMenus = ContentGroup.GetNode<Control>("Content/SubMenus");
             if (this.IsToolDebugMode())
-                Init(new MenuInputHandlerNull());
+                Init();
+        }
+
+        public override void _Process(float delta)
+        {
+            if (_closeRequest != null)
+            {
+                var closeRequest = _closeRequest;
+                _closeRequest = null;
+                HandleCloseRequest(closeRequest);
+            }
         }
 
         public async Task AddSubMenuAsync(SubMenu subMenu)
@@ -66,14 +67,13 @@ namespace Arenbee.Framework.GUI
             CurrentSubMenu.IsActive = true;
         }
 
-        public async void Init(GUIInputHandler menuInput)
+        public async void Init()
         {
-            await InitAsync(menuInput);
+            await InitAsync();
         }
 
-        public virtual async Task InitAsync(GUIInputHandler menuInput)
+        public virtual async Task InitAsync()
         {
-            _menuInput = menuInput;
             await TransitionOpenAsync();
         }
 
@@ -113,19 +113,22 @@ namespace Arenbee.Framework.GUI
             RequestedCloseMenu?.Invoke(callback);
         }
 
+        private async void HandleCloseRequest(SubMenuCloseRequest closeRequest)
+        {
+            if (closeRequest.CloseAll)
+                await CloseMenuAsync(closeRequest.Callback);
+            else
+                await CloseCurrentSubMenuAsync(closeRequest.Callback, closeRequest.CascadeTo);
+        }
+
         private async void OnRequestedAdd(SubMenu subMenu)
         {
             await AddSubMenuAsync(subMenu);
         }
 
-        private async void OnRequestedCloseAsync(Action callback = null, string cascadeTo = null)
+        private void OnRequestedClose(SubMenuCloseRequest closeRequest)
         {
-            await CloseCurrentSubMenuAsync(callback, cascadeTo);
-        }
-
-        private async void OnRequestedCloseAllAsync(Action callback = null)
-        {
-            await CloseMenuAsync(callback);
+            _closeRequest = closeRequest;
         }
 
         private void SetCurrentSubMenu()

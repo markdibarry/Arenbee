@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Arenbee.Assets.GUI.Menus.Common;
+using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
@@ -34,9 +35,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemFocused(optionContainer, optionItem);
-            if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
+            var actor = optionItem.GetData<Actor>("actor");
+            if (actor == null)
                 return;
-            _statsDisplay.UpdateStatsDisplay(_playerParty.GetPlayerByName(actorName));
+            _statsDisplay.UpdateStatsDisplay(actor);
         }
 
         private List<TextOption> GetPartyMemberOptions()
@@ -45,7 +47,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             foreach (var actor in _playerParty.Actors)
             {
                 var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.OptionData.Add("actorName", actor.Name);
+                textOption.OptionData["actor"] = actor;
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }

@@ -8,16 +8,16 @@ namespace Arenbee.Framework.GUI
     {
         public OptionItem()
         {
-            OptionData = new Dictionary<string, string>();
+            OptionData = new Dictionary<string, object>();
         }
 
         private bool _dim;
         [Export]
-        public Dictionary<string, string> OptionData { get; set; }
+        public Dictionary<string, object> OptionData { get; set; }
         [Export]
         public bool Dim
         {
-            get { return _dim; }
+            get => _dim;
             set
             {
                 _dim = value;
@@ -27,11 +27,13 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool Disabled { get; set; }
 
-        public string GetData(string key)
+        public T GetData<T>(string key)
         {
-            if (!OptionData.TryGetValue(key, out string result))
-                return null;
-            return result;
+            if (!OptionData.TryGetValue(key, out object result))
+                return default;
+            if (result is not T)
+                return default;
+            return (T)result;
         }
     }
 }

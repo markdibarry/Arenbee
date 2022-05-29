@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://wgjbs225ay24"]
 
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/OptionSubMenu.tscn" id="1_d15qu"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_d15qu"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="2_eqbit"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Inventory/UseSubMenu.cs" id="2_ne4ov"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="3_axmp3"]

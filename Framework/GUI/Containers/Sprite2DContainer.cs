@@ -6,10 +6,9 @@ namespace Arenbee.Framework.GUI
     public partial class Sprite2DContainer : Container
     {
         public Sprite2D Sprite2D { get; set; }
+
         public override void _Ready()
         {
-            base._Ready();
-            //await ToSignal(GetTree(), "process_frame");
             SetNewChild();
             ChildEnteredTree += OnChildEntered;
             ChildExitedTree += OnChildExited;

@@ -1,5 +1,4 @@
 using Arenbee.Framework.Enums;
-using Arenbee.Framework.Input;
 
 namespace Arenbee.Framework.GUI
 {
@@ -11,21 +10,21 @@ namespace Arenbee.Framework.GUI
         private readonly float _rapidScrollDelay = 0.4f;
         private readonly float _rapidScrollInterval = 0.05f;
 
-        public override void HandleInput(GUIInputHandler input, float delta)
+        public override void HandleInput(float delta)
         {
-            base.HandleInput(input, delta);
+            base.HandleInput(delta);
 
             var newDirection = Direction.None;
 
-            if (input.Up.IsActionPressed)
+            if (MenuInput.Up.IsActionPressed)
                 newDirection = Direction.Up;
-            else if (input.Down.IsActionPressed)
+            else if (MenuInput.Down.IsActionPressed)
                 newDirection = Direction.Down;
-            else if (input.Left.IsActionPressed)
+            else if (MenuInput.Left.IsActionPressed)
                 newDirection = Direction.Left;
-            else if (input.Right.IsActionPressed)
+            else if (MenuInput.Right.IsActionPressed)
                 newDirection = Direction.Right;
-            else if (input.Enter.IsActionJustPressed)
+            else if (MenuInput.Enter.IsActionJustPressed)
                 CurrentContainer.SelectItem();
 
             HandleRapidScroll(delta, newDirection);

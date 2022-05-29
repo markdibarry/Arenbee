@@ -33,7 +33,8 @@ namespace Arenbee.Assets.GUI.Menus.Title
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            if (!optionItem.OptionData.TryGetValue("titleChoice", out string titleChoice))
+            var titleChoice = optionItem.GetData<string>("titleChoice");
+            if (titleChoice == null)
                 return;
             IsActive = false;
             switch (titleChoice)
@@ -55,12 +56,18 @@ namespace Arenbee.Assets.GUI.Menus.Title
 
         private void StartNewGame()
         {
-            RaiseRequestedClose(() => GameRoot.Instance.StartGame(SaveService.GetNewGame()));
+            var closeRequest = new SubMenuCloseRequest(
+                callback: () => GameRoot.Instance.StartGame(SaveService.GetNewGame())
+            );
+            RaiseRequestedClose(closeRequest);
         }
 
         private void ContinueSavedGame()
         {
-            RaiseRequestedClose(() => GameRoot.Instance.StartGame(SaveService.LoadGame()));
+            var closeRequest = new SubMenuCloseRequest(
+                callback: () => GameRoot.Instance.StartGame(SaveService.LoadGame())
+            );
+            RaiseRequestedClose(closeRequest);
         }
     }
 }

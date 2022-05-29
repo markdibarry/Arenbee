@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnl7m3aya038x"]
+
+[ext_resource type="PackedScene" uid="uid://gydisdj3ltwf" path="res://Framework/GUI/Menus/OptionItems/OptionItem.tscn" id="1_74d75"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/Common/PartyMemberOption.cs" id="2_3tesp"]
+[ext_resource type="PackedScene" uid="uid://bf5q178lenm1v" path="res://Assets/GUI/Menus/Common/PointContainer.tscn" id="3_7i0tc"]
+
+[node name="PartyMemberOption" instance=ExtResource( "1_74d75" )]
+script = ExtResource( "2_3tesp" )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 95.0
+offset_bottom = 25.0
+
+[node name="NameContainer" type="MarginContainer" parent="HBoxContainer" index="0"]
+offset_right = 34.0
+offset_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="HBoxContainer/NameContainer" index="0"]
+unique_name_in_owner = true
+offset_right = 34.0
+offset_bottom = 10.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "NameHere"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" index="1"]
+offset_left = 38.0
+offset_right = 94.0
+offset_bottom = 24.0
+
+[node name="HPContainer" parent="HBoxContainer/VBoxContainer" index="0" instance=ExtResource( "3_7i0tc" )]
+unique_name_in_owner = true
+minimum_size = Vector2(56, 0)
+offset_right = 56.0
+offset_bottom = 10.0
+StatNameText = "HP:"
+StatCurrentValueText = "999"
+StatMaxValueText = "999"
+
+[node name="MPContainer" parent="HBoxContainer/VBoxContainer" index="1" instance=ExtResource( "3_7i0tc" )]
+unique_name_in_owner = true
+minimum_size = Vector2(56, 0)
+offset_top = 14.0
+offset_right = 56.0
+offset_bottom = 24.0
+StatNameText = "MP:"
+StatCurrentValueText = "999"
+StatMaxValueText = "999"

@@ -11,16 +11,14 @@ namespace Arenbee.Framework.Skills
         public override void _Ready()
         {
             AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-
-            if (AnimationPlayer.HasAnimation(Name))
-            {
-                AnimationPlayer.AnimationFinished += OnAnimationFinished;
-                AnimationPlayer.Play(Name);
-            }
-            else
+            if (!AnimationPlayer.HasAnimation(Name))
             {
                 Delete();
+                return;
             }
+
+            AnimationPlayer.AnimationFinished += OnAnimationFinished;
+            AnimationPlayer.Play(Name);
         }
 
         public void OnAnimationFinished(StringName animationName)

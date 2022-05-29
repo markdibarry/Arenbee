@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://u468p7ngn3n3"]
 
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/OptionSubMenu.tscn" id="1_imt36"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Inventory/InventorySubMenu.cs" id="2_funy4"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_ipg3o"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bkmu2nb7jhqad" path="res://Framework/GUI/Menus/DynamicTextContainer.tscn" id="7_8v57d"]
 
 [node name="InventorySubMenu" instance=ExtResource( "1_imt36" )]
+visible = false
 script = ExtResource( "2_funy4" )
 
 [node name="TypeList" parent="Foreground" index="0" instance=ExtResource( "3_0xw2g" )]
@@ -185,6 +186,7 @@ offset_right = 107.0
 offset_bottom = 104.0
 
 [node name="ItemInfo" parent="Foreground" index="2" instance=ExtResource( "7_8v57d" )]
+process_mode = 3
 offset_left = 207.0
 offset_top = 201.0
 offset_right = -8.0
@@ -192,7 +194,6 @@ offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 CustomText = ""
-ShouldShowAllToStop = false
 Speed = 0.01
 
 [editable path="Foreground/TypeList"]

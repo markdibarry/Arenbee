@@ -45,7 +45,7 @@ namespace Arenbee.Framework.Items
                     var name = ((AttributeType)itemMod.SubType).Get().Abbreviation;
                     if (itemMod.Value > 0)
                         modParts.Add("+");
-                    switch (itemMod.Operator)
+                    switch (itemMod.ModOperator)
                     {
                         case ModOperator.Add:
                             modParts.Add($"{itemMod.Value} {name}");

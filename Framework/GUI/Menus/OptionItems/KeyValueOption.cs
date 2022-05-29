@@ -11,7 +11,7 @@ public partial class KeyValueOption : OptionItem
     [Export(PropertyHint.MultilineText)]
     public string KeyText
     {
-        get { return _keyText; }
+        get => _keyText;
         set
         {
             _keyText = value;
@@ -22,7 +22,7 @@ public partial class KeyValueOption : OptionItem
     [Export(PropertyHint.MultilineText)]
     public string ValueText
     {
-        get { return _valueText; }
+        get => _valueText;
         set
         {
             _valueText = value;
@@ -30,8 +30,9 @@ public partial class KeyValueOption : OptionItem
                 ValueLabel.Text = _valueText;
         }
     }
-    public Label KeyLabel { get; set; }
-    public Label ValueLabel { get; set; }
+    public Label KeyLabel { get; private set; }
+    public Label ValueLabel { get; private set; }
+
     public override void _Ready()
     {
         KeyLabel = GetNodeOrNull<Label>("HBoxContainer/Key");

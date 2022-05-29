@@ -17,7 +17,6 @@ namespace Arenbee.Framework.AreaScenes
 
         public void OnEntered(Node2D node2d)
         {
-            GD.Print("Body entered");
             var camera = GameRoot.Instance.GameCamera;
             if (node2d != camera.CurrentTarget)
                 return;

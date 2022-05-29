@@ -12,7 +12,6 @@ namespace Arenbee.Assets.GUI.Menus.Common
 
         public override void _Ready()
         {
-            base._Ready();
             KeyContainer = GetNode<MarginContainer>("HBoxContainer/KeyContainer");
             ValueContainer = GetNode<MarginContainer>("HBoxContainer/ValueContainer");
             Resized += OnResize;

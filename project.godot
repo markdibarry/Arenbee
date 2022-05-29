@@ -29,6 +29,10 @@ window/size/window_width_override=1440
 window/size/window_height_override=810
 window/stretch/mode="viewport"
 
+[editor]
+
+scene/scene_naming=1
+
 [gui]
 
 theme/custom="res://Assets/GUI/Themes/BaseTheme.tres"

@@ -29,7 +29,7 @@ size = Vector2(560, 200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpp7m"]
 size = Vector2(20, 33)
 
-[node name="AreaScene" instance=ExtResource( "1_ua3fi" )]
+[node name="DemoLevel1" instance=ExtResource( "1_ua3fi" )]
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Scenery" index="0"]
 layer = -1

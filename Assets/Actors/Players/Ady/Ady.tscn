@@ -13,13 +13,13 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
 resource_local_to_scene = true
 shader = ExtResource( "12_3qfsg" )
-shader_param/cycle_direction = null
-shader_param/cycle_end = null
-shader_param/cycle_start = null
+shader_param/cycle_direction = 1.0
+shader_param/cycle_end = 0.0
+shader_param/cycle_start = 0.0
 shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
 shader_param/flash_mix = 0.0
 shader_param/palette1 = ExtResource( "13_txydx" )
-shader_param/speed = null
+shader_param/speed = 0.0
 shader_param/use_palette1 = true
 shader_param/use_palette2 = null
 
@@ -47,7 +47,9 @@ material = SubResource( "ShaderMaterial_vhqga" )
 texture = ExtResource( "7_28ga8" )
 hframes = 6
 vframes = 10
-frame = 54
+
+[node name="HurtBoxes" parent="Body/BodySprite" index="0"]
+visible = false
 
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource( "8_tc2pg" )]
 modulate = Color(0, 1, 0, 1)

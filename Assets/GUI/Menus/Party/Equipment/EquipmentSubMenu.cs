@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -21,12 +19,12 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private PackedScene _equipSelectOptionScene;
         private PackedScene _textOptionScene;
 
-        public override void HandleInput(GUIInputHandler input, float delta)
+        public override void HandleInput(float delta)
         {
-            if (input.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
+            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
                 FocusContainer(_partyOptions);
             else
-                base.HandleInput(input, delta);
+                base.HandleInput(delta);
         }
 
         public override void ResumeSubMenu()
@@ -69,18 +67,18 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private List<KeyValueOption> GetEquipmentOptions(OptionItem optionItem)
         {
             var options = new List<KeyValueOption>();
-            if (optionItem == null) return options;
-            if (!optionItem.OptionData.TryGetValue("actorName", out string actorName))
+            if (optionItem == null)
                 return options;
-            Actor actor = _playerParty.GetPlayerByName(actorName);
-            if (actor == null) return options;
+            var actor = optionItem.GetData<Actor>("actor");
+            if (actor == null)
+                return options;
             foreach (var slot in actor.Equipment.Slots)
             {
                 var keyValueOption = _equipSelectOptionScene.Instantiate<KeyValueOption>();
                 string name = slot.SlotName.Get().Abbreviation;
                 keyValueOption.KeyText = name + ":";
                 keyValueOption.ValueText = slot.Item?.DisplayName ?? "<None>";
-                keyValueOption.OptionData.Add("slotName", slot.SlotName.ToString());
+                keyValueOption.OptionData["slot"] = slot;
                 options.Add(keyValueOption);
             }
             return options;
@@ -92,7 +90,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             foreach (var actor in _playerParty.Actors)
             {
                 var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.OptionData.Add("actorName", actor.Name);
+                textOption.OptionData["actor"] = actor;
                 textOption.LabelText = actor.Name;
                 options.Add(textOption);
             }
@@ -101,15 +99,10 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
         private void OpenEquipSelectMenu(OptionItem optionItem)
         {
-            if (!_partyOptions.CurrentItem.OptionData.TryGetValue("actorName", out string actorName))
-                return;
-            Actor actor = _playerParty.GetPlayerByName(actorName);
+            var actor = _partyOptions.CurrentItem.GetData<Actor>("actor");
             if (actor == null)
                 return;
-            if (!optionItem.OptionData.TryGetValue("slotName", out string slotName))
-                return;
-
-            EquipmentSlot slot = actor.Equipment.GetSlot(Enum.Parse<EquipSlotName>(slotName));
+            var slot = optionItem.GetData<EquipmentSlot>("slot");
             if (slot == null)
                 return;
             SelectSubMenu selectMenu = GDEx.Instantiate<SelectSubMenu>(SelectSubMenu.GetScenePath());

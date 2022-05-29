@@ -19,7 +19,7 @@ namespace Arenbee.Framework.Actors
         public override void _Notification(int what)
         {
             if (what == NotificationPredelete)
-                IFrameController.HandleDispose();
+                BodyShader.Dispose();
         }
 
         public void PlaySoundFX(string soundPath)

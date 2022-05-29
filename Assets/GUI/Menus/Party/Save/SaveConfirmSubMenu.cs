@@ -1,5 +1,4 @@
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
 using Arenbee.Framework.Game.SaveData;
 using Godot;
@@ -15,7 +14,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            if (!optionItem.OptionData.TryGetValue("saveChoice", out string saveChoice))
+            var saveChoice = optionItem.GetData<string>("saveChoice");
+            if (saveChoice == null)
                 return;
             switch (saveChoice)
             {
