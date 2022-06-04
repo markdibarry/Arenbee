@@ -117,6 +117,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void UpdateItemDescription(OptionItem optionItem)
         {
+            if (optionItem == null)
+                return;
             var itemStack = optionItem.GetData<ItemStack>("itemStack");
             if (itemStack == null)
                 return;
@@ -132,6 +134,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void UpdateItemList(OptionItem optionItem)
         {
+            if (optionItem == null)
+                return;
             _inventoryList.ResetContainerFocus();
             ItemType itemType = ItemType.None;
             var typeName = optionItem.GetData<string>("typeName");

@@ -6,6 +6,7 @@ using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Godot;
+using static Arenbee.Framework.GUI.OptionContainer;
 
 namespace Arenbee.Framework.GUI
 {
@@ -18,11 +19,11 @@ namespace Arenbee.Framework.GUI
             _currentDirection = Direction.None;
         }
 
+        private PackedScene _cursorScene;
         private Cursor _cursor;
         public OptionContainer CurrentContainer { get; private set; }
         public List<OptionContainer> OptionContainers { get; private set; }
-        public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
-        public event ItemSelectedHandler ItemSelected;
+        public event ItemHandler ItemSelected;
 
         public override async void ResumeSubMenu()
         {
@@ -59,44 +60,29 @@ namespace Arenbee.Framework.GUI
 
         protected void FocusContainerClosestItem(OptionContainer optionContainer)
         {
-            if (optionContainer == null) return;
+            if (optionContainer == null)
+                return;
             int index = CurrentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
             FocusContainer(optionContainer, index);
         }
 
         protected void FocusContainer(OptionContainer optionContainer)
         {
-            if (optionContainer == null) return;
-            FocusContainer(optionContainer, optionContainer.ItemIndex);
+            if (optionContainer == null)
+                return;
+            FocusContainer(optionContainer, optionContainer.CurrentIndex);
         }
 
         protected void FocusContainer(OptionContainer optionContainer, int index)
         {
-            if (optionContainer?.OptionItems.Count > 0)
-            {
-                CurrentContainer = optionContainer;
-                optionContainer.FocusItem(index);
-            }
+            if (optionContainer == null || optionContainer.OptionItems.Count == 0)
+                return;
+            CurrentContainer?.LeaveContainerFocus();
+            CurrentContainer = optionContainer;
+            optionContainer.FocusItem(index);
         }
 
-        protected virtual void OnFocusOOB(OptionContainer container, Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up:
-                    container.FocusBottomEnd();
-                    break;
-                case Direction.Down:
-                    container.FocusTopEnd();
-                    break;
-                case Direction.Left:
-                    container.FocusRightEnd();
-                    break;
-                case Direction.Right:
-                    container.FocusLeftEnd();
-                    break;
-            }
-        }
+        protected virtual void OnFocusOOB(OptionContainer container, Direction direction) { }
 
         protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
@@ -105,6 +91,7 @@ namespace Arenbee.Framework.GUI
 
         protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
+            _cursor.Visible = !CurrentContainer.AllSelected;
             MoveCursorToItem(optionItem);
         }
 
@@ -112,10 +99,16 @@ namespace Arenbee.Framework.GUI
         {
             base.SetNodeReferences();
             OptionContainers = Foreground.GetChildren<OptionContainer>().ToList();
+            _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
+            AddCursor();
+        }
+
+        protected void AddCursor()
+        {
             _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
             if (_cursor == null)
             {
-                _cursor = GD.Load<PackedScene>(HandCursor.GetScenePath()).Instantiate<HandCursor>();
+                _cursor = _cursorScene.Instantiate<Cursor>();
                 Foreground.AddChild(_cursor);
             }
             _cursor.Visible = false;
@@ -131,6 +124,8 @@ namespace Arenbee.Framework.GUI
 
         private void MoveCursorToItem(OptionItem optionItem)
         {
+            if (CurrentContainer.AllSelected)
+                return;
             float cursorX = optionItem.GlobalPosition.x - 4;
             float cursorY = (float)(optionItem.GlobalPosition.y + Math.Round(optionItem.Size.y * 0.5));
             _cursor.GlobalPosition = new Vector2(cursorX, cursorY);

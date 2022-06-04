@@ -81,7 +81,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
                 if (!itemStack.CanReserve())
                     option.Disabled = true;
                 if (itemStack.ItemId == Slot.ItemId)
-                    _equipOptions.ItemIndex = options.Count;
+                    _equipOptions.CurrentIndex = options.Count;
                 options.Add(option);
             }
             _equipOptions.ReplaceChildren(options);

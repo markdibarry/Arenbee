@@ -9,263 +9,93 @@
 offset_right = 130.0
 offset_bottom = 74.0
 script = ExtResource( "2_t7m5c" )
-__meta__ = {
-"_edit_use_anchors_": false,
-"_edit_use_custom_anchors": false
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_left = 7.0
 offset_top = 7.0
-offset_right = 123.0
+offset_right = 127.0
 offset_bottom = 67.0
 theme_override_constants/separation = 0
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 40.0
 theme_override_constants/v_separation = 0
 columns = 2
 
 [node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-offset_right = 56.0
+minimum_size = Vector2(24, 0)
+offset_right = 60.0
 offset_bottom = 10.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/Level" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/Level/HBoxContainer" index="0"]
-offset_right = 10.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/Level/HBoxContainer/KeyContainer" index="0"]
-offset_right = 10.0
-offset_bottom = 10.0
-text = "Lv:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/Level/HBoxContainer" index="1"]
-offset_left = 14.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="Value" parent="VBoxContainer/GridContainer/Level/HBoxContainer/ValueContainer" index="0"]
-offset_left = 30.0
-offset_right = 42.0
-offset_bottom = 10.0
+StatNameText = "Lv:"
+StatValueText = "999"
 
 [node name="Spacer" type="MarginContainer" parent="VBoxContainer/GridContainer"]
-offset_left = 60.0
-offset_right = 116.0
+offset_left = 64.0
+offset_right = 120.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_top = 2
 theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
 [node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
+minimum_size = Vector2(60, 0)
 offset_top = 10.0
-offset_right = 56.0
+offset_right = 60.0
 offset_bottom = 20.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/HP" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/HP/HBoxContainer" index="0"]
-offset_right = 24.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/HP/HBoxContainer/KeyContainer" index="0"]
-offset_right = 24.0
-offset_bottom = 10.0
-text = "HP:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/HP/HBoxContainer" index="1"]
-offset_left = 28.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/HP/HBoxContainer/ValueContainer" index="0"]
-offset_left = 0.0
-offset_right = 28.0
-offset_bottom = 10.0
-
-[node name="Current" parent="VBoxContainer/GridContainer/HP/HBoxContainer/ValueContainer/HBoxContainer" index="0"]
-offset_right = 12.0
-offset_bottom = 10.0
-
-[node name="Separator" parent="VBoxContainer/GridContainer/HP/HBoxContainer/ValueContainer/HBoxContainer" index="1"]
-offset_left = 12.0
-offset_right = 16.0
-offset_bottom = 10.0
-
-[node name="Max" parent="VBoxContainer/GridContainer/HP/HBoxContainer/ValueContainer/HBoxContainer" index="2"]
-offset_left = 16.0
-offset_right = 28.0
-offset_bottom = 10.0
+StatNameText = "HP:"
+StatCurrentValueText = "999"
+StatMaxValueText = "999"
 
 [node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
-offset_left = 60.0
+minimum_size = Vector2(56, 0)
+offset_left = 64.0
 offset_top = 10.0
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 20.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/MP" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/MP/HBoxContainer" index="0"]
-offset_right = 24.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/MP/HBoxContainer/KeyContainer" index="0"]
-offset_right = 24.0
-offset_bottom = 10.0
-text = "MP:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/MP/HBoxContainer" index="1"]
-offset_left = 28.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/MP/HBoxContainer/ValueContainer" index="0"]
-offset_left = 0.0
-offset_right = 28.0
-offset_bottom = 10.0
-
-[node name="Current" parent="VBoxContainer/GridContainer/MP/HBoxContainer/ValueContainer/HBoxContainer" index="0"]
-offset_right = 12.0
-offset_bottom = 10.0
-
-[node name="Separator" parent="VBoxContainer/GridContainer/MP/HBoxContainer/ValueContainer/HBoxContainer" index="1"]
-offset_left = 12.0
-offset_right = 16.0
-offset_bottom = 10.0
-
-[node name="Max" parent="VBoxContainer/GridContainer/MP/HBoxContainer/ValueContainer/HBoxContainer" index="2"]
-offset_left = 16.0
-offset_right = 28.0
-offset_bottom = 10.0
+StatNameText = "MP:"
+StatCurrentValueText = "999"
+StatMaxValueText = "999"
 
 [node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
+minimum_size = Vector2(28, 0)
 offset_top = 20.0
-offset_right = 56.0
+offset_right = 60.0
 offset_bottom = 30.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/Attack" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/Attack/HBoxContainer" index="0"]
-offset_right = 14.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/Attack/HBoxContainer/KeyContainer" index="0"]
-offset_right = 14.0
-offset_bottom = 10.0
-text = "Atk:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/Attack/HBoxContainer" index="1"]
-offset_left = 18.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="Value" parent="VBoxContainer/GridContainer/Attack/HBoxContainer/ValueContainer" index="0"]
-offset_left = 26.0
-offset_right = 38.0
-offset_bottom = 10.0
+StatNameText = "Atk:"
+StatValueText = "999"
 
 [node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-offset_left = 60.0
+minimum_size = Vector2(28, 0)
+offset_left = 64.0
 offset_top = 20.0
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 30.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/Defense" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/Defense/HBoxContainer" index="0"]
-offset_right = 14.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/Defense/HBoxContainer/KeyContainer" index="0"]
-offset_right = 14.0
-offset_bottom = 10.0
-text = "Def:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/Defense/HBoxContainer" index="1"]
-offset_left = 18.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="Value" parent="VBoxContainer/GridContainer/Defense/HBoxContainer/ValueContainer" index="0"]
-offset_left = 26.0
-offset_right = 38.0
-offset_bottom = 10.0
+StatNameText = "Def:"
+StatValueText = "999"
 
 [node name="M Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
+minimum_size = Vector2(44, 0)
 offset_top = 30.0
-offset_right = 56.0
+offset_right = 60.0
 offset_bottom = 40.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/M Attack" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/M Attack/HBoxContainer" index="0"]
-offset_right = 22.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/M Attack/HBoxContainer/KeyContainer" index="0"]
-offset_right = 22.0
-offset_bottom = 10.0
-text = "M.Atk:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/M Attack/HBoxContainer" index="1"]
-offset_left = 26.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="Value" parent="VBoxContainer/GridContainer/M Attack/HBoxContainer/ValueContainer" index="0"]
-offset_left = 18.0
-offset_right = 30.0
-offset_bottom = 10.0
+StatNameText = "M.Atk:"
+StatValueText = "999"
 
 [node name="M Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-offset_left = 60.0
+minimum_size = Vector2(44, 0)
+offset_left = 64.0
 offset_top = 30.0
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 40.0
-
-[node name="HBoxContainer" parent="VBoxContainer/GridContainer/M Defense" index="0"]
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="KeyContainer" parent="VBoxContainer/GridContainer/M Defense/HBoxContainer" index="0"]
-offset_right = 22.0
-offset_bottom = 10.0
-
-[node name="Key" parent="VBoxContainer/GridContainer/M Defense/HBoxContainer/KeyContainer" index="0"]
-offset_right = 22.0
-offset_bottom = 10.0
-text = "M.Def:"
-
-[node name="ValueContainer" parent="VBoxContainer/GridContainer/M Defense/HBoxContainer" index="1"]
-offset_left = 26.0
-offset_right = 56.0
-offset_bottom = 10.0
-
-[node name="Value" parent="VBoxContainer/GridContainer/M Defense/HBoxContainer/ValueContainer" index="0"]
-offset_left = 18.0
-offset_right = 30.0
-offset_bottom = 10.0
+StatNameText = "M.Def:"
+StatValueText = "999"
 
 [node name="EAtk" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 40.0
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 50.0
 theme_override_constants/separation = 0
 
@@ -281,7 +111,7 @@ Element = 2
 
 [node name="EDef" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 50.0
-offset_right = 116.0
+offset_right = 120.0
 offset_bottom = 60.0
 theme_override_constants/separation = 0
 
@@ -304,11 +134,3 @@ Element = 4
 offset_left = 40.0
 offset_right = 50.0
 Element = 5
-
-[editable path="VBoxContainer/GridContainer/Level"]
-[editable path="VBoxContainer/GridContainer/HP"]
-[editable path="VBoxContainer/GridContainer/MP"]
-[editable path="VBoxContainer/GridContainer/Attack"]
-[editable path="VBoxContainer/GridContainer/Defense"]
-[editable path="VBoxContainer/GridContainer/M Attack"]
-[editable path="VBoxContainer/GridContainer/M Defense"]

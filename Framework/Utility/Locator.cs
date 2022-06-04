@@ -15,11 +15,13 @@ namespace Arenbee.Framework.Utility
             s_itemDB = new ItemDBNull();
             s_menuInput = new MenuInputHandlerNull();
             s_statusEffectDB = new StatusEffectDBNull();
+            s_logger = new Logger();
         }
 
         private static GameSession s_gameSession;
         private static AudioControllerNull s_audioController;
         private static IItemDB s_itemDB;
+        private static readonly Logger s_logger;
         private static GUIInputHandler s_menuInput;
         private static IStatusEffectDB s_statusEffectDB;
 
@@ -82,6 +84,11 @@ namespace Arenbee.Framework.Utility
         public static IStatusEffectDB GetStatusEffectDB()
         {
             return s_statusEffectDB;
+        }
+
+        public static Logger GetLogger()
+        {
+            return s_logger;
         }
     }
 }

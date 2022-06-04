@@ -1,4 +1,6 @@
+using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Common
@@ -65,6 +67,33 @@ namespace Arenbee.Assets.GUI.Menus.Common
         public override void OnResize()
         {
             ResizeItems(StatNameLabel, ValueHBox);
+        }
+
+        public void UpdateDisplay(Stats stats, Stats mockStats, AttributeType attributeType)
+        {
+            AttributeType maxType;
+            if (attributeType == AttributeType.HP)
+                maxType = AttributeType.MaxHP;
+            else if (attributeType == AttributeType.MP)
+                maxType = AttributeType.MaxMP;
+            else
+                return;
+            var currentValue = stats.Attributes.GetStat(maxType).DisplayValue;
+            var mockValue = mockStats.Attributes.GetStat(maxType).DisplayValue;
+            StatNameText = attributeType.Get().Abbreviation + ":";
+            StatCurrentValueText = stats.Attributes.GetStat(attributeType).DisplayValue.ToString();
+            StatMaxValueText = mockValue.ToString();
+            DisplayValueColor(currentValue, mockValue);
+        }
+
+        private void DisplayValueColor(int currentValue, int mockValue)
+        {
+            if (mockValue > currentValue)
+                StatMaxValueLabel.Modulate = ColorConstants.TextGreen;
+            else if (mockValue < currentValue)
+                StatMaxValueLabel.Modulate = ColorConstants.TextRed;
+            else
+                StatMaxValueLabel.Modulate = Colors.White;
         }
     }
 }

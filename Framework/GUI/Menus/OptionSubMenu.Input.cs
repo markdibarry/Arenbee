@@ -14,6 +14,14 @@ namespace Arenbee.Framework.GUI
         {
             base.HandleInput(delta);
 
+            if (CurrentContainer == null)
+                return;
+            if (MenuInput.Enter.IsActionJustPressed)
+            {
+                CurrentContainer.SelectItem();
+                return;
+            }
+
             var newDirection = Direction.None;
 
             if (MenuInput.Up.IsActionPressed)
@@ -24,8 +32,6 @@ namespace Arenbee.Framework.GUI
                 newDirection = Direction.Left;
             else if (MenuInput.Right.IsActionPressed)
                 newDirection = Direction.Right;
-            else if (MenuInput.Enter.IsActionJustPressed)
-                CurrentContainer.SelectItem();
 
             HandleRapidScroll(delta, newDirection);
         }
@@ -43,7 +49,7 @@ namespace Arenbee.Framework.GUI
                 }
 
                 _rapidScrollTimer = _rapidScrollInterval;
-                ScrollDirection(_currentDirection);
+                CurrentContainer.FocusDirection(_currentDirection);
                 return;
             }
 
@@ -56,26 +62,7 @@ namespace Arenbee.Framework.GUI
 
             _rapidScrollTimerEnabled = true;
             _rapidScrollTimer = _rapidScrollDelay;
-            ScrollDirection(_currentDirection);
-        }
-
-        private void ScrollDirection(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up:
-                    CurrentContainer?.FocusUp();
-                    break;
-                case Direction.Down:
-                    CurrentContainer?.FocusDown();
-                    break;
-                case Direction.Left:
-                    CurrentContainer?.FocusLeft();
-                    break;
-                case Direction.Right:
-                    CurrentContainer?.FocusRight();
-                    break;
-            }
+            CurrentContainer.FocusDirection(_currentDirection);
         }
     }
 }

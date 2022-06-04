@@ -26,6 +26,8 @@ namespace Arenbee.Framework.GUI
         }
         [Export]
         public bool Disabled { get; set; }
+        public bool Selected { get; set; }
+        public Cursor Cursor { get; set; }
 
         public T GetData<T>(string key)
         {

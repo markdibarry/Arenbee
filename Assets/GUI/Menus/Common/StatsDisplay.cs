@@ -1,7 +1,5 @@
 using Arenbee.Framework.Actors;
-using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
-using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -12,41 +10,51 @@ namespace Arenbee.Assets.GUI.Menus.Common
     public partial class StatsDisplay : PanelContainer
     {
         private PackedScene _elementScene;
-        private PackedScene _pointContainerScene;
-        private PackedScene _statContainerScene;
         private GridContainer _gridContainer;
         private HBoxContainer _elementAtkContainer;
         private HBoxContainer _elementDefContainer;
+        private StatContainer _levelContainer;
+        private PointContainer _hpContainer;
+        private PointContainer _mpContainer;
+        private StatContainer _attackContainer;
+        private StatContainer _defenseContainer;
+        private StatContainer _mAttackContainer;
+        private StatContainer _mDefenseContainer;
 
         public override void _Ready()
         {
             base._Ready();
             _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
-            _pointContainerScene = GD.Load<PackedScene>(PointContainer.GetScenePath());
-            _statContainerScene = GD.Load<PackedScene>(StatContainer.GetScenePath());
             _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
+            _levelContainer = _gridContainer.GetNode<StatContainer>("Level");
+            _hpContainer = _gridContainer.GetNode<PointContainer>("HP");
+            _mpContainer = _gridContainer.GetNode<PointContainer>("MP");
+            _attackContainer = _gridContainer.GetNode<StatContainer>("Attack");
+            _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
+            _mAttackContainer = _gridContainer.GetNode<StatContainer>("M Attack");
+            _mDefenseContainer = _gridContainer.GetNode<StatContainer>("M Defense");
             _elementAtkContainer = GetNode<HBoxContainer>("VBoxContainer/EAtk");
             _elementDefContainer = GetNode<HBoxContainer>("VBoxContainer/EDef");
         }
 
         public void UpdateStatsDisplay(Actor actor)
         {
-            if (actor == null) return;
+            if (actor == null)
+                return;
             UpdateStatsDisplay(actor.Stats, actor.Stats);
         }
 
         public void UpdateStatsDisplay(Stats stats, Stats mockStats)
         {
-            if (stats == null) return;
-            _gridContainer.QueueFreeAllChildren();
-            AddStatContainer(stats, mockStats, AttributeType.Level);
-            _gridContainer.AddChild(new MarginContainer());
-            AddPointContainer(stats, mockStats, AttributeType.HP);
-            AddPointContainer(stats, mockStats, AttributeType.MP);
-            AddStatContainer(stats, mockStats, AttributeType.Attack);
-            AddStatContainer(stats, mockStats, AttributeType.Defense);
-            AddStatContainer(stats, mockStats, AttributeType.MagicAttack);
-            AddStatContainer(stats, mockStats, AttributeType.MagicDefense);
+            if (stats == null)
+                return;
+            _levelContainer.UpdateDisplay(stats, mockStats, AttributeType.Level);
+            _hpContainer.UpdateDisplay(stats, mockStats, AttributeType.HP);
+            _mpContainer.UpdateDisplay(stats, mockStats, AttributeType.MP);
+            _attackContainer.UpdateDisplay(stats, mockStats, AttributeType.Attack);
+            _defenseContainer.UpdateDisplay(stats, mockStats, AttributeType.Defense);
+            _mAttackContainer.UpdateDisplay(stats, mockStats, AttributeType.MagicAttack);
+            _mDefenseContainer.UpdateDisplay(stats, mockStats, AttributeType.MagicDefense);
             AddEAtkContainer(mockStats);
             AddEDefContainer(mockStats);
         }
@@ -81,43 +89,6 @@ namespace Arenbee.Assets.GUI.Menus.Common
                 elementLg.Effectiveness = elDef.ModifiedValue;
                 _elementDefContainer.AddChild(elementLg);
             }
-        }
-
-        private void AddPointContainer(Stats stats, Stats mockStats, AttributeType attributeType)
-        {
-            AttributeType maxType;
-            if (attributeType == AttributeType.HP)
-                maxType = AttributeType.MaxHP;
-            else if (attributeType == AttributeType.MP)
-                maxType = AttributeType.MaxMP;
-            else
-                return;
-            var currentValue = stats.Attributes.GetStat(maxType).DisplayValue;
-            var mockValue = mockStats.Attributes.GetStat(maxType).DisplayValue;
-            var pointContainer = _pointContainerScene.Instantiate<PointContainer>();
-            _gridContainer.AddChild(pointContainer);
-            pointContainer.StatNameLabel.Text = attributeType.Get().Abbreviation + ":";
-            pointContainer.StatCurrentValueLabel.Text = stats.Attributes.GetStat(attributeType).DisplayValue.ToString();
-            DisplayValueColor(currentValue, mockValue, pointContainer.StatMaxValueLabel);
-        }
-
-        private void AddStatContainer(Stats stats, Stats mockStats, AttributeType attributeType)
-        {
-            var currentValue = stats.Attributes.GetStat(attributeType).DisplayValue;
-            var mockValue = mockStats.Attributes.GetStat(attributeType).DisplayValue;
-            var statContainer = _statContainerScene.Instantiate<StatContainer>();
-            _gridContainer.AddChild(statContainer);
-            statContainer.StatNameLabel.Text = attributeType.Get().Abbreviation + ":";
-            DisplayValueColor(currentValue, mockValue, statContainer.StatValueLabel);
-        }
-
-        private void DisplayValueColor(int currentValue, int mockValue, Label label)
-        {
-            label.Text = mockValue.ToString();
-            if (mockValue > currentValue)
-                label.Modulate = ColorConstants.TextGreen;
-            else if (mockValue < currentValue)
-                label.Modulate = ColorConstants.TextRed;
         }
     }
 }

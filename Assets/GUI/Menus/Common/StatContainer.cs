@@ -1,4 +1,6 @@
+using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Statistics;
 using Godot;
 
 namespace Arenbee.Assets.GUI.Menus.Common
@@ -48,6 +50,25 @@ namespace Arenbee.Assets.GUI.Menus.Common
         public override void OnResize()
         {
             ResizeItems(StatNameLabel, StatValueLabel);
+        }
+
+        public void UpdateDisplay(Stats stats, Stats mockStats, AttributeType attributeType)
+        {
+            var currentValue = stats.Attributes.GetStat(attributeType).DisplayValue;
+            var mockValue = mockStats.Attributes.GetStat(attributeType).DisplayValue;
+            StatNameText = attributeType.Get().Abbreviation + ":";
+            StatValueText = mockValue.ToString();
+            DisplayValueColor(currentValue, mockValue);
+        }
+
+        private void DisplayValueColor(int currentValue, int mockValue)
+        {
+            if (mockValue > currentValue)
+                StatValueLabel.Modulate = ColorConstants.TextGreen;
+            else if (mockValue < currentValue)
+                StatValueLabel.Modulate = ColorConstants.TextRed;
+            else
+                StatValueLabel.Modulate = Colors.White;
         }
     }
 }

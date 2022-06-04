@@ -12,6 +12,8 @@ namespace Arenbee.Framework.GUI
     {
         public OptionContainer()
         {
+            SingleOptionsEnabled = true;
+            FocusWrap = true;
             OptionItems = new List<OptionItem>();
         }
 
@@ -24,18 +26,8 @@ namespace Arenbee.Framework.GUI
         private TextureRect _arrowRight;
         private bool _arrowsDirty;
         private bool _changesDirty;
+        [Export] public PackedScene CursorScene { get; set; }
         [Export] public bool DimItems { get; set; }
-        [Export] public bool KeepHighlightPosition { get; set; }
-        [Export]
-        public bool FitContainer
-        {
-            get { return _fitContainer; }
-            set
-            {
-                _fitContainer = value;
-                _changesDirty = true;
-            }
-        }
         [Export]
         public bool ExpandContent
         {
@@ -46,20 +38,37 @@ namespace Arenbee.Framework.GUI
                 _changesDirty = true;
             }
         }
+        [Export]
+        public bool FitContainer
+        {
+            get { return _fitContainer; }
+            set
+            {
+                _fitContainer = value;
+                _changesDirty = true;
+            }
+        }
+        [Export] public bool FocusWrap { get; set; }
         [Export] public SizeFlags HResize { get; set; }
         [Export] public SizeFlags VResize { get; set; }
-        public OptionItem CurrentItem => OptionItems.ElementAtOrDefault(ItemIndex);
+        [Export] public bool KeepHighlightPosition { get; set; }
+        [Export] public bool AllOptionEnabled { get; set; }
+        [Export] public bool SingleOptionsEnabled { get; set; }
+        public OptionItem CurrentItem => OptionItems.ElementAtOrDefault(CurrentIndex);
         public GridContainer GridContainer { get; set; }
-        public int ItemIndex { get; set; }
+        public int LastIndex { get; set; }
+        public int CurrentIndex { get; set; }
+        public bool AllSelected => CurrentIndex == -1;
+        public bool IsSingleRow => OptionItems.Count <= GridContainer.Columns;
+        public bool IsSingleColumn => GridContainer.Columns == 1;
         public List<OptionItem> OptionItems { get; set; }
         public delegate void ContainerUpdatedHandler(OptionContainer container);
         public delegate void FocusOOBHandler(OptionContainer container, Direction direction);
-        public delegate void ItemFocusedHandler(OptionContainer optionContainer, OptionItem optionItem);
-        public delegate void ItemSelectedHandler(OptionContainer optionContainer, OptionItem optionItem);
+        public delegate void ItemHandler(OptionContainer optionContainer, OptionItem optionItem);
         public event ContainerUpdatedHandler ContainerUpdated;
         public event FocusOOBHandler FocusOOB;
-        public event ItemFocusedHandler ItemFocused;
-        public event ItemSelectedHandler ItemSelected;
+        public event ItemHandler ItemFocused;
+        public event ItemHandler ItemSelected;
 
         public override void _Process(float delta)
         {
@@ -78,6 +87,37 @@ namespace Arenbee.Framework.GUI
         public void AddGridChild(Node node)
         {
             GridContainer.AddChild(node);
+        }
+
+        public void AddItemToSelection(OptionItem item)
+        {
+            if (item.Selected)
+                return;
+            item.Selected = true;
+            if (item.Cursor != null)
+                return;
+            item.Dim = false;
+            var cursor = CursorScene.Instantiate<Cursor>();
+            cursor.FlashEnabled = true;
+            float cursorX = item.GlobalPosition.x - 4;
+            float cursorY = (float)(item.GlobalPosition.y + Math.Round(item.Size.y * 0.5));
+            AddChild(cursor);
+            cursor.GlobalPosition = new Vector2(cursorX, cursorY);
+            item.Cursor = cursor;
+        }
+
+        public void RemoveItemFromSelection(OptionItem item)
+        {
+            if (!item.Selected)
+                return;
+            item.Selected = false;
+            if (item.Cursor == null)
+                return;
+            item.Dim = true;
+            var cursor = item.Cursor;
+            item.Cursor = null;
+            RemoveChild(cursor);
+            cursor.QueueFree();
         }
 
         public void Clear()
@@ -120,91 +160,167 @@ namespace Arenbee.Framework.GUI
 
         public void FocusItem(int index)
         {
-            if (OptionItems.Count == 0) return;
-            if (DimItems) CurrentItem.Dim = true;
-            ItemIndex = GetValidIndex(index);
-            FocusItem(OptionItems[ItemIndex]);
+            LastIndex = CurrentIndex;
+            if (OptionItems.Count == 0)
+                return;
+            if (DimItems && CurrentItem != null)
+                CurrentItem.Dim = true;
+            CurrentIndex = GetValidIndex(index);
+            AdjustPosition(CurrentItem);
+            HandleSelectAll();
+            if (DimItems && CurrentItem != null)
+                CurrentItem.Dim = false;
+            ItemFocused?.Invoke(this, CurrentItem);
         }
 
-        public void FocusItem(OptionItem optionItem)
+        public void FocusDirection(Direction direction)
         {
-            AdjustPosition(optionItem);
-            if (DimItems) CurrentItem.Dim = false;
-            ItemFocused?.Invoke(this, optionItem);
+            switch (direction)
+            {
+                case Direction.Up:
+                    FocusUp();
+                    break;
+                case Direction.Down:
+                    FocusDown();
+                    break;
+                case Direction.Left:
+                    FocusLeft();
+                    break;
+                case Direction.Right:
+                    FocusRight();
+                    break;
+            }
         }
 
         public void FocusUp()
         {
-            int nextIndex = ItemIndex - GridContainer.Columns;
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = currentIndex - GridContainer.Columns;
             if (IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                LeaveFocus(Direction.Up);
+                LeaveItemFocus(Direction.Up);
         }
 
         public void FocusDown()
         {
-            int nextIndex = ItemIndex + GridContainer.Columns;
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = currentIndex + GridContainer.Columns;
             if (IsValidIndex(nextIndex))
                 FocusItem(nextIndex);
             else
-                LeaveFocus(Direction.Down);
+                LeaveItemFocus(Direction.Down);
         }
 
         public void FocusLeft()
         {
-            int nextIndex = ItemIndex - 1;
-            if (ItemIndex % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = CurrentIndex - 1;
+            if (IsValidIndex(nextIndex) && currentIndex % GridContainer.Columns != 0)
                 FocusItem(nextIndex);
             else
-                LeaveFocus(Direction.Left);
+                LeaveItemFocus(Direction.Left);
         }
 
         public void FocusRight()
         {
-            int nextIndex = ItemIndex + 1;
-            if ((ItemIndex + 1) % GridContainer.Columns != 0 && IsValidIndex(nextIndex))
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = CurrentIndex + 1;
+            if (IsValidIndex(nextIndex) && (currentIndex + 1) % GridContainer.Columns != 0)
                 FocusItem(nextIndex);
             else
-                LeaveFocus(Direction.Right);
+                LeaveItemFocus(Direction.Right);
         }
 
         public void FocusTopEnd()
         {
-            int nextIndex = ItemIndex % GridContainer.Columns;
-            if (nextIndex == ItemIndex) return;
+            if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
+            {
+                FocusItem(-1);
+                return;
+            }
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = currentIndex % GridContainer.Columns;
+            if (nextIndex == currentIndex)
+                return;
             FocusItem(nextIndex);
         }
 
         public void FocusBottomEnd()
         {
-            int bottomIndex = ItemIndex % GridContainer.Columns;
+            if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
+            {
+                FocusItem(-1);
+                return;
+            }
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int firstRowAdjIndex = currentIndex % GridContainer.Columns;
             int lastIndex = OptionItems.Count - 1;
             int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
-            int nextIndex = Math.Min(lastRowFirstIndex + bottomIndex, lastIndex);
-            if (nextIndex == ItemIndex) return;
+            int nextIndex = Math.Min(lastRowFirstIndex + firstRowAdjIndex, lastIndex);
+            if (nextIndex == currentIndex)
+                return;
             FocusItem(nextIndex);
         }
 
         public void FocusLeftEnd()
         {
-            int nextIndex = ItemIndex / GridContainer.Columns * GridContainer.Columns;
-            if (nextIndex == ItemIndex) return;
+            if (IsSingleRow)
+            {
+                if (AllOptionEnabled && CurrentIndex != -1)
+                    FocusItem(-1);
+                else
+                    FocusItem(0);
+                return;
+            }
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = currentIndex / GridContainer.Columns * GridContainer.Columns;
+            if (nextIndex == currentIndex)
+                return;
             FocusItem(nextIndex);
         }
 
         public void FocusRightEnd()
         {
-            int nextIndex = (((ItemIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
-            if (nextIndex >= OptionItems.Count)
-                nextIndex = OptionItems.Count - 1;
-            if (nextIndex == ItemIndex) return;
+            if (IsSingleRow)
+            {
+                if (AllOptionEnabled && CurrentIndex != -1)
+                    FocusItem(-1);
+                else
+                    FocusItem(OptionItems.Count - 1);
+                return;
+            }
+            int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+            int nextIndex = (((currentIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
+            if (nextIndex == currentIndex)
+                return;
             FocusItem(nextIndex);
         }
 
         public int GetValidIndex(int index)
         {
-            return Math.Clamp(index, 0, OptionItems.Count - 1);
+            int lowest = AllOptionEnabled ? -1 : 0;
+            return Math.Clamp(index, lowest, OptionItems.Count - 1);
+        }
+
+        public void HandleSelectAll()
+        {
+            if (!AllOptionEnabled)
+                return;
+            if (CurrentIndex == -1)
+            {
+                GridContainer.Position = Vector2.Zero;
+                foreach (var item in OptionItems)
+                {
+                    if (!item.Disabled)
+                        AddItemToSelection(item);
+                }
+            }
+            else if (LastIndex == -1)
+            {
+                foreach (var item in OptionItems)
+                    RemoveItemFromSelection(item);
+            }
         }
 
         /// <summary>
@@ -216,9 +332,15 @@ namespace Arenbee.Framework.GUI
             _changesDirty = true;
         }
 
+        public void LeaveContainerFocus()
+        {
+            foreach (var item in OptionItems)
+                RemoveItemFromSelection(item);
+        }
+
         public void RefocusItem()
         {
-            FocusItem(ItemIndex);
+            FocusItem(CurrentIndex);
         }
 
         public virtual void ReplaceChildren(IEnumerable<OptionItem> optionItems)
@@ -231,7 +353,7 @@ namespace Arenbee.Framework.GUI
 
         public void ResetContainerFocus()
         {
-            ItemIndex = 0;
+            CurrentIndex = 0;
             GridContainer.Position = Vector2.Zero;
         }
 
@@ -243,11 +365,16 @@ namespace Arenbee.Framework.GUI
 
         public void SelectItem()
         {
-            ItemSelected?.Invoke(this, OptionItems[ItemIndex]);
+            ItemSelected?.Invoke(this, OptionItems[CurrentIndex]);
         }
 
         private void AdjustPosition(OptionItem optionItem)
         {
+            if (optionItem == null)
+            {
+                GridContainer.Position = Vector2.Zero;
+                return;
+            }
             // Adjust Right
             if (_control.GlobalPosition.x + _control.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
             {
@@ -354,8 +481,10 @@ namespace Arenbee.Framework.GUI
             return -1 < index && index < OptionItems.Count;
         }
 
-        private void LeaveFocus(Direction direction)
+        private void LeaveItemFocus(Direction direction)
         {
+            if (FocusWrap)
+                WrapFocus(direction);
             FocusOOB?.Invoke(this, direction);
         }
 
@@ -377,12 +506,32 @@ namespace Arenbee.Framework.GUI
             _arrowDown = GetNodeOrNull<TextureRect>("Arrows/ArrowDown");
             _arrowLeft = GetNodeOrNull<TextureRect>("Arrows/ArrowLeft");
             _arrowRight = GetNodeOrNull<TextureRect>("Arrows/ArrowRight");
+            CursorScene ??= GD.Load<PackedScene>(HandCursor.GetScenePath());
         }
 
         private void SubscribeEvents()
         {
             Resized += OnResized;
             GridContainer.ItemRectChanged += OnGridRectChanged;
+        }
+
+        private void WrapFocus(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    FocusBottomEnd();
+                    break;
+                case Direction.Down:
+                    FocusTopEnd();
+                    break;
+                case Direction.Left:
+                    FocusRightEnd();
+                    break;
+                case Direction.Right:
+                    FocusLeftEnd();
+                    break;
+            }
         }
     }
 }

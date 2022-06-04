@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://5hlxqydf0kdn"]
+[gd_scene load_steps=6 format=3 uid="uid://5hlxqydf0kdn"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_qqjb6"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/EquipmentSubMenu.cs" id="2_wyy0h"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_l5pbf"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="4_hd1nj"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_ieu0a"]
 
 [node name="EquipmentSubMenu" instance=ExtResource( "1_qqjb6" )]
@@ -17,6 +18,7 @@ offset_left = 88.0
 offset_top = 16.0
 offset_right = 225.0
 offset_bottom = 46.0
+CursorScene = ExtResource( "4_hd1nj" )
 
 [node name="MarginContainer" parent="Foreground/PartyOptions" index="0"]
 offset_right = 130.0
@@ -64,6 +66,7 @@ offset_left = 88.0
 offset_top = 52.0
 offset_right = 225.0
 offset_bottom = 160.0
+CursorScene = ExtResource( "4_hd1nj" )
 DimItems = true
 ExpandContent = true
 
