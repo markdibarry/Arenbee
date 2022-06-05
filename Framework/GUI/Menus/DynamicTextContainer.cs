@@ -76,6 +76,8 @@ namespace Arenbee.Framework.GUI
 
         public void UpdateText(string text)
         {
+            if (text == null)
+                text = string.Empty;
             CustomText = text;
             UpdateText();
         }

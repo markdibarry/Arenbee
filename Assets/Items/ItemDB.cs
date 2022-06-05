@@ -127,7 +127,8 @@ namespace Arenbee.Assets.Items
                 Price = 15,
                 Modifiers = new Modifier[]
                 {
-                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1)
+                    new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, -1)
                 }
             });
 

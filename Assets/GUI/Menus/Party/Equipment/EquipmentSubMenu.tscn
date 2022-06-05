@@ -14,9 +14,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PartyOptions" parent="Foreground" index="0" instance=ExtResource( "3_l5pbf" )]
-offset_left = 88.0
+offset_left = 75.0
 offset_top = 16.0
-offset_right = 225.0
+offset_right = 212.0
 offset_bottom = 46.0
 CursorScene = ExtResource( "4_hd1nj" )
 
@@ -62,10 +62,10 @@ offset_right = 126.0
 offset_bottom = 11.0
 
 [node name="EquipmentOptions" parent="Foreground" index="1" instance=ExtResource( "3_l5pbf" )]
-offset_left = 88.0
-offset_top = 52.0
-offset_right = 225.0
-offset_bottom = 160.0
+offset_left = 75.0
+offset_top = 49.0
+offset_right = 212.0
+offset_bottom = 157.0
 CursorScene = ExtResource( "4_hd1nj" )
 DimItems = true
 ExpandContent = true

@@ -34,28 +34,6 @@ namespace Arenbee.Framework.Items
         public int Price { get; init; }
         public ItemUseData UseData { get; init; }
 
-        public string GetStatDescription()
-        {
-            var modParts = new List<string>();
-            foreach (var itemMod in Modifiers)
-            {
-                if (itemMod.IsHidden) continue;
-                if (itemMod.StatType == StatType.Attribute)
-                {
-                    var name = ((AttributeType)itemMod.SubType).Get().Abbreviation;
-                    if (itemMod.Value > 0)
-                        modParts.Add("+");
-                    switch (itemMod.ModOperator)
-                    {
-                        case ModOperator.Add:
-                            modParts.Add($"{itemMod.Value} {name}");
-                            break;
-                    }
-                }
-            }
-            return string.Join(", ", modParts);
-        }
-
         public void AddToStats(Stats stats)
         {
             if (Modifiers.Count == 0) return;

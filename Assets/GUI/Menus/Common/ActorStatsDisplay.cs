@@ -7,7 +7,7 @@ using Godot;
 namespace Arenbee.Assets.GUI.Menus.Common
 {
     [Tool]
-    public partial class StatsDisplay : PanelContainer
+    public partial class ActorStatsDisplay : PanelContainer
     {
         private PackedScene _elementScene;
         private GridContainer _gridContainer;

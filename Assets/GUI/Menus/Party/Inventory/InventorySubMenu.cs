@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -16,15 +16,21 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private Inventory _inventory;
         private OptionContainer _inventoryList;
         private DynamicTextContainer _itemInfo;
+        private ItemStatsDisplay _itemStatsDisplay;
         private OptionContainer _typeList;
         private PackedScene _keyValueOptionScene;
 
         public override void HandleInput(float delta)
         {
             if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
+            {
+                UpdateItemDescription(null);
                 FocusContainer(_typeList);
+            }
             else
+            {
                 base.HandleInput(delta);
+            }
         }
 
         protected override void ReplaceDefaultOptions()
@@ -35,6 +41,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
             var itemOptions = GetItemOptions(ItemType.None);
             _inventoryList.ReplaceChildren(itemOptions);
+
+            UpdateItemDescription(null);
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
@@ -62,6 +70,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             _typeList = OptionContainers.Find(x => x.Name == "TypeList");
             _inventoryList = OptionContainers.Find(x => x.Name == "InventoryList");
             _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
+            _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
             _inventory = Locator.GetParty()?.Inventory;
         }
@@ -117,19 +126,9 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void UpdateItemDescription(OptionItem optionItem)
         {
-            if (optionItem == null)
-                return;
-            var itemStack = optionItem.GetData<ItemStack>("itemStack");
-            if (itemStack == null)
-                return;
-            Item item = itemStack.Item;
-            if (item != null)
-            {
-                var message = item.Description;
-                if (item.Modifiers != null)
-                    message += $"\n{item.GetStatDescription()}";
-                _itemInfo.UpdateText(message);
-            }
+            var item = optionItem?.GetData<ItemStack>("itemStack")?.Item;
+            _itemStatsDisplay.UpdateStatsDisplay(item);
+            _itemInfo.UpdateText(item?.Description);
         }
 
         private void UpdateItemList(OptionItem optionItem)

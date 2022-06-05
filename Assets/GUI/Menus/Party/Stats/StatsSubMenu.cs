@@ -14,7 +14,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
     {
         public static string GetScenePath() => GDEx.GetScenePath();
         private PlayerParty _playerParty;
-        private StatsDisplay _statsDisplay;
+        private ActorStatsDisplay _statsDisplay;
         private OptionContainer _partyOptions;
         private PackedScene _textOptionScene;
 
@@ -23,7 +23,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.SetNodeReferences();
             _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
             _partyOptions = OptionContainers.Find(x => x.Name == "PartyList");
-            _statsDisplay = Foreground.GetNode<StatsDisplay>("StatsDisplay");
+            _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
             _playerParty = Locator.GetParty() ?? new PlayerParty();
         }
 

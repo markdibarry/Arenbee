@@ -1,19 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://bi5k8m13ufwjq"]
+[gd_scene load_steps=8 format=3 uid="uid://mpo2nq7bnq20"]
 
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/OptionSubMenu.tscn" id="1_uvd47"]
+[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_uvd47"]
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
+[ext_resource type="PackedScene" path="res://Framework/GUI/Cursors/HandCursor.tscn" id="4_jor24"]
 [ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://Framework/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
-[ext_resource type="PackedScene" uid="uid://b3th4j3xq58ie" path="res://Assets/GUI/Menus/Common/StatsDisplay.tscn" id="6_dccvk"]
+[ext_resource type="PackedScene" uid="uid://crtx7yh7puamw" path="res://Assets/GUI/Menus/Common/ActorStatsDisplay.tscn" id="6_dccvk"]
+[ext_resource type="PackedScene" uid="uid://c2htol4u10lut" path="res://Assets/GUI/Menus/Common/ItemStatsDisplay.tscn" id="7_qosjr"]
 
 [node name="SelectSubMenu" instance=ExtResource( "1_uvd47" )]
 script = ExtResource( "2_kopb2" )
 
 [node name="EquipOptions" parent="Foreground" index="0" instance=ExtResource( "3_5qnt3" )]
-offset_left = 232.0
-offset_top = 52.0
-offset_right = 344.0
-offset_bottom = 160.0
+offset_left = 215.0
+offset_top = 49.0
+offset_right = 327.0
+offset_bottom = 157.0
+CursorScene = ExtResource( "4_jor24" )
 DimItems = true
 ExpandContent = true
 HResize = 3
@@ -63,10 +66,16 @@ offset_top = 43.0
 offset_right = 101.0
 offset_bottom = 50.0
 
-[node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource( "6_dccvk" )]
-offset_left = 214.0
-offset_top = 168.0
-offset_right = 344.0
-offset_bottom = 222.0
+[node name="ActorStatsDisplay" parent="Foreground" index="1" instance=ExtResource( "6_dccvk" )]
+offset_left = 330.0
+offset_top = 83.0
+offset_right = 468.0
+offset_bottom = 157.0
+
+[node name="ItemStatsDisplay" parent="Foreground" index="3" instance=ExtResource( "7_qosjr" )]
+offset_left = 330.0
+offset_top = 16.0
+offset_right = 448.0
+offset_bottom = 80.0
 
 [editable path="Foreground/EquipOptions"]

@@ -1,38 +1,37 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3th4j3xq58ie"]
+[gd_scene load_steps=5 format=3 uid="uid://crtx7yh7puamw"]
 
-[ext_resource type="PackedScene" uid="uid://3pkonq47csuw" path="res://Assets/GUI/Menus/Common/StatContainer.tscn" id="1_1xe3x"]
-[ext_resource type="Script" path="res://Assets/GUI/Menus/Common/StatsDisplay.cs" id="2_t7m5c"]
-[ext_resource type="PackedScene" uid="uid://nkxiep8bigkl" path="res://Assets/GUI/Menus/Common/Element/ElementLarge.tscn" id="4_oa43l"]
-[ext_resource type="PackedScene" uid="uid://bf5q178lenm1v" path="res://Assets/GUI/Menus/Common/PointContainer.tscn" id="4_q5da6"]
+[ext_resource type="Script" path="res://Assets/GUI/Menus/Common/ActorStatsDisplay.cs" id="1_qpsjs"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/StatContainer.tscn" id="2_y2ynj"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/PointContainer.tscn" id="3_k2ed3"]
+[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/Element/ElementLarge.tscn" id="4_l8nds"]
 
 [node name="StatsDisplay" type="PanelContainer"]
 offset_right = 130.0
 offset_bottom = 74.0
-script = ExtResource( "2_t7m5c" )
+script = ExtResource( "1_qpsjs" )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_left = 7.0
 offset_top = 7.0
-offset_right = 127.0
+offset_right = 131.0
 offset_bottom = 67.0
 theme_override_constants/separation = 0
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 40.0
 theme_override_constants/v_separation = 0
 columns = 2
 
-[node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-minimum_size = Vector2(24, 0)
+[node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource( "2_y2ynj" )]
 offset_right = 60.0
 offset_bottom = 10.0
-StatNameText = "Lv:"
+StatNameText = "Stat:"
 StatValueText = "999"
 
 [node name="Spacer" type="MarginContainer" parent="VBoxContainer/GridContainer"]
 offset_left = 64.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 10.0
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 2
@@ -40,7 +39,7 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
+[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource( "3_k2ed3" )]
 minimum_size = Vector2(60, 0)
 offset_top = 10.0
 offset_right = 60.0
@@ -49,53 +48,49 @@ StatNameText = "HP:"
 StatCurrentValueText = "999"
 StatMaxValueText = "999"
 
-[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource( "4_q5da6" )]
-minimum_size = Vector2(56, 0)
+[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource( "3_k2ed3" )]
+minimum_size = Vector2(60, 0)
 offset_left = 64.0
 offset_top = 10.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 20.0
 StatNameText = "MP:"
 StatCurrentValueText = "999"
 StatMaxValueText = "999"
 
-[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-minimum_size = Vector2(28, 0)
+[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "2_y2ynj" )]
 offset_top = 20.0
 offset_right = 60.0
 offset_bottom = 30.0
-StatNameText = "Atk:"
+StatNameText = "Stat:"
 StatValueText = "999"
 
-[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-minimum_size = Vector2(28, 0)
+[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "2_y2ynj" )]
 offset_left = 64.0
 offset_top = 20.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 30.0
-StatNameText = "Def:"
+StatNameText = "Stat:"
 StatValueText = "999"
 
-[node name="M Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-minimum_size = Vector2(44, 0)
+[node name="M Attack" parent="VBoxContainer/GridContainer" instance=ExtResource( "2_y2ynj" )]
 offset_top = 30.0
 offset_right = 60.0
 offset_bottom = 40.0
-StatNameText = "M.Atk:"
+StatNameText = "Stat:"
 StatValueText = "999"
 
-[node name="M Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "1_1xe3x" )]
-minimum_size = Vector2(44, 0)
+[node name="M Defense" parent="VBoxContainer/GridContainer" instance=ExtResource( "2_y2ynj" )]
 offset_left = 64.0
 offset_top = 30.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 40.0
-StatNameText = "M.Def:"
+StatNameText = "Stat:"
 StatValueText = "999"
 
 [node name="EAtk" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 40.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 50.0
 theme_override_constants/separation = 0
 
@@ -104,14 +99,14 @@ offset_right = 20.0
 offset_bottom = 10.0
 text = "E.Atk:"
 
-[node name="ElementLarge" parent="VBoxContainer/EAtk" instance=ExtResource( "4_oa43l" )]
+[node name="ElementLarge" parent="VBoxContainer/EAtk" instance=ExtResource( "4_l8nds" )]
 offset_left = 20.0
 offset_right = 30.0
 Element = 2
 
 [node name="EDef" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 50.0
-offset_right = 120.0
+offset_right = 124.0
 offset_bottom = 60.0
 theme_override_constants/separation = 0
 
@@ -120,17 +115,17 @@ offset_right = 20.0
 offset_bottom = 10.0
 text = "E.Def:"
 
-[node name="ElementLarge" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
+[node name="ElementLarge" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
 offset_left = 20.0
 offset_right = 30.0
 Element = 1
 
-[node name="ElementLarge2" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
+[node name="ElementLarge2" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
 offset_left = 30.0
 offset_right = 40.0
 Element = 4
 
-[node name="ElementLarge3" parent="VBoxContainer/EDef" instance=ExtResource( "4_oa43l" )]
+[node name="ElementLarge3" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
 offset_left = 40.0
 offset_right = 50.0
 Element = 5

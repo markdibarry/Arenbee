@@ -21,7 +21,8 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private PackedScene _keyValueOptionScene;
         private Stats _mockStats;
         private PlayerParty _playerParty;
-        private StatsDisplay _statsDisplay;
+        private ActorStatsDisplay _actorStatsDisplay;
+        private ItemStatsDisplay _itemStatsDisplay;
         public Actor Actor { get; set; }
         public EquipmentSlot Slot { get; set; }
 
@@ -36,8 +37,10 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
 
             _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
             _currentItemId = optionItem.GetData<string>("itemId");
-            _itemDB.GetItem(_currentItemId)?.AddToStats(_mockStats);
-            _statsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
+            var newItem = _itemDB.GetItem(_currentItemId);
+            newItem?.AddToStats(_mockStats);
+            _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
+            _itemStatsDisplay.UpdateStatsDisplay(newItem);
         }
 
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
@@ -54,7 +57,8 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             _mockStats = Actor?.Stats == null ? null : new Stats(Actor.Stats);
             _currentItemId = Slot?.ItemId;
             _equipOptions = OptionContainers.Find(x => x.Name == "EquipOptions");
-            _statsDisplay = Foreground.GetNode<StatsDisplay>("StatsDisplay");
+            _actorStatsDisplay = Foreground.GetNode<ActorStatsDisplay>("ActorStatsDisplay");
+            _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
             _playerParty = Locator.GetParty() ?? new PlayerParty();
             _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
         }

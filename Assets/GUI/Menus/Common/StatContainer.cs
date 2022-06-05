@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Items;
 using Arenbee.Framework.Statistics;
 using Godot;
 
@@ -9,6 +12,7 @@ namespace Arenbee.Assets.GUI.Menus.Common
     public partial class StatContainer : EqualContainer
     {
         public static new string GetScenePath() => GDEx.GetScenePath();
+        private bool _dim;
         private string _statNameText;
         private string _statValueText;
         [Export]
@@ -35,14 +39,24 @@ namespace Arenbee.Assets.GUI.Menus.Common
         }
         public Label StatNameLabel { get; set; }
         public Label StatValueLabel { get; set; }
+        [Export]
+        public bool Dim
+        {
+            get => _dim;
+            set
+            {
+                _dim = value;
+                Modulate = _dim ? ColorConstants.DimGrey : Colors.White;
+            }
+        }
 
         public override void _Ready()
         {
             base._Ready();
             StatNameLabel = GetNode<Label>("%Key");
             StatValueLabel = GetNode<Label>("%Value");
-            _statNameText = StatNameLabel.Text;
-            _statValueText = StatValueLabel.Text;
+            StatNameLabel.Text = _statNameText;
+            StatValueLabel.Text = _statValueText;
             StatNameLabel.Resized += OnResize;
             StatValueLabel.Resized += OnResize;
         }
@@ -50,6 +64,19 @@ namespace Arenbee.Assets.GUI.Menus.Common
         public override void OnResize()
         {
             ResizeItems(StatNameLabel, StatValueLabel);
+        }
+
+        public void UpdateDisplay(IEnumerable<Modifier> mods, AttributeType attributeType)
+        {
+            Dim = true;
+            StatNameText = attributeType.Get().Abbreviation + ":";
+            StatValueText = "0";
+            var mod = mods?.FirstOrDefault(x => (AttributeType)x.SubType == attributeType);
+            var value = mod != null ? mod.Value : 0;
+            StatValueText = value.ToString();
+            if (value != 0)
+                Dim = false;
+            DisplayValueColor(0, value);
         }
 
         public void UpdateDisplay(Stats stats, Stats mockStats, AttributeType attributeType)
