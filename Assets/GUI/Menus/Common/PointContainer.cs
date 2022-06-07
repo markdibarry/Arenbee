@@ -9,9 +9,20 @@ namespace Arenbee.Assets.GUI.Menus.Common
     public partial class PointContainer : EqualContainer
     {
         public static new string GetScenePath() => GDEx.GetScenePath();
+        private bool _dim;
         private string _statNameText;
         private string _statCurrentValueText;
         private string _statMaxValueText;
+        [Export]
+        public bool Dim
+        {
+            get => _dim;
+            set
+            {
+                _dim = value;
+                Modulate = _dim ? ColorConstants.DimGrey : Colors.White;
+            }
+        }
         [Export]
         public string StatNameText
         {
@@ -69,7 +80,7 @@ namespace Arenbee.Assets.GUI.Menus.Common
             ResizeItems(StatNameLabel, ValueHBox);
         }
 
-        public void UpdateDisplay(Stats stats, Stats mockStats, AttributeType attributeType)
+        public void UpdateDisplay(Stats oldStats, Stats newStats, AttributeType attributeType)
         {
             AttributeType maxType;
             if (attributeType == AttributeType.HP)
@@ -78,19 +89,26 @@ namespace Arenbee.Assets.GUI.Menus.Common
                 maxType = AttributeType.MaxMP;
             else
                 return;
-            var currentValue = stats.Attributes.GetStat(maxType).DisplayValue;
-            var mockValue = mockStats.Attributes.GetStat(maxType).DisplayValue;
+            int? oldValue = oldStats?.Attributes.GetStat(maxType).DisplayValue;
+            int newValue = newStats.Attributes.GetStat(maxType).DisplayValue;
             StatNameText = attributeType.Get().Abbreviation + ":";
-            StatCurrentValueText = stats.Attributes.GetStat(attributeType).DisplayValue.ToString();
-            StatMaxValueText = mockValue.ToString();
-            DisplayValueColor(currentValue, mockValue);
+            StatCurrentValueText = newStats.Attributes.GetStat(attributeType).DisplayValue.ToString();
+            StatMaxValueText = newValue.ToString();
+            Dim = oldStats != null && oldValue == newValue;
+            DisplayValueColor(oldValue, newValue);
         }
 
-        private void DisplayValueColor(int currentValue, int mockValue)
+        private void DisplayValueColor(int? oldValue, int newValue)
         {
-            if (mockValue > currentValue)
+            if (oldValue == null)
+            {
+                StatMaxValueLabel.Modulate = Colors.White;
+                return;
+            }
+
+            if (newValue > oldValue)
                 StatMaxValueLabel.Modulate = ColorConstants.TextGreen;
-            else if (mockValue < currentValue)
+            else if (newValue < oldValue)
                 StatMaxValueLabel.Modulate = ColorConstants.TextRed;
             else
                 StatMaxValueLabel.Modulate = Colors.White;

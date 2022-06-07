@@ -79,20 +79,27 @@ namespace Arenbee.Assets.GUI.Menus.Common
             DisplayValueColor(0, value);
         }
 
-        public void UpdateDisplay(Stats stats, Stats mockStats, AttributeType attributeType)
+        public void UpdateDisplay(Stats oldStats, Stats newStats, AttributeType attributeType)
         {
-            var currentValue = stats.Attributes.GetStat(attributeType).DisplayValue;
-            var mockValue = mockStats.Attributes.GetStat(attributeType).DisplayValue;
+            int? oldValue = oldStats?.Attributes.GetStat(attributeType).DisplayValue;
+            int newValue = newStats.Attributes.GetStat(attributeType).DisplayValue;
             StatNameText = attributeType.Get().Abbreviation + ":";
-            StatValueText = mockValue.ToString();
-            DisplayValueColor(currentValue, mockValue);
+            StatValueText = newValue.ToString();
+            Dim = oldStats != null && oldValue == newValue;
+            DisplayValueColor(oldValue, newValue);
         }
 
-        private void DisplayValueColor(int currentValue, int mockValue)
+        private void DisplayValueColor(int? oldValue, int newValue)
         {
-            if (mockValue > currentValue)
+            if (oldValue == null)
+            {
+                StatValueLabel.Modulate = Colors.White;
+                return;
+            }
+
+            if (newValue > oldValue)
                 StatValueLabel.Modulate = ColorConstants.TextGreen;
-            else if (mockValue < currentValue)
+            else if (newValue < oldValue)
                 StatValueLabel.Modulate = ColorConstants.TextRed;
             else
                 StatValueLabel.Modulate = Colors.White;

@@ -21,7 +21,6 @@ namespace Arenbee.Assets.GUI.Menus
 
         public override async Task TransitionOpenAsync()
         {
-            Visible = true;
             ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
             var tween = GetTree().CreateTween();
             var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 0.1f);
@@ -37,7 +36,6 @@ namespace Arenbee.Assets.GUI.Menus
             await ToSignal(tween, "finished");
             tween.Dispose();
             prop.Dispose();
-            Visible = false;
         }
     }
 }

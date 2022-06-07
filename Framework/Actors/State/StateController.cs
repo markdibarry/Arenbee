@@ -107,8 +107,8 @@ namespace Arenbee.Framework.Actors
                 if (!ActorAnimationPlayer.HasAnimation(playerAnimPath)
                     || !CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
                     return false;
+                CurrentWeapon.AnimationPlayer.Play(animationName);
             }
-            CurrentWeapon.AnimationPlayer.Play(animationName);
             ActorAnimationPlayer.Play(playerAnimPath);
             return true;
         }

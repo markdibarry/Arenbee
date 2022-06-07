@@ -29,12 +29,20 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         protected override void ReplaceDefaultOptions()
         {
             UpdateEquippableOptions();
+            _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
+            _itemStatsDisplay.UpdateStatsDisplay(null);
         }
 
         protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemFocused(optionContainer, optionItem);
 
+            if (optionItem == null)
+            {
+                _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
+                _itemStatsDisplay.UpdateStatsDisplay(null);
+                return;
+            }
             _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
             _currentItemId = optionItem.GetData<string>("itemId");
             var newItem = _itemDB.GetItem(_currentItemId);

@@ -19,6 +19,7 @@ text = "StatName:"
 offset_left = 36.0
 offset_right = 46.0
 offset_bottom = 10.0
+theme_override_constants/separation = 0
 
 [node name="ElementLarge" parent="Elements" instance=ExtResource( "1_uib7e" )]
 Element = 2

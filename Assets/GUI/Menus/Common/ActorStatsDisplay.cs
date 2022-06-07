@@ -1,5 +1,6 @@
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.GUI.Menus.Common;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -11,8 +12,8 @@ namespace Arenbee.Assets.GUI.Menus.Common
     {
         private PackedScene _elementScene;
         private GridContainer _gridContainer;
-        private HBoxContainer _elementAtkContainer;
-        private HBoxContainer _elementDefContainer;
+        private ElementContainer _elementAtkContainer;
+        private ElementContainer _elementDefContainer;
         private StatContainer _levelContainer;
         private PointContainer _hpContainer;
         private PointContainer _mpContainer;
@@ -33,62 +34,65 @@ namespace Arenbee.Assets.GUI.Menus.Common
             _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
             _mAttackContainer = _gridContainer.GetNode<StatContainer>("M Attack");
             _mDefenseContainer = _gridContainer.GetNode<StatContainer>("M Defense");
-            _elementAtkContainer = GetNode<HBoxContainer>("VBoxContainer/EAtk");
-            _elementDefContainer = GetNode<HBoxContainer>("VBoxContainer/EDef");
+            _elementAtkContainer = GetNode<ElementContainer>("VBoxContainer/EAtk");
+            _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
         }
 
         public void UpdateStatsDisplay(Actor actor)
         {
             if (actor == null)
                 return;
-            UpdateStatsDisplay(actor.Stats, actor.Stats);
+            UpdateStatsDisplay(null, actor.Stats);
         }
 
-        public void UpdateStatsDisplay(Stats stats, Stats mockStats)
+        public void UpdateStatsDisplay(Stats oldStats, Stats newStats)
         {
-            if (stats == null)
+            if (newStats == null)
                 return;
-            _levelContainer.UpdateDisplay(stats, mockStats, AttributeType.Level);
-            _hpContainer.UpdateDisplay(stats, mockStats, AttributeType.HP);
-            _mpContainer.UpdateDisplay(stats, mockStats, AttributeType.MP);
-            _attackContainer.UpdateDisplay(stats, mockStats, AttributeType.Attack);
-            _defenseContainer.UpdateDisplay(stats, mockStats, AttributeType.Defense);
-            _mAttackContainer.UpdateDisplay(stats, mockStats, AttributeType.MagicAttack);
-            _mDefenseContainer.UpdateDisplay(stats, mockStats, AttributeType.MagicDefense);
-            AddEAtkContainer(mockStats);
-            AddEDefContainer(mockStats);
+            _levelContainer.UpdateDisplay(oldStats, newStats, AttributeType.Level);
+            _hpContainer.UpdateDisplay(oldStats, newStats, AttributeType.HP);
+            _mpContainer.UpdateDisplay(oldStats, newStats, AttributeType.MP);
+            _attackContainer.UpdateDisplay(oldStats, newStats, AttributeType.Attack);
+            _defenseContainer.UpdateDisplay(oldStats, newStats, AttributeType.Defense);
+            _mAttackContainer.UpdateDisplay(oldStats, newStats, AttributeType.MagicAttack);
+            _mDefenseContainer.UpdateDisplay(oldStats, newStats, AttributeType.MagicDefense);
+            UpdateEAtk(oldStats, newStats);
+            UpdateEDef(oldStats, newStats);
         }
 
-        private void AddEAtkContainer(Stats stats)
+        private void UpdateEAtk(Stats oldStats, Stats newStats)
         {
-            _elementAtkContainer.QueueFreeAllChildren();
-            var atkLabel = new Label() { Text = "E.Atk:" };
-            _elementAtkContainer.AddChild(atkLabel);
-            var element = stats.ElementOffs.CurrentElement;
-            if (element != ElementType.None)
+            _elementAtkContainer.Elements.QueueFreeAllChildren();
+            var newElement = newStats.ElementOffs.CurrentElement;
+            _elementAtkContainer.Dim = oldStats != null && oldStats.ElementOffs.CurrentElement == newElement;
+            if (newElement != ElementType.None)
             {
                 var elementLg = _elementScene.Instantiate<ElementLarge>();
-                elementLg.Element = element;
-                _elementAtkContainer.AddChild(elementLg);
+                elementLg.Element = newElement;
+                _elementAtkContainer.Elements.AddChild(elementLg);
             }
         }
 
-        private void AddEDefContainer(Stats stats)
+        private void UpdateEDef(Stats oldStats, Stats newStats)
         {
-            _elementDefContainer.QueueFreeAllChildren();
-            var defLabel = new Label() { Text = "E.Def:" };
-            _elementDefContainer.AddChild(defLabel);
+            _elementDefContainer.Elements.QueueFreeAllChildren();
+            _elementDefContainer.Dim = true;
+            bool changed = false;
             foreach (var element in Enum<ElementType>.Values())
             {
-                var elDef = stats.ElementDefs.GetStat(element);
-                if (elDef == null)
+                var oldDef = oldStats?.ElementDefs.GetStat(element);
+                var newDef = newStats.ElementDefs.GetStat(element);
+                if (!ElementDef.Equals(oldDef, newDef))
+                    changed = true;
+                if (newDef == null || newDef.ModifiedValue == ElementDef.None)
                     continue;
-                if (elDef.ModifiedValue == ElementDef.None) continue;
                 var elementLg = _elementScene.Instantiate<ElementLarge>();
                 elementLg.Element = element;
-                elementLg.Effectiveness = elDef.ModifiedValue;
-                _elementDefContainer.AddChild(elementLg);
+                elementLg.Effectiveness = newDef.ModifiedValue;
+                _elementDefContainer.Elements.AddChild(elementLg);
             }
+            if (changed)
+                _elementDefContainer.Dim = false;
         }
     }
 }

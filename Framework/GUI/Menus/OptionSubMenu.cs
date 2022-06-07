@@ -41,15 +41,14 @@ namespace Arenbee.Framework.GUI
 
         protected override async Task PostWaitFrameSetup()
         {
+            Modulate = TempColor;
             foreach (var optionContainer in OptionContainers)
             {
                 if (optionContainer.FitContainer)
                     optionContainer.FitToContent();
             }
-            Visible = true;
             await TransitionOpenAsync();
             OptionContainers.ForEach(x => SubscribeToEvents(x));
-            _cursor.Visible = true;
             FocusContainer(OptionContainers.FirstOrDefault());
         }
 
@@ -79,7 +78,7 @@ namespace Arenbee.Framework.GUI
                 return;
             CurrentContainer?.LeaveContainerFocus();
             CurrentContainer = optionContainer;
-            optionContainer.FocusItem(index);
+            optionContainer.FocusContainer(index);
         }
 
         protected virtual void OnFocusOOB(OptionContainer container, Direction direction) { }

@@ -14,7 +14,10 @@ namespace Arenbee.Assets.Actors.Default.State
 
         public class NotAttacking : ActionState
         {
-            public override void Enter() { }
+            public override void Enter()
+            {
+                StateController.PlayFallbackAnimation();
+            }
 
             public override ActionState Update(float delta)
             {

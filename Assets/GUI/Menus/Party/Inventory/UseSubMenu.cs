@@ -12,6 +12,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
         public static string GetScenePath() => GDEx.GetScenePath();
         private PackedScene _textOptionScene;
         private OptionContainer _optionContainer;
+        public ItemStack ItemStack { get; set; }
         public Item Item { get; set; }
 
         protected override void ReplaceDefaultOptions()
@@ -40,6 +41,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.SetNodeReferences();
             _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
             _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            Item = ItemStack.Item;
         }
 
         private void DisplayOptions()
@@ -58,20 +60,22 @@ namespace Arenbee.Assets.GUI.Menus.Party
                     ItemUseType.OtherClose => Item.UseData.CanUse?.Invoke(null) ?? true,
                     _ => false,
                 };
+                if (ItemStack.Amount <= 0)
+                    option.Disabled = true;
             }
             options.Add(option);
 
             option = _textOptionScene.Instantiate<TextOption>();
             option.LabelText = "Drop";
             option.OptionData["value"] = "drop";
-            option.Disabled = !Item.IsDroppable;
+            option.Disabled = !Item.IsDroppable || ItemStack.Amount <= 0;
             options.Add(option);
             _optionContainer.ReplaceChildren(options);
         }
 
         private void HandleDrop()
         {
-
+            // TODO
         }
 
         private void HandleUse()
@@ -95,13 +99,13 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private void OpenPartyUseSubMenu()
         {
             var usePartySubMenu = GDEx.Instantiate<UsePartySubMenu>(UsePartySubMenu.GetScenePath());
-            usePartySubMenu.Item = Item;
+            usePartySubMenu.ItemStack = ItemStack;
             RaiseRequestedAdd(usePartySubMenu);
         }
 
         private void OpenEnemyUseSubMenu()
         {
-
+            // TODO
         }
     }
 }

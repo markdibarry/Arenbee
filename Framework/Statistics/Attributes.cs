@@ -110,5 +110,16 @@ namespace Arenbee.Framework.Statistics
 
             return Math.Min(result, MaxValue);
         }
+
+        public static bool Equals(Attribute a, Attribute b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+            if (a == null || b == null)
+                return false;
+            if (a.SubType == b.SubType && a.ModifiedValue == b.ModifiedValue)
+                return true;
+            return false;
+        }
     }
 }

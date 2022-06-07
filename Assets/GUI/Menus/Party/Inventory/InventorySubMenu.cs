@@ -118,15 +118,14 @@ namespace Arenbee.Assets.GUI.Menus.Party
             var itemStack = optionItem.GetData<ItemStack>("itemStack");
             if (itemStack == null)
                 return;
-            Item item = itemStack.Item;
             var useSubMenu = GDEx.Instantiate<UseSubMenu>(UseSubMenu.GetScenePath());
-            useSubMenu.Item = item;
+            useSubMenu.ItemStack = itemStack;
             RaiseRequestedAdd(useSubMenu);
         }
 
         private void UpdateItemDescription(OptionItem optionItem)
         {
-            var item = optionItem?.GetData<ItemStack>("itemStack")?.Item;
+            Item item = optionItem?.GetData<ItemStack>("itemStack")?.Item;
             _itemStatsDisplay.UpdateStatsDisplay(item);
             _itemInfo.UpdateText(item?.Description);
         }
@@ -137,12 +136,12 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 return;
             _inventoryList.ResetContainerFocus();
             ItemType itemType = ItemType.None;
-            var typeName = optionItem.GetData<string>("typeName");
+            string typeName = optionItem.GetData<string>("typeName");
             if (typeName == null)
                 return;
             if (typeName != "All")
                 itemType = Enum.Parse<ItemType>(typeName);
-            var options = GetItemOptions(itemType);
+            List<KeyValueOption> options = GetItemOptions(itemType);
             _inventoryList.ReplaceChildren(options);
         }
     }

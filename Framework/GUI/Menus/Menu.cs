@@ -8,11 +8,6 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class Menu : Control
     {
-        public Menu()
-        {
-            Visible = false;
-        }
-
         private SubMenu _currentSubMenu;
         private SubMenuCloseRequest _closeRequest;
         private SubMenu CurrentSubMenu

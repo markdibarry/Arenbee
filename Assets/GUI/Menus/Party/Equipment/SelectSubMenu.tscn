@@ -34,11 +34,13 @@ offset_right = 94.0
 offset_bottom = 12.0
 
 [node name="Unequip" parent="Foreground/EquipOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "4_wyx2u" )]
+modulate = Color(0.7, 0.7, 0.7, 1)
 offset_right = 94.0
 offset_bottom = 12.0
 OptionData = {
 "itemId": "Unequip"
 }
+Dim = true
 KeyText = "<Unequip>"
 ValueText = ""
 
@@ -72,7 +74,7 @@ offset_top = 83.0
 offset_right = 468.0
 offset_bottom = 157.0
 
-[node name="ItemStatsDisplay" parent="Foreground" index="3" instance=ExtResource( "7_qosjr" )]
+[node name="ItemStatsDisplay" parent="Foreground" index="2" instance=ExtResource( "7_qosjr" )]
 offset_left = 330.0
 offset_top = 16.0
 offset_right = 448.0

@@ -46,8 +46,8 @@ namespace Arenbee.Framework.Statistics
 
         public ElementType Element
         {
-            get { return (ElementType)SubType; }
-            set { SubType = (int)value; }
+            get => (ElementType)SubType;
+            set => SubType = (int)value;
         }
 
         public override int CalculateStat(bool ignoreHidden = false)
@@ -61,6 +61,15 @@ namespace Arenbee.Framework.Statistics
             }
 
             return Math.Clamp(result + None, Absorb, VeryWeak);
+        }
+
+        public static bool Equals(ElementDef a, ElementDef b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+            if (a == null || b == null)
+                return false;
+            return a.Element == b.Element && a.ModifiedValue == b.ModifiedValue;
         }
     }
 }

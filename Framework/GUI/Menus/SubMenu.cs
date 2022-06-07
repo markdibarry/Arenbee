@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
@@ -11,12 +10,8 @@ namespace Arenbee.Framework.GUI
     [Tool]
     public partial class SubMenu : Control
     {
-        public SubMenu()
-        {
-            Visible = false;
-        }
-
         private bool _dim;
+
         [Export]
         public bool Dim
         {
@@ -36,6 +31,7 @@ namespace Arenbee.Framework.GUI
         protected GUIInputHandler MenuInput { get; private set; }
         [Export] protected bool PreventCancel { get; set; }
         [Export] protected bool PreventCloseAll { get; set; }
+        protected Color TempColor { get; set; }
         public delegate void RequestedAddHandler(SubMenu subMenu);
         public delegate void RequestedCloseHandler(SubMenuCloseRequest closeRequest);
         public event RequestedAddHandler RequestedAdd;
@@ -43,6 +39,8 @@ namespace Arenbee.Framework.GUI
 
         public override void _Ready()
         {
+            TempColor = Modulate;
+            Modulate = Colors.Transparent;
             SetNodeReferences();
             MenuInput = Locator.GetMenuInput();
             if (this.IsSceneRoot())
@@ -96,7 +94,6 @@ namespace Arenbee.Framework.GUI
 
         public virtual Task TransitionOpenAsync()
         {
-            Modulate = Colors.White;
             return Task.CompletedTask;
         }
 
@@ -117,7 +114,7 @@ namespace Arenbee.Framework.GUI
         /// <returns></returns>
         protected virtual async Task PostWaitFrameSetup()
         {
-            Visible = true;
+            Modulate = TempColor;
             await TransitionOpenAsync();
         }
 

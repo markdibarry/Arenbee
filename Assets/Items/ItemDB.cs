@@ -195,6 +195,20 @@ namespace Arenbee.Assets.Items
                     new(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Weak)
                 }
             });
+
+            _items.Add(new Item("ZubazPants", ItemType.Pants)
+            {
+                DisplayName = "Zubaz Pants",
+                Description = "They're like the 80's but in the 90's.",
+                MaxStack = 9,
+                IsSellable = false,
+                IsDroppable = false,
+                Price = 14,
+                Modifiers = new Modifier[]
+                {
+                    new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 2),
+                }
+            });
         }
 
         private void BuildFootwear()
@@ -334,6 +348,23 @@ namespace Arenbee.Assets.Items
                 {
                     SkillEffect = SkillEffectName.RestoreHP,
                     UseType = ItemUseType.PartyMember,
+                    Value1 = 5,
+                    CanUse = (Actor actor) => !actor.Stats.HasFullHP() && !actor.Stats.HasNoHP()
+                }
+            });
+
+            _items.Add(new Item("FlavorAid", ItemType.Restorative)
+            {
+                DisplayName = "Flavor Aid",
+                Description = "Made to share!",
+                MaxStack = 9,
+                IsSellable = true,
+                IsDroppable = true,
+                Price = 30,
+                UseData = new()
+                {
+                    SkillEffect = SkillEffectName.RestoreHP,
+                    UseType = ItemUseType.PartyMemberAll,
                     Value1 = 5,
                     CanUse = (Actor actor) => !actor.Stats.HasFullHP() && !actor.Stats.HasNoHP()
                 }

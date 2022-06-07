@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://crtx7yh7puamw"]
 
 [ext_resource type="Script" path="res://Assets/GUI/Menus/Common/ActorStatsDisplay.cs" id="1_qpsjs"]
-[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/StatContainer.tscn" id="2_y2ynj"]
-[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/PointContainer.tscn" id="3_k2ed3"]
-[ext_resource type="PackedScene" path="res://Assets/GUI/Menus/Common/Element/ElementLarge.tscn" id="4_l8nds"]
+[ext_resource type="PackedScene" uid="uid://3pkonq47csuw" path="res://Assets/GUI/Menus/Common/StatContainer.tscn" id="2_y2ynj"]
+[ext_resource type="PackedScene" uid="uid://bf5q178lenm1v" path="res://Assets/GUI/Menus/Common/PointContainer.tscn" id="3_k2ed3"]
+[ext_resource type="PackedScene" uid="uid://dmu1kef72ibae" path="res://Assets/GUI/Menus/Common/ElementContainer.tscn" id="4_1eepv"]
 
 [node name="StatsDisplay" type="PanelContainer"]
 offset_right = 130.0
@@ -88,44 +88,14 @@ offset_bottom = 40.0
 StatNameText = "Stat:"
 StatValueText = "999"
 
-[node name="EAtk" type="HBoxContainer" parent="VBoxContainer"]
+[node name="EAtk" parent="VBoxContainer" instance=ExtResource( "4_1eepv" )]
 offset_top = 40.0
 offset_right = 124.0
 offset_bottom = 50.0
-theme_override_constants/separation = 0
+StatNameText = "EAtk:"
 
-[node name="EAtk" type="Label" parent="VBoxContainer/EAtk"]
-offset_right = 20.0
-offset_bottom = 10.0
-text = "E.Atk:"
-
-[node name="ElementLarge" parent="VBoxContainer/EAtk" instance=ExtResource( "4_l8nds" )]
-offset_left = 20.0
-offset_right = 30.0
-Element = 2
-
-[node name="EDef" type="HBoxContainer" parent="VBoxContainer"]
+[node name="EDef" parent="VBoxContainer" instance=ExtResource( "4_1eepv" )]
 offset_top = 50.0
 offset_right = 124.0
 offset_bottom = 60.0
-theme_override_constants/separation = 0
-
-[node name="EDefLabel" type="Label" parent="VBoxContainer/EDef"]
-offset_right = 20.0
-offset_bottom = 10.0
-text = "E.Def:"
-
-[node name="ElementLarge" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
-offset_left = 20.0
-offset_right = 30.0
-Element = 1
-
-[node name="ElementLarge2" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
-offset_left = 30.0
-offset_right = 40.0
-Element = 4
-
-[node name="ElementLarge3" parent="VBoxContainer/EDef" instance=ExtResource( "4_l8nds" )]
-offset_left = 40.0
-offset_right = 50.0
-Element = 5
+StatNameText = "EDef:"

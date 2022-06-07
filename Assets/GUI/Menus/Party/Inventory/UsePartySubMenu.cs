@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
@@ -13,10 +15,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
     {
         public static string GetScenePath() => GDEx.GetScenePath();
         private PackedScene _partyMemberOptionScene;
-        private OptionContainer _optionContainer;
+        private OptionContainer _partyContainer;
+        public ItemStack ItemStack { get; set; }
         public Item Item { get; set; }
         public PlayerParty Party { get; set; }
-        public bool SelectAll { get; set; }
 
         protected override void ReplaceDefaultOptions()
         {
@@ -27,11 +29,6 @@ namespace Arenbee.Assets.GUI.Menus.Party
         protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
         {
             base.OnItemSelected(optionContainer, optionItem);
-            var actor = optionItem.GetData<Actor>("actor");
-            if (actor == null)
-                return;
-            if (optionItem.Disabled)
-                return;
             HandleUse(optionItem);
         }
 
@@ -39,36 +36,66 @@ namespace Arenbee.Assets.GUI.Menus.Party
         {
             base.SetNodeReferences();
             Party = Locator.GetParty();
-            _optionContainer = OptionContainers.Find(x => x.Name == "Party");
+            _partyContainer = OptionContainers.Find(x => x.Name == "Party");
             _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
+            Item = ItemStack.Item;
+            if (Item.UseData.UseType == ItemUseType.PartyMemberAll)
+            {
+                _partyContainer.AllOptionEnabled = true;
+                _partyContainer.SingleOptionsEnabled = false;
+            }
         }
 
         private void DisplayOptions()
         {
-            _optionContainer.Clear();
+            _partyContainer.Clear();
             if (Party == null)
                 return;
             foreach (var actor in Party.Actors.OrEmpty())
             {
                 var option = _partyMemberOptionScene.Instantiate<PartyMemberOption>();
-                _optionContainer.AddGridChild(option);
-                option.Disabled = !Item.UseData.CanUse(actor);
+                _partyContainer.AddGridChild(option);
+
                 option.OptionData["actor"] = actor;
                 option.NameLabel.Text = actor.Name;
                 option.HPContainer.StatNameText = "HP";
+                option.MPContainer.StatNameText = "MP";
+            }
+            UpdatePartyDisplay();
+        }
+
+        private void UpdatePartyDisplay()
+        {
+            foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
+            {
+                var actor = option.GetData<Actor>("actor");
+                if (actor == null)
+                    continue;
+                option.Disabled = !Item.UseData.CanUse(actor) || ItemStack.Amount <= 0;
                 option.HPContainer.StatCurrentValueText = actor.Stats.GetHP().ToString();
                 option.HPContainer.StatMaxValueText = actor.Stats.GetMaxHP().ToString();
-                option.MPContainer.StatNameText = "MP";
                 option.MPContainer.StatCurrentValueText = actor.Stats.GetMP().ToString();
                 option.MPContainer.StatMaxValueText = actor.Stats.GetMaxMP().ToString();
             }
-            _optionContainer.InitItems();
         }
 
         private void HandleUse(OptionItem optionItem)
         {
-            //var actor = Party.GetPlayerByName(optionItem.OptionData["value"]);
+            if (optionItem?.Disabled == true)
+                return;
+            IEnumerable<OptionItem> selectedItems;
+            if (optionItem == null && _partyContainer.AllOptionEnabled)
+                selectedItems = _partyContainer.GetSelectedItems();
+            else
+                selectedItems = new OptionItem[] { optionItem };
 
+            foreach (OptionItem item in selectedItems)
+            {
+                var actor = optionItem.GetData<Actor>("actor");
+                if (actor == null)
+                    return;
+                    
+            }
         }
     }
 }

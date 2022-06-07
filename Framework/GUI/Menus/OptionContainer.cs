@@ -84,9 +84,12 @@ namespace Arenbee.Framework.GUI
             Init();
         }
 
-        public void AddGridChild(Node node)
+        public void AddGridChild(OptionItem optionItem)
         {
-            GridContainer.AddChild(node);
+            GridContainer.AddChild(optionItem);
+            OptionItems.Add(optionItem);
+            optionItem.Dim = DimItems;
+            _changesDirty = true;
         }
 
         public void AddItemToSelection(OptionItem item)
@@ -158,8 +161,23 @@ namespace Arenbee.Framework.GUI
             Position = newPos;
         }
 
+        public void FocusContainer(int index)
+        {
+            if (SingleOptionsEnabled)
+                FocusItem(index);
+            else if (AllOptionEnabled)
+                FocusItem(-1);
+        }
+
         public void FocusItem(int index)
         {
+            if (!SingleOptionsEnabled)
+            {
+                if (AllOptionEnabled)
+                    index = -1;
+                else
+                    return;
+            }
             LastIndex = CurrentIndex;
             if (OptionItems.Count == 0)
                 return;
@@ -297,6 +315,11 @@ namespace Arenbee.Framework.GUI
             FocusItem(nextIndex);
         }
 
+        public IEnumerable<OptionItem> GetSelectedItems()
+        {
+            return OptionItems.Where(x => x.Selected);
+        }
+
         public int GetValidIndex(int index)
         {
             int lowest = AllOptionEnabled ? -1 : 0;
@@ -307,12 +330,14 @@ namespace Arenbee.Framework.GUI
         {
             if (!AllOptionEnabled)
                 return;
-            if (CurrentIndex == -1)
+            if (AllSelected)
             {
                 GridContainer.Position = Vector2.Zero;
                 foreach (var item in OptionItems)
                 {
-                    if (!item.Disabled)
+                    if (item.Disabled)
+                        RemoveItemFromSelection(item);
+                    else
                         AddItemToSelection(item);
                 }
             }
@@ -321,15 +346,6 @@ namespace Arenbee.Framework.GUI
                 foreach (var item in OptionItems)
                     RemoveItemFromSelection(item);
             }
-        }
-
-        /// <summary>
-        /// Initialize the items that were added to the container
-        /// </summary>
-        public void InitItems()
-        {
-            SetOptionItems();
-            _changesDirty = true;
         }
 
         public void LeaveContainerFocus()
@@ -348,7 +364,6 @@ namespace Arenbee.Framework.GUI
             Clear();
             foreach (var item in optionItems)
                 AddGridChild(item);
-            InitItems();
         }
 
         public void ResetContainerFocus()
@@ -357,15 +372,9 @@ namespace Arenbee.Framework.GUI
             GridContainer.Position = Vector2.Zero;
         }
 
-        public void SetOptionItems()
-        {
-            OptionItems = GridContainer.GetChildren<OptionItem>().ToList();
-            OptionItems.ForEach(x => x.Dim = DimItems);
-        }
-
         public void SelectItem()
         {
-            ItemSelected?.Invoke(this, OptionItems[CurrentIndex]);
+            ItemSelected?.Invoke(this, CurrentItem);
         }
 
         private void AdjustPosition(OptionItem optionItem)
@@ -473,7 +482,11 @@ namespace Arenbee.Framework.GUI
         private void Init()
         {
             SubscribeEvents();
-            InitItems();
+            foreach (var item in GridContainer.GetChildren<OptionItem>())
+            {
+                OptionItems.Add(item);
+                item.Dim = DimItems;
+            }
         }
 
         private bool IsValidIndex(int index)
