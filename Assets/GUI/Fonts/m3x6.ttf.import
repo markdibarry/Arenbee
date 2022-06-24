@@ -12,6 +12,7 @@ dest_files=["res://.godot/imported/m3x6.ttf-d2c1bcf442feec77480a139c3c04fda7.fon
 
 [params]
 
+face_index=0
 antialiased=false
 generate_mipmaps=false
 multichannel_signed_distance_field=false

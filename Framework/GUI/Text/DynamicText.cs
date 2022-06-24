@@ -21,7 +21,7 @@ namespace Arenbee.Framework.GUI.Text
             //Speed = 0.05f;
             StopAt = -1;
             VisibleCharacters = 0;
-            VisibleCharactersBehavior = VisibleCharactersBehaviorEnum.CharsAfterShaping;
+            VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
             _counter = Speed;
             _lineBreaks = new int[0];
         }
@@ -31,12 +31,15 @@ namespace Arenbee.Framework.GUI.Text
         private bool _isTextDirty;
         private int[] _lineBreaks;
         private int _lineCount;
-        private bool _writeEnabled;
         [Export]
         public int CurrentLine
         {
-            get { return _currentLine; }
-            set { MoveToLine(value); }
+            get => _currentLine;
+            set
+            {
+                _currentLine = value;
+                MoveToLine(value);
+            }
         }
         /// <summary>
         /// The custom text to use for display. Use UpdateText() to update the display.
@@ -47,34 +50,32 @@ namespace Arenbee.Framework.GUI.Text
         [Export]
         public bool ShowAllToStopEnabled
         {
-            get { return IsAtStop(); }
-            set { ShowAllToStop(value); }
+            get => IsAtStop();
+            set => ShowAllToStop(value);
         }
         [Export]
         public bool UpdateTextEnabled
         {
-            get { return false; }
+            get => false;
             set { if (value) UpdateText(); }
         }
         [Export]
-        public bool WriteEnabled
-        {
-            get { return _writeEnabled; }
-            set { Write(value); }
-        }
+        public bool WriteEnabled { get; set; }
         [Export]
         public float Speed { get; set; }
         public ReadOnlyCollection<int> LineBreaks
         {
-            get { return Array.AsReadOnly(_lineBreaks); }
+            get => Array.AsReadOnly(_lineBreaks);
         }
         public bool SpeedUpText { get; set; }
         public int StopAt { get; set; }
         public Dictionary<int, List<TextEvent>> TextEvents { get; set; }
         public delegate void EventTriggeredHandler(ITextEvent textEvent);
-        public event EventHandler StoppedWriting;
+        public delegate void StoppedWritingHandler();
+        public delegate void TextLoadedHandler();
+        public event StoppedWritingHandler StoppedWriting;
         public event EventTriggeredHandler TextEventTriggered;
-        public event EventHandler TextLoaded;
+        public event TextLoadedHandler TextLoaded;
 
         public override void _Process(float delta)
         {
@@ -86,7 +87,7 @@ namespace Arenbee.Framework.GUI.Text
             {
                 WriteEnabled = false;
                 InvokeTextEvents(VisibleCharacters);
-                StoppedWriting?.Invoke(this, EventArgs.Empty);
+                StoppedWriting?.Invoke();
                 return;
             }
 
@@ -111,8 +112,10 @@ namespace Arenbee.Framework.GUI.Text
 
         public bool IsAtStop()
         {
-            if (PercentVisible >= 1) return true;
-            if (StopAt < 0) return false;
+            if (PercentVisible >= 1)
+                return true;
+            if (StopAt < 0)
+                return false;
             return VisibleCharacters >= StopAt;
         }
 
@@ -120,7 +123,6 @@ namespace Arenbee.Framework.GUI.Text
         {
             line = GetValidLine(line);
             Position = new Vector2(0, -GetLineOffsetOrEnd(line));
-            _currentLine = line;
             if (line < LineBreaks.Count)
                 VisibleCharacters = LineBreaks[line];
         }
@@ -151,11 +153,6 @@ namespace Arenbee.Framework.GUI.Text
         {
             ExtractEventsFromText();
             _isTextDirty = true;
-        }
-
-        public void Write(bool shouldWrite)
-        {
-            _writeEnabled = shouldWrite;
         }
 
         private void ExtractEventsFromText()
@@ -248,10 +245,7 @@ namespace Arenbee.Framework.GUI.Text
 
         private float GetLineOffsetOrEnd(int line)
         {
-            if (line < _lineCount)
-                return GetLineOffset(line);
-            else
-                return GetContentHeight();
+            return line < _lineCount ? GetLineOffset(line) : GetContentHeight();
         }
 
         private void HandleTextEvent(ITextEvent textEvent)
@@ -289,12 +283,11 @@ namespace Arenbee.Framework.GUI.Text
 
         private void SetDefault()
         {
-            if (this.IsSceneRoot())
-            {
-                const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
-                UpdateText(DefaultText);
-                WriteEnabled = true;
-            }
+            if (!this.IsSceneRoot())
+                return;
+            const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
+            UpdateText(DefaultText);
+            WriteEnabled = true;
         }
 
         private void UpdateLineBreaks()
@@ -310,7 +303,7 @@ namespace Arenbee.Framework.GUI.Text
             _lineCount = GetLineCount();
             UpdateLineBreaks();
             _isTextDirty = false;
-            TextLoaded?.Invoke(this, EventArgs.Empty);
+            TextLoaded?.Invoke();
         }
     }
 }

@@ -21,13 +21,13 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.ReplaceDefaultOptions();
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            var optionValue = optionItem.GetData<string>("value");
+            base.OnItemSelected();
+            var optionValue = CurrentContainer.CurrentItem.GetData<string>("value");
             if (optionValue == null)
                 return;
-            if (!optionItem.Disabled)
+            if (!CurrentContainer.CurrentItem.Disabled)
             {
                 if (optionValue == "use")
                     HandleUse();
@@ -41,6 +41,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.SetNodeReferences();
             _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
             _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+            if (ItemStack == null)
+                return;
             Item = ItemStack.Item;
         }
 
@@ -53,13 +55,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             option.Disabled = true;
             if (Item.UseData != null)
             {
-                option.Disabled = Item.UseData.UseType switch
-                {
-                    ItemUseType.None or
-                    ItemUseType.Other or
-                    ItemUseType.OtherClose => Item.UseData.CanUse?.Invoke(null) ?? true,
-                    _ => false,
-                };
+                option.Disabled = false;
                 if (ItemStack.Amount <= 0)
                     option.Disabled = true;
             }

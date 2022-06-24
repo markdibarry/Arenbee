@@ -1,13 +1,10 @@
-using System;
-using Arenbee.Framework.Actors;
-using Arenbee.Framework.Skills;
+using Arenbee.Framework.ActionEffects;
 
 namespace Arenbee.Framework.Items
 {
     public class ItemUseData
     {
-        public Func<Actor, bool> CanUse { get; init; }
-        public SkillEffectName SkillEffect { get; set; }
+        public ActionEffectType ActionEffect { get; set; }
         public ItemUseType UseType { get; init; }
         public int Value1 { get; set; }
         public int Value2 { get; set; }

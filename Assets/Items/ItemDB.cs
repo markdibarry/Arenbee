@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.Actors;
+using Arenbee.Framework.ActionEffects;
 using Arenbee.Framework.Items;
-using Arenbee.Framework.Skills;
 using Arenbee.Framework.Statistics;
 
 namespace Arenbee.Assets.Items
@@ -346,10 +345,9 @@ namespace Arenbee.Assets.Items
                 Price = 10,
                 UseData = new()
                 {
-                    SkillEffect = SkillEffectName.RestoreHP,
+                    ActionEffect = ActionEffectType.RestoreHP,
                     UseType = ItemUseType.PartyMember,
-                    Value1 = 5,
-                    CanUse = (Actor actor) => !actor.Stats.HasFullHP() && !actor.Stats.HasNoHP()
+                    Value1 = 5
                 }
             });
 
@@ -363,10 +361,9 @@ namespace Arenbee.Assets.Items
                 Price = 30,
                 UseData = new()
                 {
-                    SkillEffect = SkillEffectName.RestoreHP,
+                    ActionEffect = ActionEffectType.RestoreHP,
                     UseType = ItemUseType.PartyMemberAll,
-                    Value1 = 5,
-                    CanUse = (Actor actor) => !actor.Stats.HasFullHP() && !actor.Stats.HasNoHP()
+                    Value1 = 5
                 }
             });
 

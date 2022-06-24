@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Framework.ActionEffects;
 using Arenbee.Framework.Actors;
+using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
@@ -19,6 +22,8 @@ namespace Arenbee.Assets.GUI.Menus.Party
         public ItemStack ItemStack { get; set; }
         public Item Item { get; set; }
         public PlayerParty Party { get; set; }
+        public IActionEffectDB ActionEffectDB { get; set; }
+        public IActionEffect ActionEffect { get; set; }
 
         protected override void ReplaceDefaultOptions()
         {
@@ -26,24 +31,28 @@ namespace Arenbee.Assets.GUI.Menus.Party
             base.ReplaceDefaultOptions();
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            HandleUse(optionItem);
+            base.OnItemSelected();
+            HandleUse(CurrentContainer.CurrentItem);
         }
 
         protected override void SetNodeReferences()
         {
             base.SetNodeReferences();
             Party = Locator.GetParty();
+            ActionEffectDB = Locator.GetActionEffectDB();
             _partyContainer = OptionContainers.Find(x => x.Name == "Party");
             _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
+            if (ItemStack == null)
+                return;
             Item = ItemStack.Item;
             if (Item.UseData.UseType == ItemUseType.PartyMemberAll)
             {
                 _partyContainer.AllOptionEnabled = true;
                 _partyContainer.SingleOptionsEnabled = false;
             }
+            ActionEffect = ActionEffectDB.GetEffect(Item.UseData.ActionEffect);
         }
 
         private void DisplayOptions()
@@ -66,12 +75,20 @@ namespace Arenbee.Assets.GUI.Menus.Party
 
         private void UpdatePartyDisplay()
         {
+            var request = new ActionEffectRequest()
+            {
+                ActionType = ActionType.Item,
+                Value1 = Item.UseData.Value1,
+                Value2 = Item.UseData.Value2
+            };
             foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
             {
                 var actor = option.GetData<Actor>("actor");
                 if (actor == null)
                     continue;
-                option.Disabled = !Item.UseData.CanUse(actor) || ItemStack.Amount <= 0;
+                var target = new Actor[] { actor };
+                bool canUse = ActionEffect.CanUse(request, target);
+                option.Disabled = !canUse || ItemStack.Amount <= 0;
                 option.HPContainer.StatCurrentValueText = actor.Stats.GetHP().ToString();
                 option.HPContainer.StatMaxValueText = actor.Stats.GetMaxHP().ToString();
                 option.MPContainer.StatCurrentValueText = actor.Stats.GetMP().ToString();
@@ -88,14 +105,22 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 selectedItems = _partyContainer.GetSelectedItems();
             else
                 selectedItems = new OptionItem[] { optionItem };
-
+            var request = new ActionEffectRequest()
+            {
+                ActionType = ActionType.Item,
+                Value1 = Item.UseData.Value1,
+                Value2 = Item.UseData.Value2
+            };
             foreach (OptionItem item in selectedItems)
             {
-                var actor = optionItem.GetData<Actor>("actor");
+                var actor = item.GetData<Actor>("actor");
                 if (actor == null)
                     return;
-                    
+                ActionEffect.Use(request, new Actor[] { actor });
             }
+            ItemStack.RemoveAmount(1);
+
+            UpdatePartyDisplay();
         }
     }
 }

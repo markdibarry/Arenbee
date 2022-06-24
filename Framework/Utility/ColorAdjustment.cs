@@ -20,7 +20,7 @@ namespace Arenbee.Framework.Utility
                 _colorShader?.SetShaderParam("_brightness", value);
             }
         }
-        [Export(PropertyHint.Range, "0,3")]
+        [Export(PropertyHint.Range, "-1,1")]
         public float Contrast
         {
             get
@@ -34,7 +34,7 @@ namespace Arenbee.Framework.Utility
                 _colorShader?.SetShaderParam("_contrast", value);
             }
         }
-        [Export(PropertyHint.Range, "0,3")]
+        [Export(PropertyHint.Range, "-1,2")]
         public float Saturation
         {
             get

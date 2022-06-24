@@ -37,6 +37,7 @@ namespace Arenbee.Assets.GUI
                 case ActionType.Status:
                     DisplayStatusMessage(data);
                     break;
+                case ActionType.Item:
                 case ActionType.Magic:
                 case ActionType.Melee:
                     DisplayMeleeMessage(data);

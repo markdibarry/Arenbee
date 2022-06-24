@@ -15,6 +15,7 @@ offset_top = 49.0
 offset_right = 232.0
 offset_bottom = 92.0
 CursorScene = ExtResource( "4_kr663" )
+DimItems = true
 FitContainer = true
 metadata/_edit_layout_mode = 0
 metadata/_edit_use_custom_anchors = false

@@ -36,7 +36,9 @@ script = ExtResource( "4_j4llg" )
 
 [node name="Music" type="Node2D" parent="GameDisplay/AudioController"]
 
-[node name="FX" type="Node2D" parent="GameDisplay/AudioController"]
+[node name="SceneFX" type="Node2D" parent="GameDisplay/AudioController"]
+
+[node name="MenuFX" type="Node2D" parent="GameDisplay/AudioController"]
 
 [node name="GameSessionContainer" type="Node2D" parent="GameDisplay"]
 
@@ -51,6 +53,9 @@ layer = 60
 layer = 90
 
 [node name="ColorAdjustment" parent="GameDisplay" instance=ExtResource( "5_bcxdk" )]
+Contrast = 1.0
+Saturation = 1.0
+TintColor = Color(1, 1, 1, 1)
 
 [node name="GameCamera" type="Camera2D" parent="GameDisplay"]
 current = true

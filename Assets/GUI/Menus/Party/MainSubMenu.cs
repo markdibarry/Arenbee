@@ -11,10 +11,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
     {
         public static string GetScenePath() => GDEx.GetScenePath();
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            var subMenuName = optionItem.GetData<string>("subMenu");
+            base.OnItemSelected();
+            var subMenuName = CurrentContainer.CurrentItem.GetData<string>("subMenu");
             if (subMenuName == null)
                 return;
 

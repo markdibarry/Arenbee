@@ -32,10 +32,10 @@ namespace Arenbee.Assets.GUI.Menus.Party
             UpdatePartyMemberOptions();
         }
 
-        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemFocused()
         {
-            base.OnItemFocused(optionContainer, optionItem);
-            var actor = optionItem.GetData<Actor>("actor");
+            base.OnItemFocused();
+            var actor = CurrentContainer.CurrentItem.GetData<Actor>("actor");
             if (actor == null)
                 return;
             _statsDisplay.UpdateStatsDisplay(actor);

@@ -53,7 +53,7 @@ namespace Arenbee.Assets.Items
 
                 public override ActionState CheckForTransitions()
                 {
-                    if (StateController.IsBlocked(BlockableState.Attack) || Actor.ContextAreasActive > 0)
+                    if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
                         return null;
                     if (InputHandler.Attack.IsActionJustPressed)
                         return GetState<WeakAttack1>();
@@ -84,7 +84,7 @@ namespace Arenbee.Assets.Items
 
                 public override ActionState CheckForTransitions()
                 {
-                    if (StateController.IsBlocked(BlockableState.Attack)
+                    if (StateController.IsBlocked(BlockedState.Attack)
                         || Weapon.AnimationPlayer.CurrentAnimation != AnimationName
                         || !InputHandler.Attack.IsActionPressed)
                         return GetState<NotAttacking>();
@@ -99,11 +99,7 @@ namespace Arenbee.Assets.Items
                 public Charge()
                 {
                     AnimationName = "Charge";
-                    BlockedStates = new BlockableState[]
-                    {
-                        BlockableState.Jumping,
-                        BlockableState.Move
-                    };
+                    BlockedStates = BlockedState.Jumping | BlockedState.Move;
                 }
                 private float _counter;
                 private readonly float _countTime = 1.2f;
@@ -143,7 +139,7 @@ namespace Arenbee.Assets.Items
 
                 public override ActionState CheckForTransitions()
                 {
-                    if (StateController.IsBlocked(BlockableState.Attack)
+                    if (StateController.IsBlocked(BlockedState.Attack)
                         || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
                         return GetState<NotAttacking>();
                     if (!InputHandler.Attack.IsActionPressed)
@@ -178,7 +174,7 @@ namespace Arenbee.Assets.Items
 
                 public override ActionState CheckForTransitions()
                 {
-                    if (StateController.IsBlocked(BlockableState.Attack)
+                    if (StateController.IsBlocked(BlockedState.Attack)
                         || Weapon.AnimationPlayer.CurrentAnimation != AnimationName
                         || !InputHandler.Attack.IsActionPressed)
                         return GetState<NotAttacking>();

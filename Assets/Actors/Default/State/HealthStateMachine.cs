@@ -59,12 +59,10 @@ namespace Arenbee.Assets.Actors.Default.State
             public Stagger()
             {
                 AnimationName = "Stagger";
-                BlockedStates = new BlockableState[]
-                {
-                    BlockableState.Attack,
-                    BlockableState.Jumping,
-                    BlockableState.Move
-                };
+                BlockedStates =
+                    BlockedState.Attack |
+                    BlockedState.Jumping |
+                    BlockedState.Move;
             }
 
             float _staggerTimer;
@@ -107,12 +105,10 @@ namespace Arenbee.Assets.Actors.Default.State
             public Dead()
             {
                 AnimationName = "Dead";
-                BlockedStates = new BlockableState[]
-                {
-                    BlockableState.Attack,
-                    BlockableState.Jumping,
-                    BlockableState.Move
-                };
+                BlockedStates =
+                    BlockedState.Attack |
+                    BlockedState.Jumping |
+                    BlockedState.Move;
             }
 
             public override void Enter()

@@ -7,23 +7,47 @@ namespace Arenbee.Framework.Audio
     {
         public AudioController()
         {
-            _audioFXPlayers = new AudioPlayer2D[MaxFXStreams];
+            _sceneFXPlayers = new AudioPlayer2D[MaxFXStreams];
+            _menuFXPlayers = new AudioStreamPlayer[MaxFXStreams];
         }
 
         private const int MaxFXStreams = 8;
-        private readonly AudioPlayer2D[] _audioFXPlayers;
-        private Node2D _fx;
+        private readonly AudioStreamPlayer[] _menuFXPlayers;
+        private readonly AudioPlayer2D[] _sceneFXPlayers;
+        private Node2D _sceneFX;
+        private Node2D _menuFX;
 
         public override void _Ready()
         {
-            _fx = GetNodeOrNull<Node2D>("FX");
-            AddAudioPlayers();
+            _sceneFX = GetNodeOrNull<Node2D>("SceneFX");
+            _menuFX = GetNodeOrNull<Node2D>("MenuFX");
+            AddSceneAudioPlayers();
+            AddMenuAudioPlayers();
         }
 
         public void ClearFX()
         {
-            foreach (var player in _audioFXPlayers)
+            foreach (var player in _sceneFXPlayers)
                 player.Reset();
+        }
+
+        public override void PlaySoundFX(string soundName)
+        {
+            var stream = GD.Load<AudioStream>($"res://Assets/Audio/{soundName}");
+            PlaySoundFX(stream);
+        }
+
+        public override void PlaySoundFX(AudioStream sound)
+        {
+            var audioPlayer = Array.Find(_menuFXPlayers, x => x.Stream == sound);
+            if (audioPlayer != null)
+            {
+                audioPlayer.Play();
+                return;
+            }
+            audioPlayer = GetNextMenuPlayer();
+            audioPlayer.Stream = sound;
+            audioPlayer.Play();
         }
 
         public override void PlaySoundFX(Node2D node2D, string soundName)
@@ -34,14 +58,14 @@ namespace Arenbee.Framework.Audio
 
         public override void PlaySoundFX(Node2D node2D, AudioStream sound)
         {
-            var audioPlayer = Array.Find(_audioFXPlayers, x => x.Stream == sound);
+            var audioPlayer = Array.Find(_sceneFXPlayers, x => x.Stream == sound);
             if (audioPlayer != null)
             {
                 audioPlayer.SoundSource = node2D;
                 audioPlayer.Play();
                 return;
             }
-            audioPlayer = GetNextPlayer();
+            audioPlayer = GetNextScenePlayer();
             audioPlayer.TimeStamp = Time.GetTicksMsec();
             audioPlayer.SoundSource = node2D;
             audioPlayer.Stream = sound;
@@ -50,38 +74,59 @@ namespace Arenbee.Framework.Audio
 
         public void OnPauseChanged(ProcessModeEnum processMode)
         {
-            _fx.ProcessMode = processMode;
+            _sceneFX.ProcessMode = processMode;
         }
 
         public void Reset()
         {
             ClearFX();
-            _fx.ProcessMode = ProcessModeEnum.Inherit;
+            _sceneFX.ProcessMode = ProcessModeEnum.Inherit;
         }
 
-        private void AddAudioPlayers()
+        private void AddSceneAudioPlayers()
         {
             for (int i = 0; i < MaxFXStreams; i++)
             {
-                _audioFXPlayers[i] = new AudioPlayer2D()
+                _sceneFXPlayers[i] = new AudioPlayer2D()
                 {
                     MaxPolyphony = 3,
-                    Bus = "FX"
+                    Bus = "SceneFX"
                 };
-                _fx.AddChild(_audioFXPlayers[i]);
+                _sceneFX.AddChild(_sceneFXPlayers[i]);
             }
         }
 
-        private AudioPlayer2D GetNextPlayer()
+        private void AddMenuAudioPlayers()
         {
-            var audioPlayer = Array.Find(_audioFXPlayers, x => !x.Playing);
+            for (int i = 0; i < MaxFXStreams; i++)
+            {
+                _menuFXPlayers[i] = new AudioStreamPlayer()
+                {
+                    MaxPolyphony = 3,
+                    Bus = "MenuFX"
+                };
+                _menuFX.AddChild(_menuFXPlayers[i]);
+            }
+        }
+
+        private AudioStreamPlayer GetNextMenuPlayer()
+        {
+            var audioPlayer = Array.Find(_menuFXPlayers, x => !x.Playing);
             if (audioPlayer != null)
                 return audioPlayer;
-            audioPlayer = _audioFXPlayers[0];
+            return _menuFXPlayers[0];
+        }
+
+        private AudioPlayer2D GetNextScenePlayer()
+        {
+            var audioPlayer = Array.Find(_sceneFXPlayers, x => !x.Playing);
+            if (audioPlayer != null)
+                return audioPlayer;
+            audioPlayer = _sceneFXPlayers[0];
             for (int i = 1; i < MaxFXStreams; i++)
             {
-                if (_audioFXPlayers[i].TimeStamp < audioPlayer.TimeStamp)
-                    audioPlayer = _audioFXPlayers[i];
+                if (_sceneFXPlayers[i].TimeStamp < audioPlayer.TimeStamp)
+                    audioPlayer = _sceneFXPlayers[i];
             }
             return audioPlayer;
         }

@@ -64,7 +64,7 @@ namespace Arenbee.Framework.GUI
         public List<OptionItem> OptionItems { get; set; }
         public delegate void ContainerUpdatedHandler(OptionContainer container);
         public delegate void FocusOOBHandler(OptionContainer container, Direction direction);
-        public delegate void ItemHandler(OptionContainer optionContainer, OptionItem optionItem);
+        public delegate void ItemHandler();
         public event ContainerUpdatedHandler ContainerUpdated;
         public event FocusOOBHandler FocusOOB;
         public event ItemHandler ItemFocused;
@@ -88,7 +88,7 @@ namespace Arenbee.Framework.GUI
         {
             GridContainer.AddChild(optionItem);
             OptionItems.Add(optionItem);
-            optionItem.Dim = DimItems;
+            optionItem.DimUnfocused = DimItems;
             _changesDirty = true;
         }
 
@@ -97,9 +97,9 @@ namespace Arenbee.Framework.GUI
             if (item.Selected)
                 return;
             item.Selected = true;
+            item.Focused = true;
             if (item.Cursor != null)
                 return;
-            item.Dim = false;
             var cursor = CursorScene.Instantiate<Cursor>();
             cursor.FlashEnabled = true;
             float cursorX = item.GlobalPosition.x - 4;
@@ -114,9 +114,9 @@ namespace Arenbee.Framework.GUI
             if (!item.Selected)
                 return;
             item.Selected = false;
+            item.Focused = false;
             if (item.Cursor == null)
                 return;
-            item.Dim = true;
             var cursor = item.Cursor;
             item.Cursor = null;
             RemoveChild(cursor);
@@ -181,14 +181,14 @@ namespace Arenbee.Framework.GUI
             LastIndex = CurrentIndex;
             if (OptionItems.Count == 0)
                 return;
-            if (DimItems && CurrentItem != null)
-                CurrentItem.Dim = true;
+            if (CurrentItem != null)
+                CurrentItem.Focused = false;
             CurrentIndex = GetValidIndex(index);
             AdjustPosition(CurrentItem);
             HandleSelectAll();
-            if (DimItems && CurrentItem != null)
-                CurrentItem.Dim = false;
-            ItemFocused?.Invoke(this, CurrentItem);
+            if (CurrentItem != null)
+                CurrentItem.Focused = true;
+            ItemFocused?.Invoke();
         }
 
         public void FocusDirection(Direction direction)
@@ -374,7 +374,7 @@ namespace Arenbee.Framework.GUI
 
         public void SelectItem()
         {
-            ItemSelected?.Invoke(this, CurrentItem);
+            ItemSelected?.Invoke();
         }
 
         private void AdjustPosition(OptionItem optionItem)
@@ -485,7 +485,7 @@ namespace Arenbee.Framework.GUI
             foreach (var item in GridContainer.GetChildren<OptionItem>())
             {
                 OptionItems.Add(item);
-                item.Dim = DimItems;
+                item.DimUnfocused = DimItems;
             }
         }
 

@@ -15,7 +15,7 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool Dim
         {
-            get { return _dim; }
+            get => _dim;
             set
             {
                 if (Foreground != null)
@@ -130,6 +130,7 @@ namespace Arenbee.Framework.GUI
 
         protected void RaiseRequestedClose(SubMenuCloseRequest closeRequest)
         {
+            Locator.GetAudio().PlaySoundFX("menu_close1.wav");
             RequestedClose?.Invoke(closeRequest);
         }
 

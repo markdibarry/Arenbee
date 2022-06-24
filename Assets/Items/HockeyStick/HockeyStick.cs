@@ -59,7 +59,7 @@ namespace Arenbee.Assets.Items
 
             public override ActionState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Attack) || Actor.ContextAreasActive > 0)
+                if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
                     return null;
                 if (InputHandler.Attack.IsActionJustPressed)
                     return GetState<WeakAttack1>();
@@ -90,7 +90,7 @@ namespace Arenbee.Assets.Items
 
             public override ActionState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Attack)
+                if (StateController.IsBlocked(BlockedState.Attack)
                     || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
                 if (InputHandler.Attack.IsActionJustPressed)
@@ -122,7 +122,7 @@ namespace Arenbee.Assets.Items
 
             public override ActionState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Attack)
+                if (StateController.IsBlocked(BlockedState.Attack)
                     || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
                 return null;

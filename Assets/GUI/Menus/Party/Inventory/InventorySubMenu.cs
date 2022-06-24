@@ -25,12 +25,11 @@ namespace Arenbee.Assets.GUI.Menus.Party
             if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
             {
                 UpdateItemDescription(null);
+                Locator.GetAudio().PlaySoundFX("menu_close1.wav");
                 FocusContainer(_typeList);
+                return;
             }
-            else
-            {
-                base.HandleInput(delta);
-            }
+            base.HandleInput(delta);
         }
 
         protected override void ReplaceDefaultOptions()
@@ -38,30 +37,33 @@ namespace Arenbee.Assets.GUI.Menus.Party
             var typeOptions = GetItemTypeOptions();
             _typeList.GridContainer.Columns = typeOptions.Count;
             _typeList.ReplaceChildren(typeOptions);
-
-            var itemOptions = GetItemOptions(ItemType.None);
-            _inventoryList.ReplaceChildren(itemOptions);
-
+            _typeList.CurrentIndex = 1;
+            _inventoryList.Clear();
             UpdateItemDescription(null);
         }
 
-        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemFocused()
         {
-            base.OnItemFocused(optionContainer, optionItem);
-            _itemInfo.UpdateText(string.Empty);
-            if (optionContainer == _typeList)
-                UpdateItemList(optionItem);
+            base.OnItemFocused();
+            if (CurrentContainer == _typeList)
+                UpdateItemList(CurrentContainer.CurrentItem, resetFocus: true);
             else
-                UpdateItemDescription(optionItem);
+                UpdateItemDescription(CurrentContainer.CurrentItem);
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            if (optionContainer == _typeList)
+            base.OnItemSelected();
+            if (CurrentContainer == _typeList)
                 FocusContainer(_inventoryList);
-            else if (optionContainer == _inventoryList)
-                OpenUseSubMenu(optionItem);
+            else if (CurrentContainer == _inventoryList)
+                OpenUseSubMenu(CurrentContainer.CurrentItem);
+        }
+
+        public override void ResumeSubMenu()
+        {
+            UpdateItemList(_typeList.CurrentItem, resetFocus: false);
+            base.ResumeSubMenu();
         }
 
         protected override void SetNodeReferences()
@@ -78,16 +80,12 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private List<TextOption> GetItemTypeOptions()
         {
             var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            var allOption = textOptionScene.Instantiate<TextOption>();
-            allOption.LabelText = "All";
-            allOption.OptionData["typeName"] = "None";
-            var options = new List<TextOption>() { allOption };
+            var options = new List<TextOption>();
             foreach (var itemType in Enum<ItemType>.Values())
             {
-                if (itemType == ItemType.None) continue;
                 var option = textOptionScene.Instantiate<TextOption>();
-                option.LabelText = itemType.Get().Name;
-                option.OptionData["typeName"] = itemType.Get().Name;
+                option.LabelText = itemType == ItemType.None ? "All" : itemType.Get().Name;
+                option.OptionData["itemType"] = itemType;
                 options.Add(option);
             }
             return options;
@@ -130,17 +128,13 @@ namespace Arenbee.Assets.GUI.Menus.Party
             _itemInfo.UpdateText(item?.Description);
         }
 
-        private void UpdateItemList(OptionItem optionItem)
+        private void UpdateItemList(OptionItem optionItem, bool resetFocus)
         {
             if (optionItem == null)
                 return;
-            _inventoryList.ResetContainerFocus();
-            ItemType itemType = ItemType.None;
-            string typeName = optionItem.GetData<string>("typeName");
-            if (typeName == null)
-                return;
-            if (typeName != "All")
-                itemType = Enum.Parse<ItemType>(typeName);
+            if (resetFocus)
+                _inventoryList.ResetContainerFocus();
+            ItemType itemType = optionItem.GetData<ItemType>("itemType");
             List<KeyValueOption> options = GetItemOptions(itemType);
             _inventoryList.ReplaceChildren(options);
         }

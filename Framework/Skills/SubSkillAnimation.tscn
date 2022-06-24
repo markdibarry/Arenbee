@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://n6yivclploj3"]
-
-[ext_resource type="Script" path="res://Framework/Skills/SubSkillAnimation.cs" id="1_0magk"]
-
-[node name="SubSkillAnimation" type="Node2D"]
-script = ExtResource( "1_0magk" )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

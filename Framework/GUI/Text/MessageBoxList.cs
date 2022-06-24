@@ -1,6 +1,5 @@
 using Arenbee.Framework.Extensions;
 using Godot;
-using System.Linq;
 
 namespace Arenbee.Framework.GUI.Text
 {
@@ -11,18 +10,14 @@ namespace Arenbee.Framework.GUI.Text
         public Vector2 MaxSize { get; set; }
         public bool IsReady { get; set; }
         private PackedScene _timedMessageBoxScene;
+
         public override void _Ready()
         {
+            ChildEnteredTree += OnChildEnteredTree;
             _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
             MaxSize = GetParentOrNull<Control>().Size;
-            // if loading prepopulated messages
-            var messageBoxes = GetChildren().OfType<MessageBox>();
-            foreach (MessageBox messageBox in messageBoxes)
-            {
-                messageBox.MaxWidth = MaxSize.x;
-                messageBox.UpdateMessageText();
-            }
-            IsReady = true;
+            foreach (MessageBox messageBox in this.GetChildren<MessageBox>())
+                messageBox.SetMessage(MaxSize);
         }
 
         public void AddMessageToTop(string message)
@@ -36,6 +31,13 @@ namespace Arenbee.Framework.GUI.Text
         {
             AddChild(messageBox);
             MoveChild(messageBox, 0);
+        }
+
+        public void OnChildEnteredTree(Node node)
+        {
+            if (node is not MessageBox messageBox)
+                return;
+            messageBox.SetMessage(MaxSize);
         }
     }
 }

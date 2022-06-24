@@ -1,4 +1,3 @@
-using System;
 using Arenbee.Framework.GUI.Text;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Utility;
@@ -204,14 +203,15 @@ namespace Arenbee.Framework.GUI.Dialog
             textEvent.HandleEvent(this);
         }
 
-        private void OnOptionItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        private void OnOptionItemSelected()
         {
+            var optionItem = _dialogOptionSubMenu.CurrentContainer.CurrentItem;
             int next = optionItem.GetData<int>("next");
             NextDialogPart(next);
             CloseOptionBox();
         }
 
-        private void OnStoppedWriting(object sender, EventArgs e)
+        private void OnStoppedWriting()
         {
             if (!FocusedBox.IsAtPageEnd())
                 return;

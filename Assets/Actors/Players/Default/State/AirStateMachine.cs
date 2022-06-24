@@ -29,7 +29,7 @@ namespace Arenbee.Assets.Actors.Default.State
             {
                 if (!Actor.IsOnFloor())
                     return GetState<Falling>();
-                if (InputHandler.Jump.IsActionJustPressed && !StateController.IsBlocked(BlockableState.Jumping))
+                if (InputHandler.Jump.IsActionJustPressed && !StateController.IsBlocked(BlockedState.Jumping))
                     return GetState<Jumping>();
                 return null;
             }
@@ -63,7 +63,7 @@ namespace Arenbee.Assets.Actors.Default.State
 
             public override AirState CheckForTransitions()
             {
-                if (Actor.IsMovingDown() || StateController.IsBlocked(BlockableState.Jumping))
+                if (Actor.IsMovingDown() || StateController.IsBlocked(BlockedState.Jumping))
                     return GetState<Falling>();
                 if (Actor.IsOnFloor())
                     return GetState<Grounded>();
@@ -98,7 +98,7 @@ namespace Arenbee.Assets.Actors.Default.State
             {
                 if (Actor.IsOnFloor())
                 {
-                    if (_jumpGraceTimer > 0 && !StateController.IsBlocked(BlockableState.Jumping))
+                    if (_jumpGraceTimer > 0 && !StateController.IsBlocked(BlockedState.Jumping))
                         return GetState<Jumping>();
                     return GetState<Grounded>();
                 }

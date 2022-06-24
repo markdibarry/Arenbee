@@ -1,0 +1,3 @@
+Tween causes a memory leak
+PropertyTweener causes a memory leak
+Area2Ds break signal connections when paused

@@ -1,4 +1,5 @@
 using System;
+using Arenbee.Assets.ActionEffects;
 using Arenbee.Assets.Input;
 using Arenbee.Assets.Items;
 using Arenbee.Framework.Audio;
@@ -67,6 +68,7 @@ namespace Arenbee.Framework.Game
         {
             Locator.ProvideAudioController(AudioController);
             Locator.ProvideItemDB(new ItemDB());
+            Locator.ProvideActionEffectDB(new ActionEffectDB());
             Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
             MenuController.Init();
@@ -85,7 +87,10 @@ namespace Arenbee.Framework.Game
                 ResetToTitleScreen();
             }
             if (Godot.Input.IsActionJustPressed("collect"))
-                GC.Collect();
+            {
+                GC.Collect(GC.MaxGeneration);
+                GC.WaitForPendingFinalizers();
+            }
         }
 
         public void ResetToTitleScreen()

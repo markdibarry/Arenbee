@@ -12,6 +12,7 @@ dest_files=["res://.godot/imported/Poco.ttf-d0f6b43bb071d65e258c376c5fdf768c.fon
 
 [params]
 
+face_index=0
 antialiased=false
 generate_mipmaps=false
 multichannel_signed_distance_field=false

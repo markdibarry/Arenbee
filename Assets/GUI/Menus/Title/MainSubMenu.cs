@@ -30,10 +30,10 @@ namespace Arenbee.Assets.GUI.Menus.Title
             prop.Dispose();
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            var titleChoice = optionItem.GetData<string>("titleChoice");
+            base.OnItemSelected();
+            var titleChoice = CurrentContainer.CurrentItem.GetData<string>("titleChoice");
             if (titleChoice == null)
                 return;
             IsActive = false;

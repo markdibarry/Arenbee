@@ -8,26 +8,50 @@ namespace Arenbee.Framework.GUI
     {
         public OptionItem()
         {
+            DimUnfocused = true;
             OptionData = new Dictionary<string, object>();
         }
 
-        private bool _dim;
-        [Export]
-        public Dictionary<string, object> OptionData { get; set; }
-        [Export]
-        public bool Dim
+        private bool _dimUnfocused;
+        private bool _disabled;
+        private bool _focused;
+        public Cursor Cursor { get; set; }
+        public bool DimUnfocused
         {
-            get => _dim;
+            get => _dimUnfocused;
             set
             {
-                _dim = value;
-                Modulate = Disabled ? ColorConstants.DisabledGrey : _dim ? ColorConstants.DimGrey : Colors.White;
+                _dimUnfocused = value;
+                HandleDim();
             }
         }
         [Export]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                _disabled = value;
+                HandleDim();
+            }
+        }
+        public bool Focused
+        {
+            get => _focused;
+            set
+            {
+                _focused = value;
+                HandleDim();
+            }
+        }
+        [Export]
+        public Dictionary<string, object> OptionData { get; set; }
         public bool Selected { get; set; }
-        public Cursor Cursor { get; set; }
+
+        public override void _Ready()
+        {
+            HandleDim();
+        }
 
         public T GetData<T>(string key)
         {
@@ -36,6 +60,16 @@ namespace Arenbee.Framework.GUI
             if (result is not T)
                 return default;
             return (T)result;
+        }
+
+        public void HandleDim()
+        {
+            Color color = Colors.White;
+            if (Disabled)
+                color = ColorConstants.DisabledGrey;
+            else if (DimUnfocused && !Focused)
+                color = ColorConstants.DimGrey;
+            Modulate = color;
         }
     }
 }

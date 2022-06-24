@@ -27,7 +27,7 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
 
             public override MoveState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Move))
+                if (StateController.IsBlocked(BlockedState.Move))
                     return null;
                 if (Actor.Stats.HasEffect(StatusEffectType.Burn))
                     return GetState<Running>();
@@ -55,7 +55,7 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
 
             public override MoveState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Move))
+                if (StateController.IsBlocked(BlockedState.Move))
                     return GetState<Standing>();
                 if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
                     return GetState<Running>();
@@ -85,7 +85,7 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
 
             public override MoveState CheckForTransitions()
             {
-                if (StateController.IsBlocked(BlockableState.Move))
+                if (StateController.IsBlocked(BlockedState.Move))
                     return GetState<Standing>();
                 if (Actor.Stats.HasEffect(StatusEffectType.Burn))
                     return null;

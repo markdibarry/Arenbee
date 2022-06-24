@@ -58,12 +58,10 @@ namespace Arenbee.Assets.Actors.Enemies.Default.State
             public Stagger()
             {
                 AnimationName = "Stagger";
-                BlockedStates = new BlockableState[]
-                {
-                    BlockableState.Attack,
-                    BlockableState.Jumping,
-                    BlockableState.Move
-                };
+                BlockedStates =
+                    BlockedState.Attack |
+                    BlockedState.Jumping |
+                    BlockedState.Move;
             }
 
             float _staggerTimer;

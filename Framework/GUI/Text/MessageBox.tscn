@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://bi7cmnrnx4bmb"]
 
 [ext_resource type="Script" path="res://Framework/GUI/Text/MessageBox.cs" id="1"]
 [ext_resource type="StyleBox" path="res://Assets/GUI/Backgrounds/transparent.tres" id="2"]
@@ -26,24 +26,18 @@ texture_filter = 1
 offset_right = 126.0
 offset_bottom = 17.0
 script = ExtResource( "1" )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BoxWrapper" type="MarginContainer" parent="."]
 offset_right = 9.0
 offset_bottom = 17.0
 size_flags_horizontal = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BackgroundMargin" type="MarginContainer" parent="BoxWrapper"]
 offset_right = 9.0
 offset_bottom = 17.0
-theme_override_constants/margin_right = 1
-theme_override_constants/margin_top = 1
 theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 1
 
 [node name="BackgroundColor" type="Panel" parent="BoxWrapper/BackgroundMargin"]
@@ -60,26 +54,19 @@ offset_right = 8.0
 offset_bottom = 16.0
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource( "2" )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Border" type="Panel" parent="BoxWrapper"]
-rect_clip_content = true
 offset_right = 9.0
 offset_bottom = 17.0
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource( "1" )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MessageMargin" type="MarginContainer" parent="BoxWrapper"]
 offset_right = 9.0
 offset_bottom = 17.0
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_top = 4
 theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
 [node name="Message" type="Label" parent="BoxWrapper/MessageMargin"]
@@ -89,7 +76,7 @@ offset_top = 6.0
 offset_right = 5.0
 offset_bottom = 11.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 0
 theme_override_constants/outline_size = 2
+theme_override_constants/line_spacing = 0
 theme_override_fonts/font = ExtResource( "3_cg2je" )
 theme_override_font_sizes/font_size = 16

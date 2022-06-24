@@ -11,6 +11,7 @@ namespace Arenbee.Framework.GUI.Text
             BoxAlign = Enums.BoxAlign.Left;
             _messageText = string.Empty;
         }
+
         public static string GetScenePath() => GDEx.GetScenePath();
         private string _messageText;
         private HorizontalAlignment _messageAlign;
@@ -21,27 +22,23 @@ namespace Arenbee.Framework.GUI.Text
         [Export(PropertyHint.MultilineText)]
         public string MessageText
         {
-            get { return _messageText; }
+            get => _messageText;
             set
             {
                 _messageText = value;
                 if (_message != null)
-                {
                     _message.Text = _messageText;
-                }
             }
         }
         [Export(PropertyHint.Enum)]
         public HorizontalAlignment MessageAlign
         {
-            get { return _messageAlign; }
+            get => _messageAlign;
             set
             {
                 _messageAlign = value;
                 if (_message != null)
-                {
                     _message.HorizontalAlignment = _messageAlign;
-                }
             }
         }
         /// <summary>
@@ -51,14 +48,12 @@ namespace Arenbee.Framework.GUI.Text
         [Export(PropertyHint.Enum)]
         public Enums.BoxAlign BoxAlign
         {
-            get { return _boxAlign; }
+            get => _boxAlign;
             set
             {
                 _boxAlign = value;
-                if (_message?.AutowrapMode == Label.AutowrapModeEnum.Off)
-                {
+                if (_message?.AutowrapMode == TextServer.AutowrapMode.Off)
                     _boxWrapper.SizeFlagsHorizontal = (int)_boxAlign;
-                }
             }
         }
         public float MaxWidth { get; set; }
@@ -68,20 +63,19 @@ namespace Arenbee.Framework.GUI.Text
             _boxWrapper = GetNode<MarginContainer>("BoxWrapper");
             _messageMargin = _boxWrapper.GetNode<MarginContainer>("MessageMargin");
             _message = _messageMargin.GetNode<Label>("Message");
-            // if adding to an existing list
-            var parent = GetParentOrNull<MessageBoxList>();
-            if (parent?.IsReady == true)
-            {
-                MaxWidth = parent.MaxSize.x;
-                EnableAutoWrap();
-                UpdateMessageText();
-            }
+            _message.Text = MessageText;
             _boxWrapper.Resized += OnResized;
+            TransitionIn();
         }
 
-        public void UpdateMessageText()
+        public async void TransitionIn()
         {
-            _message.Text = MessageText;
+            await ToSignal(GetTree(), "process_frame");
+        }
+
+        public void SetMessage(Vector2 maxSize)
+        {
+            MaxWidth = maxSize.x;
         }
 
         private void OnResized()
@@ -91,13 +85,12 @@ namespace Arenbee.Framework.GUI.Text
 
         private void HandleResize()
         {
-            if (MaxWidth > 0)
-            {
-                if (ShouldEnableAutoWrap())
-                    EnableAutoWrap();
-                else if (ShouldDisableAutoWrap())
-                    DisableAutoWrap();
-            }
+            if (MaxWidth <= 0)
+                return;
+            if (ShouldEnableAutoWrap())
+                EnableAutoWrap();
+            else if (ShouldDisableAutoWrap())
+                DisableAutoWrap();
         }
 
         private bool ShouldEnableAutoWrap()
@@ -112,15 +105,17 @@ namespace Arenbee.Framework.GUI.Text
 
         private void EnableAutoWrap()
         {
-            if (_message.AutowrapMode != Label.AutowrapModeEnum.Off) return;
-            _message.AutowrapMode = Label.AutowrapModeEnum.Word;
+            if (_message.AutowrapMode != TextServer.AutowrapMode.Off)
+                return;
+            _message.AutowrapMode = TextServer.AutowrapMode.Word;
             _boxWrapper.SizeFlagsHorizontal = (int)SizeFlags.Fill;
         }
 
         private void DisableAutoWrap()
         {
-            if (_message.AutowrapMode == Label.AutowrapModeEnum.Off) return;
-            _message.AutowrapMode = Label.AutowrapModeEnum.Off;
+            if (_message.AutowrapMode == TextServer.AutowrapMode.Off)
+                return;
+            _message.AutowrapMode = TextServer.AutowrapMode.Off;
             _boxWrapper.SizeFlagsHorizontal = (int)BoxAlign;
         }
     }

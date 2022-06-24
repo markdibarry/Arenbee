@@ -15,22 +15,18 @@ namespace Arenbee.Assets.GUI.Menus
         public override async Task TransitionOpenAsync()
         {
             ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
-            var tween = GetTree().CreateTween();
-            var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 1f);
+            using var tween = GetTree().CreateTween();
+            using var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 1f);
             await ToSignal(tween, "finished");
-            tween.Dispose();
-            prop.Dispose();
             var mainSubMenu = _mainSubMenuScene.Instantiate<SubMenu>();
             await AddSubMenuAsync(mainSubMenu);
         }
 
         public override async Task TransitionCloseAsync()
         {
-            var tween = GetTree().CreateTween();
-            var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 1f);
+            using var tween = GetTree().CreateTween();
+            using var prop = tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 1f);
             await ToSignal(tween, "finished");
-            tween.Dispose();
-            prop.Dispose();
         }
     }
 }

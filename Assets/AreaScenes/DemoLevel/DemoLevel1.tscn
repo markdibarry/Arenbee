@@ -166,6 +166,7 @@ shape = SubResource( "RectangleShape2D_wrpfu" )
 texture = ExtResource( "9_bgkj2" )
 
 [node name="Main" type="Area2D" parent="CameraLimits" index="0"]
+visible = false
 collision_layer = 0
 monitorable = false
 script = ExtResource( "13_nnat1" )
@@ -176,6 +177,7 @@ position = Vector2(847, 116)
 shape = SubResource( "RectangleShape2D_sfpag" )
 
 [node name="Underground1" type="Area2D" parent="CameraLimits" index="1"]
+visible = false
 position = Vector2(832, 240)
 collision_layer = 0
 monitorable = false

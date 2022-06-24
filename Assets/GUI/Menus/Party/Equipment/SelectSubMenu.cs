@@ -33,28 +33,28 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             _itemStatsDisplay.UpdateStatsDisplay(null);
         }
 
-        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemFocused()
         {
-            base.OnItemFocused(optionContainer, optionItem);
+            base.OnItemFocused();
 
-            if (optionItem == null)
+            if (CurrentContainer.CurrentItem == null)
             {
                 _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
                 _itemStatsDisplay.UpdateStatsDisplay(null);
                 return;
             }
             _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
-            _currentItemId = optionItem.GetData<string>("itemId");
+            _currentItemId = CurrentContainer.CurrentItem.GetData<string>("itemId");
             var newItem = _itemDB.GetItem(_currentItemId);
             newItem?.AddToStats(_mockStats);
             _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
             _itemStatsDisplay.UpdateStatsDisplay(newItem);
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            if (TryEquip(optionItem.GetData<string>("itemId"), Slot))
+            base.OnItemSelected();
+            if (TryEquip(CurrentContainer.CurrentItem.GetData<string>("itemId"), Slot))
                 RaiseRequestedClose();
         }
 

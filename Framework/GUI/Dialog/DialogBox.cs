@@ -2,6 +2,7 @@ using System;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
+using static Arenbee.Framework.GUI.Text.DynamicText;
 
 namespace Arenbee.Framework.GUI.Dialog
 {
@@ -20,7 +21,7 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export]
         public int CurrentPage
         {
-            get { return _dynamicTextBox?.CurrentPage ?? 0; }
+            get => _dynamicTextBox?.CurrentPage ?? 0;
             set
             {
                 if (_dynamicTextBox != null)
@@ -30,7 +31,7 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export(PropertyHint.MultilineText)]
         public string CustomText
         {
-            get { return _dynamicTextBox?.CustomText ?? string.Empty; }
+            get => _dynamicTextBox?.CustomText ?? string.Empty;
             set
             {
                 if (_dynamicTextBox != null)
@@ -49,7 +50,7 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export]
         public bool ShouldWrite
         {
-            get { return _dynamicTextBox?.ShouldWrite ?? false; }
+            get => _dynamicTextBox?.ShouldWrite ?? false;
             set
             {
                 if (_dynamicTextBox != null)
@@ -59,7 +60,7 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export]
         public bool ShouldShowAllToStop
         {
-            get { return _dynamicTextBox?.ShouldShowAllPage ?? false; }
+            get => _dynamicTextBox?.ShouldShowAllPage ?? false;
             set
             {
                 if (_dynamicTextBox != null)
@@ -69,13 +70,13 @@ namespace Arenbee.Framework.GUI.Dialog
         [Export]
         public bool ShouldUpdateText
         {
-            get { return false; }
+            get => false;
             set { if (value) UpdateText(); }
         }
         [Export]
         public float Speed
         {
-            get { return _dynamicTextBox?.Speed ?? 0f; }
+            get => _dynamicTextBox?.Speed ?? 0f;
             set
             {
                 if (_dynamicTextBox != null)
@@ -87,13 +88,17 @@ namespace Arenbee.Framework.GUI.Dialog
         public bool ReverseDisplay { get; set; }
         public bool SpeedUpText
         {
-            get { return _dynamicTextBox?.SpeedUpText ?? false; }
-            set { if (_dynamicTextBox != null) _dynamicTextBox.SpeedUpText = value; }
+            get => _dynamicTextBox?.SpeedUpText ?? false;
+            set
+            {
+                if (_dynamicTextBox != null)
+                    _dynamicTextBox.SpeedUpText = value;
+            }
         }
         public delegate void DialogBoxLoadedHandler(DialogBox dialogBox);
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
         public event DialogBoxLoadedHandler DialogBoxLoaded;
-        public event EventHandler StoppedWriting;
+        public event StoppedWritingHandler StoppedWriting;
         public event TextEventTriggeredHandler TextEventTriggered;
 
         public override void _ExitTree()
@@ -220,12 +225,12 @@ namespace Arenbee.Framework.GUI.Dialog
                 TextEventTriggered?.Invoke(textEvent);
         }
 
-        private void OnStoppedWriting(object sender, EventArgs e)
+        private void OnStoppedWriting()
         {
-            StoppedWriting?.Invoke(this, e);
+            StoppedWriting?.Invoke();
         }
 
-        private void OnTextLoaded(object sender, EventArgs e)
+        private void OnTextLoaded()
         {
             DialogBoxLoaded?.Invoke(this);
         }

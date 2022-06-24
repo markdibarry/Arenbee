@@ -1,7 +1,7 @@
-using System;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
+using static Arenbee.Framework.GUI.Text.DynamicText;
 
 namespace Arenbee.Framework.GUI
 {
@@ -14,7 +14,7 @@ namespace Arenbee.Framework.GUI
         [Export(PropertyHint.MultilineText)]
         public string CustomText
         {
-            get { return _dynamicTextBox?.CustomText ?? string.Empty; }
+            get => _dynamicTextBox?.CustomText ?? string.Empty;
             set
             {
                 if (_dynamicTextBox != null)
@@ -24,7 +24,7 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool ShouldWrite
         {
-            get { return _dynamicTextBox?.ShouldWrite ?? false; }
+            get => _dynamicTextBox?.ShouldWrite ?? false;
             set
             {
                 if (_dynamicTextBox != null)
@@ -34,7 +34,7 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool ShouldShowAllToStop
         {
-            get { return _dynamicTextBox?.ShouldShowAllPage ?? false; }
+            get => _dynamicTextBox?.ShouldShowAllPage ?? false;
             set
             {
                 if (_dynamicTextBox != null)
@@ -44,13 +44,13 @@ namespace Arenbee.Framework.GUI
         [Export]
         public bool ShouldUpdateText
         {
-            get { return false; }
+            get => false;
             set { if (value) UpdateText(); }
         }
         [Export]
         public float Speed
         {
-            get { return _dynamicTextBox?.Speed ?? _speed; }
+            get => _dynamicTextBox?.Speed ?? _speed;
             set
             {
                 if (_dynamicTextBox == null)
@@ -60,7 +60,7 @@ namespace Arenbee.Framework.GUI
             }
         }
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
-        public event EventHandler StoppedWriting;
+        public event StoppedWritingHandler StoppedWriting;
 
         public override void _ExitTree()
         {
@@ -76,8 +76,7 @@ namespace Arenbee.Framework.GUI
 
         public void UpdateText(string text)
         {
-            if (text == null)
-                text = string.Empty;
+            text ??= string.Empty;
             CustomText = text;
             UpdateText();
         }
@@ -94,12 +93,12 @@ namespace Arenbee.Framework.GUI
             UpdateText();
         }
 
-        private void OnStoppedWriting(object sender, EventArgs e)
+        private void OnStoppedWriting()
         {
-            StoppedWriting?.Invoke(this, e);
+            StoppedWriting?.Invoke();
         }
 
-        private void OnTextLoaded(object sender, EventArgs e)
+        private void OnTextLoaded()
         {
             _dynamicTextBox?.WritePage(true);
         }
@@ -107,10 +106,7 @@ namespace Arenbee.Framework.GUI
         private void SetDefault()
         {
             Speed = _speed;
-            if (this.IsSceneRoot())
-                CustomText = "Placeholder Text";
-            else
-                CustomText = string.Empty;
+            CustomText = this.IsSceneRoot() ? "Placeholder Text" : string.Empty;
         }
 
         private void SetNodeReferences()

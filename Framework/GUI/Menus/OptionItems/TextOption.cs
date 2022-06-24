@@ -12,14 +12,12 @@ namespace Arenbee.Framework.GUI
         [Export(PropertyHint.MultilineText)]
         public string LabelText
         {
-            get { return _labelText; }
+            get => _labelText;
             set
             {
                 _labelText = value;
                 if (_label != null)
-                {
                     _label.Text = _labelText;
-                }
             }
         }
 

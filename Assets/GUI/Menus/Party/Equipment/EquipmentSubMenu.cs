@@ -38,20 +38,20 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             UpdatePartyMemberOptions();
         }
 
-        protected override void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemFocused()
         {
-            base.OnItemFocused(optionContainer, optionItem);
+            base.OnItemFocused();
             if (CurrentContainer == _partyOptions)
-                UpdateEquipmentDisplay(optionItem);
+                UpdateEquipmentDisplay(CurrentContainer.CurrentItem);
         }
 
-        protected override void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected override void OnItemSelected()
         {
-            base.OnItemSelected(optionContainer, optionItem);
-            if (optionContainer == _partyOptions)
+            base.OnItemSelected();
+            if (CurrentContainer == _partyOptions)
                 FocusContainer(_equipmentOptions);
             else
-                OpenEquipSelectMenu(optionItem);
+                OpenEquipSelectMenu(CurrentContainer.CurrentItem);
         }
 
         protected override void SetNodeReferences()

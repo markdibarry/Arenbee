@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Arenbee.Framework.Extensions;
 using Godot;
+using static Arenbee.Framework.GUI.Text.DynamicText;
 
 namespace Arenbee.Framework.GUI.Text
 {
@@ -11,7 +12,6 @@ namespace Arenbee.Framework.GUI.Text
         public DynamicTextBox()
         {
             CurrentPage = 0;
-            _page = 0;
         }
 
         private float _displayHeight;
@@ -21,7 +21,15 @@ namespace Arenbee.Framework.GUI.Text
         private int[] _pageBreaks;
         private float _speed;
         [Export]
-        public int CurrentPage { get; set; }
+        public int CurrentPage
+        {
+            get => _page;
+            set
+            {
+                _page = value;
+                ToPage(value);
+            }
+        }
         [Export(PropertyHint.MultilineText)]
         public string CustomText
         {
@@ -35,25 +43,25 @@ namespace Arenbee.Framework.GUI.Text
         [Export]
         public bool ShouldShowAllPage
         {
-            get { return IsAtPageEnd(); }
-            set { ShowAllPage(value); }
+            get => IsAtPageEnd();
+            set => ShowAllPage(value);
         }
         [Export]
         public bool ShouldUpdateText
         {
-            get { return false; }
+            get => false;
             set { if (value) UpdateText(); }
         }
         [Export]
         public bool ShouldWrite
         {
-            get { return _dynamicText?.WriteEnabled ?? false; }
-            set { WritePage(value); }
+            get => _dynamicText?.WriteEnabled ?? false;
+            set => WritePage(value);
         }
         [Export]
         public float Speed
         {
-            get { return _dynamicText?.Speed ?? _speed; }
+            get => _dynamicText?.Speed ?? _speed;
             set
             {
                 if (_dynamicText == null)
@@ -64,13 +72,17 @@ namespace Arenbee.Framework.GUI.Text
         }
         public bool SpeedUpText
         {
-            get { return _dynamicText?.SpeedUpText ?? false; }
-            set { if (_dynamicText != null) _dynamicText.SpeedUpText = value; }
+            get => _dynamicText?.SpeedUpText ?? false;
+            set
+            {
+                if (_dynamicText != null)
+                    _dynamicText.SpeedUpText = value;
+            }
         }
         public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
         public event TextEventTriggeredHandler TextEventTriggered;
-        public event EventHandler StoppedWriting;
-        public event EventHandler TextLoaded;
+        public event StoppedWritingHandler StoppedWriting;
+        public event TextLoadedHandler TextLoaded;
 
         public override void _ExitTree()
         {
@@ -83,19 +95,9 @@ namespace Arenbee.Framework.GUI.Text
             Init();
         }
 
-        public override void _Process(float delta)
-        {
-            if (Engine.IsEditorHint()
-                && CurrentPage != _page)
-            {
-                ToPage(CurrentPage);
-            }
-        }
-
         public bool IsAtLastPage()
         {
-            if (_pageBreaks.IsEmpty()) return true;
-            else return CurrentPage == _pageBreaks.Length - 1;
+            return _pageBreaks.IsEmpty() || CurrentPage == _pageBreaks.Length - 1;
         }
 
         public bool IsAtPageEnd()
@@ -105,8 +107,8 @@ namespace Arenbee.Framework.GUI.Text
 
         public void NextPage()
         {
-            if (_page + 1 < _pageBreaks.Length)
-                ToPage(_page + 1);
+            if (CurrentPage + 1 < _pageBreaks.Length)
+                CurrentPage++;
         }
 
         public void ShowAllPage(bool shouldShow)
@@ -119,13 +121,12 @@ namespace Arenbee.Framework.GUI.Text
 
         public void ToPage(int newPage)
         {
-            if (_dynamicText == null) return;
+            if (_dynamicText == null)
+                return;
             newPage = GetAdjustedPageIndex(newPage);
-            CurrentPage = newPage;
             int newPageLine = GetPageLine(newPage);
             _dynamicText.MoveToLine(newPageLine);
             _dynamicText.StopAt = GetStopAt(newPage);
-            _page = newPage;
         }
 
         public void UpdateText(string text)
@@ -207,9 +208,9 @@ namespace Arenbee.Framework.GUI.Text
             SetDefault();
         }
 
-        private void OnStoppedWriting(object sender, EventArgs e)
+        private void OnStoppedWriting()
         {
-            StoppedWriting?.Invoke(this, e);
+            StoppedWriting?.Invoke();
         }
 
         private void OnTextEventTriggered(ITextEvent textEvent)
@@ -218,30 +219,30 @@ namespace Arenbee.Framework.GUI.Text
                 TextEventTriggered?.Invoke(textEvent);
         }
 
-        private void OnTextLoaded(object sender, EventArgs e)
+        private void OnTextLoaded()
         {
             UpdatePageBreaks();
-            TextLoaded?.Invoke(sender, e);
+            TextLoaded?.Invoke();
         }
 
         private void SetDefault()
         {
             Speed = _speed;
-            if (this.IsSceneRoot())
-            {
-                CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]\n" +
-                "(pause){{pause time=2}}\n" +
-                "{{speed time=0.5}}...{{speed time=0.05}}And here's the rest.";
-                UpdateText();
-                WritePage(true);
-            }
+            if (!this.IsSceneRoot())
+                return;
+            CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]\n" +
+            "(pause){{pause time=2}}\n" +
+            "{{speed time=0.5}}...{{speed time=0.05}}And here's the rest.";
+            UpdateText();
+            WritePage(true);
         }
 
         private void SetNodeReferences()
         {
             _dynamicTextContainer = GetNodeOrNull<Control>("Control");
             _dynamicText = _dynamicTextContainer.GetNodeOrNull<DynamicText>("DynamicText");
-            if (_dynamicText == null) GD.PrintErr("No DynamicText provided");
+            if (_dynamicText == null)
+                GD.PrintErr("No DynamicText provided");
         }
 
         private void SubscribeEvents()
@@ -261,7 +262,7 @@ namespace Arenbee.Framework.GUI.Text
         private void UpdatePageBreaks()
         {
             _pageBreaks = GetPageBreaks();
-            ToPage(0);
+            CurrentPage = 0;
         }
     }
 }

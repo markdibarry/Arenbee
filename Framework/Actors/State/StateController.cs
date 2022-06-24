@@ -68,17 +68,12 @@ namespace Arenbee.Framework.Actors
             CreateStateDisplay();
         }
 
-        public bool IsBlocked(BlockableState stateType)
+        public bool IsBlocked(BlockedState stateType)
         {
-            if (Array.IndexOf(HealthStateMachine.State.BlockedStates, stateType) != -1)
-                return true;
-            if (Array.IndexOf(MoveStateMachine.State.BlockedStates, stateType) != -1)
-                return true;
-            else if (Array.IndexOf(ActionStateMachine.State.BlockedStates, stateType) != -1)
-                return true;
-            else if (Array.IndexOf(AirStateMachine.State.BlockedStates, stateType) != -1)
-                return true;
-            return false;
+            return HealthStateMachine.State.BlockedStates.HasFlag(stateType) ||
+                MoveStateMachine.State.BlockedStates.HasFlag(stateType) ||
+                ActionStateMachine.State.BlockedStates.HasFlag(stateType) ||
+                AirStateMachine.State.BlockedStates.HasFlag(stateType);
         }
 
         public bool PlayHealthAnimation(string animationName)

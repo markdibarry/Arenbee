@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Enums;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Utility;
 using Godot;
 using static Arenbee.Framework.GUI.OptionContainer;
 
@@ -28,7 +29,7 @@ namespace Arenbee.Framework.GUI
         public override async void ResumeSubMenu()
         {
             await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
-            CurrentContainer.RefocusItem();
+            FocusContainer(CurrentContainer);
             base.ResumeSubMenu();
         }
 
@@ -77,21 +78,27 @@ namespace Arenbee.Framework.GUI
             if (optionContainer == null || optionContainer.OptionItems.Count == 0)
                 return;
             CurrentContainer?.LeaveContainerFocus();
+            OnFocusContainer(optionContainer);
             CurrentContainer = optionContainer;
             optionContainer.FocusContainer(index);
         }
 
+        protected virtual void OnFocusContainer(OptionContainer optionContainer) { }
+
         protected virtual void OnFocusOOB(OptionContainer container, Direction direction) { }
 
-        protected virtual void OnItemSelected(OptionContainer optionContainer, OptionItem optionItem)
+        protected virtual void OnItemSelected()
         {
-            ItemSelected?.Invoke(optionContainer, optionItem);
+            Locator.GetAudio().PlaySoundFX("menu_select1.wav");
+            ItemSelected?.Invoke();
         }
 
-        protected virtual void OnItemFocused(OptionContainer optionContainer, OptionItem optionItem)
+        protected virtual void OnItemFocused()
         {
             _cursor.Visible = !CurrentContainer.AllSelected;
-            MoveCursorToItem(optionItem);
+            if (CurrentContainer.LastIndex != CurrentContainer.CurrentIndex)
+                Locator.GetAudio().PlaySoundFX("menu_bip1.wav");
+            MoveCursorToItem(CurrentContainer.CurrentItem);
         }
 
         protected override void SetNodeReferences()

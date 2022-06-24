@@ -1,3 +1,4 @@
+using Arenbee.Framework.ActionEffects;
 using Arenbee.Framework.Audio;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Input;
@@ -16,6 +17,7 @@ namespace Arenbee.Framework.Utility
             s_menuInput = new MenuInputHandlerNull();
             s_statusEffectDB = new StatusEffectDBNull();
             s_logger = new Logger();
+            s_actionEffectDB = new ActionEffectDBNull();
         }
 
         private static GameSession s_gameSession;
@@ -24,6 +26,7 @@ namespace Arenbee.Framework.Utility
         private static readonly Logger s_logger;
         private static GUIInputHandler s_menuInput;
         private static IStatusEffectDB s_statusEffectDB;
+        private static IActionEffectDB s_actionEffectDB;
 
         public static void ProvideGameSession(GameSession gameSession)
         {
@@ -56,39 +59,25 @@ namespace Arenbee.Framework.Utility
             s_statusEffectDB = statusEffectDB ?? new StatusEffectDBNull();
         }
 
-        public static GameSession GetGameSession()
+        public static void ProvideActionEffectDB(IActionEffectDB actionEffectDB)
         {
-            return s_gameSession;
+            s_actionEffectDB = actionEffectDB ?? new ActionEffectDBNull();
         }
 
-        public static AudioControllerNull GetAudio()
-        {
-            return s_audioController;
-        }
+        public static IActionEffectDB GetActionEffectDB() => s_actionEffectDB;
 
-        public static PlayerParty GetParty()
-        {
-            return GetGameSession()?.Party;
-        }
+        public static GameSession GetGameSession() => s_gameSession;
 
-        public static IItemDB GetItemDB()
-        {
-            return s_itemDB;
-        }
+        public static AudioControllerNull GetAudio() => s_audioController;
 
-        public static GUIInputHandler GetMenuInput()
-        {
-            return s_menuInput;
-        }
+        public static PlayerParty GetParty() => GetGameSession()?.Party;
 
-        public static IStatusEffectDB GetStatusEffectDB()
-        {
-            return s_statusEffectDB;
-        }
+        public static IItemDB GetItemDB() => s_itemDB;
 
-        public static Logger GetLogger()
-        {
-            return s_logger;
-        }
+        public static GUIInputHandler GetMenuInput() => s_menuInput;
+
+        public static IStatusEffectDB GetStatusEffectDB() => s_statusEffectDB;
+
+        public static Logger GetLogger() => s_logger;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Arenbee.Framework.Extensions;
 using Godot;
 
@@ -11,29 +12,30 @@ namespace Arenbee.Framework.GUI.Text
         private float _timeOut = 2.0f;
         private bool _timerFinished;
 
-        public override void _Ready()
+        public override void _Process(float delta)
         {
-            base._Ready();
-            if (_timeOut <= 0)
+            if (Engine.IsEditorHint())
+                return;
+            base._PhysicsProcess(delta);
+            if (_timerFinished)
+                return;
+            if (_timeOut > 0)
+            {
+                _timeOut -= delta;
+            }
+            else
+            {
                 _timerFinished = true;
+                TransitionOut();
+            }
         }
 
-        public override void _PhysicsProcess(float delta)
+        public async void TransitionOut()
         {
-            if (Engine.IsEditorHint()) return;
-            base._PhysicsProcess(delta);
-            if (!_timerFinished)
-            {
-                if (_timeOut > 0)
-                {
-                    _timeOut -= delta;
-                }
-                else
-                {
-                    _timerFinished = true;
-                    QueueFree();
-                }
-            }
+            using Tween fadeTween = GetTree().CreateTween();
+            using PropertyTweener fade = fadeTween.TweenProperty(this, "modulate:a", 0f, 0.1f);
+            await ToSignal(fadeTween, "finished");
+            QueueFree();
         }
     }
 }

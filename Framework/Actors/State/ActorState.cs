@@ -1,3 +1,4 @@
+using System;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Utility;
 
@@ -8,7 +9,7 @@ namespace Arenbee.Framework.Actors
         where TStateMachine : ActorStateMachine<TState, TStateMachine>
     {
         public string AnimationName { get; protected set; }
-        public BlockableState[] BlockedStates { get; set; }
+        public BlockedState BlockedStates { get; set; }
         public ActorInputHandler InputHandler => Actor.InputHandler;
         public StateController StateController => Actor.StateController;
         protected Actor Actor { get; private set; }
@@ -17,16 +18,17 @@ namespace Arenbee.Framework.Actors
         {
             base.Init(stateMachine);
             Actor = stateMachine.Actor;
-            BlockedStates ??= new BlockableState[0];
         }
 
         protected abstract void PlayAnimation(string animationName);
     }
 
-    public enum BlockableState
+    [Flags]
+    public enum BlockedState
     {
-        Move,
-        Jumping,
-        Attack
+        None = 0,
+        Move = 1,
+        Jumping = 2,
+        Attack = 4
     }
 }
