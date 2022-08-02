@@ -1,4 +1,5 @@
 using System;
+using Arenbee.Framework.Game;
 using Godot;
 
 namespace Arenbee.Framework.Audio
@@ -72,15 +73,15 @@ namespace Arenbee.Framework.Audio
             audioPlayer.Play();
         }
 
-        public void OnPauseChanged(ProcessModeEnum processMode)
+        public void OnGameStateChanged(GameState gameState)
         {
-            _sceneFX.ProcessMode = processMode;
+            _sceneFX.ProcessMode = gameState.MenuActive ? ProcessModeEnum.Disabled : ProcessModeEnum.Inherit;
         }
 
         public void Reset()
         {
             ClearFX();
-            _sceneFX.ProcessMode = ProcessModeEnum.Inherit;
+            OnGameStateChanged(GameRoot.Instance.GameState);
         }
 
         private void AddSceneAudioPlayers()

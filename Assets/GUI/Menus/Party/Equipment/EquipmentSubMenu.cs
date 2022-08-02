@@ -3,6 +3,7 @@ using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.GUI;
+using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -19,12 +20,12 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
         private PackedScene _equipSelectOptionScene;
         private PackedScene _textOptionScene;
 
-        public override void HandleInput(float delta)
+        public override void HandleInput(GUIInputHandler menuInput, float delta)
         {
-            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
+            if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
                 FocusContainer(_partyOptions);
             else
-                base.HandleInput(delta);
+                base.HandleInput(menuInput, delta);
         }
 
         public override void ResumeSubMenu()

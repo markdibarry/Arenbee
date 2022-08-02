@@ -1,10 +1,9 @@
-using System;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
 using static Arenbee.Framework.GUI.Text.DynamicText;
 
-namespace Arenbee.Framework.GUI.Dialog
+namespace Arenbee.Framework.GUI.Dialogs
 {
     [Tool]
     public partial class DialogBox : Control

@@ -2,7 +2,7 @@ using Arenbee.Framework.Constants;
 using Godot;
 using Newtonsoft.Json;
 
-namespace Arenbee.Framework.GUI.Dialog
+namespace Arenbee.Framework.GUI.Dialogs
 {
     public static class DialogLoader
     {

@@ -1,14 +1,14 @@
 ﻿using Arenbee.Assets.GUI;
+using Arenbee.Assets.GUI.Menus;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.AreaScenes;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.GUI.Dialog;
+using Arenbee.Framework.GUI.Dialogs;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Statistics;
-using Arenbee.Framework.Utility;
 using Godot;
 using static Arenbee.Framework.Actors.Actor;
 
@@ -20,14 +20,14 @@ namespace Arenbee.Framework.Game
         {
             Party = new PlayerParty();
             SessionState = new SessionState();
+            _partyMenuScene = GD.Load<PackedScene>(PartyMenu.GetScenePath());
         }
 
         public static string GetScenePath() => GDEx.GetScenePath();
-        private GUIInputHandler _menuInput;
         private Node2D _areaSceneContainer;
-        private DialogController _dialogController;
         private HUD _hud;
-        private MenuController _menuController;
+        private GUIController _guiController;
+        private readonly PackedScene _partyMenuScene;
         public AreaScene CurrentAreaScene { get; private set; }
         public PlayerParty Party { get; private set; }
         public SessionState SessionState { get; private set; }
@@ -38,17 +38,21 @@ namespace Arenbee.Framework.Game
         public event ActorHandler ActorRemovedFromArea;
         public event AreaSceneHandler AreaSceneAdded;
         public event AreaSceneHandler AreaSceneRemoved;
-        public event PauseChangedHandler PauseChanged;
 
         public override void _ExitTree()
         {
             //Party.Free();
         }
 
+        public void HandleInput(GUIInputHandler menuInput, float delta)
+        {
+            if (menuInput.Start.IsActionJustPressed && !_guiController.GUIActive)
+                OpenPartyMenuAsync();
+        }
+
         public override void _Process(float delta)
         {
-            if (_menuInput.Start.IsActionJustPressed)
-                OpenPartyMenu();
+
         }
 
         public override void _Ready()
@@ -72,29 +76,34 @@ namespace Arenbee.Framework.Game
 
         public void Init(GameSave gameSave)
         {
-            _menuInput = Locator.GetMenuInput();
-            _dialogController = GameRoot.Instance.DialogController;
-            _menuController = GameRoot.Instance.MenuController;
+            _guiController = GameRoot.Instance.GUIController;
             Party = new PlayerParty(gameSave.ActorData, gameSave.Items);
             SessionState = gameSave.SessionState;
             InitAreaScene();
         }
 
+        public void OnGameStateChanged(GameState gameState)
+        {
+            if (gameState.MenuActive)
+                Pause();
+            else
+                Resume();
+            CurrentAreaScene?.OnGameStateChanged(gameState);
+        }
+
         public void OpenDialog(string path)
         {
-            _dialogController.StartDialog(path);
+            _guiController.OpenDialog(path);
         }
 
         public void Pause()
         {
-            PauseChanged?.Invoke(ProcessModeEnum.Disabled);
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;
             _hud.ProcessMode = ProcessModeEnum.Disabled;
         }
 
         public void Resume()
         {
-            PauseChanged?.Invoke(ProcessModeEnum.Inherit);
             CurrentAreaScene.ProcessMode = ProcessModeEnum.Inherit;
             _hud.ProcessMode = ProcessModeEnum.Inherit;
         }
@@ -163,9 +172,9 @@ namespace Arenbee.Framework.Game
             _hud.OnPlayerStatsChanged(actor);
         }
 
-        private void OpenPartyMenu()
+        private async void OpenPartyMenuAsync()
         {
-            _menuController.OpenPartyMenu();
+            await _guiController.OpenMenuAsync(_partyMenuScene);
         }
 
         private void SetNodeReferences()

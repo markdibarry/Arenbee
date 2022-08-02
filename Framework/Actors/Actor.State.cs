@@ -1,4 +1,5 @@
-﻿using Arenbee.Framework.Statistics;
+﻿using Arenbee.Framework.Game;
+using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
 
@@ -34,10 +35,26 @@ namespace Arenbee.Framework.Actors
 
         public abstract ActionStateMachineBase GetActionStateMachine();
 
+        public void OnGameStateChanged(GameState gameState)
+        {
+            if (gameState.CutsceneActive)
+            {
+                IFrameController.Stop();
+                HurtBoxes.SetMonitoringDeferred(false);
+                InputHandler.UserInputDisabled = true;
+            }
+            else
+            {
+                HurtBoxes.SetMonitoringDeferred(true);
+                InputHandler.UserInputDisabled = false;
+            }
+        }
+
         private void InitState()
         {
             StateController.Init();
             IFrameController.Init();
+            OnGameStateChanged(GameRoot.Instance.GameState);
         }
 
         private void OnDamageRecieved(DamageData damageData)

@@ -1,3 +1,4 @@
+using Arenbee.Framework.Input;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -9,11 +10,11 @@ namespace Arenbee.Framework.GUI
         private float _timeDuration;
         private bool _timerEnabled;
 
-        public override void HandleInput(float delta)
+        public override void HandleInput(GUIInputHandler menuInput, float delta)
         {
-            base.HandleInput(delta);
+            base.HandleInput(menuInput, delta);
 
-            if (MenuInput.Enter.IsActionJustPressed)
+            if (menuInput.Enter.IsActionJustPressed)
                 Confirm();
 
             if (_timerEnabled)

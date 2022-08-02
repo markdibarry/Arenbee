@@ -2,17 +2,18 @@ using System;
 using System.Threading.Tasks;
 using Godot;
 using Arenbee.Framework.Extensions;
+using Arenbee.Framework.Input;
 
 namespace Arenbee.Framework.GUI
 {
     [Tool]
-    public partial class Menu : Control
+    public partial class Menu : GUILayer
     {
         private SubMenu _currentSubMenu;
         private SubMenuCloseRequest _closeRequest;
         private SubMenu CurrentSubMenu
         {
-            get { return _currentSubMenu; }
+            get => _currentSubMenu;
             set
             {
                 if (_currentSubMenu != null)
@@ -31,8 +32,6 @@ namespace Arenbee.Framework.GUI
         protected CanvasGroup ContentGroup { get; set; }
         protected Control Background { get; set; }
         protected Control SubMenus { get; set; }
-        public delegate void RequestedCloseMenuHandler(Action callback);
-        public event RequestedCloseMenuHandler RequestedCloseMenu;
 
         public override void _Ready()
         {
@@ -43,14 +42,15 @@ namespace Arenbee.Framework.GUI
                 Init();
         }
 
+        public override void HandleInput(GUIInputHandler menuInput, float delta)
+        {
+            CurrentSubMenu?.HandleInput(menuInput, delta);
+        }
+
         public override void _Process(float delta)
         {
             if (_closeRequest != null)
-            {
-                var closeRequest = _closeRequest;
-                _closeRequest = null;
-                HandleCloseRequest(closeRequest);
-            }
+                HandleCloseRequest(_closeRequest);
         }
 
         public async Task AddSubMenuAsync(SubMenu subMenu)
@@ -105,11 +105,12 @@ namespace Arenbee.Framework.GUI
         private async Task CloseMenuAsync(Action callback = null)
         {
             await TransitionCloseAsync();
-            RequestedCloseMenu?.Invoke(callback);
+            RaiseRequestedClose(callback);
         }
 
         private async void HandleCloseRequest(SubMenuCloseRequest closeRequest)
         {
+            _closeRequest = null;
             if (closeRequest.CloseAll)
                 await CloseMenuAsync(closeRequest.Callback);
             else

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bxukt6n1a77n4"]
 
 [ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_yh25b"]
-[ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogOptionSubMenu.cs" id="2_rm6dj"]
+[ext_resource type="Script" path="res://Framework/GUI/Dialogs/DialogOptionSubMenu.cs" id="2_rm6dj"]
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="3_rf88b"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="4_t7dly"]
 

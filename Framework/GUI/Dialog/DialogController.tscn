@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhwyc83vt5s70"]
-
-[ext_resource type="Script" path="res://Framework/GUI/Dialog/DialogController.cs" id="1_26iu1"]
-
-[node name="DialogController" type="CanvasLayer"]
-script = ExtResource( "1_26iu1" )

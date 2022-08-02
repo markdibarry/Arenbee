@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI;
+using Arenbee.Framework.Input;
 using Arenbee.Framework.Items;
 using Arenbee.Framework.Utility;
 using Godot;
@@ -20,16 +21,16 @@ namespace Arenbee.Assets.GUI.Menus.Party
         private OptionContainer _typeList;
         private PackedScene _keyValueOptionScene;
 
-        public override void HandleInput(float delta)
+        public override void HandleInput(GUIInputHandler menuInput, float delta)
         {
-            if (MenuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
+            if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
             {
                 UpdateItemDescription(null);
                 Locator.GetAudio().PlaySoundFX("menu_close1.wav");
                 FocusContainer(_typeList);
                 return;
             }
-            base.HandleInput(delta);
+            base.HandleInput(menuInput, delta);
         }
 
         protected override void ReplaceDefaultOptions()

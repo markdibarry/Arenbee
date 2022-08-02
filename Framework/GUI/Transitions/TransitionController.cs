@@ -44,7 +44,7 @@ namespace Arenbee.Framework.GUI
 
         private void RemoveOldScene()
         {
-            GameRoot.Instance.MenuController.CloseMenu();
+            GameRoot.Instance.GUIController.CloseAll();
             Locator.GetGameSession()?.RemoveAreaScene();
         }
     }

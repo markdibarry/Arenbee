@@ -95,6 +95,12 @@ namespace Arenbee.Framework.AreaScenes
             return actors;
         }
 
+        public void OnGameStateChanged(GameState gameState)
+        {
+            foreach (var actor in GetAllActors())
+                actor.OnGameStateChanged(gameState);
+        }
+
         private void OnActorDamaged(Actor actor, DamageData damageData)
         {
             ActorDamaged?.Invoke(actor, damageData);

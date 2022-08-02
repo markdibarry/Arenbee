@@ -28,7 +28,6 @@ namespace Arenbee.Framework.GUI
         public bool IsActive { get; set; }
         protected Control Background { get; set; }
         protected Control Foreground { get; set; }
-        protected GUIInputHandler MenuInput { get; private set; }
         [Export] protected bool PreventCancel { get; set; }
         [Export] protected bool PreventCloseAll { get; set; }
         protected Color TempColor { get; set; }
@@ -42,15 +41,14 @@ namespace Arenbee.Framework.GUI
             TempColor = Modulate;
             Modulate = Colors.Transparent;
             SetNodeReferences();
-            MenuInput = Locator.GetMenuInput();
             if (this.IsSceneRoot())
                 Init();
         }
 
-        public override void _Process(float delta)
+        public void Update(GUIInputHandler menuInput, float delta)
         {
             if (IsActive)
-                HandleInput(delta);
+                HandleInput(menuInput, delta);
         }
 
         public virtual void CloseSubMenu(SubMenuCloseRequest closeRequest)
@@ -58,11 +56,11 @@ namespace Arenbee.Framework.GUI
             RaiseRequestedClose(closeRequest);
         }
 
-        public virtual void HandleInput(float delta)
+        public virtual void HandleInput(GUIInputHandler menuInput, float delta)
         {
-            if (MenuInput.Cancel.IsActionJustPressed && !PreventCancel)
+            if (menuInput.Cancel.IsActionJustPressed && !PreventCancel)
                 RaiseRequestedClose(new SubMenuCloseRequest());
-            else if (MenuInput.Start.IsActionJustPressed && !PreventCloseAll)
+            else if (menuInput.Start.IsActionJustPressed && !PreventCloseAll)
                 RaiseRequestedClose(new SubMenuCloseRequest(closeAll: true));
         }
 

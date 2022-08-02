@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Framework.GUI.Dialog;
+using Arenbee.Framework.GUI.Dialogs;
 using Godot;
 
 namespace Arenbee.Framework.GUI.Text
@@ -10,7 +10,7 @@ namespace Arenbee.Framework.GUI.Text
         bool HandleEvent(DynamicText dynamicText);
         bool HandleEvent(DynamicTextBox dynamicTextBox);
         bool HandleEvent(DialogBox dialogBox);
-        bool HandleEvent(DialogController dialogController);
+        bool HandleEvent(Dialog dialog);
     }
 
     public class TextEvent : ITextEvent
@@ -58,7 +58,7 @@ namespace Arenbee.Framework.GUI.Text
         public virtual bool HandleEvent(DynamicText dynamicText) => true;
         public virtual bool HandleEvent(DynamicTextBox dynamicTextBox) => true;
         public virtual bool HandleEvent(DialogBox dialogBox) => true;
-        public virtual bool HandleEvent(DialogController dialogController) => true;
+        public virtual bool HandleEvent(Dialog dialog) => true;
     }
 
     public class SpeedTextEvent : TextEvent
@@ -149,11 +149,11 @@ namespace Arenbee.Framework.GUI.Text
             return false;
         }
 
-        public override bool HandleEvent(DialogController dialogController)
+        public override bool HandleEvent(Dialog dialog)
         {
-            var portrait = dialogController.UnfocusedBox.GetPortrait(Character);
+            var portrait = dialog.UnfocusedBox.GetPortrait(Character);
             if (portrait != null)
-                dialogController.UnfocusedBox.ChangeMood(Mood, portrait);
+                dialog.UnfocusedBox.ChangeMood(Mood, portrait);
             return true;
         }
     }
@@ -165,9 +165,9 @@ namespace Arenbee.Framework.GUI.Text
         public override bool HandleEvent(DynamicText dynamicText) => false;
         public override bool HandleEvent(DynamicTextBox dynamicTextBox) => false;
         public override bool HandleEvent(DialogBox dialogBox) => false;
-        public override bool HandleEvent(DialogController dialogController)
+        public override bool HandleEvent(Dialog dialog)
         {
-            dialogController.NextDialogPart();
+            dialog.NextDialogPart();
             return true;
         }
     }

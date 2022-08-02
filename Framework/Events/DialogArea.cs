@@ -26,8 +26,12 @@ namespace Arenbee.Framework.Events
         [Export]
         public bool Hint
         {
-            get { return _colorRect?.Visible ?? false; }
-            set { if (_colorRect != null) _colorRect.Visible = value; }
+            get => _colorRect?.Visible ?? false;
+            set
+            {
+                if (_colorRect != null)
+                    _colorRect.Visible = value;
+            }
         }
 
         public override void _Ready()
@@ -39,41 +43,37 @@ namespace Arenbee.Framework.Events
 
         public void OnBodyEntered(Node body)
         {
-            if (_actor == null
-                && body is Actor actor
-                && actor.ActorType == ActorType.Player)
-            {
-                _actor = actor;
-                _actor.ContextAreasActive++;
-                _canTrigger = true;
-            }
+            if (_actor != null
+                || body is not Actor actor
+                || actor.ActorType != ActorType.Player)
+                return;
+            _actor = actor;
+            _actor.ContextAreasActive++;
+            _canTrigger = true;
         }
 
         public void OnBodyExited(Node body)
         {
-            if (body == _actor)
-            {
-                _actor.ContextAreasActive--;
-                _actor = null;
-                _canTrigger = false;
-            }
+            if (body != _actor)
+                return;
+            _actor.ContextAreasActive--;
+            _actor = null;
+            _canTrigger = false;
         }
 
         public override void _Process(float delta)
         {
-            if (this.IsToolDebugMode()) return;
-            if (_canTrigger)
+            if (this.IsToolDebugMode() || !_canTrigger)
+                return;
+            if (!IsInstanceValid(_actor))
             {
-                if (IsInstanceValid(_actor))
-                {
-                    if (_actor.InputHandler.Attack.IsActionJustPressed)
-                        _gameSession?.OpenDialog(DialogPath);
-                }
-                else
-                {
-                    _actor = null;
-                    _canTrigger = false;
-                }
+                _actor = null;
+                _canTrigger = false;
+                return;
+            }
+            if (_actor.InputHandler.Attack.IsActionJustPressed)
+            {
+                _gameSession?.OpenDialog(DialogPath);
             }
         }
     }

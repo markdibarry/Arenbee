@@ -11,7 +11,7 @@ namespace Arenbee.Framework.GUI
         {
             SetNewChild();
             ChildEnteredTree += OnChildEntered;
-            ChildExitedTree += OnChildExited;
+            ChildExitingTree += OnChildExiting;
         }
 
         private void SetNewChild()
@@ -37,8 +37,10 @@ namespace Arenbee.Framework.GUI
             float h = 0;
             Rect2 rect = Sprite2D.GetRect();
             var spritePos = Sprite2D.Position + rect.Size;
-            if (spritePos.x > h) h = spritePos.x;
-            if (spritePos.y > v) v = spritePos.y;
+            if (spritePos.x > h)
+                h = spritePos.x;
+            if (spritePos.y > v)
+                v = spritePos.y;
             return new Vector2(h, v);
         }
 
@@ -47,7 +49,7 @@ namespace Arenbee.Framework.GUI
             SetNewChild();
         }
 
-        private void OnChildExited(Node node)
+        private void OnChildExiting(Node node)
         {
             if (Sprite2D == node)
             {
@@ -59,7 +61,7 @@ namespace Arenbee.Framework.GUI
 
         private void UpdateSize()
         {
-            MinimumSize = GetNewSize();
+            CustomMinimumSize = GetNewSize();
         }
     }
 }

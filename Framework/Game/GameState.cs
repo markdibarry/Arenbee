@@ -8,32 +8,23 @@ namespace Arenbee.Framework.Game
         public bool CutsceneActive { get; private set; }
         public bool LoadingActive { get; private set; }
         public bool MenuActive { get; private set; }
+        public bool DialogActive { get; private set; }
+        public event GameStateChangedHandler GameStateChanged;
+        public delegate void GameStateChangedHandler(GameState gameState);
 
-        public void Init(MenuController menuController)
+        public void Init(GUIController guiController)
         {
-            menuController.MenuStatusChanged += OnMenuStatusChanged;
+            guiController.GUIStatusChanged += OnGUIStatusChanged;
         }
 
-        public void OnMenuStatusChanged(bool isActive)
+        public void OnGUIStatusChanged(GUIController guiController)
         {
-            MenuActive = isActive;
             var session = Locator.GetGameSession();
             if (session == null)
                 return;
-            if (isActive)
-                session.Pause();
-            else
-                session.Resume();
-        }
-
-        public void OnLoadingStatusChanged(bool isActive)
-        {
-            LoadingActive = isActive;
-        }
-
-        public void OnCutsceneStatusChanged(bool isActive)
-        {
-            CutsceneActive = isActive;
+            MenuActive = guiController.MenuActive;
+            CutsceneActive = guiController.DialogActive;
+            GameStateChanged?.Invoke(this);
         }
     }
 }

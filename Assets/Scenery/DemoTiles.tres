@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://d1yjajwjruirw" path="res://Assets/Scenery/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png" id="1_fvp8l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_norm2"]
-texture = ExtResource( "1_fvp8l" )
+texture = ExtResource("1_fvp8l")
 0:0/next_alternative_id = 2
 0:0/0 = 0
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
@@ -421,4 +421,4 @@ texture = ExtResource( "1_fvp8l" )
 [resource]
 physics_layer_0/collision_layer = 16
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource( "TileSetAtlasSource_norm2" )
+sources/0 = SubResource("TileSetAtlasSource_norm2")

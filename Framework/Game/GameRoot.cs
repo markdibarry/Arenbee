@@ -1,12 +1,13 @@
 using System;
 using Arenbee.Assets.ActionEffects;
+using Arenbee.Assets.GUI.Menus;
 using Arenbee.Assets.Input;
 using Arenbee.Assets.Items;
 using Arenbee.Framework.Audio;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.GUI.Dialog;
+using Arenbee.Framework.GUI.Dialogs;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
@@ -21,15 +22,16 @@ namespace Arenbee.Framework.Game
             s_instance = this;
             GameState = new GameState();
             TransitionController = new TransitionController();
+            _titleMenuScene = GD.Load<PackedScene>(TitleMenu.GetScenePath());
         }
 
         private static GameRoot s_instance;
         private GUIInputHandler _menuInput;
+        private readonly PackedScene _titleMenuScene;
+        private bool _queueReset;
         public static GameRoot Instance => s_instance;
-        public bool _queueReset;
         public ColorAdjustment ColorAdjustment { get; set; }
         public AudioController AudioController { get; private set; }
-        public DialogController DialogController { get; private set; }
         public GameCamera GameCamera { get; private set; }
         public Node2D GameDisplay { get; set; }
         public Node2D GameSessionContainer { get; set; }
@@ -39,7 +41,7 @@ namespace Arenbee.Framework.Game
             set { Locator.ProvideGameSession(value); }
         }
         public GameState GameState { get; }
-        public MenuController MenuController { get; private set; }
+        public GUIController GUIController { get; private set; }
         public ActorInputHandler PlayerOneInput { get; private set; }
         public CanvasLayer Transition { get; private set; }
         public TransitionController TransitionController { get; }
@@ -55,10 +57,9 @@ namespace Arenbee.Framework.Game
             _menuInput = GetNodeOrNull<MenuInputHandler>("InputHandlers/MenuInputHandler");
             PlayerOneInput = GetNodeOrNull<Player1InputHandler>("InputHandlers/PlayerOneInputHandler");
             GameDisplay = GetNodeOrNull<Node2D>("GameDisplay");
+            GUIController = GameDisplay.GetNodeOrNull<GUIController>("GUIController");
             AudioController = GameDisplay.GetNodeOrNull<AudioController>("AudioController");
-            DialogController = GameDisplay.GetNodeOrNull<DialogController>("DialogController");
             GameSessionContainer = GameDisplay.GetNodeOrNull<Node2D>("GameSessionContainer");
-            MenuController = GameDisplay.GetNodeOrNull<MenuController>("MenuController");
             Transition = GameDisplay.GetNodeOrNull<CanvasLayer>("Transition");
             ColorAdjustment = GameDisplay.GetNodeOrNull<ColorAdjustment>("ColorAdjustment");
             GameCamera = GameDisplay.GetNodeOrNull<GameCamera>("GameCamera");
@@ -71,20 +72,21 @@ namespace Arenbee.Framework.Game
             Locator.ProvideActionEffectDB(new ActionEffectDB());
             Locator.ProvideStatusEffectDB(new StatusEffectDB());
             Locator.ProvideMenuInput(_menuInput);
-            MenuController.Init();
-            DialogController.Init(_menuInput);
-            GameState.Init(MenuController);
-            ResetToTitleScreen();
+            GameState.Init(GUIController);
+            GameState.GameStateChanged += OnGameStateChanged;
+            ResetToTitleScreenAsync();
         }
 
         public override void _Process(float delta)
         {
             _menuInput.Update();
             PlayerOneInput.Update();
+            GUIController.HandleInput(_menuInput, delta);
+            GameSession?.HandleInput(_menuInput, delta);
             if (_queueReset)
             {
                 _queueReset = false;
-                ResetToTitleScreen();
+                ResetToTitleScreenAsync();
             }
             if (Godot.Input.IsActionJustPressed("collect"))
             {
@@ -93,18 +95,17 @@ namespace Arenbee.Framework.Game
             }
         }
 
-        public void ResetToTitleScreen()
+        public async void ResetToTitleScreenAsync()
         {
             EndCurrentgame();
-            MenuController.CloseMenu();
-            MenuController.OpenTitleMenu();
+            GUIController.CloseAll();
+            await GUIController.OpenMenuAsync(_titleMenuScene);
         }
 
         public void EndCurrentgame()
         {
             if (!IsInstanceValid(GameSession))
                 return;
-            UnsubscribeSessionEvents(GameSession);
             AudioController.Reset();
             GameSession.Free();
             GameSession = null;
@@ -120,18 +121,13 @@ namespace Arenbee.Framework.Game
             var newSession = GDEx.Instantiate<GameSession>(GameSession.GetScenePath());
             Locator.ProvideGameSession(newSession);
             GameSessionContainer.AddChild(newSession);
-            SubscribeSessionEvents(newSession);
             newSession.Init(gameSave);
         }
 
-        public void SubscribeSessionEvents(GameSession session)
+        private void OnGameStateChanged(GameState gameState)
         {
-            session.PauseChanged += AudioController.OnPauseChanged;
-        }
-
-        public void UnsubscribeSessionEvents(GameSession session)
-        {
-            session.PauseChanged -= AudioController.OnPauseChanged;
+            AudioController.OnGameStateChanged(gameState);
+            GameSession?.OnGameStateChanged(gameState);
         }
     }
 }

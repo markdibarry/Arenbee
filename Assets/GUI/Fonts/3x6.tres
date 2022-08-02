@@ -1,7 +1,7 @@
-[gd_resource type="Font" load_steps=2 format=3]
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://cypalrjgsj7r2"]
 
-[ext_resource type="FontData" path="res://Assets/GUI/Fonts/m3x6.ttf" id="1_xpcgx"]
+[ext_resource type="FontFile" uid="uid://dbugkturmyth8" path="res://Assets/GUI/Fonts/m3x6.ttf" id="1_0xy1r"]
 
 [resource]
+base_font = ExtResource("1_0xy1r")
 spacing_top = -4
-data/0 = ExtResource( "1_xpcgx" )

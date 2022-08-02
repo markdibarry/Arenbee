@@ -12,13 +12,13 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
 resource_local_to_scene = true
-shader = ExtResource( "12_3qfsg" )
+shader = ExtResource("12_3qfsg")
 shader_param/cycle_direction = 1.0
 shader_param/cycle_end = 0.0
 shader_param/cycle_start = 0.0
 shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
 shader_param/flash_mix = 0.0
-shader_param/palette1 = ExtResource( "13_txydx" )
+shader_param/palette1 = ExtResource("13_txydx")
 shader_param/speed = 0.0
 shader_param/use_palette1 = true
 shader_param/use_palette2 = null
@@ -30,28 +30,28 @@ size = Vector2(14, 24)
 resource_local_to_scene = true
 size = Vector2(14, 24)
 
-[node name="Ady" instance=ExtResource( "1_n2y5e" )]
-script = ExtResource( "2_0vmt5" )
+[node name="Ady" instance=ExtResource("1_n2y5e")]
+script = ExtResource("2_0vmt5")
 
 [node name="AnimationPlayer" parent="." index="0"]
 libraries = {
-"": ExtResource( "3_1pauw" ),
-"LongStick": ExtResource( "4_cmo6m" ),
-"Wand": ExtResource( "5_kayxj" )
+"": ExtResource("3_1pauw"),
+"LongStick": ExtResource("4_cmo6m"),
+"Wand": ExtResource("5_kayxj")
 }
 
 [node name="BodySprite" parent="Body" index="0"]
 modulate = Color(1, 1, 1, 1)
 texture_filter = 3
-material = SubResource( "ShaderMaterial_vhqga" )
-texture = ExtResource( "7_28ga8" )
+material = SubResource("ShaderMaterial_vhqga")
+texture = ExtResource("7_28ga8")
 hframes = 6
 vframes = 10
 
 [node name="HurtBoxes" parent="Body/BodySprite" index="0"]
 visible = false
 
-[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource( "8_tc2pg" )]
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("8_tc2pg")]
 modulate = Color(0, 1, 0, 1)
 collision_layer = 0
 collision_mask = 160
@@ -59,9 +59,9 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
 position = Vector2(0, 3)
-shape = SubResource( "RectangleShape2D_niveh" )
+shape = SubResource("RectangleShape2D_niveh")
 
 [node name="CollisionShape2D" parent="." index="2"]
 visible = false
 position = Vector2(0, 3)
-shape = SubResource( "RectangleShape2D_53s3l" )
+shape = SubResource("RectangleShape2D_53s3l")

@@ -1,43 +1,40 @@
+using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Arenbee.Framework.Input;
-using Arenbee.Framework.Utility;
 using Godot;
 
-namespace Arenbee.Framework.GUI.Dialog
+namespace Arenbee.Framework.GUI.Dialogs
 {
-    public partial class DialogController : CanvasLayer
+    public partial class Dialog : GUILayer
     {
+        public Dialog()
+        {
+            _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
+            _dialogOptionMenuScene = GD.Load<PackedScene>(DialogOptionMenu.GetScenePath());
+        }
+
+        public static string GetScenePath() => GDEx.GetScenePath();
         private int _currentPart;
-        private PackedScene _dialogBoxScene;
-        private PackedScene _dialogOptionSubMenuScene;
-        private DialogOptionSubMenu _dialogOptionSubMenu;
-        private GUIInputHandler _menuInput;
+        private readonly PackedScene _dialogBoxScene;
+        private readonly PackedScene _dialogOptionMenuScene;
+        private DialogOptionMenu _dialogOptionMenu;
         public bool CanProceed { get; set; }
-        public bool DialogActive { get; set; }
         public DialogPart[] DialogParts { get; set; }
         public DialogBox UnfocusedBox { get; set; }
         public DialogBox FocusedBox { get; set; }
         public delegate void DialogStartedHandler();
         public delegate void DialogEndedHandler();
+        public delegate void OptionBoxRequestedHandler(Menu menu);
         public event DialogStartedHandler DialogStarted;
         public event DialogEndedHandler DialogEnded;
+        public event OptionBoxRequestedHandler OptionBoxRequested;
 
-        public override void _Process(float delta)
+        public override void HandleInput(GUIInputHandler menuInput, float delta)
         {
-            if (!DialogActive)
-                return;
-            if (_menuInput.Enter.IsActionJustPressed)
+            if (menuInput.Enter.IsActionJustPressed)
                 Proceed();
-            else if (_menuInput.Enter.IsActionPressed)
+            else if (menuInput.Enter.IsActionPressed)
                 SpeedUpText();
-        }
-
-        public override void _Ready()
-        {
-            _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
-            _dialogOptionSubMenuScene = GD.Load<PackedScene>(DialogOptionSubMenu.GetScenePath());
-            DialogStarted += OnDialogStarted;
-            DialogEnded += OnDialogEnded;
         }
 
         public void CloseBox(DialogBox box)
@@ -56,13 +53,7 @@ namespace Arenbee.Framework.GUI.Dialog
             UnfocusedBox = null;
             CloseBox(FocusedBox);
             FocusedBox = null;
-            DialogActive = false;
-            DialogEnded?.Invoke();
-        }
-
-        public void Init(GUIInputHandler menuInput)
-        {
-            _menuInput = menuInput;
+            RaiseRequestedClose();
         }
 
         public void NextDialogPart()
@@ -148,10 +139,9 @@ namespace Arenbee.Framework.GUI.Dialog
 
         public void StartDialog(string path)
         {
-            if (DialogActive || string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
                 return;
             DialogStarted?.Invoke();
-            DialogActive = true;
             _currentPart = 0;
             DialogParts = DialogLoader.Load(path);
             if (DialogParts == null)
@@ -176,21 +166,9 @@ namespace Arenbee.Framework.GUI.Dialog
             return newBox;
         }
 
-        private void CloseOptionBox()
+        public void OnOptionBoxClosed(DialogOptionClosedRequest request)
         {
-            _dialogOptionSubMenu.ItemSelected -= OnOptionItemSelected;
-            _dialogOptionSubMenu.QueueFree();
-            _dialogOptionSubMenu = null;
-        }
-
-        private void OnDialogEnded()
-        {
-            Locator.GetParty()?.DisableUserInput(false);
-        }
-
-        private void OnDialogStarted()
-        {
-            Locator.GetParty()?.DisableUserInput(true);
+            NextDialogPart(request.Next);
         }
 
         private void OnDialogBoxLoaded(DialogBox dialogBox)
@@ -201,14 +179,6 @@ namespace Arenbee.Framework.GUI.Dialog
         private void OnTextEventTriggered(ITextEvent textEvent)
         {
             textEvent.HandleEvent(this);
-        }
-
-        private void OnOptionItemSelected()
-        {
-            var optionItem = _dialogOptionSubMenu.CurrentContainer.CurrentItem;
-            int next = optionItem.GetData<int>("next");
-            NextDialogPart(next);
-            CloseOptionBox();
         }
 
         private void OnStoppedWriting()
@@ -225,13 +195,12 @@ namespace Arenbee.Framework.GUI.Dialog
             CanProceed = true;
         }
 
-        private async void OpenOptionBoxAsync()
+        private void OpenOptionBoxAsync()
         {
-            _dialogOptionSubMenu = _dialogOptionSubMenuScene.Instantiate<DialogOptionSubMenu>();
-            _dialogOptionSubMenu.ItemSelected += OnOptionItemSelected;
-            _dialogOptionSubMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
-            AddChild(_dialogOptionSubMenu);
-            await _dialogOptionSubMenu.InitAsync();
+            _dialogOptionMenu = _dialogOptionMenuScene.Instantiate<DialogOptionMenu>();
+            _dialogOptionMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
+            _dialogOptionMenu.Dialog = this;
+            OptionBoxRequested?.Invoke(_dialogOptionMenu);
         }
 
         private void SpeedUpText()
