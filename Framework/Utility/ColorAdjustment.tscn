@@ -6,11 +6,11 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u7eke"]
 resource_local_to_scene = true
 shader = ExtResource( "1_b70dx" )
-shader_param/_brightness = 0.0
-shader_param/_contrast = 0.0
-shader_param/_saturation = 0.0
-shader_param/_tint_amount = 0.0
-shader_param/_tint_color = Color(1, 0.0823529, 0, 1)
+_brightness = 0.0
+_contrast = 0.0
+_saturation = 0.0
+_tint_amount = 0.0
+_tint_color = Color(1, 0.0823529, 0, 1)
 
 [node name="ColorAdjustment" type="CanvasLayer"]
 layer = 100

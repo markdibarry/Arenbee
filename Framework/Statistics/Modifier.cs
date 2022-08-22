@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -52,9 +51,9 @@ namespace Arenbee.Framework.Statistics
 
         public int Chance { get; set; }
         public bool IsHidden { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ModOperator ModOperator { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public StatType StatType { get; set; }
         public int SubType { get; set; }
         public int Value { get; }

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.Framework.Utility;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Items
 {

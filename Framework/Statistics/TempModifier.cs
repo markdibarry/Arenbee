@@ -1,36 +1,31 @@
-using Newtonsoft.Json;
-
-namespace Arenbee.Framework.Statistics
+﻿namespace Arenbee.Framework.Statistics;
+public class TempModifier
 {
-    public class TempModifier
+    public TempModifier(Modifier modifier, StatsNotifier notifier)
     {
-        public TempModifier(Modifier mod, StatsNotifier notifier)
-        {
-            Modifier = mod;
-            Notifier = notifier;
-        }
+        Modifier = modifier;
+        Notifier = notifier;
+    }
 
-        public Modifier Modifier { get; set; }
-        private StatsNotifier _notifier;
-        [JsonProperty(TypeNameHandling = TypeNameHandling.All)]
-        public StatsNotifier Notifier
+    public Modifier Modifier { get; set; }
+    private StatsNotifier _notifier;
+    public StatsNotifier Notifier
+    {
+        get { return _notifier; }
+        set
         {
-            get { return _notifier; }
-            set
-            {
-                if (_notifier != null)
-                    _notifier.Elapsed -= OnExpired;
-                _notifier = value;
-                if (_notifier != null)
-                    _notifier.Elapsed += OnExpired;
-            }
+            if (_notifier != null)
+                _notifier.Elapsed -= OnExpired;
+            _notifier = value;
+            if (_notifier != null)
+                _notifier.Elapsed += OnExpired;
         }
-        public delegate void ExpiredHandler(TempModifier tempModifier);
-        public event ExpiredHandler Expired;
+    }
+    public delegate void ExpiredHandler(TempModifier tempModifier);
+    public event ExpiredHandler Expired;
 
-        public void OnExpired()
-        {
-            Expired?.Invoke(this);
-        }
+    public void OnExpired()
+    {
+        Expired?.Invoke(this);
     }
 }

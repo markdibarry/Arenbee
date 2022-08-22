@@ -33,7 +33,7 @@ namespace Arenbee.Framework.Actors
             Locator.GetAudio().PlaySoundFX(this, sound);
         }
 
-        public abstract ActionStateMachineBase GetActionStateMachine();
+        public virtual ActionStateMachineBase GetActionStateMachine() => null;
 
         public void OnGameStateChanged(GameState gameState)
         {

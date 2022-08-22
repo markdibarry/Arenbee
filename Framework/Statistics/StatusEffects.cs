@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.Framework.Utility;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -146,7 +145,7 @@ namespace Arenbee.Framework.Statistics
             TickNotifier = EffectData.TickNotifier?.Clone();
         }
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public StatusEffectType StatusEffectType
         {
             get { return (StatusEffectType)SubType; }

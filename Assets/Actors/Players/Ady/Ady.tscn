@@ -13,15 +13,15 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vhqga"]
 resource_local_to_scene = true
 shader = ExtResource("12_3qfsg")
-shader_param/cycle_direction = 1.0
-shader_param/cycle_end = 0.0
-shader_param/cycle_start = 0.0
-shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
-shader_param/flash_mix = 0.0
-shader_param/palette1 = ExtResource("13_txydx")
-shader_param/speed = 0.0
-shader_param/use_palette1 = true
-shader_param/use_palette2 = null
+cycle_direction = null
+cycle_end = null
+cycle_start = null
+flash_color = null
+flash_mix = null
+palette1 = ExtResource("13_txydx")
+speed = null
+use_palette1 = true
+use_palette2 = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_niveh"]
 size = Vector2(14, 24)

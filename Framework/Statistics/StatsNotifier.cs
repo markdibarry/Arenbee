@@ -1,5 +1,5 @@
-using System;
-using Newtonsoft.Json;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -19,24 +19,24 @@ namespace Arenbee.Framework.Statistics
 
     public class TimedNotifier : StatsNotifier
     {
+        public TimedNotifier() { }
+
         [JsonConstructor]
         public TimedNotifier(float timeOut, bool oneShot = false)
         {
             _timeOut = timeOut;
-            _timeRemaining = timeOut;
-            _oneShot = oneShot;
+            TimeRemaining = timeOut;
+            OneShot = oneShot;
         }
 
-        [JsonProperty]
-        private readonly bool _oneShot;
+        public float TimeRemaining { get; set; }
+        public bool OneShot { get; set; }
         private bool _stopped;
         private readonly float _timeOut;
-        [JsonProperty]
-        private float _timeRemaining;
 
         public override StatsNotifier Clone()
         {
-            return new TimedNotifier(_timeOut, _oneShot);
+            return new TimedNotifier(_timeOut, OneShot);
         }
 
         public override void SubscribeEvents(Stats stats)
@@ -52,15 +52,15 @@ namespace Arenbee.Framework.Statistics
         public void OnProcess(float delta)
         {
             if (_stopped) return;
-            if (_timeRemaining > 0)
+            if (TimeRemaining > 0)
             {
-                _timeRemaining -= delta;
+                TimeRemaining -= delta;
             }
             else
             {
                 RaiseElapsed();
-                if (_oneShot) _stopped = true;
-                _timeRemaining = _timeOut;
+                if (OneShot) _stopped = true;
+                TimeRemaining = _timeOut;
             }
         }
     }

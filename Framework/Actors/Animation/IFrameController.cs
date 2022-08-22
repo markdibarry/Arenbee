@@ -38,7 +38,7 @@ namespace Arenbee.Framework.Actors
         public void Start(DamageData damageData, bool overDamageThreshold)
         {
             _actor.HurtBoxes.SetMonitoringDeferred(false);
-            _spriteShader.SetShaderParam("flash_mix", 1);
+            _spriteShader.SetShaderUniform("flash_mix", 1);
             SetShaderFlashColor(damageData);
             _flashTimer = FlashDuration;
             _flashTimerEnabled = true;
@@ -50,7 +50,7 @@ namespace Arenbee.Framework.Actors
 
         public void Stop()
         {
-            _spriteShader.SetShaderParam("flash_mix", 0);
+            _spriteShader.SetShaderUniform("flash_mix", 0);
             _actor.HurtBoxes.SetMonitoringDeferred(true);
             _iframeTimerEnabled = false;
             _flashTimerEnabled = false;
@@ -100,7 +100,7 @@ namespace Arenbee.Framework.Actors
 
         private void OnFlashTimerExpire()
         {
-            _spriteShader.SetShaderParam("flash_mix", 0);
+            _spriteShader.SetShaderUniform("flash_mix", 0);
         }
 
         private void OnIFrameTimerExpire()
@@ -120,12 +120,12 @@ namespace Arenbee.Framework.Actors
                     StatusEffectType.Poison => new Color(1, 0.65f, 1),
                     _ => Colors.White
                 };
-                _spriteShader.SetShaderParam("flash_color", color);
+                _spriteShader.SetShaderUniform("flash_color", color);
             }
             else
             {
                 var color = damageData.ElementDamage.Get().Color;
-                _spriteShader.SetShaderParam("flash_color", color);
+                _spriteShader.SetShaderUniform("flash_color", color);
             }
         }
     }

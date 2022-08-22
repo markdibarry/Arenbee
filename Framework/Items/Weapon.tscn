@@ -6,14 +6,14 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_85gvd"]
 resource_local_to_scene = true
 shader = ExtResource( "2_j37tb" )
-shader_param/flash_color = null
-shader_param/flash_mix = null
-shader_param/speed = null
-shader_param/cycle_start = null
-shader_param/cycle_end = null
-shader_param/cycle_direction = null
-shader_param/use_palette1 = null
-shader_param/use_palette2 = null
+flash_color = null
+flash_mix = null
+speed = null
+cycle_start = null
+cycle_end = null
+cycle_direction = null
+use_palette1 = null
+use_palette2 = null
 
 [node name="Weapon" type="Node2D"]
 texture_filter = 1

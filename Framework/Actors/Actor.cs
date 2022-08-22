@@ -8,7 +8,7 @@ namespace Arenbee.Framework.Actors
     /// <summary>
     /// Base character object.
     /// </summary>
-    public abstract partial class Actor : CharacterBody2D, IDamageable
+    public partial class Actor : CharacterBody2D, IDamageable
     {
         protected Actor()
         {

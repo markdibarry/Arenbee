@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using Godot;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -34,7 +34,7 @@ namespace Arenbee.Framework.Statistics
         }
 
         /// <summary>
-        /// For Json.Net
+        /// For Json Deserializing
         /// </summary>
         /// <param name="attributes"></param>
         /// <param name="statusEffects"></param>

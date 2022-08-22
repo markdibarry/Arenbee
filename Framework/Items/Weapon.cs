@@ -1,10 +1,10 @@
-using Godot;
+﻿using Godot;
 using Arenbee.Framework.Utility;
 using Arenbee.Framework.Actors;
 
 namespace Arenbee.Framework.Items
 {
-    public abstract partial class Weapon : Node2D
+    public partial class Weapon : Node2D
     {
         protected Weapon()
         {
@@ -44,7 +44,7 @@ namespace Arenbee.Framework.Items
             Holder = holder;
         }
 
-        public abstract ActionStateMachineBase GetActionStateMachine();
+        public virtual ActionStateMachineBase GetActionStateMachine() => null;
 
         public void PlaySoundFX(string soundPath)
         {

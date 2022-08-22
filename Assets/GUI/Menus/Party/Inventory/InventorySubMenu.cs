@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Extensions;
@@ -86,7 +86,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
             {
                 var option = textOptionScene.Instantiate<TextOption>();
                 option.LabelText = itemType == ItemType.None ? "All" : itemType.Get().Name;
-                option.OptionData["itemType"] = itemType;
+                //option.OptionData["itemType"] = itemType;
                 options.Add(option);
             }
             return options;
@@ -106,7 +106,7 @@ namespace Arenbee.Assets.GUI.Menus.Party
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
                 option.ValueText = "x" + itemStack.Amount.ToString();
-                option.OptionData["itemStack"] = itemStack;
+                //option.OptionData["itemStack"] = itemStack;
                 options.Add(option);
             }
             return options;

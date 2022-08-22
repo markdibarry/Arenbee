@@ -6,21 +6,23 @@
 [ext_resource type="PackedScene" uid="uid://chj5vtpjj1ppe" path="res://Framework/GUI/Menus/OptionContainer.tscn" id="5_w46as"]
 [ext_resource type="PackedScene" uid="uid://dhgb0pn80xr64" path="res://Framework/GUI/Menus/OptionItems/TextOption.tscn" id="6_had5t"]
 
-[node name="MainSubMenu" instance=ExtResource( "1_g7lyy" )]
-script = ExtResource( "2_cyvws" )
+[node name="MainSubMenu" instance=ExtResource("1_g7lyy")]
+script = ExtResource("2_cyvws")
 PreventCancel = true
 PreventCloseAll = true
 
-[node name="MainOptions" parent="Foreground" index="0" instance=ExtResource( "5_w46as" )]
+[node name="MainOptions" parent="Foreground" index="0" instance=ExtResource("5_w46as")]
 offset_left = 211.0
 offset_top = 112.0
 offset_right = 268.0
 offset_bottom = 155.0
-CursorScene = ExtResource( "4_6d667" )
+CursorScene = ExtResource("4_6d667")
 DimItems = true
 FitContainer = true
+FocusWrap = true
 HResize = 4
 VResize = 4
+SingleOptionsEnabled = true
 metadata/_edit_layout_mode = 0
 metadata/_edit_use_custom_anchors = false
 
@@ -36,25 +38,24 @@ offset_bottom = 27.0
 offset_right = 39.0
 offset_bottom = 25.0
 
-[node name="Continue" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource( "6_had5t" )]
+[node name="Continue" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("6_had5t")]
 offset_right = 39.0
 offset_bottom = 12.0
+LabelText = "Continue"
 OptionData = {
 "titleChoice": "Continue"
 }
-LabelText = "Continue"
 
-[node name="New Game" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="1" instance=ExtResource( "6_had5t" )]
+[node name="New Game" parent="Foreground/MainOptions/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("6_had5t")]
 modulate = Color(0.7, 0.7, 0.7, 1)
 offset_top = 13.0
 offset_right = 39.0
 offset_bottom = 25.0
+LabelText = "New Game
+"
 OptionData = {
 "titleChoice": "NewGame"
 }
-Dim = true
-LabelText = "New Game
-"
 
 [node name="Arrows" parent="Foreground/MainOptions" index="1"]
 offset_right = 50.0

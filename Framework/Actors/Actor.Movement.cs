@@ -12,9 +12,9 @@ namespace Arenbee.Framework.Actors
         private Vector2 _move;
         private readonly float _fallMultiplier = 2f;
         [Export]
-        private readonly float _jumpHeight;
+        private float _jumpHeight;
         [Export]
-        private readonly float _timeToJumpPeak;
+        private float _timeToJumpPeak;
         [Export]
         public int WalkSpeed { get; protected set; }
         public Vector2 Direction { get; private set; }

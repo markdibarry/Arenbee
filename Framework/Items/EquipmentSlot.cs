@@ -1,7 +1,5 @@
-﻿using Arenbee.Framework.Statistics;
+﻿using System.Text.Json.Serialization;
 using Arenbee.Framework.Utility;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Arenbee.Framework.Items
 {
@@ -41,9 +39,9 @@ namespace Arenbee.Framework.Items
             }
         }
         public string ItemId { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public EquipSlotName SlotName { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ItemType SlotType { get; set; }
 
         public bool IsCompatible(Item item)

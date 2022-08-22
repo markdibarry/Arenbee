@@ -1,6 +1,6 @@
-using Arenbee.Framework.Constants;
+﻿using Arenbee.Framework.Constants;
 using Godot;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Arenbee.Framework.GUI.Dialogs
 {
@@ -14,7 +14,7 @@ namespace Arenbee.Framework.GUI.Dialogs
             file.Open(fullPath, File.ModeFlags.Read);
             string content = file.GetAsText();
             file.Close();
-            return JsonConvert.DeserializeObject<DialogPart[]>(content);
+            return JsonSerializer.Deserialize<DialogPart[]>(content);
         }
     }
 }

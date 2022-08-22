@@ -12,12 +12,12 @@ namespace Arenbee.Framework.Utility
             get
             {
                 if (_colorShader != null)
-                    return (float)_colorShader.GetShaderParam("_brightness");
+                    return (float)_colorShader.GetShaderUniform("_brightness");
                 return 0;
             }
             set
             {
-                _colorShader?.SetShaderParam("_brightness", value);
+                _colorShader?.SetShaderUniform("_brightness", value);
             }
         }
         [Export(PropertyHint.Range, "-1,1")]
@@ -26,12 +26,12 @@ namespace Arenbee.Framework.Utility
             get
             {
                 if (_colorShader != null)
-                    return (float)_colorShader.GetShaderParam("_contrast");
+                    return (float)_colorShader.GetShaderUniform("_contrast");
                 return 1;
             }
             set
             {
-                _colorShader?.SetShaderParam("_contrast", value);
+                _colorShader?.SetShaderUniform("_contrast", value);
             }
         }
         [Export(PropertyHint.Range, "-1,2")]
@@ -40,12 +40,12 @@ namespace Arenbee.Framework.Utility
             get
             {
                 if (_colorShader != null)
-                    return (float)_colorShader.GetShaderParam("_saturation");
+                    return (float)_colorShader.GetShaderUniform("_saturation");
                 return 1;
             }
             set
             {
-                _colorShader?.SetShaderParam("_saturation", value);
+                _colorShader?.SetShaderUniform("_saturation", value);
             }
         }
         [Export(PropertyHint.ColorNoAlpha)]
@@ -54,12 +54,12 @@ namespace Arenbee.Framework.Utility
             get
             {
                 if (_colorShader != null)
-                    return (Color)_colorShader.GetShaderParam("_tint_color");
+                    return (Color)_colorShader.GetShaderUniform("_tint_color");
                 return Colors.White;
             }
             set
             {
-                _colorShader?.SetShaderParam("_tint_color", value);
+                _colorShader?.SetShaderUniform("_tint_color", value);
             }
         }
         [Export(PropertyHint.Range, "0,1")]
@@ -68,12 +68,12 @@ namespace Arenbee.Framework.Utility
             get
             {
                 if (_colorShader != null)
-                    return (float)_colorShader.GetShaderParam("_tint_amount");
+                    return (float)_colorShader.GetShaderUniform("_tint_amount");
                 return 0;
             }
             set
             {
-                _colorShader?.SetShaderParam("_tint_amount", value);
+                _colorShader?.SetShaderUniform("_tint_amount", value);
             }
         }
 

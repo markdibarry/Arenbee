@@ -108,9 +108,9 @@ namespace Arenbee.Assets.Items
                 {
                     _counter = _countTime;
                     _spriteShader = Actor.BodyShader;
-                    _spriteShader.SetShaderParam("cycle_start", 2);
-                    _spriteShader.SetShaderParam("cycle_end", 4);
-                    _spriteShader.SetShaderParam("speed", 1);
+                    _spriteShader.SetShaderUniform("cycle_start", 2);
+                    _spriteShader.SetShaderUniform("cycle_end", 4);
+                    _spriteShader.SetShaderUniform("speed", 1);
                     PlayAnimation(AnimationName);
                 }
 
@@ -121,8 +121,8 @@ namespace Arenbee.Assets.Items
                         _counter -= delta;
                         if (_counter <= 0)
                         {
-                            _spriteShader.SetShaderParam("speed", 1.5f);
-                            _spriteShader.SetShaderParam("cycle_start", 1);
+                            _spriteShader.SetShaderUniform("speed", 1.5f);
+                            _spriteShader.SetShaderUniform("cycle_start", 1);
                         }
 
                     }
@@ -132,9 +132,9 @@ namespace Arenbee.Assets.Items
 
                 public override void Exit()
                 {
-                    _spriteShader.SetShaderParam("cycle_end", 0);
-                    _spriteShader.SetShaderParam("cycle_start", 0);
-                    _spriteShader.SetShaderParam("speed", 0);
+                    _spriteShader.SetShaderUniform("cycle_end", 0);
+                    _spriteShader.SetShaderUniform("cycle_start", 0);
+                    _spriteShader.SetShaderUniform("speed", 0);
                 }
 
                 public override ActionState CheckForTransitions()

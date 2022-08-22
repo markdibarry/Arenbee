@@ -8,15 +8,15 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d32fs"]
 resource_local_to_scene = true
 shader = ExtResource( "3_g161r" )
-shader_param/flash_color = null
-shader_param/flash_mix = null
-shader_param/speed = null
-shader_param/cycle_start = null
-shader_param/cycle_end = null
-shader_param/cycle_direction = null
-shader_param/use_palette1 = true
-shader_param/use_palette2 = null
-shader_param/palette1 = ExtResource( "4_5qvd7" )
+flash_color = null
+flash_mix = null
+speed = null
+cycle_start = null
+cycle_end = null
+cycle_direction = null
+use_palette1 = true
+use_palette2 = null
+palette1 = ExtResource( "4_5qvd7" )
 
 [node name="MetalHockeyStick" instance=ExtResource( "1_bqbp3" )]
 script = ExtResource( "2_lcd6o" )

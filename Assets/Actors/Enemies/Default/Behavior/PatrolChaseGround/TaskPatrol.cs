@@ -1,4 +1,4 @@
-using Arenbee.Framework.Actors;
+﻿using Arenbee.Framework.Actors;
 using Arenbee.Framework.Input;
 
 namespace Arenbee.Assets.Actors.Enemies.Default.Behavior.PatrolChaseGround
@@ -52,7 +52,6 @@ namespace Arenbee.Assets.Actors.Enemies.Default.Behavior.PatrolChaseGround
                     result = -1;
                 else if (collision.GetNormal().x < 0)
                     result = 1;
-                collision.Dispose();
             }
             return result;
         }

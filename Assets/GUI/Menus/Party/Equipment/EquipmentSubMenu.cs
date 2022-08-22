@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game;
@@ -79,7 +79,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
                 string name = slot.SlotName.Get().Abbreviation;
                 keyValueOption.KeyText = name + ":";
                 keyValueOption.ValueText = slot.Item?.DisplayName ?? "<None>";
-                keyValueOption.OptionData["slot"] = slot;
+                keyValueOption.OptionData["slotName"] = (int)slot.SlotName;
                 options.Add(keyValueOption);
             }
             return options;
@@ -103,9 +103,10 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             var actor = _partyOptions.CurrentItem.GetData<Actor>("actor");
             if (actor == null)
                 return;
-            var slot = optionItem.GetData<EquipmentSlot>("slot");
-            if (slot == null)
+            var slotName = (EquipSlotName)optionItem.GetData<int>("slotName");
+            if (slotName == EquipSlotName.None)
                 return;
+            var slot = actor.Equipment.GetSlot(slotName);
             SelectSubMenu selectMenu = GDEx.Instantiate<SelectSubMenu>(SelectSubMenu.GetScenePath());
             selectMenu.Slot = slot;
             selectMenu.Actor = actor;

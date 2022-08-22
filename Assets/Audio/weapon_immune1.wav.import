@@ -1,7 +1,7 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
+type="AudioStreamWAV"
 uid="uid://bpd8aeks4ijp1"
 path="res://.godot/imported/weapon_immune1.wav-c22b77ede224af66399f895aeb411e03.sample"
 

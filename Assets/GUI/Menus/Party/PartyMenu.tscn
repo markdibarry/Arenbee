@@ -7,8 +7,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1f80b"]
 shader = ExtResource( "3_c8k6s" )
-shader_param/scroll_speed = 0.3
-shader_param/tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
+scroll_speed = 0.3
+tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
 
 [node name="PartyMenu" instance=ExtResource( "1_h1eqx" )]
 visible = true

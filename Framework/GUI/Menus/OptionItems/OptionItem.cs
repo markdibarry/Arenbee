@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using Arenbee.Framework.Constants;
+﻿using Arenbee.Framework.Constants;
+using Godot.Collections;
 using Godot;
 
 namespace Arenbee.Framework.GUI
@@ -9,7 +9,7 @@ namespace Arenbee.Framework.GUI
         public OptionItem()
         {
             DimUnfocused = true;
-            OptionData = new Dictionary<string, object>();
+            OptionData = new Dictionary<string, Variant>();
         }
 
         private bool _dimUnfocused;
@@ -45,7 +45,7 @@ namespace Arenbee.Framework.GUI
             }
         }
         [Export]
-        public Dictionary<string, object> OptionData { get; set; }
+        public Dictionary<string, Variant> OptionData { get; set; }
         public bool Selected { get; set; }
 
         public override void _Ready()
@@ -55,11 +55,11 @@ namespace Arenbee.Framework.GUI
 
         public T GetData<T>(string key)
         {
-            if (!OptionData.TryGetValue(key, out object result))
+            if (!OptionData.TryGetValue(key, out Variant result))
                 return default;
-            if (result is not T)
+            if (result.Obj is not T)
                 return default;
-            return (T)result;
+            return (T)result.Obj;
         }
 
         public void HandleDim()

@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Constants;
 using Arenbee.Framework.Game;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;
 using Godot;
-using Newtonsoft.Json;
 
 namespace Arenbee.Framework.GUI.Dialogs
 {
@@ -19,30 +19,24 @@ namespace Arenbee.Framework.GUI.Dialogs
 
     public class DialogPart
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
-        [JsonProperty(PropertyName = "choices")]
+        [JsonPropertyName("choices")]
         public DialogChoice[] DialogChoices { get; set; }
-        [JsonProperty(PropertyName = "speakers")]
+        [JsonPropertyName("speakers")]
         public List<Speaker> Speakers { get; set; }
-        [JsonProperty(PropertyName = "speed")]
+        [JsonPropertyName("speed")]
         public float? Speed { get; set; }
-        [JsonProperty(PropertyName = "text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
-        [JsonProperty(PropertyName = "next")]
+        [JsonPropertyName("next")]
         public int? Next { get; set; }
 
         public static DialogPart GetDefault()
         {
             return new DialogPart()
             {
-                Speakers = new List<Speaker> {
-                    new Speaker()
-                    {
-                        DisplayName = "Dani",
-                        Mood = "Neutral"
-                    }
-                },
+                Speakers = new List<Speaker> { new Speaker("Dani", "Neautral") },
                 Text = "Hi!\n" +
                 "My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
             };
@@ -51,13 +45,26 @@ namespace Arenbee.Framework.GUI.Dialogs
 
     public class Speaker
     {
-        [JsonProperty(PropertyName = "character")]
+        public Speaker(string character, string mood)
+            : this(character, character, character, mood)
+        { }
+
+        [JsonConstructor]
+        public Speaker(string character, string portrait, string displayName, string mood)
+        {
+            Character = character;
+            Portrait = portrait ?? character;
+            DisplayName = displayName ?? character;
+            Mood = mood;
+        }
+
+        [JsonPropertyName("character")]
         public string Character { get; set; }
-        [JsonProperty(PropertyName = "portrait")]
+        [JsonPropertyName("portrait")]
         public string Portrait { get; set; }
-        [JsonProperty(PropertyName = "displayName")]
+        [JsonPropertyName("displayName")]
         public string DisplayName { get; set; }
-        [JsonProperty(PropertyName = "mood")]
+        [JsonPropertyName("mood")]
         public string Mood { get; set; }
 
         public static bool SameSpeakers(IList<Speaker> speakersA, IList<Speaker> speakersB)
@@ -84,23 +91,22 @@ namespace Arenbee.Framework.GUI.Dialogs
 
         public AnimatedSprite2D GetPortrait(float shiftAmount, bool reverse)
         {
-            string portraitCharacter = Portrait ?? Character;
-            if (portraitCharacter == null)
+            if (Portrait == null)
                 return null;
-            string path = $"{PathConstants.PortraitsPath}{portraitCharacter.ToLower()}/portraits.tres";
+            string path = $"{PathConstants.PortraitsPath}{Portrait.ToLower()}/portraits.tres";
             if (!ResourceLoader.Exists(path))
                 return null;
-            var portrait = new AnimatedSprite2D()
+            AnimatedSprite2D portrait = new()
             {
-                Name = DisplayName ?? portraitCharacter,
+                Name = DisplayName,
                 FlipH = reverse,
                 Frames = GD.Load<SpriteFrames>(path)
             };
             portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
-            var mood = Mood?.ToLower() ?? "neutral";
+            string mood = Mood?.ToLower() ?? "neutral";
             if (!portrait.Frames.HasAnimation(mood))
             {
-                GD.PrintErr($"No portrait found for {portraitCharacter} {mood}");
+                GD.PrintErr($"No portrait found for {Portrait} {mood}");
                 return null;
             }
             portrait.Play(mood);
@@ -110,27 +116,27 @@ namespace Arenbee.Framework.GUI.Dialogs
 
     public class DialogChoice
     {
-        [JsonProperty(PropertyName = "text")]
+        [JsonPropertyName("text")]
         public string Text { get; set; }
-        [JsonProperty(PropertyName = "next")]
+        [JsonPropertyName("next")]
         public int Next { get; set; }
-        [JsonProperty(PropertyName = "event")]
+        [JsonPropertyName("event")]
         public string CustomEvent { get; set; }
-        [JsonProperty(PropertyName = "condition")]
+        [JsonPropertyName("condition")]
         public Condition Condition { get; set; }
     }
 
     public class Condition
     {
-        [JsonProperty(PropertyName = "category")]
+        [JsonPropertyName("category")]
         public string Category { get; set; }
-        [JsonProperty(PropertyName = "type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonProperty(PropertyName = "target")]
+        [JsonPropertyName("target")]
         public string Target { get; set; }
-        [JsonProperty(PropertyName = "comparison")]
+        [JsonPropertyName("comparison")]
         public string Comparison { get; set; }
-        [JsonProperty(PropertyName = "toCompare")]
+        [JsonPropertyName("toCompare")]
         public string ToCompare { get; set; }
 
         public bool Evaluate()

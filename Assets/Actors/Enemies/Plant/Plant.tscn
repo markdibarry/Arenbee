@@ -44,14 +44,14 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_a0m8f"]
 resource_local_to_scene = true
 shader = ExtResource( "4_2aald" )
-shader_param/cycle_direction = null
-shader_param/cycle_end = null
-shader_param/cycle_start = null
-shader_param/flash_color = Color(0.556863, 0.482353, 1, 1)
-shader_param/flash_mix = 0.0
-shader_param/speed = null
-shader_param/use_palette1 = null
-shader_param/use_palette2 = null
+cycle_direction = null
+cycle_end = null
+cycle_start = null
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+speed = null
+use_palette1 = null
+use_palette2 = null
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nwnae"]
 size = Vector2(22, 18)

@@ -208,22 +208,6 @@ namespace Arenbee.Framework.Extensions
             return new Vector2(vec.x, y);
         }
 
-        /// <summary>
-        /// Do not use with Int32. Godot bug
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="key"></param>
-        /// <param name="fallback"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T TryGet<T>(this Godot.Collections.Dictionary dict, object key, T fallback)
-        {
-            if (dict.Contains(key))
-                return (T)dict[key];
-            else
-                return fallback;
-        }
-
         private static string GetGodotRoot([CallerFilePath] string rootResourcePath = "")
         {
             int stopIndex = rootResourcePath.LastIndexOf(ProjectDirName) + ProjectDirName.Length;

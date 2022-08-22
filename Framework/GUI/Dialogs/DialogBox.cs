@@ -1,3 +1,4 @@
+using System.Linq;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.GUI.Text;
 using Godot;
@@ -147,11 +148,32 @@ namespace Arenbee.Framework.GUI.Dialogs
             _dynamicTextBox?.NextPage();
         }
 
+        public void SetDisplayNames()
+        {
+            _nameLabel.Text = string.Empty;
+            var speakers = CurrentDialogPart.Speakers.OrEmpty();
+            if (speakers.Any(x => string.IsNullOrEmpty(x.DisplayName)))
+            {
+                _namePanel.Hide();
+                return;
+            }
+            foreach (Speaker speaker in speakers)
+            {
+                if (string.IsNullOrEmpty(_nameLabel.Text))
+                    _nameLabel.Text = speaker.DisplayName;
+                else
+                    _nameLabel.Text += $" & {speaker.DisplayName}";
+            }
+            if (ReverseDisplay)
+                _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
+            _namePanel.Show();
+        }
+
         public void SetPortraits()
         {
             int shiftBase = 30;
             _portraitContainer.QueueFreeAllChildren();
-            _nameLabel.Text = string.Empty;
+
             if (ReverseDisplay)
             {
                 shiftBase *= -1;
@@ -169,16 +191,6 @@ namespace Arenbee.Framework.GUI.Dialogs
                     if (Engine.IsEditorHint())
                         portrait.Owner = GetTree().EditedSceneRoot;
                 }
-                if (speaker.DisplayName != null)
-                {
-                    if (ReverseDisplay)
-                        _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
-                    if (string.IsNullOrEmpty(_nameLabel.Text))
-                        _nameLabel.Text = speaker.DisplayName;
-                    else
-                        _nameLabel.Text += " & " + speaker.DisplayName;
-                    _nameLabel.Show();
-                }
             }
         }
 
@@ -191,6 +203,7 @@ namespace Arenbee.Framework.GUI.Dialogs
             }
 
             SetPortraits();
+            SetDisplayNames();
             if (CurrentDialogPart.Text == null)
                 return;
             _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;

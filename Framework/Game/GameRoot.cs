@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Arenbee.Assets.ActionEffects;
 using Arenbee.Assets.GUI.Menus;
 using Arenbee.Assets.Input;
@@ -7,7 +7,6 @@ using Arenbee.Framework.Audio;
 using Arenbee.Framework.Extensions;
 using Arenbee.Framework.Game.SaveData;
 using Arenbee.Framework.GUI;
-using Arenbee.Framework.GUI.Dialogs;
 using Arenbee.Framework.Input;
 using Arenbee.Framework.Statistics;
 using Arenbee.Framework.Utility;

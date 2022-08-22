@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace Arenbee.Framework.Statistics
 {
@@ -84,7 +83,7 @@ namespace Arenbee.Framework.Statistics
             : base(type, attribute)
         { }
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public AttributeType AttributeType
         {
             get { return (AttributeType)SubType; }

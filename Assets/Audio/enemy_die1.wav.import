@@ -1,7 +1,7 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
+type="AudioStreamWAV"
 uid="uid://devg8g6hwa8n8"
 path="res://.godot/imported/enemy_die1.wav-f8bf4fc752b242d451d3cc9dcbccd9f9.sample"
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.Assets.GUI.Menus.Common;
 using Arenbee.Framework.Actors;
 using Arenbee.Framework.Extensions;
@@ -82,7 +82,7 @@ namespace Arenbee.Assets.GUI.Menus.Party.Equipment
             var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
             unequipOption.KeyText = "<Unequip>";
             unequipOption.ValueText = string.Empty;
-            unequipOption.OptionData["itemId"] = null;
+            //unequipOption.OptionData["itemId"] = null;
             options.Add(unequipOption);
             foreach (var itemStack in _playerParty.Inventory?.GetItemsByType(Slot.SlotType))
             {

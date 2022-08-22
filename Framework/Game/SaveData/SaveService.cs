@@ -1,5 +1,6 @@
+﻿using Arenbee.Framework.Utility.JsonConverters;
 using Godot;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Arenbee.Framework.Game.SaveData
 {
@@ -25,16 +26,18 @@ namespace Arenbee.Framework.Game.SaveData
             file.Open(path, File.ModeFlags.Read);
             string content = file.GetAsText();
             file.Close();
-            return JsonConvert.DeserializeObject<GameSave>(content, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            });
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new StatsNotifierConverter());
+            return JsonSerializer.Deserialize<GameSave>(content, options);
         }
 
         public static void SaveGame(GameSession gameSession)
         {
             var gameSave = new GameSave(gameSession);
-            string saveString = JsonConvert.SerializeObject(gameSave, Formatting.Indented);
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new StatsNotifierConverter());
+            options.WriteIndented = true;
+            string saveString = JsonSerializer.Serialize(gameSave, options);
             var file = new File();
             file.Open(SavePath, File.ModeFlags.Write);
             file.StoreString(saveString);
