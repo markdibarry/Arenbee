@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://GameCore/GUI/Text/DynamicText.cs" id="1_b2t8a"]
+
+[node name="DynamicText" type="RichTextLabel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+bbcode_enabled = true
+text = "Once... there was a toad that ate the [wave]moon[/wave]."
+fit_content_height = true
+scroll_active = false
+visible_characters = 43
+visible_characters_behavior = 1
+script = ExtResource( "1_b2t8a" )
+CustomText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave]."

@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://7hfb2x8ofu3h"]
-
-[ext_resource type="PackedScene" uid="uid://bbb7ulop70vv8" path="res://Framework/GUI/Menus/Menu.tscn" id="1_yuc3r"]
-[ext_resource type="Script" path="res://Framework/GUI/Dialogs/DialogOptionMenu.cs" id="2_5t1an"]
-
-[node name="DialogOptionMenu" instance=ExtResource("1_yuc3r")]
-visible = true
-script = ExtResource("2_5t1an")

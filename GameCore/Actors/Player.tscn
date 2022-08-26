@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/Actors/Actor.tscn" id="1"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_nvv46"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qef7"]
+resource_local_to_scene = true
+shader = ExtResource( "2_nvv46" )
+cycle_direction = null
+cycle_end = null
+cycle_start = null
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+speed = null
+use_palette1 = null
+use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5hcfj"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Player" instance=ExtResource( "1" )]
+collision_mask = 276
+ActorType = 0
+WalkSpeed = 100
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource( "ShaderMaterial_1qef7" )
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource( "RectangleShape2D_5hcfj" )

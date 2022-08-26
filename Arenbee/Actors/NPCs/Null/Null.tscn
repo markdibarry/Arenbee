@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/Actors/Actor.tscn" id="1_486h3"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_apru7"]
+[ext_resource type="Texture2D" path="res://Arenbee/Actors/NPCs/Null/Animation/NullPalette.png" id="3_cdmjg"]
+[ext_resource type="Texture2D" path="res://Arenbee/Actors/NPCs/Null/Animation/Null.png" id="4_7a7r8"]
+
+[sub_resource type="Animation" id="Animation_suo3e"]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodySprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_unlx8"]
+resource_name = "Talk"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodySprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w0m04"]
+_data = {
+"Idle": SubResource("Animation_suo3e"),
+"Talk": SubResource("Animation_unlx8")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l3g26"]
+resource_local_to_scene = true
+shader = ExtResource("2_apru7")
+cycle_direction = null
+cycle_end = null
+cycle_start = null
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+palette1 = ExtResource("3_cdmjg")
+speed = null
+use_palette1 = true
+use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wthwg"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Null" instance=ExtResource("1_486h3")]
+
+[node name="AnimationPlayer" parent="." index="0"]
+libraries = {
+"": SubResource("AnimationLibrary_w0m04")
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_l3g26")
+position = Vector2(0, -3)
+texture = ExtResource("4_7a7r8")
+hframes = 2
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_wthwg")

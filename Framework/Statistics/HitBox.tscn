@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://db8n72b70al36"]
-
-[ext_resource type="Script" path="res://Framework/Statistics/HitBox.cs" id="1"]
-
-[node name="HitBox" type="Area2D"]
-monitoring = false
-script = ExtResource( "1" )

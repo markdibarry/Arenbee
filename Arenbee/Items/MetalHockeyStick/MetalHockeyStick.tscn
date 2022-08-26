@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://Arenbee/Items/HockeyStick/HockeyStick.tscn" id="1_bqbp3"]
+[ext_resource type="Script" path="res://Arenbee/Items/MetalHockeyStick/MetalHockeyStick.cs" id="2_lcd6o"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Weapon.gdshader" id="3_g161r"]
+[ext_resource type="Texture2D" path="res://Arenbee/Items/MetalHockeyStick/MetalHockeyStickPalette.png" id="4_5qvd7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d32fs"]
+resource_local_to_scene = true
+shader = ExtResource( "3_g161r" )
+flash_color = null
+flash_mix = null
+speed = null
+cycle_start = null
+cycle_end = null
+cycle_direction = null
+use_palette1 = true
+use_palette2 = null
+palette1 = ExtResource( "4_5qvd7" )
+
+[node name="MetalHockeyStick" instance=ExtResource( "1_bqbp3" )]
+script = ExtResource( "2_lcd6o" )
+
+[node name="Sprite" parent="." index="0"]
+material = SubResource( "ShaderMaterial_d32fs" )

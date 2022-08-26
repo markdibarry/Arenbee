@@ -1,0 +1,60 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/Scenery/Breakable/Breakable.tscn" id="1_0ty7v"]
+[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Barrel/barrel_default.png" id="2_ccwov"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uhhpb"]
+resource_local_to_scene = true
+size = Vector2(14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2h30e"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qcxvw"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c8tjx"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pxatw"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pk2p7"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1iyb"]
+atlas = ExtResource( "2_ccwov" )
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pjfaf"]
+animations = [{
+"frames": [SubResource( "AtlasTexture_2h30e" ), SubResource( "AtlasTexture_qcxvw" )],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [SubResource( "AtlasTexture_c8tjx" ), SubResource( "AtlasTexture_pxatw" ), SubResource( "AtlasTexture_pk2p7" ), SubResource( "AtlasTexture_h1iyb" )],
+"loop": true,
+"name": &"destroy",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_82lx4"]
+resource_local_to_scene = true
+size = Vector2(14, 16)
+
+[node name="Barrel" instance=ExtResource( "1_0ty7v" )]
+
+[node name="Collision" parent="." index="0"]
+shape = SubResource( "RectangleShape2D_uhhpb" )
+
+[node name="AnimatedSprite" parent="." index="1"]
+frames = SubResource( "SpriteFrames_pjfaf" )
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource( "RectangleShape2D_82lx4" )

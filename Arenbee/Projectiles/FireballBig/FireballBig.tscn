@@ -1,0 +1,42 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://Arenbee/Projectiles/FireballBig/FireballBig.cs" id="1_2g6sn"]
+[ext_resource type="Texture2D" path="res://Arenbee/Projectiles/FireballBig/fireball_big.png" id="1_yr53w"]
+[ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="2_w0xb8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q2a63"]
+atlas = ExtResource( "1_yr53w" )
+region = Rect2(0, 0, 37, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kucut"]
+atlas = ExtResource( "1_yr53w" )
+region = Rect2(37, 0, 37, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7hufg"]
+atlas = ExtResource( "1_yr53w" )
+region = Rect2(74, 0, 37, 22)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_brbyb"]
+animations = [{
+"frames": [SubResource( "AtlasTexture_q2a63" ), SubResource( "AtlasTexture_kucut" ), SubResource( "AtlasTexture_7hufg" )],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bt84c"]
+size = Vector2(20, 16)
+
+[node name="FireballBig" type="Node2D"]
+script = ExtResource( "1_2g6sn" )
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+frames = SubResource( "SpriteFrames_brbyb" )
+
+[node name="HitBox" parent="." instance=ExtResource( "2_w0xb8" )]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(6, 0)
+shape = SubResource( "RectangleShape2D_bt84c" )

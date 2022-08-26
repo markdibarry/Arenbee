@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_yuc3r"]
+[ext_resource type="Script" path="res://GameCore/GUI/Dialogs/DialogOptionMenu.cs" id="2_5t1an"]
+
+[node name="DialogOptionMenu" instance=ExtResource("1_yuc3r")]
+visible = true
+script = ExtResource("2_5t1an")

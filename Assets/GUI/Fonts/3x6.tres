@@ -1,7 +1,0 @@
-[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://cypalrjgsj7r2"]
-
-[ext_resource type="FontFile" uid="uid://dbugkturmyth8" path="res://Assets/GUI/Fonts/m3x6.ttf" id="1_0xy1r"]
-
-[resource]
-base_font = ExtResource("1_0xy1r")
-spacing_top = -4

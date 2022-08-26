@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://dlfeo74016d0"]
+
+[ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="1_jas0l"]
+[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/GameRootBase.tscn" id="1_luofh"]
+[ext_resource type="Script" path="res://Arenbee/Input/MenuInputHandler.cs" id="2_103x3"]
+[ext_resource type="Script" path="res://Arenbee/Input/Player1InputHandler.cs" id="3_bax5s"]
+[ext_resource type="Script" path="res://Arenbee/Audio/AudioController.cs" id="5_ognf4"]
+[ext_resource type="Script" path="res://GameCore/Game/GameCamera.cs" id="5_qvtd4"]
+
+[node name="GameRoot" instance=ExtResource("1_luofh")]
+script = ExtResource("1_jas0l")
+
+[node name="ColorRect" parent="MainBackground" index="0"]
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuInputHandler" parent="InputHandlers" index="0"]
+script = ExtResource("2_103x3")
+
+[node name="PlayerOneInputHandler" parent="InputHandlers" index="1"]
+script = ExtResource("3_bax5s")
+
+[node name="AudioController" parent="GameDisplay" index="0"]
+script = ExtResource("5_ognf4")
+
+[node name="GameCamera" type="Camera2D" parent="GameDisplay" index="4"]
+current = true
+limit_left = 0
+limit_bottom = 270
+limit_smoothed = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+editor_draw_screen = false
+script = ExtResource("5_qvtd4")

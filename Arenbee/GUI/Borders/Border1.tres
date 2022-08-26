@@ -1,0 +1,12 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dpr1b8cydbn7v"]
+
+[ext_resource type="Texture2D" uid="uid://duu4fet2ifvjd" path="res://GameCore/GUI/Borders/border2.png" id="1_58hy1"]
+
+[resource]
+texture = ExtResource( "1_58hy1" )
+region_rect = Rect2(0, 0, 16, 16)
+margin_left = 5.0
+margin_right = 5.0
+margin_top = 5.0
+margin_bottom = 5.0
+modulate_color = Color(0.968627, 1, 0.411765, 1)

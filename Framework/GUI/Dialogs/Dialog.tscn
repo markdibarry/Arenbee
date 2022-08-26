@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6cyk4e5oe73i"]
-
-[ext_resource type="Script" path="res://Framework/GUI/Dialogs/Dialog.cs" id="1_umwox"]
-
-[node name="Dialog" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource("1_umwox")

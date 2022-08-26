@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://5lgfwver1np"]
-
-[ext_resource type="PackedScene" uid="uid://cjuu6ekrrfelc" path="res://Framework/GUI/Menus/SubMenu.tscn" id="1_22hay"]
-[ext_resource type="Script" path="res://Framework/GUI/Menus/OptionSubMenu.cs" id="2_hu6av"]
-
-[node name="OptionSubMenu" instance=ExtResource( "1_22hay" )]
-script = ExtResource( "2_hu6av" )

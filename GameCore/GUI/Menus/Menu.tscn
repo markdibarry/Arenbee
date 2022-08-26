@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://GameCore/GUI/Menus/Menu.cs" id="1_5rlu4"]
+
+[node name="Menu" type="Control"]
+visible = false
+script = ExtResource( "1_5rlu4" )
+
+[node name="ContentGroup" type="CanvasGroup" parent="."]
+
+[node name="Content" type="Control" parent="ContentGroup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 480.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_custom_anchors = false
+
+[node name="Background" type="Control" parent="ContentGroup/Content"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="SubMenus" type="Control" parent="ContentGroup/Content"]
+anchor_right = 1.0
+anchor_bottom = 1.0
