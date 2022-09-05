@@ -1,5 +1,5 @@
 ﻿namespace GameCore.Input;
 
-public partial class DummyInputHandler : ActorInputHandler
+public class DummyInputHandler : ActorInputHandler
 {
 }

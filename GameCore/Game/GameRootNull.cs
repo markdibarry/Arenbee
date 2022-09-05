@@ -13,13 +13,5 @@ namespace GameCore.Game
         protected override void ProvideLocatorReferences() { }
 
         public override void _Process(float delta) { }
-
-        public override async void ResetToTitleScreenAsync() { }
-
-        public override void EndCurrentgame() { }
-
-        public override void QueueReset() { }
-
-        public override void StartGame(GameSave gameSave = null) { }
     }
 }

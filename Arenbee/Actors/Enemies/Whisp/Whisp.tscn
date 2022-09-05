@@ -1,94 +1,59 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=13 format=3 uid="uid://dykieghkvjhee"]
 
-[ext_resource type="PackedScene" path="res://GameCore/Actors/Enemy.tscn" id="1_0h21x"]
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/Actor.tscn" id="1_e7d2k"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
-[ext_resource type="Texture2D" path="res://Arenbee/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
+[ext_resource type="AnimationLibrary" uid="uid://cc0dhjokcf6hg" path="res://Arenbee/Actors/Enemies/Whisp/Animation/WhispLibrary.res" id="3_6kwvn"]
+[ext_resource type="Texture2D" uid="uid://bryfxg1olnhug" path="res://Arenbee/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="3_mqnde"]
 [ext_resource type="PackedScene" path="res://GameCore/Statistics/HurtBox.tscn" id="5_uvkvh"]
 [ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="6_ttdw0"]
 
-[sub_resource type="Animation" id="Animation_cwund"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body/BodySprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1]
-}
-
-[sub_resource type="Animation" id="Animation_8v7pu"]
-resource_name = "Idle"
-length = 1.75
-loop_mode = 1
-step = 0.0416667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body/BodySprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0833333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_bu72h"]
-_data = {
-"RESET": SubResource( "Animation_cwund" ),
-"Standing": SubResource( "Animation_8v7pu" )
-}
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dyyga"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_esvcb"]
 resource_local_to_scene = true
-shader = ExtResource( "3_mqnde" )
+shader = ExtResource("3_mqnde")
 cycle_direction = null
-cycle_end = null
-cycle_start = null
+cycle_end = 0.0
+cycle_start = 0.0
 flash_color = Color(0.556863, 0.482353, 1, 1)
 flash_mix = 0.0
-speed = null
-use_palette1 = null
+speed = 0.0
+use_palette1 = false
 use_palette2 = null
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_r0tkl"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pidx0"]
 size = Vector2(16, 18)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xujb8"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sjcgy"]
 size = Vector2(14, 16)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_ip5ud"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_gicn0"]
 radius = 78.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2djvb"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cw5in"]
 resource_local_to_scene = true
 size = Vector2(16, 18)
 
-[node name="Whisp" instance=ExtResource( "1_0h21x" )]
+[node name="Whisp" instance=ExtResource("1_e7d2k")]
 collision_layer = 1024
 collision_mask = 0
-script = ExtResource( "2_smssj" )
+script = ExtResource("2_smssj")
+ActorType = 1
 
 [node name="AnimationPlayer" parent="." index="0"]
+autoplay = "Standing"
 libraries = {
-"": SubResource( "AnimationLibrary_bu72h" )
+"": ExtResource("3_6kwvn")
 }
 
 [node name="BodySprite" parent="Body" index="0"]
-material = SubResource( "ShaderMaterial_dyyga" )
+material = SubResource("ShaderMaterial_esvcb")
 scale = Vector2(-1, 1)
-texture = ExtResource( "3_gge5r" )
+texture = ExtResource("3_gge5r")
 hframes = 21
-frame = 1
+vframes = 1
+frame = 0
 
-[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource( "5_uvkvh" )]
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_uvkvh")]
 modulate = Color(0, 1, 0, 1)
 collision_layer = 0
 collision_mask = 40
@@ -96,16 +61,16 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
 position = Vector2(0, 6)
-shape = SubResource( "RectangleShape2D_r0tkl" )
+shape = SubResource("RectangleShape2D_pidx0")
 
-[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource( "6_ttdw0" )]
+[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("6_ttdw0")]
 modulate = Color(1, 0, 0, 1)
 collision_layer = 128
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]
 position = Vector2(0, 6)
-shape = SubResource( "RectangleShape2D_xujb8" )
+shape = SubResource("RectangleShape2D_sjcgy")
 
 [node name="DetectTargetZone" type="Area2D" parent="." index="2"]
 collision_layer = 0
@@ -113,8 +78,8 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectTargetZone" index="0"]
 position = Vector2(0, 6)
-shape = SubResource( "CircleShape2D_ip5ud" )
+shape = SubResource("CircleShape2D_gicn0")
 
 [node name="CollisionShape2D" parent="." index="3"]
 position = Vector2(0, 6)
-shape = SubResource( "RectangleShape2D_2djvb" )
+shape = SubResource("RectangleShape2D_cw5in")

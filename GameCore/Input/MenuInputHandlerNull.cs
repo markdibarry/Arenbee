@@ -1,4 +1,3 @@
-namespace GameCore.Input
-{
-    public partial class MenuInputHandlerNull : GUIInputHandler { }
-}
+﻿namespace GameCore.Input;
+
+public class MenuInputHandlerNull : GUIInputHandler { }

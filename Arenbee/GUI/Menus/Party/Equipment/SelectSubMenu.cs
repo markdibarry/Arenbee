@@ -55,7 +55,7 @@ namespace Arenbee.GUI.Menus.Party.Equipment
         {
             base.OnItemSelected();
             if (TryEquip(CurrentContainer.CurrentItem.GetData<string>("itemId"), Slot))
-                RaiseRequestedClose();
+                CloseSubMenu();
         }
 
         protected override void SetNodeReferences()

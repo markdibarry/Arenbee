@@ -1,8 +1,7 @@
 ﻿using GameCore.GUI;
 
-namespace Arenbee.GUI.Transitions
+namespace Arenbee.GUI;
+
+public class TransitionController : TransitionControllerBase
 {
-    public class TransitionController : TransitionControllerBase
-    {
-    }
 }

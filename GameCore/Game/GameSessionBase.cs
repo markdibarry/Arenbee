@@ -1,6 +1,5 @@
 ﻿using GameCore.Actors;
 using GameCore.AreaScenes;
-using GameCore.Constants;
 using GameCore.Extensions;
 using GameCore.Game.SaveData;
 using GameCore.GUI;
@@ -21,7 +20,7 @@ public abstract partial class GameSessionBase : Node2D
     }
 
     protected Node2D AreaSceneContainer { get; set; }
-    protected IHUD HUD { get; set; }
+    protected HUDBase HUD { get; set; }
     protected GUIController GUIController { get; set; }
     public AreaScene CurrentAreaScene { get; private set; }
     public PlayerParty Party { get; private set; }
@@ -101,20 +100,12 @@ public abstract partial class GameSessionBase : Node2D
         CurrentAreaScene = null;
     }
 
-    public void ReplaceScene(AreaScene areaScene)
-    {
-        //TODO TransitionStart
-        RemoveAreaScene();
-        AddAreaScene(areaScene);
-        //TODO TransitionEnd
-    }
-
     private void InitAreaScene()
     {
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(PathConstants.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Arenbee.Constants.PathConstants.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }
@@ -154,7 +145,7 @@ public abstract partial class GameSessionBase : Node2D
 
     protected virtual void SetNodeReferences()
     {
-        HUD = GetNode<IHUD>("HUD");
+        HUD = GetNode<HUDBase>("HUD");
         AreaSceneContainer = GetNode<Node2D>("AreaSceneContainer");
         Transition = GetNode<CanvasLayer>("Transition");
     }

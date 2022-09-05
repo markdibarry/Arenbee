@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using GameCore.Audio;
-using GameCore.Game.SaveData;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Utility;
@@ -15,9 +14,8 @@ public abstract partial class GameRootBase : Node
         GameState = new GameState();
     }
 
-    private bool _queueReset;
-    protected PackedScene GameSessionScene { get; set; }
-    protected PackedScene TitleMenuScene { get; set; }
+    public string GameSessionScenePath { get; set; }
+    public string TitleMenuScenePath { get; set; }
     public ColorAdjustment ColorAdjustment { get; set; }
     public AudioControllerBase AudioController { get; protected set; }
     public GameCamera GameCamera { get; protected set; }
@@ -29,7 +27,7 @@ public abstract partial class GameRootBase : Node
     public GUIInputHandler MenuInput { get; protected set; }
     public ActorInputHandler PlayerOneInput { get; protected set; }
     public CanvasLayer Transition { get; protected set; }
-    public TransitionControllerBase TransitionController { get; }
+    public TransitionControllerBase TransitionController { get; protected set; }
 
     public override void _Ready()
     {
@@ -39,8 +37,6 @@ public abstract partial class GameRootBase : Node
 
     protected virtual void SetNodeReferences()
     {
-        MenuInput = GetNodeOrNull<GUIInputHandler>("InputHandlers/MenuInputHandler");
-        PlayerOneInput = GetNodeOrNull<ActorInputHandler>("InputHandlers/PlayerOneInputHandler");
         GameDisplay = GetNodeOrNull<Node2D>("GameDisplay");
         GUIController = GameDisplay.GetNodeOrNull<GUIController>("GUIController");
         AudioController = GameDisplay.GetNodeOrNull<AudioControllerBase>("AudioController");
@@ -55,7 +51,8 @@ public abstract partial class GameRootBase : Node
         ProvideLocatorReferences();
         GameState.Init(GUIController);
         GameState.GameStateChanged += OnGameStateChanged;
-        ResetToTitleScreenAsync();
+        var titleMenuScene = GD.Load<PackedScene>(TitleMenuScenePath);
+        ResetToTitleScreenAsync(titleMenuScene);
     }
 
     protected virtual void ProvideLocatorReferences()
@@ -66,15 +63,8 @@ public abstract partial class GameRootBase : Node
 
     public override void _Process(float delta)
     {
-        MenuInput.Update();
-        PlayerOneInput.Update();
-        GUIController.HandleInput(MenuInput, delta);
-        GameSession?.HandleInput(MenuInput, delta);
-        if (_queueReset)
-        {
-            _queueReset = false;
-            ResetToTitleScreenAsync();
-        }
+        HandleInput(delta);
+        TransitionController.Update();
         if (Godot.Input.IsActionJustPressed("collect"))
         {
             GC.Collect(GC.MaxGeneration);
@@ -82,33 +72,20 @@ public abstract partial class GameRootBase : Node
         }
     }
 
-    public virtual async void ResetToTitleScreenAsync()
+    public virtual async void ResetToTitleScreenAsync(PackedScene titleMenuScene)
     {
-        EndCurrentgame();
-        GUIController.CloseAll();
-        await GUIController.OpenMenuAsync(TitleMenuScene);
-    }
-
-    public virtual void EndCurrentgame()
-    {
-        if (!IsInstanceValid(GameSession))
-            return;
         AudioController.Reset();
-        GameSession.Free();
         Locator.ProvideGameSession(null);
+        GUIController.CloseAll();
+        await GUIController.OpenMenuAsync(titleMenuScene);
     }
 
-    public virtual void QueueReset()
+    protected void HandleInput(float delta)
     {
-        _queueReset = true;
-    }
-
-    public virtual void StartGame(GameSave gameSave = null)
-    {
-        var newSession = GameSessionScene.Instantiate<GameSessionBase>();
-        Locator.ProvideGameSession(newSession);
-        GameSessionContainer.AddChild(newSession);
-        newSession.Init(gameSave);
+        GUIController.HandleInput(MenuInput, delta);
+        GameSession?.HandleInput(MenuInput, delta);
+        MenuInput.Update();
+        PlayerOneInput.Update();
     }
 
     protected void OnGameStateChanged(GameState gameState)

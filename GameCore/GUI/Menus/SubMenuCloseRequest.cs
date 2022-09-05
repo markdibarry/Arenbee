@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace GameCore.GUI
 {
@@ -22,19 +22,19 @@ namespace GameCore.GUI
             CloseAll = closeAll;
         }
 
-        public SubMenuCloseRequest(string cascadeTo)
+        public SubMenuCloseRequest(Type cascadeTo)
             : this(callback: null, cascadeTo)
         {
         }
 
-        public SubMenuCloseRequest(Action callback, string cascadeTo)
+        public SubMenuCloseRequest(Action callback, Type cascadeTo)
         {
             Callback = callback;
             CascadeTo = cascadeTo;
         }
 
         public Action Callback { get; }
-        public string CascadeTo { get; }
+        public Type CascadeTo { get; }
         public bool CloseAll { get; }
     }
 }

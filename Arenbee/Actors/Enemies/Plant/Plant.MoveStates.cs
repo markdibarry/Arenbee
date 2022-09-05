@@ -1,54 +1,53 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 
-namespace Arenbee.Actors.Enemies
+namespace Arenbee.Actors.Enemies;
+
+public partial class Plant : Actor
 {
-    public partial class Plant : Actor
+    public class MoveStateMachine : MoveStateMachineBase
     {
-        public class MoveStateMachine : MoveStateMachineBase
+        public MoveStateMachine(Actor actor)
+            : base(actor)
         {
-            public MoveStateMachine(Actor actor)
-                : base(actor)
+            AddState<Standing>();
+            InitStates(this);
+        }
+
+        public class NotAttacking : ActionState
+        {
+            public override void Enter() { }
+
+            public override ActionState Update(float delta)
             {
-                AddState<Standing>();
-                InitStates(this);
+                return CheckForTransitions();
             }
 
-            public class NotAttacking : ActionState
+            public override void Exit() { }
+
+            public override ActionState CheckForTransitions()
             {
-                public override void Enter() { }
+                return null;
+            }
+        }
 
-                public override ActionState Update(float delta)
-                {
-                    return CheckForTransitions();
-                }
-
-                public override void Exit() { }
-
-                public override ActionState CheckForTransitions()
-                {
-                    return null;
-                }
+        private class Standing : MoveState
+        {
+            public Standing() { AnimationName = "Standing"; }
+            public override void Enter()
+            {
+                PlayAnimation(AnimationName);
             }
 
-            private class Standing : MoveState
+            public override MoveState Update(float delta)
             {
-                public Standing() { AnimationName = "Standing"; }
-                public override void Enter()
-                {
-                    PlayAnimation(AnimationName);
-                }
+                return CheckForTransitions();
+            }
 
-                public override MoveState Update(float delta)
-                {
-                    return CheckForTransitions();
-                }
+            public override void Exit() { }
 
-                public override void Exit() { }
-
-                public override MoveState CheckForTransitions()
-                {
-                    return null;
-                }
+            public override MoveState CheckForTransitions()
+            {
+                return null;
             }
         }
     }

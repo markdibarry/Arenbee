@@ -1,7 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfoicm8bddlks"]
+[gd_scene load_steps=3 format=3 uid="uid://dfoicm8bddlks"]
 
-[ext_resource type="Script" path="res://GameCore/Input/MenuInputHandlerNull.cs" id="2_jenrf"]
-[ext_resource type="Script" path="res://GameCore/Input/DummyInputHandler.cs" id="3_hqvi5"]
 [ext_resource type="Script" path="res://GameCore/Audio/AudioControllerNull.cs" id="4_j4llg"]
 [ext_resource type="Script" path="res://GameCore/GUI/GUIController.cs" id="5_ft6f4"]
 
@@ -12,17 +10,10 @@ process_mode = 3
 layer = -100
 
 [node name="ColorRect" type="ColorRect" parent="MainBackground"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 1)
-
-[node name="InputHandlers" type="Node" parent="."]
-
-[node name="MenuInputHandler" type="Node" parent="InputHandlers"]
-script = ExtResource("2_jenrf")
-
-[node name="PlayerOneInputHandler" type="Node" parent="InputHandlers"]
-script = ExtResource("3_hqvi5")
 
 [node name="GameDisplay" type="Node2D" parent="."]
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using GameCore.Input;
 using GameCore.Utility;
 
@@ -11,7 +11,7 @@ namespace GameCore.Actors
         public string AnimationName { get; protected set; }
         public BlockedState BlockedStates { get; set; }
         public ActorInputHandler InputHandler => Actor.InputHandler;
-        public StateController StateController => Actor.StateController;
+        public IStateController StateController => Actor.StateController;
         protected Actor Actor { get; private set; }
 
         public override void Init(TStateMachine stateMachine)

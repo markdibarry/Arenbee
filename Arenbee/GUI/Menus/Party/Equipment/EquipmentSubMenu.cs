@@ -79,7 +79,7 @@ namespace Arenbee.GUI.Menus.Party.Equipment
                 string name = slot.SlotName.Get().Abbreviation;
                 keyValueOption.KeyText = name + ":";
                 keyValueOption.ValueText = slot.Item?.DisplayName ?? "<None>";
-                keyValueOption.OptionData["slotName"] = (int)slot.SlotName;
+                keyValueOption.OptionData["slotName"] = (long)slot.SlotName;
                 options.Add(keyValueOption);
             }
             return options;
@@ -103,7 +103,7 @@ namespace Arenbee.GUI.Menus.Party.Equipment
             var actor = _partyOptions.CurrentItem.GetData<Actor>("actor");
             if (actor == null)
                 return;
-            var slotName = (EquipSlotName)optionItem.GetData<int>("slotName");
+            var slotName = (EquipSlotName)optionItem.GetData<long>("slotName");
             if (slotName == EquipSlotName.None)
                 return;
             var slot = actor.Equipment.GetSlot(slotName);

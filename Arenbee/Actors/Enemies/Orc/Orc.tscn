@@ -1,43 +1,50 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=11 format=3 uid="uid://bl58jthybjsit"]
 
-[ext_resource type="PackedScene" path="res://GameCore/Actors/Enemy.tscn" id="1_kkfne"]
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/Actor.tscn" id="1_kkfne"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Orc/Orc.cs" id="2_0isoc"]
-[ext_resource type="Texture2D" path="res://Arenbee/Actors/Enemies/Orc/orc.png" id="3_cduir"]
+[ext_resource type="Texture2D" uid="uid://hkevh6cdtpaa" path="res://Arenbee/Actors/Enemies/Orc/orc.png" id="3_cduir"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="3_tdvp8"]
 [ext_resource type="PackedScene" path="res://GameCore/Statistics/HurtBox.tscn" id="5_npsqk"]
 [ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="6_ket8o"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5nbqd"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ar7n6"]
 resource_local_to_scene = true
-shader = ExtResource( "3_tdvp8" )
+shader = ExtResource("3_tdvp8")
 cycle_direction = null
-cycle_end = null
-cycle_start = null
+cycle_end = 0.0
+cycle_start = 0.0
 flash_color = Color(0.556863, 0.482353, 1, 1)
 flash_mix = 0.0
-speed = null
-use_palette1 = null
+speed = 0.0
+use_palette1 = false
 use_palette2 = null
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2755h"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d11ek"]
 size = Vector2(20, 28)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5cg6x"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t4anf"]
 size = Vector2(20, 28)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xe4kc"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t35uc"]
 resource_local_to_scene = true
 size = Vector2(18, 26)
 
-[node name="Orc" instance=ExtResource( "1_kkfne" )]
-script = ExtResource( "2_0isoc" )
+[node name="Orc" instance=ExtResource("1_kkfne")]
+script = ExtResource("2_0isoc")
+ActorType = 1
+
+[node name="AnimationPlayer" parent="." index="0"]
+autoplay = "Jump"
 
 [node name="BodySprite" parent="Body" index="0"]
-material = SubResource( "ShaderMaterial_5nbqd" )
+material = SubResource("ShaderMaterial_ar7n6")
 position = Vector2(1, 0)
-texture = ExtResource( "3_cduir" )
+texture = ExtResource("3_cduir")
+hframes = 1
+vframes = 1
+frame = 0
 
-[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource( "5_npsqk" )]
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_npsqk")]
 modulate = Color(0, 1, 0, 1)
 collision_layer = 0
 collision_mask = 40
@@ -45,16 +52,16 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
 position = Vector2(-1, 1)
-shape = SubResource( "RectangleShape2D_2755h" )
+shape = SubResource("RectangleShape2D_d11ek")
 
-[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource( "6_ket8o" )]
+[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("6_ket8o")]
 modulate = Color(1, 0, 0, 1)
 collision_layer = 128
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]
 position = Vector2(-1, 1)
-shape = SubResource( "RectangleShape2D_5cg6x" )
+shape = SubResource("RectangleShape2D_t4anf")
 
 [node name="RayCast2D" type="RayCast2D" parent="Body/BodySprite" index="2"]
 target_position = Vector2(100, 0)
@@ -62,4 +69,4 @@ collision_mask = 21
 
 [node name="CollisionShape2D" parent="." index="2"]
 position = Vector2(0, 2)
-shape = SubResource( "RectangleShape2D_xe4kc" )
+shape = SubResource("RectangleShape2D_t35uc")

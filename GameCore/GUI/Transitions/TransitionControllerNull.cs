@@ -1,6 +1,5 @@
-﻿namespace GameCore.GUI
+﻿namespace GameCore.GUI;
+
+public class TransitionControllerNull : TransitionControllerBase
 {
-    public class TransitionControllerNull : TransitionControllerBase
-    {
-    }
 }

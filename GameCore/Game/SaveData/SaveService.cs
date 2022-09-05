@@ -6,23 +6,21 @@ namespace GameCore.Game.SaveData
 {
     public static class SaveService
     {
-        private const string SavePath = "user://gamesave.json";
-        private const string NewGamePath = "user://newgame.json";
-
         public static GameSave GetNewGame()
         {
-            return LoadSavedGame(NewGamePath);
+            return LoadSavedGame(Config.NewGamePath);
         }
 
-        public static GameSave LoadGame()
+        public static GameSave LoadGame(string path)
         {
-            return LoadSavedGame(SavePath);
+            return LoadSavedGame(path);
         }
 
         private static GameSave LoadSavedGame(string path)
         {
             var file = new File();
-            if (!File.FileExists(path)) return null;
+            if (!File.FileExists(path))
+                return null;
             file.Open(path, File.ModeFlags.Read);
             string content = file.GetAsText();
             file.Close();
@@ -39,7 +37,7 @@ namespace GameCore.Game.SaveData
             options.WriteIndented = true;
             string saveString = JsonSerializer.Serialize(gameSave, options);
             var file = new File();
-            file.Open(SavePath, File.ModeFlags.Write);
+            file.Open(Config.SavePath, File.ModeFlags.Write);
             file.StoreString(saveString);
             file.Close();
         }

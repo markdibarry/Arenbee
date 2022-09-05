@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bt55n31a506nw"]
+[gd_scene load_steps=22 format=3 uid="uid://b6luyi74byyu7"]
 
 [ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -11,12 +11,12 @@
 [ext_resource type="Texture2D" uid="uid://c5wf4cfd7uty4" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/underground_repeat.png" id="7_wwrsr"]
 [ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://m235kimduuai" path="res://Arenbee/Scenery/Spike.png" id="9_bgkj2"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="10_xf0m5"]
 [ext_resource type="PackedScene" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.tscn" id="11_mxxem"]
-[ext_resource type="Script" path="res://GameCore/Events/ChangeScene.cs" id="12_vgakd"]
+[ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Enemies/Plant/Plant.tscn" id="17_bru8i"]
+[ext_resource type="PackedScene" uid="uid://r7ccjejv8p58" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="15_5maqv"]
+[ext_resource type="PackedScene" uid="uid://bl58jthybjsit" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="16_8h35j"]
+[ext_resource type="PackedScene" uid="uid://dykieghkvjhee" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.tscn" id="17_g0fp2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)
@@ -196,8 +196,8 @@ position = Vector2(67, 191)
 position = Vector2(212, 104)
 monitorable = false
 script = ExtResource("12_vgakd")
+Automatic = true
 PackedScenePath = "res://Arenbee/AreaScenes/DemoLevel/DemoLevel2.tscn"
-TransitionType = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Events/Teleport" index="0"]
 position = Vector2(-6, 8.5)
@@ -215,11 +215,11 @@ position = Vector2(96, 80)
 DialogPath = "example"
 Hint = true
 
-[node name="Orc" parent="Enemies" index="0" instance=ExtResource("10_xf0m5")]
-position = Vector2(544, 200)
+[node name="Ball" parent="Enemies" index="0" instance=ExtResource("15_5maqv")]
+position = Vector2(355, 198)
 
-[node name="Wisp" parent="Enemies" index="1" instance=ExtResource("11_mxxem")]
-position = Vector2(392, 40)
+[node name="Orc" parent="Enemies" index="1" instance=ExtResource("16_8h35j")]
+position = Vector2(566, 187)
 
-[node name="Plant" parent="Enemies" index="2" instance=ExtResource("17_bru8i")]
-position = Vector2(1152, 406)
+[node name="Whisp" parent="Enemies" index="2" instance=ExtResource("17_g0fp2")]
+position = Vector2(391, 27)

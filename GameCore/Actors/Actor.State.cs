@@ -3,71 +3,62 @@ using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
 
-namespace GameCore.Actors
+namespace GameCore.Actors;
+
+public partial class Actor
 {
-    public partial class Actor
+    public int ContextAreasActive { get; set; }
+    public Sprite2D BodySprite { get; private set; }
+    public AnimationPlayer AnimationPlayer { get; private set; }
+    public IStateController StateController { get; protected set; }
+    public IFrameController IFrameController { get; }
+    public delegate void ActorHandler(Actor actor);
+    public delegate void DamageReceivedHandler(Actor actor, DamageData damageRecievedData);
+    public event ActorHandler Defeated;
+    public event DamageReceivedHandler DamageRecieved;
+
+    public void PlaySoundFX(string soundPath)
     {
-        public int ContextAreasActive { get; set; }
-        public Sprite2D BodySprite { get; private set; }
-        public AnimationPlayer AnimationPlayer { get; private set; }
-        public StateController StateController { get; protected set; }
-        public IFrameController IFrameController { get; }
-        public delegate void ActorHandler(Actor actor);
-        public delegate void DamageReceivedHandler(Actor actor, DamageData damageRecievedData);
-        public event ActorHandler Defeated;
-        public event DamageReceivedHandler DamageRecieved;
+        Locator.Audio.PlaySoundFX(this, soundPath);
+    }
 
-        public override void _Notification(int what)
+    public void PlaySoundFX(AudioStream sound)
+    {
+        Locator.Audio.PlaySoundFX(this, sound);
+    }
+
+    public void OnGameStateChanged(GameState gameState)
+    {
+        if (gameState.CutsceneActive)
         {
-            if (what == NotificationPredelete)
-                BodyShader.Dispose();
+            IFrameController.Stop();
+            HurtBoxes.SetMonitoringDeferred(false);
+            InputHandler.UserInputDisabled = true;
         }
-
-        public void PlaySoundFX(string soundPath)
+        else
         {
-            Locator.Audio.PlaySoundFX(this, soundPath);
+            HurtBoxes.SetMonitoringDeferred(true);
+            InputHandler.UserInputDisabled = false;
         }
+    }
 
-        public void PlaySoundFX(AudioStream sound)
-        {
-            Locator.Audio.PlaySoundFX(this, sound);
-        }
+    private void InitState()
+    {
+        StateController.Init();
+        IFrameController.Init();
+        OnGameStateChanged(Locator.Root.GameState);
+    }
 
-        public abstract ActionStateMachineBase GetActionStateMachine();
+    private void OnDamageRecieved(DamageData damageData)
+    {
+        damageData.RecieverName = Name;
+        StateController.HealthStateMachine.State.HandleDamage(damageData);
+        DamageRecieved?.Invoke(this, damageData);
+    }
 
-        public void OnGameStateChanged(GameState gameState)
-        {
-            if (gameState.CutsceneActive)
-            {
-                IFrameController.Stop();
-                HurtBoxes.SetMonitoringDeferred(false);
-                InputHandler.UserInputDisabled = true;
-            }
-            else
-            {
-                HurtBoxes.SetMonitoringDeferred(true);
-                InputHandler.UserInputDisabled = false;
-            }
-        }
-
-        private void InitState()
-        {
-            StateController.Init();
-            IFrameController.Init();
-            OnGameStateChanged(Locator.Root.GameState);
-        }
-
-        private void OnDamageRecieved(DamageData damageData)
-        {
-            damageData.RecieverName = Name;
-            StateController.HealthStateMachine.State.HandleDamage(damageData);
-            DamageRecieved?.Invoke(this, damageData);
-        }
-
-        private void OnHPDepleted()
-        {
-            StateController.HealthStateMachine.State.HandleHPDepleted();
-            Defeated?.Invoke(this);
-        }
+    private void OnHPDepleted()
+    {
+        StateController.HealthStateMachine.State.HandleHPDepleted();
+        Defeated?.Invoke(this);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using GameCore;
 using GameCore.Extensions;
+using GameCore.Game;
 using GameCore.Game.SaveData;
 using GameCore.GUI;
 using GameCore.Utility;
@@ -56,17 +58,47 @@ public partial class MainSubMenu : OptionSubMenu
 
     private void StartNewGame()
     {
-        var closeRequest = new SubMenuCloseRequest(
-            callback: () => Locator.Root?.StartGame(SaveService.GetNewGame())
-        );
-        RaiseRequestedClose(closeRequest);
+        var tController = Locator.TransitionController;
+        var request = new TransitionRequest(
+            BasicLoadingScreen.GetScenePath(),
+            TransitionType.Game,
+            FadeTransition.GetScenePath(),
+            FadeTransition.GetScenePath(),
+            new string[] { Locator.Root?.GameSessionScenePath, Config.NewGamePath },
+            (loader) =>
+            {
+                var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
+                var gameSave = loader.GetObject<GameSave>(Config.NewGamePath);
+                var session = sessionScene.Instantiate<GameSessionBase>();
+                Locator.Root?.GUIController.CloseAll();
+                Locator.ProvideGameSession(session);
+                Locator.Root?.GameSessionContainer.AddChild(session);
+                session.Init(gameSave);
+                return Task.CompletedTask;
+            });
+        tController.ChangeScene(request);
     }
 
     private void ContinueSavedGame()
     {
-        var closeRequest = new SubMenuCloseRequest(
-            callback: () => Locator.Root?.StartGame(SaveService.LoadGame())
-        );
-        RaiseRequestedClose(closeRequest);
+        var tController = Locator.TransitionController;
+        var request = new TransitionRequest(
+            BasicLoadingScreen.GetScenePath(),
+            TransitionType.Game,
+            FadeTransition.GetScenePath(),
+            FadeTransition.GetScenePath(),
+            new string[] { Locator.Root?.GameSessionScenePath, Config.SavePath },
+            (loader) =>
+            {
+                var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
+                var gameSave = loader.GetObject<GameSave>(Config.SavePath);
+                var session = sessionScene.Instantiate<GameSessionBase>();
+                Locator.Root?.GUIController.CloseAll();
+                Locator.ProvideGameSession(session);
+                Locator.Root?.GameSessionContainer.AddChild(session);
+                session.Init(gameSave);
+                return Task.CompletedTask;
+            });
+        tController.ChangeScene(request);
     }
 }

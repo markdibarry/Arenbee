@@ -1,4 +1,5 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
+using GameCore.GUI.Menus;
 using GameCore.GUI.Text;
 using GameCore.Input;
 using Godot;
@@ -53,7 +54,11 @@ namespace GameCore.GUI.Dialogs
             UnfocusedBox = null;
             CloseBox(FocusedBox);
             FocusedBox = null;
-            RaiseRequestedClose();
+            var request = new GUILayerCloseRequest()
+            {
+                Layer = this
+            };
+            RaiseRequestedClose(request);
         }
 
         public void NextDialogPart()

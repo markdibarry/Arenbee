@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3bkilx1k44e3"]
+
+[ext_resource type="Script" path="res://Arenbee/GUI/Transitions/WipeTransition.cs" id="1_0djtk"]
+
+[node name="WipeTransition" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0djtk")
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 270.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.913725, 0.545098, 0.364706, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 480.0
+offset_right = 480.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

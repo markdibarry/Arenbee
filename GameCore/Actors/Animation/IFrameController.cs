@@ -1,4 +1,4 @@
-using GameCore.Enums;
+﻿using GameCore.Enums;
 using GameCore.Statistics;
 using Godot;
 
@@ -22,6 +22,16 @@ namespace GameCore.Actors
         private bool _flashTimerEnabled;
         public float IFrameDuration { get; set; }
         public float FlashDuration { get; set; }
+        private float FlashMix
+        {
+            get => (float)_spriteShader.GetShaderUniform("flash_mix");
+            set => _spriteShader.SetShaderUniform("flash_mix", value);
+        }
+        private Color FlashColor
+        {
+            get => (Color)_spriteShader.GetShaderUniform("flash_color");
+            set => _spriteShader.SetShaderUniform("flash_color", value);
+        }
 
         public void Process(float delta)
         {
@@ -38,7 +48,7 @@ namespace GameCore.Actors
         public void Start(DamageData damageData, bool overDamageThreshold)
         {
             _actor.HurtBoxes.SetMonitoringDeferred(false);
-            _spriteShader.SetShaderUniform("flash_mix", 1);
+            FlashMix = 1;
             SetShaderFlashColor(damageData);
             _flashTimer = FlashDuration;
             _flashTimerEnabled = true;
@@ -50,7 +60,7 @@ namespace GameCore.Actors
 
         public void Stop()
         {
-            _spriteShader.SetShaderUniform("flash_mix", 0);
+            FlashMix = 0;
             _actor.HurtBoxes.SetMonitoringDeferred(true);
             _iframeTimerEnabled = false;
             _flashTimerEnabled = false;
@@ -100,7 +110,7 @@ namespace GameCore.Actors
 
         private void OnFlashTimerExpire()
         {
-            _spriteShader.SetShaderUniform("flash_mix", 0);
+            FlashMix = 0;
         }
 
         private void OnIFrameTimerExpire()
@@ -112,7 +122,7 @@ namespace GameCore.Actors
         {
             if (damageData.ActionType == ActionType.Status)
             {
-                var color = damageData.StatusEffectDamage switch
+                FlashColor = damageData.StatusEffectDamage switch
                 {
                     StatusEffectType.Burn => new Color(1, 0.35f, 0.35f),
                     StatusEffectType.Freeze => new Color(0.4f, 0.9f, 1),
@@ -120,12 +130,10 @@ namespace GameCore.Actors
                     StatusEffectType.Poison => new Color(1, 0.65f, 1),
                     _ => Colors.White
                 };
-                _spriteShader.SetShaderUniform("flash_color", color);
             }
             else
             {
-                var color = damageData.ElementDamage.Get().Color;
-                _spriteShader.SetShaderUniform("flash_color", color);
+                FlashColor = damageData.ElementDamage.Get().Color;
             }
         }
     }

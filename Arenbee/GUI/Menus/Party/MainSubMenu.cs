@@ -1,4 +1,5 @@
-﻿using Arenbee.GUI.Menus.Party.Equipment;
+﻿using System.Threading.Tasks;
+using Arenbee.GUI.Menus.Party.Equipment;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
@@ -61,7 +62,20 @@ namespace Arenbee.GUI.Menus.Party
         private void QuitToTitle()
         {
             IsActive = false;
-            Locator.Root.QueueReset();
+            var tController = Locator.TransitionController;
+            var request = new TransitionRequest(
+                BasicLoadingScreen.GetScenePath(),
+                TransitionType.Game,
+                WipeTransition.GetScenePath(),
+                FadeTransition.GetScenePath(),
+                new string[] { Locator.Root?.TitleMenuScenePath },
+                (loader) =>
+                {
+                    var titleMenuScene = loader.GetObject<PackedScene>(Locator.Root?.TitleMenuScenePath);
+                    Locator.Root?.ResetToTitleScreenAsync(titleMenuScene);
+                    return Task.CompletedTask;
+                });
+            tController.ChangeScene(request);
         }
     }
 }

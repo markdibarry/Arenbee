@@ -6,131 +6,110 @@ using GameCore.GUI;
 using GameCore.GUI.Text;
 using GameCore.Statistics;
 using GameCore.Utility;
-using Godot;
 
-namespace Arenbee.GUI
+namespace Arenbee.GUI;
+
+public partial class HUD : HUDBase
 {
-    public partial class HUD : CanvasLayer, IHUD
+    public static string GetScenePath() => GDEx.GetScenePath();
+
+    private HeartDisplay _heartDisplay;
+    private StatusEffectDBBase _statusEffectDB;
+
+    public override void _Ready()
     {
-        public static string GetScenePath() => GDEx.GetScenePath();
+        MessageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
+        _heartDisplay = GetNode<HeartDisplay>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HeartDisplay");
+        _statusEffectDB = Locator.StatusEffectDB;
+    }
 
-        private HeartDisplay _heartDisplay;
-        private MessageBoxList _messageBoxList;
-        private StatusEffectDBBase _statusEffectDB;
-
-        public override void _Ready()
-        {
-            _messageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-            _heartDisplay = GetNode<HeartDisplay>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HeartDisplay");
-            _statusEffectDB = Locator.StatusEffectDB;
-        }
-
-        public void OnActorAdded(Actor actor)
-        {
-            if (actor.ActorType == ActorType.Player)
-                UpdatePlayerStatsDisplay(actor);
-        }
-
-        public void OnActorDamaged(Actor actor, DamageData data)
-        {
-            switch (data.ActionType)
-            {
-                case ActionType.Status:
-                    DisplayStatusMessage(data);
-                    break;
-                case ActionType.Item:
-                case ActionType.Magic:
-                case ActionType.Melee:
-                    DisplayMeleeMessage(data);
-                    break;
-            }
-        }
-
-        public void OnActorDefeated(Actor actor)
-        {
-            string defeatedMessage = $"{actor.Name} was defeated!";
-            AddMessage(defeatedMessage);
-        }
-
-        public void OnPlayerModChanged(Actor actor, ModChangeData data)
-        {
-            if (data.Modifier.StatType == StatType.StatusEffect)
-            {
-                string message;
-                if (data.Change == ModChange.Add)
-                    message = $"{data.Actor.Name} was {_statusEffectDB.GetEffectData(data.Modifier.SubType).PastTenseName}!";
-                else
-                    message = $"{data.Actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
-
-                AddMessage(message);
-            }
-        }
-
-        public void OnPlayerStatsChanged(Actor actor)
-        {
+    public override void OnActorAdded(Actor actor)
+    {
+        if (actor.ActorType == ActorType.Player)
             UpdatePlayerStatsDisplay(actor);
-        }
+    }
 
-        public void Pause()
+    public override void OnActorDamaged(Actor actor, DamageData data)
+    {
+        switch (data.ActionType)
         {
-            ProcessMode = ProcessModeEnum.Disabled;
+            case ActionType.Status:
+                DisplayStatusMessage(data);
+                break;
+            case ActionType.Item:
+            case ActionType.Magic:
+            case ActionType.Melee:
+                DisplayMeleeMessage(data);
+                break;
         }
+    }
 
-        public void Resume()
-        {
-            ProcessMode = ProcessModeEnum.Inherit;
-        }
+    public override void OnActorDefeated(Actor actor)
+    {
+        string defeatedMessage = $"{actor.Name} was defeated!";
+        MessageQueue.Enqueue(defeatedMessage);
+    }
 
-        private void AddMessage(string message)
+    public override void OnPlayerModChanged(Actor actor, ModChangeData data)
+    {
+        if (data.Modifier.StatType == StatType.StatusEffect)
         {
-            if (ProcessMode == ProcessModeEnum.Disabled)
-                return;
-            _messageBoxList.AddMessageToTop(message);
-        }
-
-        private void DisplayMeleeMessage(DamageData data)
-        {
-            if (data.ElementMultiplier != ElementDef.None)
-            {
-                string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
-                string effectiveMessage = $"{data.RecieverName} {effectiveness} {data.ElementDamage}!";
-                AddMessage(effectiveMessage);
-            }
-            string action = data.TotalDamage < 0 ? "healed" : "hurt";
-            string actionMessage = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
-            AddMessage(actionMessage);
-        }
-
-        private void DisplayStatusMessage(DamageData data)
-        {
-            string actionMessage;
-            if (data.TotalDamage > 0)
-                actionMessage = $"{data.RecieverName} took {data.TotalDamage} {data.SourceName.ToLower()} damage!";
+            string message;
+            if (data.Change == ModChange.Add)
+                message = $"{data.Actor.Name} was {_statusEffectDB.GetEffectData(data.Modifier.SubType).PastTenseName}!";
             else
-                actionMessage = $"{data.RecieverName} was healed for {Math.Abs(data.TotalDamage)} HP!";
-            AddMessage(actionMessage);
-        }
+                message = $"{data.Actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
 
-        private string GetEffectivenessMessage(int elementMultiplier)
-        {
-            if (elementMultiplier > ElementDef.None)
-                return "is weak to";
-            else if (elementMultiplier == ElementDef.Resist)
-                return "resists";
-            else if (elementMultiplier == ElementDef.Nullify)
-                return "nullifies";
-            else
-                return "absorbs";
+            MessageQueue.Enqueue(message);
         }
+    }
 
-        private void UpdatePlayerStatsDisplay(Actor actor)
+    public override void OnPlayerStatsChanged(Actor actor)
+    {
+        UpdatePlayerStatsDisplay(actor);
+    }
+
+    private void DisplayMeleeMessage(DamageData data)
+    {
+        if (data.ElementMultiplier != ElementDef.None)
         {
-            if (ProcessMode == ProcessModeEnum.Disabled)
-                return;
-            int hp = actor.Stats.GetHP();
-            int maxHP = actor.Stats.GetMaxHP();
-            _heartDisplay.UpdateMaxHearts(maxHP);
-            _heartDisplay.UpdateCurrentHearts(hp);
+            string effectiveness = GetEffectivenessMessage(data.ElementMultiplier);
+            string effectiveMessage = $"{data.RecieverName} {effectiveness} {data.ElementDamage}!";
+            MessageQueue.Enqueue(effectiveMessage);
         }
+        string action = data.TotalDamage < 0 ? "healed" : "hurt";
+        string actionMessage = $"{data.SourceName} {action} {data.RecieverName} for {Math.Abs(data.TotalDamage)} HP!";
+        MessageQueue.Enqueue(actionMessage);
+    }
+
+    private void DisplayStatusMessage(DamageData data)
+    {
+        string actionMessage;
+        if (data.TotalDamage > 0)
+            actionMessage = $"{data.RecieverName} took {data.TotalDamage} {data.SourceName.ToLower()} damage!";
+        else
+            actionMessage = $"{data.RecieverName} was healed for {Math.Abs(data.TotalDamage)} HP!";
+        MessageQueue.Enqueue(actionMessage);
+    }
+
+    private string GetEffectivenessMessage(int elementMultiplier)
+    {
+        return elementMultiplier switch
+        {
+            > ElementDef.None => "is weak to",
+            ElementDef.Resist => "resists",
+            ElementDef.Nullify => "nullifies",
+            _ => "absorbs"
+        };
+    }
+
+    private void UpdatePlayerStatsDisplay(Actor actor)
+    {
+        if (ProcessMode == ProcessModeEnum.Disabled)
+            return;
+        int hp = actor.Stats.GetHP();
+        int maxHP = actor.Stats.GetMaxHP();
+        _heartDisplay.UpdateMaxHearts(maxHP);
+        _heartDisplay.UpdateCurrentHearts(hp);
     }
 }

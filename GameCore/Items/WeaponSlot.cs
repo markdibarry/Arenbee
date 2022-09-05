@@ -30,7 +30,7 @@ namespace GameCore.Items
             DetachWeapon();
             if (string.IsNullOrEmpty(itemId))
                 return;
-            var weapon = GDEx.Instantiate<Weapon>($"{PathConstants.ItemPath}{itemId}/{itemId}.tscn");
+            var weapon = GDEx.Instantiate<Weapon>($"{Config.ItemPath}{itemId}/{itemId}.tscn");
             if (weapon == null)
             {
                 GD.PrintErr("No weapon at provided location!");
@@ -47,7 +47,7 @@ namespace GameCore.Items
             Weapon weapon = GetChildOrNull<Weapon>(0);
             if (weapon != null)
             {
-                _holder.StateController.SwitchActionStateMachine(_holder.GetActionStateMachine());
+                _holder.StateController.ResetActionStateMachine();
                 RemoveChild(weapon);
                 weapon.QueueFree();
                 CurrentWeapon = null;

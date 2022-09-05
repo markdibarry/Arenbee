@@ -73,7 +73,9 @@ namespace GameCore.AreaScenes
 
         public void RemovePlayer()
         {
-            Actor actor = _playerParty.Actors?.ElementAt(0);
+            Actor actor = _playerParty.Actors?.ElementAtOrDefault(0);
+            if (actor == null)
+                return;
             PlayersContainer.RemoveChild(actor);
             UnsubscribeActorEvents(actor);
             ActorRemoved?.Invoke(actor);
@@ -111,7 +113,7 @@ namespace GameCore.AreaScenes
         private void OnActorDefeated(Actor actor)
         {
             if (actor.ActorType == ActorType.Enemy)
-                CallDeferred(nameof(RemoveEnemy), new[] { actor });
+                CallDeferred(nameof(RemoveEnemy), actor);
             ActorDefeated?.Invoke(actor);
         }
 

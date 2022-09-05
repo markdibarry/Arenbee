@@ -1,4 +1,4 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Game.SaveData;
 using Godot;
@@ -23,7 +23,7 @@ namespace Arenbee.GUI.Menus.Party
                     SaveGame();
                     break;
                 case "No":
-                    RaiseRequestedClose();
+                    CloseSubMenu();
                     break;
             }
         }

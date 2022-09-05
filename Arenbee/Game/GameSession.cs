@@ -36,7 +36,7 @@ public partial class GameSession : GameSessionBase
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(PathConstants.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Arenbee.Constants.PathConstants.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }

@@ -1,12 +1,12 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://bgefk1ceps2oa"]
 
 [ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AreaScene.tscn" id="1_d3aeo"]
-[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
-[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
-[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]
-[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
+[ext_resource type="Texture2D" uid="uid://ba4b7pjwnhbf" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
+[ext_resource type="Texture2D" uid="uid://chj220l1bt2wy" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
+[ext_resource type="Texture2D" uid="uid://gnrvt0dyrg15" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]
+[ext_resource type="Texture2D" uid="uid://dnm6k1qshq4d" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
-[ext_resource type="Script" path="res://GameCore/Events/ChangeScene.cs" id="7_ftrnt"]
+[ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
@@ -236,15 +236,15 @@ LimitBottom = 270
 position = Vector2(336, 128)
 shape = SubResource("RectangleShape2D_1ltgi")
 
-[node name="Position2D" type="Position2D" parent="SpawnPoints" index="0"]
+[node name="Position2D" type="Marker2D" parent="SpawnPoints" index="0"]
 position = Vector2(54, 200)
 
 [node name="Teleport" type="Area2D" parent="Events" index="0"]
 position = Vector2(470, 200)
 monitorable = false
 script = ExtResource("7_ftrnt")
+Automatic = true
 PackedScenePath = "res://Arenbee/AreaScenes/DemoLevel/DemoLevel1.tscn"
-TransitionType = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Events/Teleport" index="0"]
 position = Vector2(-6, 8.5)

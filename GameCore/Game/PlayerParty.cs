@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GameCore.Actors;
 using GameCore.Game.SaveData;
 using GameCore.Items;
@@ -26,10 +26,7 @@ namespace GameCore.Game
         }
 
         private readonly List<Actor> _actors;
-        public IReadOnlyCollection<Actor> Actors
-        {
-            get { return _actors.AsReadOnly(); }
-        }
+        public IReadOnlyCollection<Actor> Actors => _actors.AsReadOnly();
         public Inventory Inventory { get; }
 
         public void DisableUserInput(bool disable)

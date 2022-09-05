@@ -1,4 +1,4 @@
-using Godot;
+﻿using Godot;
 
 namespace GameCore.Audio
 {
@@ -14,8 +14,13 @@ namespace GameCore.Audio
 
         public override void _Process(float delta)
         {
-            if (IsInstanceValid(SoundSource))
-                GlobalPosition = SoundSource.GlobalPosition;
+            if (SoundSource != null)
+            {
+                if (IsInstanceValid(SoundSource))
+                    GlobalPosition = SoundSource.GlobalPosition;
+                else
+                    SoundSource = null;
+            }
         }
 
         public void Reset()

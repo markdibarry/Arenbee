@@ -1,4 +1,4 @@
-using GameCore.Utility;
+﻿using GameCore.Utility;
 
 namespace GameCore.Actors
 {
@@ -16,6 +16,6 @@ namespace GameCore.Actors
         /// </summary>
         /// <value></value>
         public Actor Actor { get; set; }
-        public StateController StateController => Actor.StateController;
+        public IStateController StateController => Actor.StateController;
     }
 }

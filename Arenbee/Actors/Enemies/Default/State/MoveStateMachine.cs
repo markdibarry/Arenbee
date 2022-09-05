@@ -1,4 +1,4 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 using GameCore.Statistics;
 
 namespace Arenbee.Actors.Enemies.Default.State
@@ -16,7 +16,12 @@ namespace Arenbee.Actors.Enemies.Default.State
 
         public class Standing : MoveState
         {
-            public override void Enter() { }
+            public Standing() { AnimationName = "Standing"; }
+
+            public override void Enter()
+            {
+                PlayAnimation(AnimationName);
+            }
 
             public override MoveState Update(float delta)
             {
@@ -39,8 +44,10 @@ namespace Arenbee.Actors.Enemies.Default.State
 
         public class Walking : MoveState
         {
+            public Walking() { AnimationName = "Walk"; }
             public override void Enter()
             {
+                PlayAnimation(AnimationName);
                 Actor.MaxSpeed = Actor.WalkSpeed;
             }
 

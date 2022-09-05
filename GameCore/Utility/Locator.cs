@@ -16,7 +16,7 @@ namespace GameCore.Utility
             s_audioController = new AudioControllerNull();
             s_itemDB = new ItemDBNull();
             s_logger = new Logger();
-            s_gameRoot = null;
+            s_gameRoot = new GameRootNull();
             s_gameSession = null;
             s_statusEffectDB = new StatusEffectDBNull();
             s_transitionController = new TransitionControllerNull();
