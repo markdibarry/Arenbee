@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GameCore.Actors;
 
 namespace GameCore.Input
@@ -43,7 +43,7 @@ namespace GameCore.Input
             Children.Add(node);
         }
 
-        public virtual NodeState Evaluate(float delta)
+        public virtual NodeState Evaluate(double delta)
         {
             return NodeState.Failure;
         }

@@ -39,7 +39,7 @@ public class ObjectLoaderResource : ObjectLoader
             LoadedObject = ResourceLoader.LoadThreadedGet(Path);
             Status = ObjectLoadStatus.Loaded;
         }
-        Progress = (int)((float)_loadProgress[0] * 100);
+        Progress = (int)((double)_loadProgress[0] * 100);
     }
 }
 

@@ -61,7 +61,7 @@ public abstract partial class GameRootBase : Node
         Locator.ProvideAudioController(AudioController);
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         HandleInput(delta);
         TransitionController.Update();
@@ -80,7 +80,7 @@ public abstract partial class GameRootBase : Node
         await GUIController.OpenMenuAsync(titleMenuScene);
     }
 
-    protected void HandleInput(float delta)
+    protected void HandleInput(double delta)
     {
         GUIController.HandleInput(MenuInput, delta);
         GameSession?.HandleInput(MenuInput, delta);

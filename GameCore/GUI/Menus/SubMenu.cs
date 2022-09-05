@@ -55,7 +55,7 @@ public partial class SubMenu : Control
         RaiseRequestedClose(closeRequest);
     }
 
-    public virtual void HandleInput(GUIInputHandler menuInput, float delta)
+    public virtual void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && !PreventCancel)
             CloseSubMenu(new SubMenuCloseRequest());

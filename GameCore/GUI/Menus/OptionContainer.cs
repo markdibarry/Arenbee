@@ -70,7 +70,7 @@ namespace GameCore.GUI
         public event ItemHandler ItemFocused;
         public event ItemHandler ItemSelected;
 
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             if (_arrowsDirty)
                 HandleArrows();

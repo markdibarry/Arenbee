@@ -21,7 +21,7 @@ namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseAir
             }
         }
 
-        public override NodeState Evaluate(float delta)
+        public override NodeState Evaluate(double delta)
         {
             object t = GetData("Target");
             if (t == null)

@@ -1,4 +1,4 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Statistics;
 using Godot;
@@ -23,7 +23,7 @@ namespace Arenbee.Actors.Default.State
                 StateController.PlayFallbackAnimation();
             }
 
-            public override HealthState Update(float delta)
+            public override HealthState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -65,18 +65,18 @@ namespace Arenbee.Actors.Default.State
                     BlockedState.Move;
             }
 
-            float _staggerTimer;
+            double _staggerTimer;
             bool _isStaggered;
 
             public override void Enter(object[] args)
             {
-                _staggerTimer = 0.5f;
+                _staggerTimer = 0.5;
                 _isStaggered = true;
                 Actor.PlaySoundFX("agh1.wav");
                 PlayAnimation(AnimationName);
             }
 
-            public override HealthState Update(float delta)
+            public override HealthState Update(double delta)
             {
                 if (_staggerTimer > 0)
                     _staggerTimer -= delta;
@@ -120,7 +120,7 @@ namespace Arenbee.Actors.Default.State
                 PlayAnimation(AnimationName);
             }
 
-            public override HealthState Update(float delta)
+            public override HealthState Update(double delta)
             {
                 return CheckForTransitions();
             }

@@ -20,7 +20,7 @@ public partial class Whisp : Actor
                 StateController.PlayFallbackAnimation();
             }
 
-            public override AirState Update(float delta)
+            public override AirState Update(double delta)
             {
                 return CheckForTransitions();
             }

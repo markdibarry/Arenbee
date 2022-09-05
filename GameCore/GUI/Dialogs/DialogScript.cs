@@ -25,7 +25,7 @@ public class DialogPart
     [JsonPropertyName("speakers")]
     public List<Speaker> Speakers { get; set; }
     [JsonPropertyName("speed")]
-    public float? Speed { get; set; }
+    public double? Speed { get; set; }
     [JsonPropertyName("text")]
     public string Text { get; set; }
     [JsonPropertyName("next")]

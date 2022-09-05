@@ -9,16 +9,16 @@ public partial class Actor
     private Vector2 _floatPosition;
     private ActorInputHandler _inputHandler;
     private Vector2 _move;
-    private readonly float _fallMultiplier = 2f;
+    private readonly double _fallMultiplier = 2;
     [Export]
-    private float _jumpHeight = 64;
+    private double _jumpHeight = 64;
     [Export]
-    private float _timeToJumpPeak = 0.4f;
+    private double _timeToJumpPeak = 0.4;
     public int WalkSpeed { get; protected set; }
     public Vector2 Direction { get; private set; }
-    protected float Acceleration { get; set; }
-    protected float Friction { get; set; }
-    public float GroundedGravity { get; }
+    protected double Acceleration { get; set; }
+    protected double Friction { get; set; }
+    public double GroundedGravity { get; }
     public int MaxSpeed { get; set; }
     public float VelocityX
     {
@@ -33,8 +33,8 @@ public partial class Actor
     public int IsHalfSpeed { get; set; }
     public bool IsFloater { get; protected set; }
     public int IsRunStuck { get; set; }
-    public float JumpVelocity { get; protected set; }
-    public float JumpGravity { get; protected set; }
+    public double JumpVelocity { get; protected set; }
+    public double JumpGravity { get; protected set; }
     public int RunSpeed { get; protected set; }
     public CollisionShape2D CollisionShape2D { get; private set; }
     public ActorInputHandler InputHandler
@@ -43,14 +43,14 @@ public partial class Actor
         set => _inputHandler = value ?? new DummyInputHandler();
     }
 
-    public void ApplyFallGravity(float delta)
+    public void ApplyFallGravity(double delta)
     {
         VelocityY = Velocity.y.LerpClamp(JumpGravity * _fallMultiplier, JumpGravity * delta);
     }
 
-    public void ApplyJumpGravity(float delta)
+    public void ApplyJumpGravity(double delta)
     {
-        VelocityY = Velocity.y + (JumpGravity * delta);
+        VelocityY = Velocity.y + (float)(JumpGravity * delta);
     }
 
     public void ChangeDirectionX()
@@ -63,7 +63,7 @@ public partial class Actor
 
     public void Jump()
     {
-        VelocityY = JumpVelocity;
+        VelocityY = (float)JumpVelocity;
     }
 
     public void Move()
@@ -83,21 +83,21 @@ public partial class Actor
             Direction = Direction.SetY(velocity.y);
     }
 
-    private void HandleMove(float delta)
+    private void HandleMove(double delta)
     {
         int maxSpeed = IsHalfSpeed > 0 ? (int)(MaxSpeed * 0.5) : MaxSpeed;
         Vector2 newVelocity = Velocity;
         if (_move != Vector2.Zero)
         {
-            newVelocity.x = Mathf.MoveToward(VelocityX, _move.x * maxSpeed, Acceleration * delta);
+            newVelocity.x = VelocityX.MoveToward(_move.x * maxSpeed, Acceleration * delta);
             if (IsFloater)
-                newVelocity.y = Mathf.MoveToward(VelocityY, _move.y * maxSpeed, Acceleration * delta);
+                newVelocity.y = VelocityY.MoveToward(_move.y * maxSpeed, Acceleration * delta);
         }
         else
         {
-            newVelocity.x = Mathf.MoveToward(VelocityX, 0, Friction * delta);
+            newVelocity.x = VelocityX.MoveToward(0, Friction * delta);
             if (IsFloater)
-                newVelocity.y = Mathf.MoveToward(VelocityY, 0, Friction * delta);
+                newVelocity.y = VelocityY.MoveToward(0, Friction * delta);
         }
         Velocity = newVelocity;
         MoveAndSlide();
@@ -111,7 +111,7 @@ public partial class Actor
     {
         RunSpeed = (int)(WalkSpeed * 1.5);
         MaxSpeed = WalkSpeed;
-        JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1f;
-        JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1f;
+        JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1;
+        JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1;
     }
 }

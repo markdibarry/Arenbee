@@ -43,7 +43,7 @@ public partial class Wand : Weapon
                 StateController.PlayFallbackAnimation();
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -63,8 +63,8 @@ public partial class Wand : Weapon
         protected class WeakAttack1 : ActionState
         {
             public WeakAttack1() { AnimationName = "WeakAttack1"; }
-            private float _counter;
-            private readonly float _countTime = 0.5f;
+            private double _counter;
+            private readonly double _countTime = 0.5;
             public override void Enter()
             {
                 _counter = _countTime;
@@ -72,7 +72,7 @@ public partial class Wand : Weapon
                 Fireball.CreateFireball(Actor);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 if (_counter > 0)
                     _counter -= delta;
@@ -100,8 +100,8 @@ public partial class Wand : Weapon
                 AnimationName = "Charge";
                 BlockedStates = BlockedState.Jumping | BlockedState.Move;
             }
-            private float _counter;
-            private readonly float _countTime = 1.2f;
+            private double _counter;
+            private readonly double _countTime = 1.2;
             public override void Enter()
             {
                 _counter = _countTime;
@@ -111,7 +111,7 @@ public partial class Wand : Weapon
                 PlayAnimation(AnimationName);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 if (_counter > 0)
                 {
@@ -121,7 +121,6 @@ public partial class Wand : Weapon
                         Actor.ShaderSpeed = 1.5f;
                         Actor.ShaderCycleStart = 1;
                     }
-
                 }
 
                 return CheckForTransitions();
@@ -160,7 +159,7 @@ public partial class Wand : Weapon
                 FireballBig.CreateFireball(Actor);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }

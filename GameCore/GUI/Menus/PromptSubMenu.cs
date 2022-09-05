@@ -1,42 +1,42 @@
-using GameCore.Input;
+﻿using GameCore.Input;
 using Godot;
 
-namespace GameCore.GUI
+namespace GameCore.GUI;
+
+[Tool]
+public partial class PromptSubMenu : SubMenu
 {
-    [Tool]
-    public partial class PromptSubMenu : SubMenu
+    [Export]
+    private double _timeDuration;
+    private bool _timerEnabled;
+
+    public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        [Export]
-        private float _timeDuration;
-        private bool _timerEnabled;
+        base.HandleInput(menuInput, delta);
 
-        public override void HandleInput(GUIInputHandler menuInput, float delta)
+        if (menuInput.Enter.IsActionJustPressed)
+            Confirm();
+
+        if (_timerEnabled)
         {
-            base.HandleInput(menuInput, delta);
-
-            if (menuInput.Enter.IsActionJustPressed)
-                Confirm();
-
-            if (_timerEnabled)
-            {
-                if (_timeDuration < 0)
-                    OnTimeOut();
-                else
-                    _timeDuration -= delta;
-            }
+            if (_timeDuration < 0)
+                OnTimeOut();
+            else
+                _timeDuration -= delta;
         }
+    }
 
-        protected virtual void Confirm() { }
+    protected virtual void Confirm() { }
 
-        protected override void PreWaitFrameSetup()
-        {
-            if (_timeDuration > 0) _timerEnabled = true;
-            base.PreWaitFrameSetup();
-        }
+    protected override void PreWaitFrameSetup()
+    {
+        if (_timeDuration > 0)
+            _timerEnabled = true;
+        base.PreWaitFrameSetup();
+    }
 
-        protected virtual void OnTimeOut()
-        {
-            _timerEnabled = false;
-        }
+    protected virtual void OnTimeOut()
+    {
+        _timerEnabled = false;
     }
 }

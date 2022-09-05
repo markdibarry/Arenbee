@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -18,7 +18,6 @@ namespace GameCore.GUI.Text
             FitContentHeight = true;
             ScrollActive = false;
             WriteEnabled = false;
-            //Speed = 0.05f;
             StopAt = -1;
             VisibleCharacters = 0;
             VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
@@ -26,7 +25,7 @@ namespace GameCore.GUI.Text
             _lineBreaks = new int[0];
         }
 
-        private float _counter;
+        private double _counter;
         private int _currentLine;
         private bool _isTextDirty;
         private int[] _lineBreaks;
@@ -62,7 +61,7 @@ namespace GameCore.GUI.Text
         [Export]
         public bool WriteEnabled { get; set; }
         [Export]
-        public float Speed { get; set; }
+        public double Speed { get; set; }
         public ReadOnlyCollection<int> LineBreaks
         {
             get => Array.AsReadOnly(_lineBreaks);
@@ -77,7 +76,7 @@ namespace GameCore.GUI.Text
         public event EventTriggeredHandler TextEventTriggered;
         public event TextLoadedHandler TextLoaded;
 
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             if (_isTextDirty)
                 UpdateTextInfo();
@@ -127,12 +126,12 @@ namespace GameCore.GUI.Text
                 VisibleCharacters = LineBreaks[line];
         }
 
-        public void SetPause(float time)
+        public void SetPause(double time)
         {
             _counter += time;
         }
 
-        public void SetSpeed(float time)
+        public void SetSpeed(double time)
         {
             Speed = time;
             _counter = Speed;

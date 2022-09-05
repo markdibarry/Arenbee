@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GameCore.GUI.Dialogs;
 using Godot;
@@ -63,7 +63,7 @@ namespace GameCore.GUI.Text
 
     public class SpeedTextEvent : TextEvent
     {
-        private const float DefaultSpeed = 0.05f;
+        private const double DefaultSpeed = 0.05;
         public SpeedTextEvent(string name, Dictionary<string, string> options)
             : base(name)
         {
@@ -71,20 +71,20 @@ namespace GameCore.GUI.Text
             {
                 if (options["time"] == "default")
                     Time = DefaultSpeed;
-                else if (float.TryParse(options["time"], out float time))
+                else if (double.TryParse(options["time"], out double time))
                     Time = time;
                 else
                     Valid = false;
             }
         }
 
+        public double Time { get; set; }
+
         public override bool HandleEvent(DynamicText dynamicText)
         {
             dynamicText.SetSpeed(Time);
             return true;
         }
-
-        public float Time { get; set; }
     }
 
     public class PauseTextEvent : TextEvent
@@ -94,7 +94,7 @@ namespace GameCore.GUI.Text
         {
             if (options.ContainsKey("time"))
             {
-                if (float.TryParse(options["time"], out float time))
+                if (double.TryParse(options["time"], out double time))
                     Time = time;
                 else
                     Valid = false;
@@ -105,13 +105,13 @@ namespace GameCore.GUI.Text
             }
         }
 
+        public double Time { get; set; }
+
         public override bool HandleEvent(DynamicText dynamicText)
         {
             dynamicText.SetPause(Time);
             return true;
         }
-
-        public float Time { get; set; }
     }
 
     public class MoodTextEvent : TextEvent

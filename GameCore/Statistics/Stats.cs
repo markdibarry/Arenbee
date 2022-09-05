@@ -61,7 +61,7 @@ namespace GameCore.Statistics
         public delegate void DamageRecievedHandler(DamageData damageRecievedData);
         public delegate void HPDepletedHandler();
         public delegate void ModChangedHandler(ModChangeData modChangeData);
-        public delegate void ProcessedHandler(float delta);
+        public delegate void ProcessedHandler(double delta);
         public delegate void StatsChangedHandler();
         public event DamageRecievedHandler DamageReceived;
         public event HPDepletedHandler HPDepleted;
@@ -120,7 +120,7 @@ namespace GameCore.Statistics
             HandleHitBoxAction(hitBox);
         }
 
-        public void Process(float delta)
+        public void Process(double delta)
         {
             Processed?.Invoke(delta);
         }

@@ -15,5 +15,5 @@ public interface IStateController
     bool PlayAirAnimation(string animationName);
     bool PlayMoveAnimation(string animationName);
     bool PlayFallbackAnimation();
-    void UpdateStates(float delta);
+    void UpdateStates(double delta);
 }

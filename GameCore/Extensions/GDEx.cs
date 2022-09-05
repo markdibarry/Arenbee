@@ -44,8 +44,10 @@ namespace GameCore.Extensions
         public static int GetClosestIndex(this Control control, IEnumerable<Control> controls)
         {
             int controlCount = controls.Count();
-            if (controlCount == 0) return -1;
-            if (controlCount == 1) return 0;
+            if (controlCount == 0)
+                return -1;
+            if (controlCount == 1)
+                return 0;
             int nearestIndex = 0;
             float nearestDistance = control.GlobalPosition.DistanceTo(controls.ElementAt(0).GlobalPosition);
             for (int i = 1; i < controlCount; i++)
@@ -63,8 +65,10 @@ namespace GameCore.Extensions
         public static int GetClosestIndex(this Node2D control, IEnumerable<Node2D> nodes)
         {
             int nodeCount = nodes.Count();
-            if (nodeCount == 0) return -1;
-            if (nodeCount == 1) return 0;
+            if (nodeCount == 0)
+                return -1;
+            if (nodeCount == 1)
+                return 0;
             int nearestIndex = 0;
             float nearestDistance = control.GlobalPosition.DistanceTo(nodes.ElementAt(0).GlobalPosition);
             for (int i = 1; i < nodeCount; i++)
@@ -143,6 +147,16 @@ namespace GameCore.Extensions
                 return true;
             else
                 return node == node.GetTree().CurrentScene;
+        }
+
+        public static float MoveToward(this float from, double to, double delta)
+        {
+            return Mathf.MoveToward(from, (float)to, (float)delta);
+        }
+
+        public static float LerpClamp(this float val, double target, double maxMove)
+        {
+            return LerpClamp(val, (float)target, (float)maxMove);
         }
 
         public static float LerpClamp(this float val, float target, float maxMove)

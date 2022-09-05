@@ -15,7 +15,7 @@ namespace Arenbee.Actors.Enemies.Default.State
         {
             public override void Enter() { }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }

@@ -43,13 +43,13 @@ public partial class Menu : GUILayer
             Init();
     }
 
-    public override void HandleInput(GUIInputHandler menuInput, float delta)
+    public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (CurrentSubMenu != null && CurrentSubMenu.IsActive)
             CurrentSubMenu.HandleInput(menuInput, delta);
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         if (_closeRequest != null)
             HandleCloseRequestAsync(_closeRequest);

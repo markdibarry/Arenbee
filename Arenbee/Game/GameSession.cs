@@ -25,7 +25,7 @@ public partial class GameSession : GameSessionBase
         SetNodeReferences();
     }
 
-    public override void HandleInput(GUIInputHandler menuInput, float delta)
+    public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Start.IsActionJustPressed && !GUIController.GUIActive)
             OpenPartyMenuAsync();

@@ -79,7 +79,7 @@ namespace GameCore.Utility
         /// <summary>
         /// Updates the State.
         /// </summary>
-        public void Update(float delta)
+        public void Update(double delta)
         {
             var state = State.Update(delta);
             if (state != null)

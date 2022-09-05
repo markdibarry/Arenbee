@@ -12,7 +12,7 @@ namespace GameCore.Audio
             Finished += OnFinished;
         }
 
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             if (SoundSource != null)
             {

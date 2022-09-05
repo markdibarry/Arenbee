@@ -1,58 +1,57 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 
-namespace Arenbee.Actors.Enemies.Default.State
+namespace Arenbee.Actors.Enemies.Default.State;
+
+public class AirStateMachine : AirStateMachineBase
 {
-    public class AirStateMachine : AirStateMachineBase
+    public AirStateMachine(Actor actor)
+        : base(actor)
     {
-        public AirStateMachine(Actor actor)
-            : base(actor)
+        AddState<Grounded>();
+        AddState<Falling>();
+        InitStates(this);
+    }
+
+    public class Grounded : AirState
+    {
+        public override void Enter()
         {
-            AddState<Grounded>();
-            AddState<Falling>();
-            InitStates(this);
+            Actor.VelocityY = (float)Actor.GroundedGravity;
+            StateController.PlayFallbackAnimation();
         }
 
-        public class Grounded : AirState
+        public override AirState Update(double delta)
         {
-            public override void Enter()
-            {
-                Actor.VelocityY = Actor.GroundedGravity;
-                StateController.PlayFallbackAnimation();
-            }
-
-            public override AirState Update(float delta)
-            {
-                return CheckForTransitions();
-            }
-
-            public override void Exit() { }
-
-            public override AirState CheckForTransitions()
-            {
-                if (!Actor.IsOnFloor())
-                    return GetState<Falling>();
-                return null;
-            }
+            return CheckForTransitions();
         }
 
-        public class Falling : AirState
+        public override void Exit() { }
+
+        public override AirState CheckForTransitions()
         {
-            public override void Enter() { }
+            if (!Actor.IsOnFloor())
+                return GetState<Falling>();
+            return null;
+        }
+    }
 
-            public override AirState Update(float delta)
-            {
-                Actor.ApplyFallGravity(delta);
-                return CheckForTransitions();
-            }
+    public class Falling : AirState
+    {
+        public override void Enter() { }
 
-            public override void Exit() { }
+        public override AirState Update(double delta)
+        {
+            Actor.ApplyFallGravity(delta);
+            return CheckForTransitions();
+        }
 
-            public override AirState CheckForTransitions()
-            {
-                if (Actor.IsOnFloor())
-                    return GetState<Grounded>();
-                return null;
-            }
+        public override void Exit() { }
+
+        public override AirState CheckForTransitions()
+        {
+            if (Actor.IsOnFloor())
+                return GetState<Grounded>();
+            return null;
         }
     }
 }

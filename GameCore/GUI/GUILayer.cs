@@ -8,7 +8,7 @@ namespace GameCore.GUI;
 public abstract partial class GUILayer : Control
 {
     public string NameId { get; set; }
-    public abstract void HandleInput(GUIInputHandler menuInput, float delta);
+    public abstract void HandleInput(GUIInputHandler menuInput, double delta);
     public delegate void RequestedCloseHandler(GUILayerCloseRequest request);
     public event RequestedCloseHandler RequestedClose;
 
@@ -18,13 +18,7 @@ public abstract partial class GUILayer : Control
         RequestedClose?.Invoke(request);
     }
 
-    public virtual Task TransitionOpenAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task TransitionOpenAsync() => Task.CompletedTask;
 
-    public virtual Task TransitionCloseAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task TransitionCloseAsync() => Task.CompletedTask;
 }

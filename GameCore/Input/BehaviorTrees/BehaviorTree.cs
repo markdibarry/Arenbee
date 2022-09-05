@@ -14,7 +14,7 @@ namespace GameCore.Input
         private readonly BTNode _root;
         private readonly BlackBoard _blackBoard;
 
-        public void Update(float delta)
+        public void Update(double delta)
         {
             _root?.Evaluate(delta);
         }

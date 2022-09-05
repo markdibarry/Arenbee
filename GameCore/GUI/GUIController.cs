@@ -28,12 +28,12 @@ public partial class GUIController : CanvasLayer
     public delegate void MenuStatusChangedHandler(GUIController guiController);
     public event MenuStatusChangedHandler GUIStatusChanged;
 
-    public void HandleInput(GUIInputHandler menuInput, float delta)
+    public void HandleInput(GUIInputHandler menuInput, double delta)
     {
         _currentGUILayer?.HandleInput(menuInput, delta);
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         if (_layerCloseRequest != null)
             HandleCloseRequest(_layerCloseRequest);

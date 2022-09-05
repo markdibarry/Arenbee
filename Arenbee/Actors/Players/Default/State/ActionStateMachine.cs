@@ -19,7 +19,7 @@ namespace Arenbee.Actors.Default.State
                 StateController.PlayFallbackAnimation();
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -47,7 +47,7 @@ namespace Arenbee.Actors.Default.State
                 PlayAnimation(AnimationName);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }

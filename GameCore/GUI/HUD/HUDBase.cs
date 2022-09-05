@@ -11,7 +11,7 @@ public abstract partial class HUDBase : CanvasLayer
     protected Queue<string> MessageQueue { get; set; } = new();
     protected MessageBoxList MessageBoxList { get; set; }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         ProcessQueue();
     }

@@ -146,7 +146,7 @@ public class StateController : IStateController
         return false;
     }
 
-    public void UpdateStates(float delta)
+    public void UpdateStates(double delta)
     {
         MoveStateMachine.Update(delta);
         AirStateMachine.Update(delta);

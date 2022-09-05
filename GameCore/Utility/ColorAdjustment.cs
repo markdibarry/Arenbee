@@ -12,10 +12,10 @@ public partial class ColorAdjustment : CanvasLayer
         get
         {
             if (_colorShader != null)
-                return (float)_colorShader.GetShaderUniform("_brightness");
+                return (float)_colorShader.GetShaderParameter("_brightness");
             return 0;
         }
-        set => _colorShader?.SetShaderUniform("_brightness", value);
+        set => _colorShader?.SetShaderParameter("_brightness", value);
     }
     [Export(PropertyHint.Range, "-1,1")]
     public float Contrast
@@ -23,10 +23,10 @@ public partial class ColorAdjustment : CanvasLayer
         get
         {
             if (_colorShader != null)
-                return (float)_colorShader.GetShaderUniform("_contrast");
+                return (float)_colorShader.GetShaderParameter("_contrast");
             return 1;
         }
-        set => _colorShader?.SetShaderUniform("_contrast", value);
+        set => _colorShader?.SetShaderParameter("_contrast", value);
     }
     [Export(PropertyHint.Range, "-1,2")]
     public float Saturation
@@ -34,10 +34,10 @@ public partial class ColorAdjustment : CanvasLayer
         get
         {
             if (_colorShader != null)
-                return (float)_colorShader.GetShaderUniform("_saturation");
+                return (float)_colorShader.GetShaderParameter("_saturation");
             return 1;
         }
-        set => _colorShader?.SetShaderUniform("_saturation", value);
+        set => _colorShader?.SetShaderParameter("_saturation", value);
     }
     [Export(PropertyHint.ColorNoAlpha)]
     public Color TintColor
@@ -45,10 +45,10 @@ public partial class ColorAdjustment : CanvasLayer
         get
         {
             if (_colorShader != null)
-                return (Color)_colorShader.GetShaderUniform("_tint_color");
+                return (Color)_colorShader.GetShaderParameter("_tint_color");
             return Colors.White;
         }
-        set => _colorShader?.SetShaderUniform("_tint_color", value);
+        set => _colorShader?.SetShaderParameter("_tint_color", value);
     }
     [Export(PropertyHint.Range, "0,1")]
     public float TintAmount
@@ -56,10 +56,10 @@ public partial class ColorAdjustment : CanvasLayer
         get
         {
             if (_colorShader != null)
-                return (float)_colorShader.GetShaderUniform("_tint_amount");
+                return (float)_colorShader.GetShaderParameter("_tint_amount");
             return 0;
         }
-        set => _colorShader?.SetShaderUniform("_tint_amount", value);
+        set => _colorShader?.SetShaderParameter("_tint_amount", value);
     }
 
     public override void _Ready()
@@ -68,7 +68,7 @@ public partial class ColorAdjustment : CanvasLayer
         _colorShader = rect.Material as ShaderMaterial;
     }
 
-    public override void _Notification(int what)
+    public override void _Notification(long what)
     {
         if (what == NotificationPredelete)
             _colorShader.Dispose();

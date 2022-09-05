@@ -17,7 +17,7 @@ public partial class Plant : Actor
         {
             public override void Enter() { }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -38,7 +38,7 @@ public partial class Plant : Actor
                 PlayAnimation(AnimationName);
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 return CheckForTransitions();
             }

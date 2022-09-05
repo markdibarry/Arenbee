@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using GameCore.Extensions;
 using GameCore.GUI.Text;
 using Godot;
@@ -74,9 +74,9 @@ namespace GameCore.GUI.Dialogs
             set { if (value) UpdateText(); }
         }
         [Export]
-        public float Speed
+        public double Speed
         {
-            get => _dynamicTextBox?.Speed ?? 0f;
+            get => _dynamicTextBox?.Speed ?? 0;
             set
             {
                 if (_dynamicTextBox != null)
@@ -206,7 +206,7 @@ namespace GameCore.GUI.Dialogs
             SetDisplayNames();
             if (CurrentDialogPart.Text == null)
                 return;
-            _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05f;
+            _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05;
             _dynamicTextBox.CustomText = CurrentDialogPart.Text;
             _dynamicTextBox.UpdateText();
         }

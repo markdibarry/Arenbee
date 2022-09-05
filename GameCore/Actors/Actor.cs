@@ -13,9 +13,9 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
     protected Actor()
     {
         UpDirection = Vector2.Up;
-        Acceleration = 600f;
-        Friction = 600f;
-        GroundedGravity = 0.05f;
+        Acceleration = 600;
+        Friction = 600;
+        GroundedGravity = 0.05;
         WalkSpeed = 50;
         Direction = new Vector2(1, 1);
         Stats = new Stats(this);
@@ -51,18 +51,18 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
     public ShaderMaterial BodyShader { get; set; }
     public int ShaderCycleStart
     {
-        get => (int)BodyShader.GetShaderUniform("cycle_start");
-        set => BodyShader.SetShaderUniform("cycle_start", value);
+        get => (int)BodyShader.GetShaderParameter("cycle_start");
+        set => BodyShader.SetShaderParameter("cycle_start", value);
     }
     public int ShaderCycleEnd
     {
-        get => (int)BodyShader.GetShaderUniform("cycle_end");
-        set => BodyShader.SetShaderUniform("cycle_end", value);
+        get => (int)BodyShader.GetShaderParameter("cycle_end");
+        set => BodyShader.SetShaderParameter("cycle_end", value);
     }
     public float ShaderSpeed
     {
-        get => (float)BodyShader.GetShaderUniform("speed");
-        set => BodyShader.SetShaderUniform("speed", value);
+        get => (float)BodyShader.GetShaderParameter("speed");
+        set => BodyShader.SetShaderParameter("speed", value);
     }
 
     public override void _Ready()
@@ -76,7 +76,7 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
         WeaponSlot.Init(this);
     }
 
-    public override void _PhysicsProcess(float delta)
+    public override void _PhysicsProcess(double delta)
     {
         GlobalPosition = _floatPosition;
         _move = Vector2.Zero;

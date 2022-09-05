@@ -23,7 +23,7 @@ namespace Arenbee.Actors.Enemies.Default.State
                 PlayAnimation(AnimationName);
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -51,7 +51,7 @@ namespace Arenbee.Actors.Enemies.Default.State
                 Actor.MaxSpeed = Actor.WalkSpeed;
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 Actor.UpdateDirection();
                 Actor.Move();
@@ -81,7 +81,7 @@ namespace Arenbee.Actors.Enemies.Default.State
                 Actor.MaxSpeed = Actor.RunSpeed;
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 Actor.UpdateDirection();
                 Actor.Move();

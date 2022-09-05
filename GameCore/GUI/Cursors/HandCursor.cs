@@ -1,4 +1,4 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using Godot;
 
 namespace GameCore.GUI
@@ -7,10 +7,10 @@ namespace GameCore.GUI
     public partial class HandCursor : Cursor
     {
         public static new string GetScenePath() => GDEx.GetScenePath();
-        private readonly float _cursorTimerOut = 1.0f;
-        private float _cursorTimer = 0;
+        private readonly double _cursorTimerOut = 1.0;
+        private double _cursorTimer = 0;
 
-        public override void HandleCursorAnimation(float delta)
+        public override void HandleCursorAnimation(double delta)
         {
             base.HandleCursorAnimation(delta);
             _cursorTimer += delta;

@@ -12,6 +12,6 @@ namespace GameCore.Game
 
         protected override void ProvideLocatorReferences() { }
 
-        public override void _Process(float delta) { }
+        public override void _Process(double delta) { }
     }
 }

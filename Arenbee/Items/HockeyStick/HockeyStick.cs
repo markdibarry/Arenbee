@@ -50,7 +50,7 @@ namespace Arenbee.Items
                 StateController.PlayFallbackAnimation();
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -76,7 +76,7 @@ namespace Arenbee.Items
                 PlayAnimation(AnimationName);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -108,7 +108,7 @@ namespace Arenbee.Items
                 PlayAnimation(AnimationName);
             }
 
-            public override ActionState Update(float delta)
+            public override ActionState Update(double delta)
             {
                 return CheckForTransitions();
             }

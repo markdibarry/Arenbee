@@ -4,213 +4,212 @@ using GameCore.GUI.Text;
 using GameCore.Input;
 using Godot;
 
-namespace GameCore.GUI.Dialogs
+namespace GameCore.GUI.Dialogs;
+
+public partial class Dialog : GUILayer
 {
-    public partial class Dialog : GUILayer
+    public Dialog()
     {
-        public Dialog()
+        _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
+        _dialogOptionMenuScene = GD.Load<PackedScene>(DialogOptionMenu.GetScenePath());
+    }
+
+    public static string GetScenePath() => GDEx.GetScenePath();
+    private int _currentPart;
+    private readonly PackedScene _dialogBoxScene;
+    private readonly PackedScene _dialogOptionMenuScene;
+    private DialogOptionMenu _dialogOptionMenu;
+    public bool CanProceed { get; set; }
+    public DialogPart[] DialogParts { get; set; }
+    public DialogBox UnfocusedBox { get; set; }
+    public DialogBox FocusedBox { get; set; }
+    public delegate void DialogStartedHandler();
+    public delegate void DialogEndedHandler();
+    public delegate void OptionBoxRequestedHandler(Menu menu);
+    public event DialogStartedHandler DialogStarted;
+    public event DialogEndedHandler DialogEnded;
+    public event OptionBoxRequestedHandler OptionBoxRequested;
+
+    public override void HandleInput(GUIInputHandler menuInput, double delta)
+    {
+        if (menuInput.Enter.IsActionJustPressed)
+            Proceed();
+        else if (menuInput.Enter.IsActionPressed)
+            SpeedUpText();
+    }
+
+    public void CloseBox(DialogBox box)
+    {
+        if (box == null)
+            return;
+        box.DialogBoxLoaded -= OnDialogBoxLoaded;
+        box.TextEventTriggered -= OnTextEventTriggered;
+        box.StoppedWriting -= OnStoppedWriting;
+        box.QueueFree();
+    }
+
+    public void EndDialog()
+    {
+        CloseBox(UnfocusedBox);
+        UnfocusedBox = null;
+        CloseBox(FocusedBox);
+        FocusedBox = null;
+        var request = new GUILayerCloseRequest()
         {
-            _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
-            _dialogOptionMenuScene = GD.Load<PackedScene>(DialogOptionMenu.GetScenePath());
+            Layer = this
+        };
+        RaiseRequestedClose(request);
+    }
+
+    public void NextDialogPart()
+    {
+        NextDialogPart(_currentPart + 1);
+    }
+
+    public void NextDialogPart(int partId)
+    {
+        DialogPart previousPart = DialogParts[_currentPart];
+        _currentPart = partId;
+        if (partId >= DialogParts.Length)
+        {
+            EndDialog();
+            return;
+        }
+        DialogPart newPart = DialogParts[partId];
+        DialogBox nextBox = FocusedBox;
+
+        // Reuse current box if next speaker(s) is same as current speaker(s).
+        if (Speaker.SameSpeakers(newPart.Speakers, previousPart.Speakers))
+        {
+            nextBox.CurrentDialogPart = newPart;
+            nextBox.UpdateDialogPart();
+            return;
         }
 
-        public static string GetScenePath() => GDEx.GetScenePath();
-        private int _currentPart;
-        private readonly PackedScene _dialogBoxScene;
-        private readonly PackedScene _dialogOptionMenuScene;
-        private DialogOptionMenu _dialogOptionMenu;
-        public bool CanProceed { get; set; }
-        public DialogPart[] DialogParts { get; set; }
-        public DialogBox UnfocusedBox { get; set; }
-        public DialogBox FocusedBox { get; set; }
-        public delegate void DialogStartedHandler();
-        public delegate void DialogEndedHandler();
-        public delegate void OptionBoxRequestedHandler(Menu menu);
-        public event DialogStartedHandler DialogStarted;
-        public event DialogEndedHandler DialogEnded;
-        public event OptionBoxRequestedHandler OptionBoxRequested;
-
-        public override void HandleInput(GUIInputHandler menuInput, float delta)
+        // Remove current box if a speaker in the current box is needed in the next one.
+        if (Speaker.AnySpeakers(newPart.Speakers, previousPart.Speakers))
         {
-            if (menuInput.Enter.IsActionJustPressed)
-                Proceed();
-            else if (menuInput.Enter.IsActionPressed)
-                SpeedUpText();
+            CloseBox(nextBox);
+            nextBox = null;
+        }
+        else
+        {
+            nextBox.Dim = true;
         }
 
-        public void CloseBox(DialogBox box)
-        {
-            if (box == null)
-                return;
-            box.DialogBoxLoaded -= OnDialogBoxLoaded;
-            box.TextEventTriggered -= OnTextEventTriggered;
-            box.StoppedWriting -= OnStoppedWriting;
-            box.QueueFree();
-        }
+        // Current box cannot be reused, try old unfocused box if there is one
+        DialogBox oldBox = nextBox;
+        nextBox = UnfocusedBox;
 
-        public void EndDialog()
+        if (nextBox != null)
         {
-            CloseBox(UnfocusedBox);
-            UnfocusedBox = null;
-            CloseBox(FocusedBox);
-            FocusedBox = null;
-            var request = new GUILayerCloseRequest()
+            // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
+            if (Speaker.SameSpeakers(newPart.Speakers, nextBox.CurrentDialogPart.Speakers))
             {
-                Layer = this
-            };
-            RaiseRequestedClose(request);
-        }
-
-        public void NextDialogPart()
-        {
-            NextDialogPart(_currentPart + 1);
-        }
-
-        public void NextDialogPart(int partId)
-        {
-            DialogPart previousPart = DialogParts[_currentPart];
-            _currentPart = partId;
-            if (partId >= DialogParts.Length)
-            {
-                EndDialog();
-                return;
-            }
-            DialogPart newPart = DialogParts[partId];
-            DialogBox nextBox = FocusedBox;
-
-            // Reuse current box if next speaker(s) is same as current speaker(s).
-            if (Speaker.SameSpeakers(newPart.Speakers, previousPart.Speakers))
-            {
+                nextBox.Raise();
                 nextBox.CurrentDialogPart = newPart;
                 nextBox.UpdateDialogPart();
-                return;
+                nextBox.Dim = false;
             }
-
-            // Remove current box if a speaker in the current box is needed in the next one.
-            if (Speaker.AnySpeakers(newPart.Speakers, previousPart.Speakers))
+            else
             {
                 CloseBox(nextBox);
                 nextBox = null;
             }
-            else
-            {
-                nextBox.Dim = true;
-            }
-
-            // Current box cannot be reused, try old unfocused box if there is one
-            DialogBox oldBox = nextBox;
-            nextBox = UnfocusedBox;
-
-            if (nextBox != null)
-            {
-                // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
-                if (Speaker.SameSpeakers(newPart.Speakers, nextBox.CurrentDialogPart.Speakers))
-                {
-                    nextBox.Raise();
-                    nextBox.CurrentDialogPart = newPart;
-                    nextBox.UpdateDialogPart();
-                    nextBox.Dim = false;
-                }
-                else
-                {
-                    CloseBox(nextBox);
-                    nextBox = null;
-                }
-            }
-
-            nextBox ??= CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
-
-            UnfocusedBox = oldBox;
-            FocusedBox = nextBox;
         }
 
-        public void Proceed()
+        nextBox ??= CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
+
+        UnfocusedBox = oldBox;
+        FocusedBox = nextBox;
+    }
+
+    public void Proceed()
+    {
+        if (!CanProceed || !FocusedBox.IsAtPageEnd())
+            return;
+        CanProceed = false;
+        FocusedBox.NextArrow.Hide();
+        if (!FocusedBox.IsAtLastPage())
         {
-            if (!CanProceed || !FocusedBox.IsAtPageEnd())
-                return;
-            CanProceed = false;
-            FocusedBox.NextArrow.Hide();
-            if (!FocusedBox.IsAtLastPage())
-            {
-                FocusedBox.NextPage();
-                return;
-            }
-
-            if (FocusedBox.CurrentDialogPart.Next != null)
-                NextDialogPart((int)FocusedBox.CurrentDialogPart.Next);
-            else
-                NextDialogPart();
+            FocusedBox.NextPage();
+            return;
         }
 
-        public void StartDialog(string path)
+        if (FocusedBox.CurrentDialogPart.Next != null)
+            NextDialogPart((int)FocusedBox.CurrentDialogPart.Next);
+        else
+            NextDialogPart();
+    }
+
+    public void StartDialog(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return;
+        DialogStarted?.Invoke();
+        _currentPart = 0;
+        DialogParts = DialogLoader.Load(path);
+        if (DialogParts == null)
         {
-            if (string.IsNullOrEmpty(path))
-                return;
-            DialogStarted?.Invoke();
-            _currentPart = 0;
-            DialogParts = DialogLoader.Load(path);
-            if (DialogParts == null)
-            {
-                GD.PrintErr("No dialog found at location provided.");
-                EndDialog();
-                return;
-            }
-            FocusedBox = CreateDialogBox(DialogParts[0], false);
+            GD.PrintErr("No dialog found at location provided.");
+            EndDialog();
+            return;
         }
+        FocusedBox = CreateDialogBox(DialogParts[0], false);
+    }
 
-        public DialogBox CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
+    public DialogBox CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
+    {
+        var newBox = _dialogBoxScene.Instantiate<DialogBox>();
+        newBox.TextEventTriggered += OnTextEventTriggered;
+        newBox.StoppedWriting += OnStoppedWriting;
+        newBox.DialogBoxLoaded += OnDialogBoxLoaded;
+        newBox.CurrentDialogPart = dialogPart;
+        newBox.ReverseDisplay = reverseDisplay;
+        AddChild(newBox);
+        newBox.UpdateDialogPart();
+        return newBox;
+    }
+
+    public void OnOptionBoxClosed(DialogOptionClosedRequest request)
+    {
+        NextDialogPart(request.Next);
+    }
+
+    private void OnDialogBoxLoaded(DialogBox dialogBox)
+    {
+        dialogBox.WritePage(true);
+    }
+
+    private void OnTextEventTriggered(ITextEvent textEvent)
+    {
+        textEvent.HandleEvent(this);
+    }
+
+    private void OnStoppedWriting()
+    {
+        if (!FocusedBox.IsAtPageEnd())
+            return;
+        if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
         {
-            var newBox = _dialogBoxScene.Instantiate<DialogBox>();
-            newBox.TextEventTriggered += OnTextEventTriggered;
-            newBox.StoppedWriting += OnStoppedWriting;
-            newBox.DialogBoxLoaded += OnDialogBoxLoaded;
-            newBox.CurrentDialogPart = dialogPart;
-            newBox.ReverseDisplay = reverseDisplay;
-            AddChild(newBox);
-            newBox.UpdateDialogPart();
-            return newBox;
+            OpenOptionBoxAsync();
+            return;
         }
 
-        public void OnOptionBoxClosed(DialogOptionClosedRequest request)
-        {
-            NextDialogPart(request.Next);
-        }
+        FocusedBox.NextArrow.Show();
+        CanProceed = true;
+    }
 
-        private void OnDialogBoxLoaded(DialogBox dialogBox)
-        {
-            dialogBox.WritePage(true);
-        }
+    private void OpenOptionBoxAsync()
+    {
+        _dialogOptionMenu = _dialogOptionMenuScene.Instantiate<DialogOptionMenu>();
+        _dialogOptionMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
+        _dialogOptionMenu.Dialog = this;
+        OptionBoxRequested?.Invoke(_dialogOptionMenu);
+    }
 
-        private void OnTextEventTriggered(ITextEvent textEvent)
-        {
-            textEvent.HandleEvent(this);
-        }
-
-        private void OnStoppedWriting()
-        {
-            if (!FocusedBox.IsAtPageEnd())
-                return;
-            if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
-            {
-                OpenOptionBoxAsync();
-                return;
-            }
-
-            FocusedBox.NextArrow.Show();
-            CanProceed = true;
-        }
-
-        private void OpenOptionBoxAsync()
-        {
-            _dialogOptionMenu = _dialogOptionMenuScene.Instantiate<DialogOptionMenu>();
-            _dialogOptionMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
-            _dialogOptionMenu.Dialog = this;
-            OptionBoxRequested?.Invoke(_dialogOptionMenu);
-        }
-
-        private void SpeedUpText()
-        {
-            FocusedBox.SpeedUpText = true;
-        }
+    private void SpeedUpText()
+    {
+        FocusedBox.SpeedUpText = true;
     }
 }

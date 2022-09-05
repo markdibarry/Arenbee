@@ -13,7 +13,7 @@ namespace GameCore.Utility
 
         public virtual void Enter() { }
         public virtual void Enter(object[] args = null) { Enter(); }
-        public abstract TState Update(float delta);
+        public abstract TState Update(double delta);
         public virtual void Exit() { }
         public abstract TState CheckForTransitions();
 

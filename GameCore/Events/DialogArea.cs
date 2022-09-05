@@ -61,7 +61,7 @@ namespace GameCore.Events
             _canTrigger = false;
         }
 
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             if (this.IsToolDebugMode() || !_canTrigger)
                 return;

@@ -23,7 +23,7 @@ public partial class Whisp : Actor
                 PlayAnimation(AnimationName);
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 return CheckForTransitions();
             }
@@ -47,7 +47,7 @@ public partial class Whisp : Actor
                 Actor.MaxSpeed = Actor.RunSpeed;
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 Actor.UpdateDirection();
                 Actor.Move();
@@ -73,7 +73,7 @@ public partial class Whisp : Actor
                 Actor.MaxSpeed = Actor.WalkSpeed;
             }
 
-            public override MoveState Update(float delta)
+            public override MoveState Update(double delta)
             {
                 Actor.UpdateDirection();
                 Actor.Move();
