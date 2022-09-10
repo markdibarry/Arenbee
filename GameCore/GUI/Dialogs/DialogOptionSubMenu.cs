@@ -2,7 +2,7 @@
 using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class DialogOptionSubMenu : OptionSubMenu

@@ -3,7 +3,6 @@ using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.GUI.Text;
 using GameCore.Statistics;
 using GameCore.Utility;
 
@@ -92,7 +91,7 @@ public partial class HUD : HUDBase
         MessageQueue.Enqueue(actionMessage);
     }
 
-    private string GetEffectivenessMessage(int elementMultiplier)
+    private static string GetEffectivenessMessage(int elementMultiplier)
     {
         return elementMultiplier switch
         {

@@ -22,7 +22,6 @@ public abstract partial class GameRootBase : Node
     public GameCamera GameCamera { get; protected set; }
     public Node2D GameDisplay { get; set; }
     public Node2D GameSessionContainer { get; set; }
-    private GameSessionBase GameSession => Locator.Session;
     public GameState GameState { get; }
     public GUIController GUIController { get; protected set; }
     public GUIInputHandler MenuInput { get; protected set; }
@@ -90,7 +89,7 @@ public abstract partial class GameRootBase : Node
     protected void HandleInput(double delta)
     {
         GUIController.HandleInput(MenuInput, delta);
-        GameSession?.HandleInput(MenuInput, delta);
+        Locator.Session?.HandleInput(MenuInput, delta);
         MenuInput.Update();
         PlayerOneInput.Update();
     }
@@ -98,6 +97,6 @@ public abstract partial class GameRootBase : Node
     protected void OnGameStateChanged(GameState gameState)
     {
         AudioController.OnGameStateChanged(gameState);
-        GameSession?.OnGameStateChanged(gameState);
+        Locator.Session?.OnGameStateChanged(gameState);
     }
 }

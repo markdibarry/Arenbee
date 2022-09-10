@@ -4,34 +4,33 @@ using GameCore.SaveData;
 using Godot;
 using GameCore.Utility;
 
-namespace Arenbee.GUI.Menus.Party
+namespace Arenbee.GUI.Menus.Party;
+
+[Tool]
+public partial class SaveConfirmSubMenu : OptionSubMenu
 {
-    [Tool]
-    public partial class SaveConfirmSubMenu : OptionSubMenu
+    public static string GetScenePath() => GDEx.GetScenePath();
+
+    protected override void OnItemSelected()
     {
-        public static string GetScenePath() => GDEx.GetScenePath();
-
-        protected override void OnItemSelected()
+        base.OnItemSelected();
+        var saveChoice = CurrentContainer.CurrentItem.GetData<string>("saveChoice");
+        if (saveChoice == null)
+            return;
+        switch (saveChoice)
         {
-            base.OnItemSelected();
-            var saveChoice = CurrentContainer.CurrentItem.GetData<string>("saveChoice");
-            if (saveChoice == null)
-                return;
-            switch (saveChoice)
-            {
-                case "Yes":
-                    SaveGame();
-                    break;
-                case "No":
-                    CloseSubMenu();
-                    break;
-            }
+            case "Yes":
+                SaveGame();
+                break;
+            case "No":
+                CloseSubMenu();
+                break;
         }
+    }
 
-        private void SaveGame()
-        {
-            SaveService.SaveGame(Locator.Session);
-            RaiseRequestedAdd(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
-        }
+    private void SaveGame()
+    {
+        SaveService.SaveGame(Locator.Session);
+        RaiseRequestedAdd(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
     }
 }

@@ -1,7 +1,6 @@
-namespace GameCore.Constants
+﻿namespace GameCore.Constants;
+
+public static class GodotConstants
 {
-    public static class GodotConstants
-    {
-        public static string ProcessFrameSignal = "process_frame";
-    }
+    public const string ProcessFrameSignal = "process_frame";
 }

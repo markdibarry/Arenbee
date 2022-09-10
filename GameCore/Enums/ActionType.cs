@@ -1,13 +1,12 @@
-namespace GameCore.Enums
+﻿namespace GameCore.Enums;
+
+public enum ActionType
 {
-    public enum ActionType
-    {
-        None,
-        Item,
-        Status,
-        Environment,
-        Melee,
-        Magic,
-        Projectile
-    }
+    None,
+    Item,
+    Status,
+    Environment,
+    Melee,
+    Magic,
+    Projectile
 }

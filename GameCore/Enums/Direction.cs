@@ -1,11 +1,10 @@
-namespace GameCore.Enums
+﻿namespace GameCore.Enums;
+
+public enum Direction
 {
-    public enum Direction
-    {
-        None,
-        Up,
-        Down,
-        Left,
-        Right
-    }
+    None,
+    Up,
+    Down,
+    Left,
+    Right
 }

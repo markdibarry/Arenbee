@@ -1,17 +1,16 @@
-using Godot;
+﻿using Godot;
 
-namespace GameCore.Actors
+namespace GameCore.Actors;
+
+public abstract partial class SubActor : CharacterBody2D
 {
-    public abstract partial class SubActor : CharacterBody2D
+    protected SubActor()
     {
-        protected SubActor()
-        {
-        }
+    }
 
-        public Actor ParentActor { get; set; }
+    public Actor ParentActor { get; set; }
 
-        public override void _Ready()
-        {
-        }
+    public override void _Ready()
+    {
     }
 }

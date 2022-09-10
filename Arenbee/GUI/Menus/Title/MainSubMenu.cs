@@ -55,9 +55,9 @@ public partial class MainSubMenu : OptionSubMenu
         _startOptions = OptionContainers.Find(x => x.Name == "MainOptions");
     }
 
-    private void StartNewGame()
+    private static void StartNewGame()
     {
-        Func<Loader, Task> callback = async (loader) =>
+        static async Task Callback(Loader loader)
         {
             var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
             var gameSave = loader.GetObject<GameSave>(Config.NewGamePath);
@@ -70,7 +70,7 @@ public partial class MainSubMenu : OptionSubMenu
                 CloseRequestType = CloseRequestType.AllLayers,
                 PreventAnimation = true
             });
-        };
+        }
 
         var tController = Locator.TransitionController;
         var request = new TransitionRequest(
@@ -79,12 +79,27 @@ public partial class MainSubMenu : OptionSubMenu
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
             new string[] { Locator.Root?.GameSessionScenePath, Config.NewGamePath },
-            callback);
+            Callback);
         tController.RequestTransition(request);
     }
 
-    private void ContinueSavedGame()
+    private static void ContinueSavedGame()
     {
+        static async Task Callback(Loader loader)
+        {
+            var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
+            var gameSave = loader.GetObject<GameSave>(Config.SavePath);
+            var session = sessionScene.Instantiate<GameSessionBase>();
+            await Locator.Root?.GUIController.CloseLayerAsync(new GUILayerCloseRequest()
+            {
+                CloseRequestType = CloseRequestType.AllLayers,
+                PreventAnimation = true
+            });
+            Locator.ProvideGameSession(session);
+            Locator.Root?.GameSessionContainer.AddChild(session);
+            session.Init(gameSave);
+        };
+
         var tController = Locator.TransitionController;
         var request = new TransitionRequest(
             BasicLoadingScreen.GetScenePath(),
@@ -92,20 +107,7 @@ public partial class MainSubMenu : OptionSubMenu
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
             new string[] { Locator.Root?.GameSessionScenePath, Config.SavePath },
-            async (loader) =>
-            {
-                var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
-                var gameSave = loader.GetObject<GameSave>(Config.SavePath);
-                var session = sessionScene.Instantiate<GameSessionBase>();
-                await Locator.Root?.GUIController.CloseLayerAsync(new GUILayerCloseRequest()
-                {
-                    CloseRequestType = CloseRequestType.AllLayers,
-                    PreventAnimation = true
-                });
-                Locator.ProvideGameSession(session);
-                Locator.Root?.GameSessionContainer.AddChild(session);
-                session.Init(gameSave);
-            });
+            Callback);
         tController.RequestTransition(request);
     }
 }

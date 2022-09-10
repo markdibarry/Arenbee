@@ -22,10 +22,8 @@ public partial class Breakable : StaticBody2D
     /// The number of hits between texture changes
     /// </summary>
     /// <value></value>
-#pragma warning disable IDE0044
     [Export]
     private int _hitsToNextStage;
-#pragma warning restore IDE0044
 
     public override void _Ready()
     {

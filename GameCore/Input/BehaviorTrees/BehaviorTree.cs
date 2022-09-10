@@ -1,29 +1,28 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 
-namespace GameCore.Input
+namespace GameCore.Input;
+
+public abstract class BehaviorTree
 {
-    public abstract class BehaviorTree
+    protected BehaviorTree(Actor actor)
     {
-        protected BehaviorTree(Actor actor)
-        {
-            _blackBoard = new BlackBoard();
-            _root = SetupTree();
-            _root.SetDependencies(actor, _blackBoard);
-        }
-
-        private readonly BTNode _root;
-        private readonly BlackBoard _blackBoard;
-
-        public void Update(double delta)
-        {
-            _root?.Evaluate(delta);
-        }
-
-        public void ClearBlackBoard()
-        {
-            _blackBoard.Clear();
-        }
-
-        protected abstract BTNode SetupTree();
+        _blackBoard = new BlackBoard();
+        _root = SetupTree();
+        _root.SetDependencies(actor, _blackBoard);
     }
+
+    private readonly BTNode _root;
+    private readonly BlackBoard _blackBoard;
+
+    public void Update(double delta)
+    {
+        _root?.Evaluate(delta);
+    }
+
+    public void ClearBlackBoard()
+    {
+        _blackBoard.Clear();
+    }
+
+    protected abstract BTNode SetupTree();
 }

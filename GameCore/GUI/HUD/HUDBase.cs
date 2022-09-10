@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GameCore.Actors;
-using GameCore.GUI.Text;
 using GameCore.Statistics;
 using Godot;
 

@@ -1,66 +1,65 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 
-namespace Arenbee.Actors.Default.State
+namespace Arenbee.Actors.Default.State;
+
+public class ActionStateMachine : ActionStateMachineBase
 {
-    public class ActionStateMachine : ActionStateMachineBase
+    public ActionStateMachine(Actor actor)
+        : base(actor)
     {
-        public ActionStateMachine(Actor actor)
-            : base(actor)
+        AddState<NotAttacking>();
+        AddState<UnarmedAttack>();
+        InitStates(this);
+    }
+
+    public class NotAttacking : ActionState
+    {
+        public override void Enter()
         {
-            AddState<NotAttacking>();
-            AddState<UnarmedAttack>();
-            InitStates(this);
+            StateController.PlayFallbackAnimation();
         }
 
-        public class NotAttacking : ActionState
+        public override ActionState Update(double delta)
         {
-            public override void Enter()
-            {
-                StateController.PlayFallbackAnimation();
-            }
-
-            public override ActionState Update(double delta)
-            {
-                return CheckForTransitions();
-            }
-
-            public override ActionState CheckForTransitions()
-            {
-                if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
-                    return null;
-                if (InputHandler.Attack.IsActionJustPressed)
-                    return StateMachine.GetState<UnarmedAttack>();
-                return null;
-            }
+            return CheckForTransitions();
         }
 
-        public class UnarmedAttack : ActionState
+        public override ActionState CheckForTransitions()
         {
-            public UnarmedAttack()
-            {
-                AnimationName = "UnarmedAttack";
-                BlockedStates = BlockedState.Jumping | BlockedState.Move;
-            }
-
-            public override void Enter()
-            {
-                PlayAnimation(AnimationName);
-            }
-
-            public override ActionState Update(double delta)
-            {
-                return CheckForTransitions();
-            }
-
-            public override ActionState CheckForTransitions()
-            {
-                if (StateController.IsBlocked(BlockedState.Attack)
-                    || Actor.AnimationPlayer.CurrentAnimation != AnimationName)
-                    return GetState<NotAttacking>();
-                if (InputHandler.Attack.IsActionJustPressed)
-                    return GetState<UnarmedAttack>();
+            if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
                 return null;
-            }
+            if (InputHandler.Attack.IsActionJustPressed)
+                return StateMachine.GetState<UnarmedAttack>();
+            return null;
+        }
+    }
+
+    public class UnarmedAttack : ActionState
+    {
+        public UnarmedAttack()
+        {
+            AnimationName = "UnarmedAttack";
+            BlockedStates = BlockedState.Jumping | BlockedState.Move;
+        }
+
+        public override void Enter()
+        {
+            PlayAnimation(AnimationName);
+        }
+
+        public override ActionState Update(double delta)
+        {
+            return CheckForTransitions();
+        }
+
+        public override ActionState CheckForTransitions()
+        {
+            if (StateController.IsBlocked(BlockedState.Attack)
+                || Actor.AnimationPlayer.CurrentAnimation != AnimationName)
+                return GetState<NotAttacking>();
+            if (InputHandler.Attack.IsActionJustPressed)
+                return GetState<UnarmedAttack>();
+            return null;
         }
     }
 }

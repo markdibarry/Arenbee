@@ -1,105 +1,104 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 using GameCore.Statistics;
 
-namespace Arenbee.Actors.Default.State
+namespace Arenbee.Actors.Default.State;
+
+public class MoveStateMachine : MoveStateMachineBase
 {
-    public class MoveStateMachine : MoveStateMachineBase
+    public MoveStateMachine(Actor actor)
+        : base(actor)
     {
-        public MoveStateMachine(Actor actor)
-            : base(actor)
+        AddState<Standing>();
+        AddState<Walking>();
+        AddState<Running>();
+        InitStates(this);
+    }
+
+    public class Standing : MoveState
+    {
+        public Standing() { AnimationName = "Standing"; }
+        public override void Enter()
         {
-            AddState<Standing>();
-            AddState<Walking>();
-            AddState<Running>();
-            InitStates(this);
+            PlayAnimation(AnimationName);
         }
 
-        public class Standing : MoveState
+        public override MoveState Update(double delta)
         {
-            public Standing() { AnimationName = "Standing"; }
-            public override void Enter()
-            {
-                PlayAnimation(AnimationName);
-            }
-
-            public override MoveState Update(double delta)
-            {
-                return CheckForTransitions();
-            }
-
-            public override MoveState CheckForTransitions()
-            {
-                if (StateController.IsBlocked(BlockedState.Move))
-                    return null;
-                if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
-                    return GetState<Running>();
-                if (InputHandler.GetLeftAxis().x == 0)
-                    return null;
-                if (InputHandler.Run.IsActionPressed)
-                    return GetState<Running>();
-                return GetState<Walking>();
-            }
+            return CheckForTransitions();
         }
 
-        public class Walking : MoveState
+        public override MoveState CheckForTransitions()
         {
-            public Walking() { AnimationName = "Walk"; }
-            public override void Enter()
-            {
-                PlayAnimation(AnimationName);
-                Actor.MaxSpeed = Actor.WalkSpeed;
-            }
-
-            public override MoveState Update(double delta)
-            {
-                Actor.UpdateDirection();
-                Actor.Move();
-                return CheckForTransitions();
-            }
-
-            public override MoveState CheckForTransitions()
-            {
-                if (StateController.IsBlocked(BlockedState.Move))
-                    return GetState<Standing>();
-                if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
-                    return GetState<Running>();
-                if (InputHandler.GetLeftAxis().x == 0)
-                    return GetState<Standing>();
-                if (InputHandler.Run.IsActionPressed)
-                    return GetState<Running>();
+            if (StateController.IsBlocked(BlockedState.Move))
                 return null;
-            }
+            if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
+                return GetState<Running>();
+            if (InputHandler.GetLeftAxis().x == 0)
+                return null;
+            if (InputHandler.Run.IsActionPressed)
+                return GetState<Running>();
+            return GetState<Walking>();
+        }
+    }
+
+    public class Walking : MoveState
+    {
+        public Walking() { AnimationName = "Walk"; }
+        public override void Enter()
+        {
+            PlayAnimation(AnimationName);
+            Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
-        public class Running : MoveState
+        public override MoveState Update(double delta)
         {
-            public Running() { AnimationName = "Run"; }
+            Actor.UpdateDirection();
+            Actor.Move();
+            return CheckForTransitions();
+        }
 
-            public override void Enter()
-            {
-                PlayAnimation(AnimationName);
-                Actor.MaxSpeed = Actor.RunSpeed;
-            }
+        public override MoveState CheckForTransitions()
+        {
+            if (StateController.IsBlocked(BlockedState.Move))
+                return GetState<Standing>();
+            if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
+                return GetState<Running>();
+            if (InputHandler.GetLeftAxis().x == 0)
+                return GetState<Standing>();
+            if (InputHandler.Run.IsActionPressed)
+                return GetState<Running>();
+            return null;
+        }
+    }
 
-            public override MoveState Update(double delta)
-            {
-                Actor.UpdateDirection();
-                Actor.Move();
-                return CheckForTransitions();
-            }
+    public class Running : MoveState
+    {
+        public Running() { AnimationName = "Run"; }
 
-            public override MoveState CheckForTransitions()
-            {
-                if (StateController.IsBlocked(BlockedState.Move))
-                    return GetState<Standing>();
-                if (Actor.Stats.HasEffect(StatusEffectType.Burn))
-                    return null;
-                if (InputHandler.GetLeftAxis().x == 0)
-                    return GetState<Standing>();
-                if (InputHandler.Run.IsActionPressed)
-                    return null;
-                return GetState<Walking>();
-            }
+        public override void Enter()
+        {
+            PlayAnimation(AnimationName);
+            Actor.MaxSpeed = Actor.RunSpeed;
+        }
+
+        public override MoveState Update(double delta)
+        {
+            Actor.UpdateDirection();
+            Actor.Move();
+            return CheckForTransitions();
+        }
+
+        public override MoveState CheckForTransitions()
+        {
+            if (StateController.IsBlocked(BlockedState.Move))
+                return GetState<Standing>();
+            if (Actor.Stats.HasEffect(StatusEffectType.Burn))
+                return null;
+            if (InputHandler.GetLeftAxis().x == 0)
+                return GetState<Standing>();
+            if (InputHandler.Run.IsActionPressed)
+                return null;
+            return GetState<Walking>();
         }
     }
 }

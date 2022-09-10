@@ -1,10 +1,9 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.GUI
+namespace GameCore.GUI;
+
+public partial class StateDisplay : Control
 {
-    public partial class StateDisplay : Control
-    {
-        public static string GetScenePath() => GDEx.GetScenePath();
-    }
+    public static string GetScenePath() => GDEx.GetScenePath();
 }

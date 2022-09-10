@@ -110,7 +110,7 @@ public abstract class TransitionControllerBase
         _loadingScreen = null;
     }
 
-    private Node GetTarget(TransitionType transitionType)
+    private static Node GetTarget(TransitionType transitionType)
     {
         return transitionType switch
         {

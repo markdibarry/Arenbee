@@ -1,7 +1,8 @@
-using Arenbee.GUI.Menus.Common;
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
+
+namespace Arenbee.GUI.Menus.Common;
 
 [Tool]
 public partial class PartyMemberOption : OptionItem

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using GameCore.Extensions;
-using GameCore.GUI.Text;
 using Godot;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class DialogBox : Control

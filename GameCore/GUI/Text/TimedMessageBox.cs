@@ -1,7 +1,7 @@
 ﻿using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.GUI.Text;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class TimedMessageBox : MessageBox

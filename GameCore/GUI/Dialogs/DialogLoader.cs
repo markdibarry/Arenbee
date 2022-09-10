@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Godot;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 public static class DialogLoader
 {

@@ -1,8 +1,5 @@
-using System.Collections.Generic;
+﻿namespace GameCore.Statistics;
 
-namespace GameCore.Statistics
+public static class StatsExtensions
 {
-    public static class StatsExtensions
-    {
-    }
 }

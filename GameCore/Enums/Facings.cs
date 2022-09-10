@@ -1,8 +1,7 @@
-namespace GameCore.Enums
+﻿namespace GameCore.Enums;
+
+public enum Facings
 {
-    public enum Facings
-    {
-        Left = -1,
-        Right = 1
-    }
+    Left = -1,
+    Right = 1
 }

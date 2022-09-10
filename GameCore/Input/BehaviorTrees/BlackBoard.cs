@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace GameCore.Input
-{
-    public class BlackBoard : Dictionary<string, object> { }
-}
+namespace GameCore.Input;
+
+public class BlackBoard : Dictionary<string, object> { }

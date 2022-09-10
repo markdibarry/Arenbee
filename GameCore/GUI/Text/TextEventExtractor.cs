@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using Godot;
 
-namespace GameCore.GUI.Text;
+namespace GameCore.GUI;
 
 public static class TextEventExtractor
 {

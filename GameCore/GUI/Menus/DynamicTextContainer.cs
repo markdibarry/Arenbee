@@ -1,6 +1,5 @@
 ﻿using System;
 using GameCore.Extensions;
-using GameCore.GUI.Text;
 using Godot;
 
 namespace GameCore.GUI;

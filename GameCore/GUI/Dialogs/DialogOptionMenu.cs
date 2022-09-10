@@ -1,9 +1,9 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class DialogOptionMenu : Menu

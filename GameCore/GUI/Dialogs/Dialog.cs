@@ -1,10 +1,9 @@
 ﻿using System;
 using GameCore.Extensions;
-using GameCore.GUI.Text;
 using GameCore.Input;
 using Godot;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 public partial class Dialog : GUILayer
 {

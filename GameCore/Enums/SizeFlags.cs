@@ -1,12 +1,11 @@
-namespace GameCore.Enums
+﻿namespace GameCore.Enums;
+
+/// <summary>
+/// Must match internal size flags
+/// </summary>
+public enum BoxAlign
 {
-    /// <summary>
-    /// Must match internal size flags
-    /// </summary>
-    public enum BoxAlign
-    {
-        Left = 0,
-        Center = 4,
-        Right = 8
-    }
+    Left = 0,
+    Center = 4,
+    Right = 8
 }

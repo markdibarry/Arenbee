@@ -19,15 +19,15 @@ public partial class FadeTransition : Transition
     public override async Task TransistionFrom()
     {
         _colorRect.Modulate = Colors.Transparent;
-        var tween = GetTree().CreateTween();
-        var prop = tween.TweenProperty(_colorRect, "modulate:a", 1f, 0.4f);
+        var tween = GetTree().CreateTween()
+            .TweenProperty(_colorRect, "modulate:a", 1f, 0.4f);
         await _colorRect.ToSignal(tween, "finished");
     }
 
     public override async Task TransitionTo()
     {
-        var tween = GetTree().CreateTween();
-        var prop = tween.TweenProperty(_colorRect, "modulate:a", 0f, 0.4f);
+        var tween = GetTree().CreateTween()
+            .TweenProperty(_colorRect, "modulate:a", 0f, 0.4f);
         await _colorRect.ToSignal(tween, "finished");
     }
 }

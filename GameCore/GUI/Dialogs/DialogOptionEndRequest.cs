@@ -1,7 +1,6 @@
-namespace GameCore.GUI.Dialogs
+﻿namespace GameCore.GUI;
+
+public class DialogOptionClosedRequest
 {
-    public class DialogOptionClosedRequest
-    {
-        public int Next { get; set; }
-    }
+    public int Next { get; set; }
 }

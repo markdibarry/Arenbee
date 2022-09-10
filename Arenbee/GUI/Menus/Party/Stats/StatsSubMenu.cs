@@ -7,57 +7,56 @@ using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
 
-namespace Arenbee.GUI.Menus.Party
+namespace Arenbee.GUI.Menus.Party;
+
+[Tool]
+public partial class StatsSubMenu : OptionSubMenu
 {
-    [Tool]
-    public partial class StatsSubMenu : OptionSubMenu
+    public static string GetScenePath() => GDEx.GetScenePath();
+    private PlayerParty _playerParty;
+    private ActorStatsDisplay _statsDisplay;
+    private OptionContainer _partyOptions;
+    private PackedScene _textOptionScene;
+
+    protected override void SetNodeReferences()
     {
-        public static string GetScenePath() => GDEx.GetScenePath();
-        private PlayerParty _playerParty;
-        private ActorStatsDisplay _statsDisplay;
-        private OptionContainer _partyOptions;
-        private PackedScene _textOptionScene;
+        base.SetNodeReferences();
+        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+        _partyOptions = OptionContainers.Find(x => x.Name == "PartyList");
+        _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
+        _playerParty = Locator.GetParty() ?? new PlayerParty();
+    }
 
-        protected override void SetNodeReferences()
-        {
-            base.SetNodeReferences();
-            _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-            _partyOptions = OptionContainers.Find(x => x.Name == "PartyList");
-            _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
-            _playerParty = Locator.GetParty() ?? new PlayerParty();
-        }
+    protected override void ReplaceDefaultOptions()
+    {
+        UpdatePartyMemberOptions();
+    }
 
-        protected override void ReplaceDefaultOptions()
-        {
-            UpdatePartyMemberOptions();
-        }
+    protected override void OnItemFocused()
+    {
+        base.OnItemFocused();
+        var actor = CurrentContainer.CurrentItem.GetData<Actor>("actor");
+        if (actor == null)
+            return;
+        _statsDisplay.UpdateStatsDisplay(actor);
+    }
 
-        protected override void OnItemFocused()
+    private List<TextOption> GetPartyMemberOptions()
+    {
+        var options = new List<TextOption>();
+        foreach (var actor in _playerParty.Actors)
         {
-            base.OnItemFocused();
-            var actor = CurrentContainer.CurrentItem.GetData<Actor>("actor");
-            if (actor == null)
-                return;
-            _statsDisplay.UpdateStatsDisplay(actor);
+            var textOption = _textOptionScene.Instantiate<TextOption>();
+            textOption.OptionData["actor"] = actor;
+            textOption.LabelText = actor.Name;
+            options.Add(textOption);
         }
+        return options;
+    }
 
-        private List<TextOption> GetPartyMemberOptions()
-        {
-            var options = new List<TextOption>();
-            foreach (var actor in _playerParty.Actors)
-            {
-                var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.OptionData["actor"] = actor;
-                textOption.LabelText = actor.Name;
-                options.Add(textOption);
-            }
-            return options;
-        }
-
-        private void UpdatePartyMemberOptions()
-        {
-            List<TextOption> options = GetPartyMemberOptions();
-            _partyOptions.ReplaceChildren(options);
-        }
+    private void UpdatePartyMemberOptions()
+    {
+        List<TextOption> options = GetPartyMemberOptions();
+        _partyOptions.ReplaceChildren(options);
     }
 }

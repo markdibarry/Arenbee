@@ -19,7 +19,7 @@ public class ItemDB : ItemDBBase
         BuildKey(items);
     }
 
-    private void BuildWeapons(List<ItemBase> items)
+    private static void BuildWeapons(List<ItemBase> items)
     {
         items.Add(new("HockeyStick", ItemCategoryIds.Weapon)
         {
@@ -67,7 +67,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildHeadGear(List<ItemBase> items)
+    private static void BuildHeadGear(List<ItemBase> items)
     {
         items.Add(new("CheeseHat", ItemCategoryIds.Headgear)
         {
@@ -127,7 +127,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildShirt(List<ItemBase> items)
+    private static void BuildShirt(List<ItemBase> items)
     {
         items.Add(new("ClemsonHoodie", ItemCategoryIds.Shirt)
         {
@@ -159,7 +159,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildPants(List<ItemBase> items)
+    private static void BuildPants(List<ItemBase> items)
     {
         items.Add(new("JNCOJeans", ItemCategoryIds.Pants)
         {
@@ -191,7 +191,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildFootwear(List<ItemBase> items)
+    private static void BuildFootwear(List<ItemBase> items)
     {
         items.Add(new("Vibrams", ItemCategoryIds.Footwear)
         {
@@ -239,7 +239,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildAccessories(List<ItemBase> items)
+    private static void BuildAccessories(List<ItemBase> items)
     {
         items.Add(new("FriendshipBracelet", ItemCategoryIds.Accessory)
         {
@@ -314,7 +314,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildRestorative(List<ItemBase> items)
+    private static void BuildRestorative(List<ItemBase> items)
     {
         items.Add(new("Potion", ItemCategoryIds.Restorative)
         {
@@ -469,7 +469,7 @@ public class ItemDB : ItemDBBase
         });
     }
 
-    private void BuildKey(List<ItemBase> items)
+    private static void BuildKey(List<ItemBase> items)
     {
         items.Add(new("BunnyNugget", ItemCategoryIds.Key)
         {

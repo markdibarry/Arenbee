@@ -78,7 +78,7 @@ public partial class InventorySubMenu : OptionSubMenu
         _inventory = Locator.GetParty()?.Inventory;
     }
 
-    private List<TextOption> GetItemTypeOptions()
+    private static List<TextOption> GetItemTypeOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();

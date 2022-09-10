@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.GUI.Text;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class DynamicTextBox : Control

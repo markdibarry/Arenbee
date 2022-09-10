@@ -69,7 +69,7 @@ public partial class UseSubMenu : OptionSubMenu
         _optionContainer.ReplaceChildren(options);
     }
 
-    private void HandleDrop()
+    private static void HandleDrop()
     {
         // TODO
     }
@@ -99,7 +99,7 @@ public partial class UseSubMenu : OptionSubMenu
         RaiseRequestedAdd(usePartySubMenu);
     }
 
-    private void OpenEnemyUseSubMenu()
+    private static void OpenEnemyUseSubMenu()
     {
         // TODO
     }

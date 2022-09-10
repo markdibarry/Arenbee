@@ -1,4 +1,4 @@
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
 
@@ -14,7 +14,7 @@ public partial class BasicLoadingScreen : LoadingScreen
         base._Ready();
         var sprite2d = GetNode<Sprite2D>("Sprite2d");
         var tween = sprite2d.CreateTween().SetLoops();
-        var prop2 = tween.TweenProperty(sprite2d, "rotation", Mathf.Tau, 1f)
+        tween.TweenProperty(sprite2d, "rotation", Mathf.Tau, 1f)
             .AsRelative();
     }
 }

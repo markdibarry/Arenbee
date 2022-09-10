@@ -4,12 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using GameCore.Actors;
-using GameCore;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
 
-namespace GameCore.GUI.Dialogs;
+namespace GameCore.GUI;
 
 public class DialogScript
 {

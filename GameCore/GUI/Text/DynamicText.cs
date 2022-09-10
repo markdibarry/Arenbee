@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.GUI.Text;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class DynamicText : RichTextLabel
