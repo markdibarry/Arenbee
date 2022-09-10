@@ -1,7 +1,7 @@
-﻿using GameCore.Extensions;
+﻿using System;
+using GameCore.Extensions;
 using GameCore.GUI.Text;
 using Godot;
-using static GameCore.GUI.Text.DynamicText;
 
 namespace GameCore.GUI;
 
@@ -59,8 +59,7 @@ public partial class DynamicTextContainer : PanelContainer
                 _dynamicTextBox.Speed = value;
         }
     }
-    public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
-    public event StoppedWritingHandler StoppedWriting;
+    public event Action StoppedWriting;
 
     public override void _ExitTree()
     {

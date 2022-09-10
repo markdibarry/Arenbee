@@ -65,9 +65,9 @@ public partial class EquipmentSubMenu : OptionSubMenu
         _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
     }
 
-    private List<KeyValueOption> GetEquipmentOptions(OptionItem optionItem)
+    private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
     {
-        var options = new List<KeyValueOption>();
+        var options = new List<EquipSelectOption>();
         if (optionItem == null)
             return options;
         var actor = optionItem.GetData<Actor>("actor");
@@ -75,12 +75,11 @@ public partial class EquipmentSubMenu : OptionSubMenu
             return options;
         foreach (var slot in actor.Equipment.Slots)
         {
-            var keyValueOption = _equipSelectOptionScene.Instantiate<KeyValueOption>();
-            string name = slot.SlotName.Get().Abbreviation;
-            keyValueOption.KeyText = name + ":";
-            keyValueOption.ValueText = slot.Item?.DisplayName ?? "<None>";
-            keyValueOption.OptionData["slotName"] = (long)slot.SlotName;
-            options.Add(keyValueOption);
+            var option = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
+            option.KeyText = slot.SlotCategory.Name + ":";
+            option.ValueText = slot.Item?.DisplayName ?? "<None>";
+            option.OptionData[nameof(EquipmentSlotBase.SlotCategoryId)] = slot.SlotCategoryId;
+            options.Add(option);
         }
         return options;
     }
@@ -103,10 +102,10 @@ public partial class EquipmentSubMenu : OptionSubMenu
         var actor = _partyOptions.CurrentItem.GetData<Actor>("actor");
         if (actor == null)
             return;
-        var slotName = (EquipSlotName)optionItem.GetData<long>("slotName");
-        if (slotName == EquipSlotName.None)
+        var slotCategoryId = optionItem.GetData<string>(nameof(EquipmentSlotBase.SlotCategoryId));
+        if (string.IsNullOrEmpty(slotCategoryId))
             return;
-        var slot = actor.Equipment.GetSlot(slotName);
+        var slot = actor.Equipment.GetSlot(slotCategoryId);
         SelectSubMenu selectMenu = GDEx.Instantiate<SelectSubMenu>(SelectSubMenu.GetScenePath());
         selectMenu.Slot = slot;
         selectMenu.Actor = actor;
@@ -115,7 +114,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private void UpdateEquipmentDisplay(OptionItem optionItem)
     {
-        List<KeyValueOption> options = GetEquipmentOptions(optionItem);
+        List<EquipSelectOption> options = GetEquipmentOptions(optionItem);
         _equipmentOptions.ReplaceChildren(options);
     }
 

@@ -1,4 +1,5 @@
-﻿using GameCore.Game;
+﻿using System;
+using GameCore.Game;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -12,10 +13,8 @@ public partial class Actor
     public AnimationPlayer AnimationPlayer { get; private set; }
     public IStateController StateController { get; protected set; }
     public IFrameController IFrameController { get; }
-    public delegate void ActorHandler(Actor actor);
-    public delegate void DamageReceivedHandler(Actor actor, DamageData damageRecievedData);
-    public event ActorHandler Defeated;
-    public event DamageReceivedHandler DamageRecieved;
+    public event Action<Actor> Defeated;
+    public event Action<Actor, DamageData> DamageRecieved;
 
     public void PlaySoundFX(string soundPath)
     {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://bmquoy67ynmba"]
 
 [ext_resource type="Script" path="res://GameCore/GUI/Menus/OptionItems/OptionItem.cs" id="1_xluat"]
 
@@ -7,11 +7,8 @@ texture_filter = 1
 offset_right = 4.0
 offset_bottom = 4.0
 size_flags_vertical = 0
-theme_override_constants/margin_right = 1
-theme_override_constants/margin_top = 1
 theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 1
-script = ExtResource( "1_xluat" )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("1_xluat")

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using GameCore.Extensions;
 using Godot;
-using static GameCore.GUI.Text.DynamicText;
 
 namespace GameCore.GUI.Text;
 
@@ -55,7 +54,7 @@ public partial class DynamicTextBox : Control
     [Export]
     public bool ShouldWrite
     {
-        get => _dynamicText?.WriteEnabled ?? false;
+        get => _dynamicText?.WriteTextEnabled ?? false;
         set => WritePage(value);
     }
     [Export]
@@ -79,10 +78,10 @@ public partial class DynamicTextBox : Control
                 _dynamicText.SpeedUpText = value;
         }
     }
-    public delegate void TextEventTriggeredHandler(ITextEvent textEvent);
-    public event TextEventTriggeredHandler TextEventTriggered;
-    public event StoppedWritingHandler StoppedWriting;
-    public event TextLoadedHandler TextLoaded;
+
+    public event Action<ITextEvent> TextEventTriggered;
+    public event Action StoppedWriting;
+    public event Action TextLoaded;
 
     public override void _ExitTree()
     {
@@ -102,7 +101,7 @@ public partial class DynamicTextBox : Control
 
     public bool IsAtPageEnd()
     {
-        return _dynamicText?.IsAtStop() ?? false;
+        return _dynamicText?.IsAtTextEnd() ?? false;
     }
 
     public void NextPage()
@@ -114,7 +113,7 @@ public partial class DynamicTextBox : Control
     public void ShowAllPage(bool shouldShow)
     {
         if (shouldShow)
-            _dynamicText?.ShowAllToStop(true);
+            _dynamicText?.ShowToTextEnd(true);
         else
             ToPage(CurrentPage);
     }
@@ -126,7 +125,7 @@ public partial class DynamicTextBox : Control
         newPage = GetAdjustedPageIndex(newPage);
         int newPageLine = GetPageLine(newPage);
         _dynamicText.MoveToLine(newPageLine);
-        _dynamicText.StopAt = GetStopAt(newPage);
+        _dynamicText.EndChar = GetEndChar(newPage);
     }
 
     public void UpdateText(string text)
@@ -144,7 +143,7 @@ public partial class DynamicTextBox : Control
     public void WritePage(bool shouldWrite)
     {
         if (_dynamicText != null)
-            _dynamicText.WriteEnabled = shouldWrite;
+            _dynamicText.WriteTextEnabled = shouldWrite;
     }
 
     private int GetAdjustedPageIndex(int page)
@@ -194,7 +193,7 @@ public partial class DynamicTextBox : Control
             return _pageBreaks[page];
     }
 
-    private int GetStopAt(int page)
+    private int GetEndChar(int page)
     {
         if (page + 1 >= _pageBreaks.Length)
             return _dynamicText.GetTotalCharacterCount();

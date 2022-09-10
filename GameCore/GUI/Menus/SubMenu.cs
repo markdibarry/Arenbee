@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GameCore.Constants;
 using GameCore.Extensions;
 using GameCore.Input;
@@ -31,10 +32,8 @@ public partial class SubMenu : Control
     [Export] protected bool PreventCancel { get; set; }
     [Export] protected bool PreventCloseAll { get; set; }
     protected Color TempColor { get; set; }
-    public delegate void RequestedAddHandler(SubMenu subMenu);
-    public delegate void RequestedCloseHandler(SubMenuCloseRequest closeRequest);
-    public event RequestedAddHandler RequestedAdd;
-    public event RequestedCloseHandler RequestedClose;
+    public event Action<SubMenu> RequestedAdd;
+    public event Action<SubMenuCloseRequest> RequestedClose;
 
     public override void _Ready()
     {
@@ -75,6 +74,8 @@ public partial class SubMenu : Control
         await PostWaitFrameSetup();
         IsActive = true;
     }
+
+    public virtual Task OnNavigationAsync(SubMenu subMenu) => Task.CompletedTask;
 
     public virtual void ResumeSubMenu()
     {

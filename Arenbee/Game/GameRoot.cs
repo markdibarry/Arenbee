@@ -25,6 +25,8 @@ public partial class GameRoot : GameRootBase
         Locator.ProvideGameRoot(this);
         Locator.ProvideAudioController(AudioController);
         Locator.ProvideItemDB(new ItemDB());
+        Locator.ProvideItemCategoryDB(new ItemCategoryDB());
+        Locator.ProvideEquipmentSlotCategoryDB(new EquipmentSlotCategoryDB());
         Locator.ProvideActionEffectDB(new ActionEffectDB());
         Locator.ProvideStatusEffectDB(new StatusEffectDB());
         Locator.ProvideTransitionController(TransitionController);

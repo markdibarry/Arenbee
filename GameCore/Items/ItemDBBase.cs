@@ -1,20 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace GameCore.Items
+namespace GameCore.Items;
+
+public abstract class ItemDBBase
 {
-    public abstract class ItemDBBase
+    protected ItemDBBase()
     {
-        protected List<Item> Items { get; } = new();
+        BuildDB(_items);
+    }
 
-        public virtual Item GetItem(string id)
-        {
-            return Items.Find(item => item.Id.Equals(id));
-        }
+    private readonly List<ItemBase> _items = new();
+    public IEnumerable<ItemBase> Items => _items.AsReadOnly();
 
-        public virtual IEnumerable<Item> GetItemsByType(ItemType itemType)
-        {
-            return Items.Where(item => item.ItemType.Equals(itemType));
-        }
+    protected abstract void BuildDB(List<ItemBase> items);
+
+    public virtual ItemBase GetItem(string id)
+    {
+        return _items.Find(item => item.Id.Equals(id));
+    }
+
+    public IEnumerable<ItemBase> GetItemsByCategory(string itemCategoryId)
+    {
+        return _items.Where(item => item.ItemCategoryId.Equals(itemCategoryId));
     }
 }

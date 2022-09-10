@@ -1,6 +1,6 @@
 ﻿using GameCore.Constants;
-using Godot.Collections;
 using Godot;
+using Godot.Collections;
 
 namespace GameCore.GUI;
 

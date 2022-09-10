@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GameCore.GUI;
 
@@ -15,15 +17,14 @@ public class Loader
         foreach (string path in paths)
         {
             if (path.EndsWith("gamesave.json"))
-                _objects.Add(new ObjectLoaderGameSave(path));
+                _objects.Add(new ObjectLoaderGameSave(path, OnReport));
             else
-                _objects.Add(new ObjectLoaderResource(path));
+                _objects.Add(new ObjectLoaderResource(path, OnReport));
         }
     }
 
-    private ObjectLoader _currentObject;
     private readonly List<ObjectLoader> _objects;
-    public LoaderStatus Status { get; set; }
+    public event Action<int> ProgressUpdate;
 
     public T GetObject<T>(string path)
     {
@@ -33,45 +34,14 @@ public class Loader
         return (T)result;
     }
 
-    public int Load()
+    public async Task LoadAsync()
     {
-        if (Status == LoaderStatus.Inactive)
-        {
-            _currentObject = GetNextObjectToLoad();
-            Status = _currentObject == null ? LoaderStatus.AllLoaded : LoaderStatus.Loading;
-        }
-
-        if (Status == LoaderStatus.Loading)
-        {
-            _currentObject.Load();
-            if (_currentObject.Status == ObjectLoadStatus.Loaded)
-                Status = LoaderStatus.Inactive;
-        }
-
-        return GetProgress();
+        foreach (var obj in _objects)
+            await obj.LoadAsync();
     }
 
-    public int GetProgress()
+    public void OnReport()
     {
-        int totalProgress = 0;
-        if (_objects.Count == 0)
-            return totalProgress;
-        foreach (ObjectLoader obj in _objects)
-        {
-            totalProgress += obj.Status == ObjectLoadStatus.Loaded ? 100 : obj.Progress;
-        }
-        return totalProgress / _objects.Count;
+        ProgressUpdate?.Invoke((int)_objects.Average(x => x.Progress));
     }
-
-    public ObjectLoader GetNextObjectToLoad()
-    {
-        return _objects.FirstOrDefault(x => x.Status == ObjectLoadStatus.NotLoaded);
-    }
-}
-
-public enum LoaderStatus
-{
-    Inactive,
-    Loading,
-    AllLoaded
 }

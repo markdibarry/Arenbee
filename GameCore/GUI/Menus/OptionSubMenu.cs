@@ -7,7 +7,6 @@ using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
-using static GameCore.GUI.OptionContainer;
 
 namespace GameCore.GUI;
 
@@ -24,7 +23,7 @@ public partial class OptionSubMenu : SubMenu
     private Cursor _cursor;
     public OptionContainer CurrentContainer { get; private set; }
     public List<OptionContainer> OptionContainers { get; private set; }
-    public event ItemHandler ItemSelected;
+    public event Action ItemSelected;
 
     public override async void ResumeSubMenu()
     {

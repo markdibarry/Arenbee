@@ -1,4 +1,5 @@
-﻿using GameCore.Statistics;
+﻿using System;
+using GameCore.Statistics;
 
 namespace GameCore.Actors;
 
@@ -27,9 +28,8 @@ public partial class Actor
             }
         }
     }
-    public delegate void ModChangedHandler(Actor actor, ModChangeData modChangeData);
-    public event ModChangedHandler ModChanged;
-    public event ActorHandler StatsChanged;
+    public event Action<Actor, ModChangeData> ModChanged;
+    public event Action<Actor> StatsChanged;
 
     protected virtual void ApplyDefaultStats() { }
 

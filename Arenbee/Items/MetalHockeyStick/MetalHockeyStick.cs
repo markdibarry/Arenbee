@@ -1,10 +1,9 @@
-namespace Arenbee.Items
+﻿namespace Arenbee.Items;
+
+public partial class MetalHockeyStick : HockeyStick
 {
-    public partial class MetalHockeyStick : HockeyStick
+    public MetalHockeyStick()
     {
-        public MetalHockeyStick()
-        {
-            ItemId = "MetalHockeyStick";
-        }
+        SetItemId("HockeyStick");
     }
 }

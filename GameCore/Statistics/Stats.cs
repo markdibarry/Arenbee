@@ -58,16 +58,11 @@ namespace GameCore.Statistics
         [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
         public StatusEffects StatusEffects { get; }
         [JsonIgnore] public Func<int> MinHP { get; set; } = () => 0;
-        public delegate void DamageRecievedHandler(DamageData damageRecievedData);
-        public delegate void HPDepletedHandler();
-        public delegate void ModChangedHandler(ModChangeData modChangeData);
-        public delegate void ProcessedHandler(double delta);
-        public delegate void StatsChangedHandler();
-        public event DamageRecievedHandler DamageReceived;
-        public event HPDepletedHandler HPDepleted;
-        public event ModChangedHandler ModChanged;
-        public event ProcessedHandler Processed;
-        public event StatsChangedHandler StatsChanged;
+        public event Action<DamageData> DamageReceived;
+        public event Action HPDepleted;
+        public event Action<ModChangeData> ModChanged;
+        public event Action<double> Processed;
+        public event Action StatsChanged;
 
         public void AddKOStatus()
         {

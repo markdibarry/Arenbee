@@ -75,7 +75,7 @@ namespace Arenbee.GUI.Menus.Party
                     Locator.Root?.ResetToTitleScreenAsync(titleMenuScene);
                     return Task.CompletedTask;
                 });
-            tController.ChangeScene(request);
+            tController.RequestTransition(request);
         }
     }
 }

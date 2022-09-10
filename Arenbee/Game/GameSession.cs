@@ -1,6 +1,5 @@
 ﻿using Arenbee.GUI.Menus;
 using GameCore.AreaScenes;
-using GameCore.Constants;
 using GameCore.Extensions;
 using GameCore.Game;
 using GameCore.GUI;
@@ -36,13 +35,14 @@ public partial class GameSession : GameSessionBase
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(Arenbee.Constants.PathConstants.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Constants.PathConstants.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }
 
     private async void OpenPartyMenuAsync()
     {
-        await GUIController.OpenMenuAsync(_partyMenuScene);
+        MenuOpenRequest request = new(_partyMenuScene);
+        await GUIController.OpenMenuAsync(request);
     }
 }

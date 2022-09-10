@@ -1,4 +1,6 @@
-﻿using GameCore.Actors;
+﻿using System;
+using System.Threading.Tasks;
+using GameCore.Actors;
 using GameCore.AreaScenes;
 using GameCore.Extensions;
 using GameCore.Game.SaveData;
@@ -7,7 +9,6 @@ using GameCore.Input;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
-using static GameCore.Actors.Actor;
 
 namespace GameCore.Game;
 
@@ -26,12 +27,10 @@ public abstract partial class GameSessionBase : Node2D
     public PlayerParty Party { get; private set; }
     public SessionState SessionState { get; private set; }
     public CanvasLayer Transition { get; private set; }
-    public delegate void AreaSceneHandler(AreaScene newScene);
-    public delegate void PauseChangedHandler(ProcessModeEnum processMode);
-    public event ActorHandler ActorAddedToArea;
-    public event ActorHandler ActorRemovedFromArea;
-    public event AreaSceneHandler AreaSceneAdded;
-    public event AreaSceneHandler AreaSceneRemoved;
+    public event Action<Actor> ActorAddedToArea;
+    public event Action<Actor> ActorRemovedFromArea;
+    public event Action<AreaScene> AreaSceneAdded;
+    public event Action<AreaScene> AreaSceneRemoved;
 
     public override void _Ready()
     {
@@ -71,9 +70,9 @@ public abstract partial class GameSessionBase : Node2D
         CurrentAreaScene?.OnGameStateChanged(gameState);
     }
 
-    public void OpenDialog(string path)
+    public async Task OpenDialogAsync(DialogOpenRequest request)
     {
-        GUIController.OpenDialog(path);
+        await GUIController.OpenDialogAsync(request);
     }
 
     public void Pause()

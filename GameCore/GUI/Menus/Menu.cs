@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Godot;
 using GameCore.Extensions;
 using GameCore.Input;
-using GameCore.GUI.Menus;
+using System.Collections.Generic;
 
 namespace GameCore.GUI;
 
@@ -55,7 +55,11 @@ public partial class Menu : GUILayer
             HandleCloseRequestAsync(_closeRequest);
     }
 
-    public async Task AddSubMenuAsync(SubMenu subMenu)
+    public virtual void DataTransfer(Dictionary<string, object> grabBag)
+    {
+    }
+
+    protected async Task AddSubMenuAsync(SubMenu subMenu)
     {
         CurrentSubMenu?.SuspendSubMenu();
         SubMenus.AddChild(subMenu);
@@ -68,10 +72,7 @@ public partial class Menu : GUILayer
         await InitAsync();
     }
 
-    public virtual async Task InitAsync()
-    {
-        await TransitionOpenAsync();
-    }
+    public virtual async Task InitAsync() => await TransitionOpenAsync();
 
     private async Task CloseCurrentSubMenuAsync(Action callback = null, Type cascadeTo = null)
     {
@@ -95,7 +96,8 @@ public partial class Menu : GUILayer
 
     private void CloseMenu(Action callback = null)
     {
-        CurrentSubMenu.IsActive = false;
+        if (CurrentSubMenu != null)
+            CurrentSubMenu.IsActive = false;
         var request = new GUILayerCloseRequest()
         {
             Callback = callback,

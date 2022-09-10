@@ -1,13 +1,31 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7eq34w6io0p0"]
+[gd_scene load_steps=3 format=3 uid="uid://b7eq34w6io0p0"]
 
-[ext_resource type="PackedScene" uid="uid://dgygikie1lfui" path="res://GameCore/GUI/Menus/OptionItems/KeyValueOption.tscn" id="1_t0ipt"]
+[ext_resource type="PackedScene" uid="uid://vm13acghyp35" path="res://GameCore/GUI/Menus/OptionItems/KeyValueOption.tscn" id="1_t0ipt"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Equipment/EquipSelectOption.cs" id="2_jhylh"]
 
-[node name="EquipSelectOption" instance=ExtResource( "1_t0ipt" )]
+[node name="EquipSelectOption" instance=ExtResource("1_t0ipt")]
+script = ExtResource("2_jhylh")
 KeyText = ""
 ValueText = ""
 
+[node name="HBoxContainer" parent="." index="0"]
+layout_mode = 3
+offset_right = 9.0
+offset_bottom = 8.0
+
 [node name="Key" parent="HBoxContainer" index="0"]
+layout_mode = 3
+offset_top = 1.0
+offset_right = 1.0
+offset_bottom = 6.0
 size_flags_stretch_ratio = 0.5
+text = ""
 
 [node name="Value" parent="HBoxContainer" index="1"]
+layout_mode = 3
+offset_left = 5.0
+offset_top = 1.0
+offset_right = 8.0
+offset_bottom = 6.0
 size_flags_horizontal = 3
+text = ""

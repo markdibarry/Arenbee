@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameCore.Actors;
 using GameCore.Extensions;
@@ -6,7 +7,6 @@ using GameCore.Game;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
-using static GameCore.Actors.Actor;
 
 namespace GameCore.AreaScenes
 {
@@ -23,12 +23,12 @@ namespace GameCore.AreaScenes
         public bool IsReady { get; set; }
         public Node2D PlayersContainer { get; set; }
         public Node2D SpawnPointContainer { get; set; }
-        public event ActorHandler ActorAdded;
-        public event DamageReceivedHandler ActorDamaged;
-        public event ActorHandler ActorDefeated;
-        public event ActorHandler ActorRemoved;
-        public event ModChangedHandler PlayerModChanged;
-        public event ActorHandler PlayerStatsChanged;
+        public event Action<Actor> ActorAdded;
+        public event Action<Actor, DamageData> ActorDamaged;
+        public event Action<Actor> ActorDefeated;
+        public event Action<Actor> ActorRemoved;
+        public event Action<Actor, ModChangeData> PlayerModChanged;
+        public event Action<Actor> PlayerStatsChanged;
 
         public override void _Ready()
         {

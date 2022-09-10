@@ -1,67 +1,63 @@
-﻿using GameCore.Game.SaveData;
+﻿using System;
+using System.Threading.Tasks;
+using GameCore.Game.SaveData;
 using Godot;
 
 namespace GameCore.GUI;
 
 public abstract class ObjectLoader
 {
-    protected ObjectLoader(string path)
+    protected ObjectLoader(string path, Action reportProgress)
     {
         Path = path;
+        ReportProgress = reportProgress;
     }
 
-    public ObjectLoadStatus Status { get; set; }
     public object LoadedObject { get; set; }
     public int Progress { get; set; }
     public string Path { get; set; }
-
-    public abstract void Load();
+    public Action ReportProgress { get; set; }
+    public abstract Task<object> LoadAsync();
 }
 
 public class ObjectLoaderResource : ObjectLoader
 {
-    public ObjectLoaderResource(string path)
-        : base(path) { }
+    public ObjectLoaderResource(string path, Action reportProgress)
+        : base(path, reportProgress) { }
 
-    private readonly Godot.Collections.Array _loadProgress = new();
-    private ResourceLoader.ThreadLoadStatus _loadStatus;
-
-    public override void Load()
+    public override async Task<object> LoadAsync()
     {
-        _loadStatus = ResourceLoader.LoadThreadedGetStatus(Path, _loadProgress);
-        if (Status == ObjectLoadStatus.NotLoaded)
+        ResourceLoader.ThreadLoadStatus loadStatus;
+        Godot.Collections.Array loadProgress = new();
+        ResourceLoader.LoadThreadedRequest(Path);
+
+        loadStatus = ResourceLoader.LoadThreadedGetStatus(Path, loadProgress);
+        Progress = (int)((double)loadProgress[0] * 100);
+        ReportProgress();
+
+        while (loadStatus == ResourceLoader.ThreadLoadStatus.InProgress)
         {
-            ResourceLoader.LoadThreadedRequest(Path);
-            Status = ObjectLoadStatus.Loading;
+            await Task.Delay(100);
+            loadStatus = ResourceLoader.LoadThreadedGetStatus(Path, loadProgress);
+            Progress = (int)((double)loadProgress[0] * 100);
+            ReportProgress();
         }
-        else if (_loadStatus == ResourceLoader.ThreadLoadStatus.Loaded && Status != ObjectLoadStatus.Loaded)
-        {
+        if (loadStatus == ResourceLoader.ThreadLoadStatus.Loaded)
             LoadedObject = ResourceLoader.LoadThreadedGet(Path);
-            Status = ObjectLoadStatus.Loaded;
-        }
-        Progress = (int)((double)_loadProgress[0] * 100);
+        return LoadedObject;
     }
 }
 
 public class ObjectLoaderGameSave : ObjectLoader
 {
-    public ObjectLoaderGameSave(string path)
-        : base(path) { }
+    public ObjectLoaderGameSave(string path, Action reportProgress)
+        : base(path, reportProgress) { }
 
-    public override void Load()
+    public override Task<object> LoadAsync()
     {
-        if (Status == ObjectLoadStatus.NotLoaded)
-        {
-            LoadedObject = SaveService.LoadGame(Path);
-            Status = ObjectLoadStatus.Loaded;
-            Progress = 100;
-        }
+        LoadedObject = SaveService.LoadGame(Path);
+        Progress = 100;
+        ReportProgress();
+        return Task.FromResult(LoadedObject);
     }
-}
-
-public enum ObjectLoadStatus
-{
-    NotLoaded,
-    Loading,
-    Loaded
 }

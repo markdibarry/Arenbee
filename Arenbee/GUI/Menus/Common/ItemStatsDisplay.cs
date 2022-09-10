@@ -35,14 +35,14 @@ namespace Arenbee.GUI.Menus.Common
             _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
         }
 
-        public void UpdateStatsDisplay(Item item)
+        public void UpdateStatsDisplay(ItemBase item)
         {
             UpdateAttributes(item);
             UpdateEAtk(item);
             UpdateEDef(item);
         }
 
-        private void UpdateAttributes(Item item)
+        private void UpdateAttributes(ItemBase item)
         {
             var attMods = item?.Modifiers?.Where(x => !x.IsHidden && x.StatType == StatType.Attribute);
             _hpContainer.UpdateDisplay(attMods, AttributeType.MaxHP);
@@ -53,7 +53,7 @@ namespace Arenbee.GUI.Menus.Common
             _mDefenseContainer.UpdateDisplay(attMods, AttributeType.MagicDefense);
         }
 
-        private void UpdateEAtk(Item item)
+        private void UpdateEAtk(ItemBase item)
         {
             _elementAtkContainer.Elements.QueueFreeAllChildren();
             _elementAtkContainer.Dim = true;
@@ -66,7 +66,7 @@ namespace Arenbee.GUI.Menus.Common
             _elementAtkContainer.Dim = false;
         }
 
-        private void UpdateEDef(Item item)
+        private void UpdateEDef(ItemBase item)
         {
             _elementDefContainer.Elements.QueueFreeAllChildren();
             _elementDefContainer.Dim = true;

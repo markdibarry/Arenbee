@@ -1,4 +1,4 @@
-﻿using GameCore.Game.SaveData;
+﻿using System.Threading.Tasks;
 
 namespace GameCore.Game
 {
@@ -8,7 +8,7 @@ namespace GameCore.Game
 
         protected override void SetNodeReferences() { }
 
-        protected override void Init() { }
+        protected override Task Init() => Task.CompletedTask;
 
         protected override void ProvideLocatorReferences() { }
 

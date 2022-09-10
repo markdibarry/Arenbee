@@ -1,5 +1,5 @@
-﻿using GameCore.Extensions;
-using GameCore.GUI.Menus;
+﻿using System;
+using GameCore.Extensions;
 using GameCore.GUI.Text;
 using GameCore.Input;
 using Godot;
@@ -23,12 +23,9 @@ public partial class Dialog : GUILayer
     public DialogPart[] DialogParts { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
-    public delegate void DialogStartedHandler();
-    public delegate void DialogEndedHandler();
-    public delegate void OptionBoxRequestedHandler(Menu menu);
-    public event DialogStartedHandler DialogStarted;
-    public event DialogEndedHandler DialogEnded;
-    public event OptionBoxRequestedHandler OptionBoxRequested;
+    public event Action DialogStarted;
+    public event Action DialogEnded;
+    public event Action<MenuOpenRequest> OptionBoxRequested;
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -106,7 +103,7 @@ public partial class Dialog : GUILayer
             // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
             if (Speaker.SameSpeakers(newPart.Speakers, nextBox.CurrentDialogPart.Speakers))
             {
-                nextBox.Raise();
+                nextBox.MoveToFront();
                 nextBox.CurrentDialogPart = newPart;
                 nextBox.UpdateDialogPart();
                 nextBox.Dim = false;
@@ -202,10 +199,10 @@ public partial class Dialog : GUILayer
 
     private void OpenOptionBoxAsync()
     {
-        _dialogOptionMenu = _dialogOptionMenuScene.Instantiate<DialogOptionMenu>();
-        _dialogOptionMenu.DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices;
-        _dialogOptionMenu.Dialog = this;
-        OptionBoxRequested?.Invoke(_dialogOptionMenu);
+        MenuOpenRequest request = new(_dialogOptionMenuScene);
+        request.GrabBag["DialogChoices"] = FocusedBox.CurrentDialogPart.DialogChoices;
+        request.GrabBag["Dialog"] = this;
+        OptionBoxRequested?.Invoke(request);
     }
 
     private void SpeedUpText()

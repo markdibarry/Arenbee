@@ -1,7 +1,7 @@
 ﻿using GameCore.Extensions;
-using GameCore.GUI;
 using Godot;
 
+namespace GameCore.GUI;
 [Tool]
 public partial class KeyValueOption : OptionItem
 {
@@ -35,9 +35,9 @@ public partial class KeyValueOption : OptionItem
 
     public override void _Ready()
     {
-        KeyLabel = GetNodeOrNull<Label>("HBoxContainer/Key");
+        KeyLabel = GetNodeOrNull<Label>("%Key");
         KeyLabel.Text = _keyText;
-        ValueLabel = GetNodeOrNull<Label>("HBoxContainer/Value");
+        ValueLabel = GetNodeOrNull<Label>("%Value");
         ValueLabel.Text = _valueText;
     }
 }

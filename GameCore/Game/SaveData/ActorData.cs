@@ -19,7 +19,7 @@ namespace GameCore.Game.SaveData
         }
 
         public string ActorPath { get; set; }
-        public IEnumerable<EquipmentSlot> EquipmentSlots { get; set; }
+        public IEnumerable<EquipmentSlotBase> EquipmentSlots { get; set; }
         public Stats Stats { get; set; }
 
         public Actor GetActor(Inventory inventory)

@@ -1,4 +1,7 @@
-﻿namespace GameCore.Statistics;
+﻿using System;
+
+namespace GameCore.Statistics;
+
 public class TempModifier
 {
     public TempModifier(Modifier modifier, StatsNotifier notifier)
@@ -21,8 +24,7 @@ public class TempModifier
                 _notifier.Elapsed += OnExpired;
         }
     }
-    public delegate void ExpiredHandler(TempModifier tempModifier);
-    public event ExpiredHandler Expired;
+    public event Action<TempModifier> Expired;
 
     public void OnExpired()
     {

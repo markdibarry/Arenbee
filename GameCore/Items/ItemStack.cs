@@ -8,39 +8,28 @@ public class ItemStack
 {
     public ItemStack(string itemId, int amount)
     {
-        Reservations = new List<EquipmentSlot>();
+        Reservations = new List<EquipmentSlotBase>();
         ItemId = itemId;
         Amount = amount;
-        _itemDB = Locator.ItemDB;
     }
 
-    private readonly ItemDBBase _itemDB;
-    private Item _item;
     public int Amount { get; private set; }
     [JsonIgnore]
-    public Item Item
+    public ItemBase Item
     {
-        get
-        {
-            if (!string.IsNullOrEmpty(ItemId))
-            {
-                if (_item == null || _item.Id != ItemId)
-                    _item = _itemDB.GetItem(ItemId);
-                return _item;
-            }
-            return null;
-        }
+        get => Locator.ItemDB.GetItem(ItemId);
+        private set => ItemId = value?.Id;
     }
-    public string ItemId { get; }
+    public string ItemId { get; private set; }
     [JsonIgnore]
-    public ICollection<EquipmentSlot> Reservations { get; set; }
+    public ICollection<EquipmentSlotBase> Reservations { get; set; }
 
     public void AddAmount(int num)
     {
         Amount += num;
     }
 
-    public bool AddReservation(EquipmentSlot slot)
+    public bool AddReservation(EquipmentSlotBase slot)
     {
         if (!Reservations.Contains(slot) && CanReserve())
         {
@@ -63,7 +52,7 @@ public class ItemStack
             Amount = 0;
     }
 
-    public bool RemoveReservation(EquipmentSlot slot)
+    public bool RemoveReservation(EquipmentSlotBase slot)
     {
         if (!Reservations.Contains(slot))
             return false;

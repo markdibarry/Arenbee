@@ -33,14 +33,14 @@ public class Inventory
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public ItemStack GetItemStack(Item item)
+    public ItemStack GetItemStack(ItemBase item)
     {
         return _itemStacks.Find(itemStack => itemStack.ItemId.Equals(item?.Id));
     }
 
-    public ICollection<ItemStack> GetItemsByType(ItemType itemType)
+    public ICollection<ItemStack> GetItemsByType(string itemCategoryId)
     {
-        return _itemStacks.Where(itemStack => itemStack.Item.ItemType == itemType).ToList();
+        return _itemStacks.Where(itemStack => itemStack.Item.ItemCategoryId == itemCategoryId).ToList();
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public class Inventory
     /// <param name="itemId"></param>
     /// <param name="amount"></param>
     /// <returns>The number of items left over after attempting to add to the inventory.</returns>
-    public int Add(Item item, int amount)
+    public int Add(ItemBase item, int amount)
     {
         int leftOver;
         ItemStack itemStack = GetItemStack(item);
@@ -83,14 +83,14 @@ public class Inventory
         return leftOver;
     }
 
-    public bool CanReserve(Item item) => CanReserve(item?.Id);
+    public bool CanReserve(ItemBase item) => CanReserve(item?.Id);
 
     public bool CanReserve(string itemId)
     {
         return GetItemStack(itemId)?.CanReserve() ?? false;
     }
 
-    public bool Remove(Item item, int amount)
+    public bool Remove(ItemBase item, int amount)
     {
         ItemStack itemStack = GetItemStack(item);
         if (itemStack != null)
@@ -103,7 +103,7 @@ public class Inventory
         return false;
     }
 
-    public void SetReservation(EquipmentSlot slot, Item newItem)
+    public void SetReservation(EquipmentSlotBase slot, ItemBase newItem)
     {
         GetItemStack(slot.Item)?.RemoveReservation(slot);
         GetItemStack(newItem)?.AddReservation(slot);

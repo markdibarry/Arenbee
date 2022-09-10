@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Arenbee.GUI;
+﻿using Arenbee.GUI;
 using GameCore.AreaScenes;
 using GameCore.Events;
 using GameCore.GUI;
@@ -14,19 +13,17 @@ public partial class SceneChanger : SceneChangerBase
     {
         var tController = Locator.TransitionController;
         var request = new TransitionRequest(
-            //BasicLoadingScreen.GetScenePath(),
             TransitionType.Session,
             FadeTransition.GetScenePath(),
-            //FadeTransition.GetScenePath(),
             new string[] { PackedScenePath },
-            (loader) =>
+            async (loader) =>
             {
                 var newAreaScene = loader.GetObject<PackedScene>(PackedScenePath);
-                Locator.Root?.GUIController.CloseAll();
+                GUILayerCloseRequest closeRequest = new() { CloseRequestType = CloseRequestType.AllLayers };
+                await Locator.Root?.GUIController.CloseLayerAsync(closeRequest);
                 Locator.Session?.RemoveAreaScene();
                 Locator.Session?.AddAreaScene(newAreaScene.Instantiate<AreaScene>());
-                return Task.CompletedTask;
             });
-        tController.ChangeScene(request);
+        tController.RequestTransition(request);
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using GameCore.GUI.Menus;
+﻿using System;
+using System.Threading.Tasks;
 using GameCore.Input;
 using Godot;
 
@@ -9,8 +9,7 @@ public abstract partial class GUILayer : Control
 {
     public string NameId { get; set; }
     public abstract void HandleInput(GUIInputHandler menuInput, double delta);
-    public delegate void RequestedCloseHandler(GUILayerCloseRequest request);
-    public event RequestedCloseHandler RequestedClose;
+    public event Action<GUILayerCloseRequest> RequestedClose;
 
     protected void RaiseRequestedClose(GUILayerCloseRequest request)
     {

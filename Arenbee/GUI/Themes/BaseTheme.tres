@@ -2,7 +2,7 @@
 
 [ext_resource type="FontVariation" path="res://Arenbee/GUI/Fonts/3x6.tres" id="1_tg3kh"]
 [ext_resource type="Texture2D" uid="uid://bnoa5ecbv0drg" path="res://Arenbee/GUI/Borders/border2.png" id="2_wie4d"]
-[ext_resource type="FontFile" uid="uid://bpl4x0bpa1xeo" path="res://Arenbee/GUI/Fonts/m3x6.ttf" id="3_w4l6s"]
+[ext_resource type="FontFile" uid="uid://bwgmirjnrsccs" path="res://Arenbee/GUI/Fonts/m3x6.ttf" id="3_w4l6s"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og6dl"]
 content_margin_left = 7.0
@@ -39,4 +39,4 @@ ProgressBar/styles/fg = SubResource("StyleBoxFlat_641gb")
 RichTextLabel/colors/font_outline_color = Color(0.12549, 0.12549, 0.12549, 1)
 RichTextLabel/constants/line_separation = 1
 RichTextLabel/constants/outline_size = 2
-RichTextLabel/fonts/normal_font = ExtResource("1_tg3kh")
+RichTextLabel/fonts/normal_font = ExtResource("3_w4l6s")

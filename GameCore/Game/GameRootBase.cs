@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GameCore.Audio;
 using GameCore.GUI;
 using GameCore.Input;
@@ -32,7 +33,7 @@ public abstract partial class GameRootBase : Node
     public override void _Ready()
     {
         SetNodeReferences();
-        Init();
+        _ = Init();
     }
 
     protected virtual void SetNodeReferences()
@@ -46,13 +47,13 @@ public abstract partial class GameRootBase : Node
         GameCamera = GameDisplay.GetNodeOrNull<GameCamera>("GameCamera");
     }
 
-    protected virtual void Init()
+    protected virtual async Task Init()
     {
         ProvideLocatorReferences();
         GameState.Init(GUIController);
         GameState.GameStateChanged += OnGameStateChanged;
         var titleMenuScene = GD.Load<PackedScene>(TitleMenuScenePath);
-        ResetToTitleScreenAsync(titleMenuScene);
+        await ResetToTitleScreenAsync(titleMenuScene);
     }
 
     protected virtual void ProvideLocatorReferences()
@@ -72,12 +73,18 @@ public abstract partial class GameRootBase : Node
         }
     }
 
-    public virtual async void ResetToTitleScreenAsync(PackedScene titleMenuScene)
+    public virtual async Task ResetToTitleScreenAsync(PackedScene titleMenuScene)
     {
         AudioController.Reset();
         Locator.ProvideGameSession(null);
-        GUIController.CloseAll();
-        await GUIController.OpenMenuAsync(titleMenuScene);
+        GUILayerCloseRequest closeRequest = new()
+        {
+            CloseRequestType = CloseRequestType.AllLayers,
+            PreventAnimation = true
+        };
+        await GUIController.CloseLayerAsync(closeRequest);
+        MenuOpenRequest openRequest = new(titleMenuScene) { PreventAnimation = true };
+        await GUIController.OpenMenuAsync(openRequest);
     }
 
     protected void HandleInput(double delta)

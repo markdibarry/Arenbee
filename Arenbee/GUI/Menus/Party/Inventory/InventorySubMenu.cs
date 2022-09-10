@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.GUI.Menus.Common;
+using Arenbee.Items;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
@@ -82,31 +82,37 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
-        foreach (var itemType in Enum<ItemType>.Values())
+        var itemCategories = Locator.ItemCategoryDB.Categories;
+        var allOption = textOptionScene.Instantiate<TextOption>();
+        allOption.LabelText = "All";
+        allOption.OptionData[nameof(Item.ItemCategoryId)] = "all";
+        options.Add(allOption);
+        foreach (var category in itemCategories)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = itemType == ItemType.None ? "All" : itemType.Get().Name;
-            //option.OptionData["itemType"] = itemType;
+            option.LabelText = category.Name;
+            option.OptionData[nameof(Item.ItemCategoryId)] = category.Id;
             options.Add(option);
         }
         return options;
     }
 
-    private List<KeyValueOption> GetItemOptions(ItemType itemType = ItemType.None)
+    private List<KeyValueOption> GetItemOptions(string itemCategoryId)
     {
         var options = new List<KeyValueOption>();
         ICollection<ItemStack> itemStacks;
-        if (itemType == ItemType.None)
+        if (itemCategoryId == "all")
             itemStacks = _inventory?.Items;
         else
-            itemStacks = _inventory?.GetItemsByType(itemType);
-
+            itemStacks = _inventory?.GetItemsByType(itemCategoryId);
+        if (itemStacks == null)
+            return options;
         foreach (var itemStack in itemStacks)
         {
             var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
             option.KeyText = itemStack.Item.DisplayName;
             option.ValueText = "x" + itemStack.Amount.ToString();
-            //option.OptionData["itemStack"] = itemStack;
+            option.OptionData[nameof(ItemStack.ItemId)] = itemStack.ItemId;
             options.Add(option);
         }
         return options;
@@ -114,7 +120,8 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void OpenUseSubMenu(OptionItem optionItem)
     {
-        var itemStack = optionItem.GetData<ItemStack>("itemStack");
+        string itemId = optionItem.GetData<string>(nameof(ItemStack.ItemId));
+        ItemStack itemStack = _inventory.GetItemStack(itemId);
         if (itemStack == null)
             return;
         var useSubMenu = GDEx.Instantiate<UseSubMenu>(UseSubMenu.GetScenePath());
@@ -124,7 +131,8 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void UpdateItemDescription(OptionItem optionItem)
     {
-        Item item = optionItem?.GetData<ItemStack>("itemStack")?.Item;
+        string itemId = optionItem?.GetData<string>(nameof(ItemStack.ItemId));
+        ItemBase item = Locator.ItemDB.GetItem(itemId);
         _itemStatsDisplay.UpdateStatsDisplay(item);
         _itemInfo.UpdateText(item?.Description);
     }
@@ -135,8 +143,8 @@ public partial class InventorySubMenu : OptionSubMenu
             return;
         if (resetFocus)
             _inventoryList.ResetContainerFocus();
-        ItemType itemType = optionItem.GetData<ItemType>("itemType");
-        List<KeyValueOption> options = GetItemOptions(itemType);
+        string itemCategoryId = optionItem.GetData<string>(nameof(Item.ItemCategoryId));
+        List<KeyValueOption> options = GetItemOptions(itemCategoryId);
         _inventoryList.ReplaceChildren(options);
     }
 }

@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://ceqtqwioxjqn7"]
+[gd_scene load_steps=5 format=3 uid="uid://ceqtqwioxjqn7"]
 
 [ext_resource type="Script" path="res://Arenbee/GUI/Loaders/BasicLoadingScreen.cs" id="1_jkt01"]
+[ext_resource type="Texture2D" uid="uid://gjcptay16asr" path="res://icon.svg" id="2_r41uf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oi2p4"]
+bg_color = Color(0.45098, 0.27451, 0.0941176, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jmcoq"]
+bg_color = Color(0.796078, 0.537255, 0.25098, 1)
 
 [node name="BasicLoadingScreen" type="Control"]
 layout_mode = 3
@@ -33,3 +40,11 @@ offset_right = 115.0
 offset_bottom = 13.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_oi2p4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_jmcoq")
+
+[node name="Sprite2d" type="Sprite2D" parent="."]
+position = Vector2(240, 67)
+rotation = 1375.31
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_r41uf")

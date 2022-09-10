@@ -63,7 +63,7 @@ public partial class GameCamera : Camera2D
     public void SetGoalLimits(int top, int right, int bottom, int left)
     {
         _limitsDirty = true;
-        Vector2 cameraPosition = GetCameraScreenCenter() - _viewSize * 0.5f;
+        Vector2 cameraPosition = GetScreenCenterPosition() - _viewSize * 0.5f;
         _goalLimitTop = top;
         _goalLimitRight = right;
         _goalLimitBottom = bottom;
@@ -80,6 +80,5 @@ public partial class GameCamera : Camera2D
 
         if (cameraPosition.x < _goalLimitLeft)
             LimitLeft = (int)cameraPosition.x;
-
     }
 }

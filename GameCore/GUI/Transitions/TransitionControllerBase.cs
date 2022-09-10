@@ -1,4 +1,5 @@
-﻿using GameCore.Extensions;
+﻿using System.Threading.Tasks;
+using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
 
@@ -6,78 +7,46 @@ namespace GameCore.GUI;
 
 public abstract class TransitionControllerBase
 {
-    public enum TransitionState
-    {
-        Inactive,
-        Started,
-        TransitioningIn,
-        Loading,
-        Loaded,
-        RunningCallback,
-        CallbackComplete,
-        TransitioningOut
-    }
-
     private LoadingScreen _loadingScreen;
-    private Loader _loader;
     private TransitionRequest _pendingTransition;
     private Transition _transitionA;
     private Transition _transitionB;
-    public TransitionState Status { get; set; }
 
     public virtual void Update()
     {
-        if (Status != TransitionState.Inactive)
-            Run();
+        if (_pendingTransition != null)
+            _ = TransitionAsync(_pendingTransition);
     }
 
-    public void ChangeScene(TransitionRequest request)
+    public void RequestTransition(TransitionRequest request)
     {
-        if (Status != TransitionState.Inactive)
-            return;
-        Status = TransitionState.Started;
         _pendingTransition = request;
-        _loader = new Loader(request.Paths);
     }
 
-    private void Run()
+    public async Task TransitionAsync(TransitionRequest request)
     {
-        switch (Status)
-        {
-            case TransitionState.Started:
-                TransitionIn();
-                break;
-            case TransitionState.Loading:
-                Load();
-                break;
-            case TransitionState.Loaded:
-                InvokeCallback();
-                break;
-            case TransitionState.CallbackComplete:
-                TransitionOut();
-                break;
-        }
+        _pendingTransition = null;
+        var loader = new Loader(request.Paths);
+        await TransitionInAsync(request);
+        await LoadAsync(loader);
+        await request.Callback?.Invoke(loader);
+        await TransitionOutAsync(request);
     }
 
-    private void Load()
+    private async Task LoadAsync(Loader loader)
     {
-        int progress = _loader.Load();
+        loader.ProgressUpdate += OnProgressUpdate;
+        await loader.LoadAsync();
+        loader.ProgressUpdate -= OnProgressUpdate;
+    }
+
+    private void OnProgressUpdate(int progress)
+    {
         _loadingScreen?.Update(progress);
-        if (_loader.Status == LoaderStatus.AllLoaded)
-            Status = TransitionState.Loaded;
     }
 
-    private async void InvokeCallback()
+    private async Task TransitionInAsync(TransitionRequest request)
     {
-        Status = TransitionState.RunningCallback;
-        await _pendingTransition.Callback?.Invoke(_loader);
-        Status = TransitionState.CallbackComplete;
-    }
-
-    private async void TransitionIn()
-    {
-        Status = TransitionState.TransitioningIn;
-        var request = _pendingTransition;
         Node target = GetTarget(request.TransitionType);
         // Use Loader Transition
         if (request.TransitionAPath == null)
@@ -105,13 +74,10 @@ public abstract class TransitionControllerBase
             target.RemoveChild(_transitionA);
             _transitionA.QueueFree();
         }
-        Status = TransitionState.Loading;
     }
 
-    private async void TransitionOut()
+    private async Task TransitionOutAsync(TransitionRequest request)
     {
-        Status = TransitionState.TransitioningOut;
-        var request = _pendingTransition;
         Node target = GetTarget(request.TransitionType);
         // Use Loader Transition
         if (request.TransitionAPath == null)
@@ -142,9 +108,6 @@ public abstract class TransitionControllerBase
         _transitionA = null;
         _transitionB = null;
         _loadingScreen = null;
-        _loader = null;
-        _pendingTransition = null;
-        Status = TransitionState.Inactive;
     }
 
     private Node GetTarget(TransitionType transitionType)

@@ -22,22 +22,25 @@ public partial class WipeTransition : Transition
     {
         _colorRect.Position = new Vector2(480, 0);
         _colorRect2.Position = new Vector2(0, 270);
-        var tween2 = GetTree().CreateTween();
-        var prop2 = tween2.TweenProperty(_colorRect2, "position:y", 0, 0.8f);
+        var tween2 = _colorRect2.CreateTween()
+            .TweenProperty(_colorRect2, "position:y", 0, 0.8f)
+            .SetEase(Tween.EaseType.Out);
         await _colorRect2.ToSignal(tween2, "finished");
 
-        var tween = GetTree().CreateTween();
-        var prop = tween.TweenProperty(_colorRect, "position:x", 0, 0.8f);
+        var tween = _colorRect.CreateTween()
+            .TweenProperty(_colorRect, "position:x", 0, 0.8f);
         await _colorRect.ToSignal(tween, "finished");
     }
 
     public override async Task TransitionTo()
     {
-        var tween = GetTree().CreateTween();
-        var prop = tween.TweenProperty(_colorRect, "position:x", -480, 0.8f);
+        var tween = _colorRect.CreateTween()
+            .TweenProperty(_colorRect, "position:x", -480, 0.8f);
         await _colorRect.ToSignal(tween, "finished");
-        var tween2 = GetTree().CreateTween();
-        var prop2 = tween2.TweenProperty(_colorRect2, "position:y", -270, 0.8f);
+
+        var tween2 = _colorRect2.CreateTween()
+            .TweenProperty(_colorRect2, "position:y", -270, 0.8f)
+            .SetEase(Tween.EaseType.Out);
         await _colorRect2.ToSignal(tween2, "finished");
     }
 }

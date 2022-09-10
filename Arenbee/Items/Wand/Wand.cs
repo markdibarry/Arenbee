@@ -9,7 +9,7 @@ public partial class Wand : Weapon
 {
     public Wand()
     {
-        ItemId = "Wand";
+        SetItemId("Wand");
         WeaponTypeName = WeaponTypeConstants.Wand;
     }
 

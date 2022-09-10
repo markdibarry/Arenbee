@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.GUI.Dialogs;
-using GameCore.GUI.Menus;
 using GameCore.Input;
 using Godot;
 
@@ -17,7 +16,6 @@ public partial class GUIController : CanvasLayer
         _dialogScene = GD.Load<PackedScene>(Dialog.GetScenePath());
     }
 
-    private GUILayerCloseRequest _layerCloseRequest;
     private readonly PackedScene _dialogScene;
     private readonly List<GUILayer> _guiLayers;
     private GUILayer _currentGUILayer;
@@ -25,46 +23,24 @@ public partial class GUIController : CanvasLayer
     public bool MenuActive { get; set; }
     public bool DialogActive { get; set; }
     public bool GUIActive => MenuActive || DialogActive;
-    public delegate void MenuStatusChangedHandler(GUIController guiController);
-    public event MenuStatusChangedHandler GUIStatusChanged;
+    public event Action<GUIController> GUIStatusChanged;
 
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
         _currentGUILayer?.HandleInput(menuInput, delta);
     }
 
-    public override void _Process(double delta)
-    {
-        if (_layerCloseRequest != null)
-            HandleCloseRequest(_layerCloseRequest);
-    }
-
-    public async Task CloseAllAsync(Action callback = null)
-    {
-        await TransitionCloseAsync();
-        CloseAll(callback);
-    }
-
-    public void CloseAll(Action callback = null)
-    {
-        foreach (var layer in _guiLayers)
-            RemoveLayer(layer);
-        _guiLayers.Clear();
-        UpdateCurrentGUI();
-        callback?.Invoke();
-    }
-
     public async Task CloseLayerAsync(GUILayerCloseRequest request)
     {
-        _layerCloseRequest = null;
-        GUILayer layer = request.Layer;
-        await layer.TransitionCloseAsync();
-        if (!_guiLayers.Contains(layer))
-            return;
-        RemoveLayer(layer);
-        _guiLayers.Remove(layer);
-        UpdateCurrentGUI();
-        request.Callback?.Invoke();
+        switch (request.CloseRequestType)
+        {
+            case CloseRequestType.AllLayers:
+                await CloseAllLayersAsync(request);
+                break;
+            case CloseRequestType.ProvidedLayer:
+                await CloseSingleLayerAsync(request);
+                break;
+        }
     }
 
     public bool IsActive(string guiLayerName)
@@ -72,28 +48,25 @@ public partial class GUIController : CanvasLayer
         return _guiLayers.Any(x => x.NameId == guiLayerName);
     }
 
-    public void OpenDialog(string path)
+    public Task OpenDialogAsync(DialogOpenRequest request)
     {
-        if (string.IsNullOrEmpty(path))
-            return;
         Dialog newDialog = _dialogScene.Instantiate<Dialog>();
         newDialog.RequestedClose += OnRequestedClose;
         newDialog.OptionBoxRequested += OnOptionBoxRequested;
         AddChild(newDialog);
         _guiLayers.Add(newDialog);
         UpdateCurrentGUI();
-        newDialog.StartDialog(path);
+        newDialog.StartDialog(request.Path);
+        return Task.CompletedTask;
     }
 
-    public async Task OpenMenuAsync(PackedScene menuScene)
+    public async Task OpenMenuAsync(MenuOpenRequest request)
     {
-        Menu newMenu = menuScene.Instantiate<Menu>();
-        await OpenMenuAsync(newMenu);
-    }
-
-    public async Task OpenMenuAsync(Menu menu)
-    {
+        if (request.PackedScene == null)
+            request.PackedScene = GD.Load<PackedScene>(request.Path);
+        Menu menu = request.PackedScene.Instantiate<Menu>();
         menu.RequestedClose += OnRequestedClose;
+        menu.DataTransfer(request.GrabBag);
         AddChild(menu);
         _guiLayers.Add(menu);
         UpdateCurrentGUI();
@@ -102,31 +75,41 @@ public partial class GUIController : CanvasLayer
 
     public void OnRequestedClose(GUILayerCloseRequest request)
     {
-        _layerCloseRequest = request;
+        _ = CloseLayerAsync(request);
     }
 
-    public void OnOptionBoxRequested(Menu menu)
+    public void OnOptionBoxRequested(MenuOpenRequest request)
     {
-        OpenMenuAsync(menu);
+        _ = OpenMenuAsync(request);
     }
 
-    public virtual Task TransitionOpenAsync()
+    protected virtual Task TransitionOpenAsync() => Task.CompletedTask;
+
+    protected virtual Task TransitionCloseAsync() => Task.CompletedTask;
+
+    private async Task CloseAllLayersAsync(GUILayerCloseRequest request)
     {
-        return Task.CompletedTask;
+        if (!request.PreventAnimation)
+            await TransitionCloseAsync();
+        foreach (var layer in _guiLayers)
+            RemoveLayer(layer);
+        _guiLayers.Clear();
+        UpdateCurrentGUI();
+        request.Callback?.Invoke();
     }
 
-    public virtual Task TransitionCloseAsync()
+    private async Task CloseSingleLayerAsync(GUILayerCloseRequest request)
     {
-        return Task.CompletedTask;
-    }
-
-    private async void HandleCloseRequest(GUILayerCloseRequest request)
-    {
-        _layerCloseRequest = null;
-        if (request.CloseAll)
-            await CloseAllAsync(request.Callback);
-        else
-            await CloseLayerAsync(request);
+        GUILayer layer = request.Layer;
+        if (layer == null)
+            return;
+        await layer.TransitionCloseAsync();
+        if (!_guiLayers.Contains(layer))
+            return;
+        RemoveLayer(layer);
+        _guiLayers.Remove(layer);
+        UpdateCurrentGUI();
+        request.Callback?.Invoke();
     }
 
     private void RemoveLayer(GUILayer layer)

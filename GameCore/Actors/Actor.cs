@@ -21,19 +21,19 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
         Stats = new Stats(this);
         ApplyDefaultStats();
         Inventory = new Inventory();
-        Equipment = new Equipment(this);
+        Equipment = new EquipmentBase(this);
         IFrameController = new IFrameController(this);
         InputHandler = new DummyInputHandler();
     }
 
     private Node2D _body;
-    private Equipment _equipment;
+    private EquipmentBase _equipment;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; } = ActorType.NPC;
     public string ActorName { get; set; }
     public string ActorId { get; set; }
     public Inventory Inventory { get; set; }
-    public Equipment Equipment
+    public EquipmentBase Equipment
     {
         get => _equipment;
         private set
@@ -97,12 +97,11 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
 
     protected virtual void SetHitBoxes() { }
 
-    private void OnEquipmentSet(EquipmentSlot slot, Item oldItem, Item newItem)
+    private void OnEquipmentSet(EquipmentSlotBase slot, ItemBase oldItem, ItemBase newItem)
     {
         oldItem?.RemoveFromStats(Stats);
         newItem?.AddToStats(Stats);
-        if (slot.SlotName == EquipSlotName.Weapon)
-            WeaponSlot?.SetWeapon(newItem);
+        WeaponSlot?.SetWeapon(newItem);
     }
 
     private void SetNodeReferences()
