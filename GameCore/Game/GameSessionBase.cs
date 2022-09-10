@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using GameCore.Actors;
 using GameCore.AreaScenes;
 using GameCore.Extensions;
-using GameCore.Game.SaveData;
+using GameCore.SaveData;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
 
-namespace GameCore.Game;
+namespace GameCore;
 
 public abstract partial class GameSessionBase : Node2D
 {

@@ -1,12 +1,12 @@
 ﻿using Arenbee.GUI.Menus;
+using GameCore;
 using GameCore.AreaScenes;
 using GameCore.Extensions;
-using GameCore.Game;
 using GameCore.GUI;
 using GameCore.Input;
 using Godot;
 
-namespace Arenbee.Game;
+namespace Arenbee;
 
 public partial class GameSession : GameSessionBase
 {

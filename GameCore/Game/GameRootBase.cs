@@ -6,7 +6,7 @@ using GameCore.Input;
 using GameCore.Utility;
 using Godot;
 
-namespace GameCore.Game;
+namespace GameCore;
 
 public abstract partial class GameRootBase : Node
 {

@@ -1,39 +1,38 @@
 ﻿using Godot;
 
-namespace GameCore.Audio
+namespace GameCore.Audio;
+
+public partial class AudioPlayer2D : AudioStreamPlayer2D
 {
-    public partial class AudioPlayer2D : AudioStreamPlayer2D
+    public Node2D SoundSource { get; set; }
+    public ulong TimeStamp { get; set; }
+
+    public override void _Ready()
     {
-        public Node2D SoundSource { get; set; }
-        public ulong TimeStamp { get; set; }
+        Finished += OnFinished;
+    }
 
-        public override void _Ready()
+    public override void _Process(double delta)
+    {
+        if (SoundSource != null)
         {
-            Finished += OnFinished;
+            if (IsInstanceValid(SoundSource))
+                GlobalPosition = SoundSource.GlobalPosition;
+            else
+                SoundSource = null;
         }
+    }
 
-        public override void _Process(double delta)
-        {
-            if (SoundSource != null)
-            {
-                if (IsInstanceValid(SoundSource))
-                    GlobalPosition = SoundSource.GlobalPosition;
-                else
-                    SoundSource = null;
-            }
-        }
+    public void Reset()
+    {
+        SoundSource = null;
+        TimeStamp = 0;
+        Stream = null;
+        Stop();
+    }
 
-        public void Reset()
-        {
-            SoundSource = null;
-            TimeStamp = 0;
-            Stream = null;
-            Stop();
-        }
-
-        public void OnFinished()
-        {
-            SoundSource = null;
-        }
+    public void OnFinished()
+    {
+        SoundSource = null;
     }
 }

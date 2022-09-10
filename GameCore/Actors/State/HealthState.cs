@@ -1,16 +1,15 @@
-using GameCore.Statistics;
+﻿using GameCore.Statistics;
 
-namespace GameCore.Actors
+namespace GameCore.Actors;
+
+public abstract class HealthState : ActorState<HealthState, HealthStateMachineBase>
 {
-    public abstract class HealthState : ActorState<HealthState, HealthStateMachineBase>
+    protected override void PlayAnimation(string animationName)
     {
-        protected override void PlayAnimation(string animationName)
-        {
-            StateController.PlayHealthAnimation(animationName);
-        }
-
-        public virtual void HandleDamage(DamageData damageData) { }
-
-        public virtual void HandleHPDepleted() { }
+        StateController.PlayHealthAnimation(animationName);
     }
+
+    public virtual void HandleDamage(DamageData damageData) { }
+
+    public virtual void HandleHPDepleted() { }
 }

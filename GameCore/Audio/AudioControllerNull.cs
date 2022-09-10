@@ -1,6 +1,7 @@
 ﻿using Godot;
 
 namespace GameCore.Audio;
+
 public partial class AudioControllerNull : AudioControllerBase
 {
     public AudioControllerNull() { }

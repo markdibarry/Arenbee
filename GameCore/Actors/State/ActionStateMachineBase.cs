@@ -1,9 +1,8 @@
-namespace GameCore.Actors
+﻿namespace GameCore.Actors;
+
+public abstract class ActionStateMachineBase : ActorStateMachine<ActionState, ActionStateMachineBase>
 {
-    public abstract class ActionStateMachineBase : ActorStateMachine<ActionState, ActionStateMachineBase>
-    {
-        protected ActionStateMachineBase(Actor actor)
-            : base(actor)
-        { }
-    }
+    protected ActionStateMachineBase(Actor actor)
+        : base(actor)
+    { }
 }

@@ -1,7 +1,6 @@
-namespace GameCore.Utility
+﻿namespace GameCore.Utility;
+
+public static class Time
 {
-    public static class Time
-    {
-        public const int Minute = 170;
-    }
+    public const int Minute = 170;
 }

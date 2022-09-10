@@ -4,10 +4,10 @@ using Arenbee.GUI.Menus;
 using Arenbee.Input;
 using Arenbee.Items;
 using Arenbee.Statistics;
-using GameCore.Game;
+using GameCore;
 using GameCore.Utility;
 
-namespace Arenbee.Game;
+namespace Arenbee;
 
 public partial class GameRoot : GameRootBase
 {

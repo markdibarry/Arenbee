@@ -1,7 +1,6 @@
-namespace GameCore.Game
-{
-    public class EventBus
-    {
+﻿namespace GameCore;
 
-    }
+public class EventBus
+{
+
 }

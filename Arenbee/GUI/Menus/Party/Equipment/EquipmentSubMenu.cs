@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.Game;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;

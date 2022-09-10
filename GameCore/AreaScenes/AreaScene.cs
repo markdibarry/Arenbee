@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.Game;
+using GameCore;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;

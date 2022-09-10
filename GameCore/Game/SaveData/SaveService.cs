@@ -2,7 +2,7 @@
 using Godot;
 using System.Text.Json;
 
-namespace GameCore.Game.SaveData;
+namespace GameCore.SaveData;
 
 public static class SaveService
 {

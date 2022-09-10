@@ -1,6 +1,6 @@
 ﻿using GameCore.ActionEffects;
 using GameCore.Audio;
-using GameCore.Game;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;

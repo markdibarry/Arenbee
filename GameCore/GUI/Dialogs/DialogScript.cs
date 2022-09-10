@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using GameCore.Actors;
-using GameCore.Game;
+using GameCore;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;

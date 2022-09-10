@@ -1,7 +1,7 @@
 ﻿using GameCore.Extensions;
 using Godot;
 
-namespace GameCore.Game;
+namespace GameCore;
 
 public partial class GameCamera : Camera2D
 {

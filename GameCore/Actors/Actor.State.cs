@@ -1,5 +1,5 @@
 ﻿using System;
-using GameCore.Game;
+using GameCore;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;

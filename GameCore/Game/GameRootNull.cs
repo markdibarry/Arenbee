@@ -1,17 +1,16 @@
 ﻿using System.Threading.Tasks;
 
-namespace GameCore.Game
+namespace GameCore;
+
+public partial class GameRootNull : GameRootBase
 {
-    public partial class GameRootNull : GameRootBase
-    {
-        public override void _Ready() { }
+    public override void _Ready() { }
 
-        protected override void SetNodeReferences() { }
+    protected override void SetNodeReferences() { }
 
-        protected override Task Init() => Task.CompletedTask;
+    protected override Task Init() => Task.CompletedTask;
 
-        protected override void ProvideLocatorReferences() { }
+    protected override void ProvideLocatorReferences() { }
 
-        public override void _Process(double delta) { }
-    }
+    public override void _Process(double delta) { }
 }

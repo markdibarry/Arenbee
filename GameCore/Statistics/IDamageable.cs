@@ -1,10 +1,9 @@
-using Godot;
+﻿using Godot;
 
-namespace GameCore.Statistics
+namespace GameCore.Statistics;
+
+public interface IDamageable
 {
-    public interface IDamageable
-    {
-        Stats Stats { get; }
-        StringName Name { get; }
-    }
+    Stats Stats { get; }
+    StringName Name { get; }
 }

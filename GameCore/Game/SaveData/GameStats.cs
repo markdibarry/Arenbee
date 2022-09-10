@@ -1,11 +1,10 @@
-namespace GameCore.Game.SaveData
+﻿namespace GameCore.SaveData;
+
+public class GameStats
 {
-    public class GameStats
-    {
-        public int TimesDamaged { get; set; }
-        public int DamageDealt { get; set; }
-        public int DamageRecieved { get; set; }
-        public int TimesDied { get; set; }
-        public int EnemiesDefeated { get; set; }
-    }
+    public int TimesDamaged { get; set; }
+    public int DamageDealt { get; set; }
+    public int DamageRecieved { get; set; }
+    public int TimesDied { get; set; }
+    public int EnemiesDefeated { get; set; }
 }

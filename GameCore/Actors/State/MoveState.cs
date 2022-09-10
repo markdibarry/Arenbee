@@ -1,10 +1,9 @@
-namespace GameCore.Actors
+﻿namespace GameCore.Actors;
+
+public abstract class MoveState : ActorState<MoveState, MoveStateMachineBase>
 {
-    public abstract class MoveState : ActorState<MoveState, MoveStateMachineBase>
+    protected override void PlayAnimation(string animationName)
     {
-        protected override void PlayAnimation(string animationName)
-        {
-            StateController.PlayMoveAnimation(animationName);
-        }
+        StateController.PlayMoveAnimation(animationName);
     }
 }

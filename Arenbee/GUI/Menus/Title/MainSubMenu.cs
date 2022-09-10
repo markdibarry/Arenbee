@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using GameCore;
 using GameCore.Extensions;
-using GameCore.Game;
-using GameCore.Game.SaveData;
 using GameCore.GUI;
+using GameCore.SaveData;
 using GameCore.Utility;
 using Godot;
 

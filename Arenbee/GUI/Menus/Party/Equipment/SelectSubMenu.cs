@@ -2,7 +2,7 @@
 using Arenbee.GUI.Menus.Common;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.Game;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;

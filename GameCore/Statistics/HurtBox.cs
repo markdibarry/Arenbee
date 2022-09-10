@@ -1,6 +1,5 @@
-﻿namespace GameCore.Statistics
+﻿namespace GameCore.Statistics;
+
+public partial class HurtBox : AreaBox
 {
-    public partial class HurtBox : AreaBox
-    {
-    }
 }

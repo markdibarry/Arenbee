@@ -2,7 +2,7 @@
 using GameCore.GUI;
 using GameCore.Utility;
 
-namespace GameCore.Game;
+namespace GameCore;
 
 public class GameState
 {

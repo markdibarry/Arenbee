@@ -67,10 +67,4 @@ public partial class ColorAdjustment : CanvasLayer
         var rect = GetNodeOrNull<ColorRect>("ColorRect");
         _colorShader = rect.Material as ShaderMaterial;
     }
-
-    public override void _Notification(long what)
-    {
-        if (what == NotificationPredelete)
-            _colorShader.Dispose();
-    }
 }
