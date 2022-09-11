@@ -27,8 +27,8 @@ public abstract partial class GameSessionBase : Node2D
     public PlayerParty Party { get; private set; }
     public SessionState SessionState { get; private set; }
     public CanvasLayer Transition { get; private set; }
-    public event Action<Actor> ActorAddedToArea;
-    public event Action<Actor> ActorRemovedFromArea;
+    public event Action<ActorBase> ActorAddedToArea;
+    public event Action<ActorBase> ActorRemovedFromArea;
     public event Action<AreaScene> AreaSceneAdded;
     public event Action<AreaScene> AreaSceneRemoved;
 
@@ -109,35 +109,35 @@ public abstract partial class GameSessionBase : Node2D
         }
     }
 
-    private void OnActorAdded(Actor actor)
+    private void OnActorAdded(ActorBase actor)
     {
         HUD.OnActorAdded(actor);
         ActorAddedToArea?.Invoke(actor);
     }
 
-    private void OnActorDamaged(Actor actor, DamageData damageData)
+    private void OnActorDamaged(ActorBase actor, DamageData damageData)
     {
         HUD.OnActorDamaged(actor, damageData);
         SessionState.OnActorDamaged(actor, damageData);
     }
 
-    private void OnActorDefeated(Actor actor)
+    private void OnActorDefeated(ActorBase actor)
     {
         HUD.OnActorDefeated(actor);
         SessionState.OnActorDefeated(actor);
     }
 
-    private void OnActorRemoved(Actor actor)
+    private void OnActorRemoved(ActorBase actor)
     {
         ActorRemovedFromArea?.Invoke(actor);
     }
 
-    private void OnPlayerModChanged(Actor actor, ModChangeData modChangeData)
+    private void OnPlayerModChanged(ActorBase actor, ModChangeData modChangeData)
     {
         HUD.OnPlayerModChanged(actor, modChangeData);
     }
 
-    private void OnPlayerStatsChanged(Actor actor)
+    private void OnPlayerStatsChanged(ActorBase actor)
     {
         HUD.OnPlayerStatsChanged(actor);
     }

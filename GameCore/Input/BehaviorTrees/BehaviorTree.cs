@@ -4,7 +4,7 @@ namespace GameCore.Input;
 
 public abstract class BehaviorTree
 {
-    protected BehaviorTree(Actor actor)
+    protected BehaviorTree(ActorBase actor)
     {
         _blackBoard = new BlackBoard();
         _root = SetupTree();

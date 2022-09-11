@@ -2,7 +2,7 @@
 
 public abstract class HealthStateMachineBase : ActorStateMachine<HealthState, HealthStateMachineBase>
 {
-    protected HealthStateMachineBase(Actor actor)
+    protected HealthStateMachineBase(ActorBase actor)
         : base(actor)
     { }
 }

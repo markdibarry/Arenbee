@@ -2,7 +2,7 @@
 
 public abstract class AirStateMachineBase : ActorStateMachine<AirState, AirStateMachineBase>
 {
-    protected AirStateMachineBase(Actor actor)
+    protected AirStateMachineBase(ActorBase actor)
         : base(actor)
     { }
 }

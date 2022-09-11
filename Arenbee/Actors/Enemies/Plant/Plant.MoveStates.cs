@@ -6,7 +6,7 @@ public partial class Plant : Actor
 {
     public class MoveStateMachine : MoveStateMachineBase
     {
-        public MoveStateMachine(Actor actor)
+        public MoveStateMachine(ActorBase actor)
             : base(actor)
         {
             AddState<Standing>();

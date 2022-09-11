@@ -33,7 +33,7 @@ public class StatusEffectDB : StatusEffectDBBase
             TickEffect = (statusEffect) =>
             {
                 var statsOwner = statusEffect.Stats.StatsOwner;
-                if (statsOwner is Actor actor)
+                if (statsOwner is ActorBase actor)
                     actor.InputHandler.Jump.IsActionJustPressed = true;
                 var actionData = new ActionData()
                 {

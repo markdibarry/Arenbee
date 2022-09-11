@@ -1,6 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://cfch3cmr87dud"]
+[gd_scene load_steps=13 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/Actor.tscn" id="1_mabku"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/Actor.tscn" id="1_mabku"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Players/Ady/Ady.cs" id="2_0vmt5"]
 [ext_resource type="AnimationLibrary" uid="uid://0t0ca6phh7jd" path="res://Arenbee/Actors/Players/Ady/Animation/AdyLibrary.res" id="3_1pauw"]
 [ext_resource type="AnimationLibrary" uid="uid://bsb3k1lmvuc0m" path="res://Arenbee/Actors/Players/Ady/Animation/LongStick/LongStickLibrary.res" id="4_cmo6m"]

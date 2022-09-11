@@ -11,7 +11,7 @@ public class ActorData
     public ActorData()
     { }
 
-    public ActorData(Actor actor)
+    public ActorData(ActorBase actor)
     {
         ActorPath = actor.SceneFilePath;
         EquipmentSlots = actor.Equipment.Slots;
@@ -22,9 +22,9 @@ public class ActorData
     public IEnumerable<EquipmentSlotBase> EquipmentSlots { get; set; }
     public Stats Stats { get; set; }
 
-    public Actor GetActor(Inventory inventory)
+    public ActorBase GetActor(Inventory inventory)
     {
-        var actor = GDEx.Instantiate<Actor>(ActorPath);
+        var actor = GDEx.Instantiate<ActorBase>(ActorPath);
         actor.Stats.ApplyStats(Stats);
         actor.Inventory = inventory;
         actor.Equipment.ApplyEquipment(EquipmentSlots);

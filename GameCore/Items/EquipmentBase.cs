@@ -8,7 +8,7 @@ namespace GameCore.Items;
 
 public class EquipmentBase
 {
-    public EquipmentBase(Actor actor)
+    public EquipmentBase(ActorBase actor)
     {
         _slots = new();
         _actor = actor;
@@ -16,7 +16,7 @@ public class EquipmentBase
             _slots.Add(new EquipmentSlotBase(category.Id));
     }
 
-    private readonly Actor _actor;
+    private readonly ActorBase _actor;
     private readonly List<EquipmentSlotBase> _slots;
     public IEnumerable<EquipmentSlotBase> Slots => _slots.AsReadOnly();
     public event Action<EquipmentSlotBase, ItemBase, ItemBase> EquipmentSet;

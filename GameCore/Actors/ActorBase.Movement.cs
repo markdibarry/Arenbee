@@ -4,7 +4,7 @@ using Godot;
 
 namespace GameCore.Actors;
 
-public partial class Actor
+public partial class ActorBase
 {
     private Vector2 _floatPosition;
     private ActorInputHandler _inputHandler;

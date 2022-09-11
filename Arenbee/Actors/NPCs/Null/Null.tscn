@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/Actors/Actor.tscn" id="1_486h3"]
+[ext_resource type="PackedScene" path="res://GameCore/Actors/ActorBase.tscn" id="1_486h3"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_apru7"]
-[ext_resource type="Texture2D" path="res://Arenbee/Actors/NPCs/Null/Animation/NullPalette.png" id="3_cdmjg"]
-[ext_resource type="Texture2D" path="res://Arenbee/Actors/NPCs/Null/Animation/Null.png" id="4_7a7r8"]
+[ext_resource type="Texture2D" uid="uid://dpm828ygwncpf" path="res://Arenbee/Actors/NPCs/Null/Animation/NullPalette.png" id="3_cdmjg"]
+[ext_resource type="Texture2D" uid="uid://cnwfyddt1cb8e" path="res://Arenbee/Actors/NPCs/Null/Animation/Null.png" id="4_7a7r8"]
 
 [sub_resource type="Animation" id="Animation_suo3e"]
 resource_name = "Idle"

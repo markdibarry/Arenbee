@@ -25,19 +25,18 @@ public partial class ActorStatsDisplay : PanelContainer
     {
         base._Ready();
         _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
-        _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
-        _levelContainer = _gridContainer.GetNode<StatContainer>("Level");
-        _hpContainer = _gridContainer.GetNode<PointContainer>("HP");
-        _mpContainer = _gridContainer.GetNode<PointContainer>("MP");
-        _attackContainer = _gridContainer.GetNode<StatContainer>("Attack");
-        _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
-        _mAttackContainer = _gridContainer.GetNode<StatContainer>("M Attack");
-        _mDefenseContainer = _gridContainer.GetNode<StatContainer>("M Defense");
-        _elementAtkContainer = GetNode<ElementContainer>("VBoxContainer/EAtk");
-        _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
+        _levelContainer = GetNode<StatContainer>("%Level");
+        _hpContainer = GetNode<PointContainer>("%HP");
+        _mpContainer = GetNode<PointContainer>("%MP");
+        _attackContainer = GetNode<StatContainer>("%Attack");
+        _defenseContainer = GetNode<StatContainer>("%Defense");
+        _mAttackContainer = GetNode<StatContainer>("%M Attack");
+        _mDefenseContainer = GetNode<StatContainer>("%M Defense");
+        _elementAtkContainer = GetNode<ElementContainer>("%EAtk");
+        _elementDefContainer = GetNode<ElementContainer>("%EDef");
     }
 
-    public void UpdateStatsDisplay(Actor actor)
+    public void UpdateStatsDisplay(ActorBase actor)
     {
         if (actor == null)
             return;

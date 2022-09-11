@@ -6,7 +6,7 @@ public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TS
     where TState : ActorState<TState, TStateMachine>
     where TStateMachine : ActorStateMachine<TState, TStateMachine>
 {
-    protected ActorStateMachine(Actor actor)
+    protected ActorStateMachine(ActorBase actor)
     {
         Actor = actor;
     }
@@ -15,6 +15,6 @@ public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TS
     /// The Actor using the StateMachine
     /// </summary>
     /// <value></value>
-    public Actor Actor { get; set; }
+    public ActorBase Actor { get; set; }
     public IStateController StateController => Actor.StateController;
 }

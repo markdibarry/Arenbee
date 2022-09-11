@@ -16,7 +16,7 @@ public partial class DialogArea : Area2D
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private Actor _actor;
+    private ActorBase _actor;
     private readonly GameSessionBase _gameSession;
     private bool _canTrigger;
     private ColorRect _colorRect;
@@ -45,7 +45,7 @@ public partial class DialogArea : Area2D
     public void OnBodyEntered(Node body)
     {
         if (_actor != null
-            || body is not Actor actor
+            || body is not ActorBase actor
             || actor.ActorType != ActorType.Player)
             return;
         _actor = actor;

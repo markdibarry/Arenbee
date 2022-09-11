@@ -15,7 +15,7 @@ public partial class Orc : Actor
             new MoveStateMachine(this),
             new AirStateMachine(this),
             new HealthStateMachine(this),
-            (actor) => new ActionStateMachine(actor),
+            new ActionStateMachine(this),
             (actor) => new PatrolChaseGroundBT(actor));
     }
 

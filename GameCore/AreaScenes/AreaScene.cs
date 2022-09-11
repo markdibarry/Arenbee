@@ -23,12 +23,12 @@ public partial class AreaScene : Node2D
     public bool IsReady { get; set; }
     public Node2D PlayersContainer { get; set; }
     public Node2D SpawnPointContainer { get; set; }
-    public event Action<Actor> ActorAdded;
-    public event Action<Actor, DamageData> ActorDamaged;
-    public event Action<Actor> ActorDefeated;
-    public event Action<Actor> ActorRemoved;
-    public event Action<Actor, ModChangeData> PlayerModChanged;
-    public event Action<Actor> PlayerStatsChanged;
+    public event Action<ActorBase> ActorAdded;
+    public event Action<ActorBase, DamageData> ActorDamaged;
+    public event Action<ActorBase> ActorDefeated;
+    public event Action<ActorBase> ActorRemoved;
+    public event Action<ActorBase, ModChangeData> PlayerModChanged;
+    public event Action<ActorBase> PlayerStatsChanged;
 
     public override void _Ready()
     {
@@ -36,7 +36,7 @@ public partial class AreaScene : Node2D
         Init();
     }
 
-    public void AddActor(Actor actor, Vector2 spawnPosition)
+    public void AddActor(ActorBase actor, Vector2 spawnPosition)
     {
         actor.GlobalPosition = spawnPosition;
         if (actor.ActorType == ActorType.Player)
@@ -49,7 +49,7 @@ public partial class AreaScene : Node2D
 
     public void AddPlayer(int spawnPointIndex)
     {
-        Actor actor = _playerParty.Actors?.ElementAt(0);
+        ActorBase actor = _playerParty.Actors?.ElementAt(0);
         var camera = Locator.Root?.GameCamera;
         if (camera != null)
             camera.CurrentTarget = actor;
@@ -73,7 +73,7 @@ public partial class AreaScene : Node2D
 
     public void RemovePlayer()
     {
-        Actor actor = _playerParty.Actors?.ElementAtOrDefault(0);
+        ActorBase actor = _playerParty.Actors?.ElementAtOrDefault(0);
         if (actor == null)
             return;
         PlayersContainer.RemoveChild(actor);
@@ -81,7 +81,7 @@ public partial class AreaScene : Node2D
         ActorRemoved?.Invoke(actor);
     }
 
-    public void RemoveEnemy(Actor actor)
+    public void RemoveEnemy(ActorBase actor)
     {
         EnemiesContainer.RemoveChild(actor);
         UnsubscribeActorEvents(actor);
@@ -89,11 +89,11 @@ public partial class AreaScene : Node2D
         ActorRemoved?.Invoke(actor);
     }
 
-    public IEnumerable<Actor> GetAllActors()
+    public IEnumerable<ActorBase> GetAllActors()
     {
-        var actors = new List<Actor>();
-        var players = PlayersContainer.GetChildren<Actor>();
-        var enemies = EnemiesContainer.GetChildren<Actor>();
+        var actors = new List<ActorBase>();
+        var players = PlayersContainer.GetChildren<ActorBase>();
+        var enemies = EnemiesContainer.GetChildren<ActorBase>();
         actors.AddRange(players);
         actors.AddRange(enemies);
         return actors;
@@ -105,25 +105,25 @@ public partial class AreaScene : Node2D
             actor.OnGameStateChanged(gameState);
     }
 
-    private void OnActorDamaged(Actor actor, DamageData damageData)
+    private void OnActorDamaged(ActorBase actor, DamageData damageData)
     {
         ActorDamaged?.Invoke(actor, damageData);
     }
 
-    private void OnActorDefeated(Actor actor)
+    private void OnActorDefeated(ActorBase actor)
     {
         if (actor.ActorType == ActorType.Enemy)
             CallDeferred(nameof(RemoveEnemy), actor);
         ActorDefeated?.Invoke(actor);
     }
 
-    private void OnActorModChanged(Actor actor, ModChangeData modChangeData)
+    private void OnActorModChanged(ActorBase actor, ModChangeData modChangeData)
     {
         if (actor.ActorType == ActorType.Player)
             PlayerModChanged?.Invoke(actor, modChangeData);
     }
 
-    private void OnActorStatsChanged(Actor actor)
+    private void OnActorStatsChanged(ActorBase actor)
     {
         if (actor.ActorType == ActorType.Player)
             PlayerStatsChanged?.Invoke(actor);
@@ -137,7 +137,7 @@ public partial class AreaScene : Node2D
         EventContainer = GetNodeOrNull<Node2D>("Events");
     }
 
-    private void SubscribeActorEvents(Actor actor)
+    private void SubscribeActorEvents(ActorBase actor)
     {
         actor.Defeated += OnActorDefeated;
         actor.DamageRecieved += OnActorDamaged;
@@ -148,7 +148,7 @@ public partial class AreaScene : Node2D
         }
     }
 
-    private void UnsubscribeActorEvents(Actor actor)
+    private void UnsubscribeActorEvents(ActorBase actor)
     {
         actor.Defeated -= OnActorDefeated;
         actor.DamageRecieved -= OnActorDamaged;

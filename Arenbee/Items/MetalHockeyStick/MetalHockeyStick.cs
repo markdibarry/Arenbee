@@ -1,9 +1,12 @@
-﻿namespace Arenbee.Items;
+﻿using GameCore.Actors;
+using GameCore.Constants;
+
+namespace Arenbee.Items;
 
 public partial class MetalHockeyStick : HockeyStick
 {
-    public MetalHockeyStick()
+    public override void Init(ActorBase actor)
     {
-        SetItemId("HockeyStick");
+        Setup("MetalHockeyStick", WeaponTypeConstants.LongStick, actor, new ActionStateMachine(actor, this));
     }
 }

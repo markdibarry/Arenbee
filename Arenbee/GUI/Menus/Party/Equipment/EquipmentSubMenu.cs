@@ -70,7 +70,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         var options = new List<EquipSelectOption>();
         if (optionItem == null)
             return options;
-        var actor = optionItem.GetData<Actor>("actor");
+        var actor = optionItem.GetData<ActorBase>("actor");
         if (actor == null)
             return options;
         foreach (var slot in actor.Equipment.Slots)
@@ -99,7 +99,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private void OpenEquipSelectMenu(OptionItem optionItem)
     {
-        var actor = _partyOptions.CurrentItem.GetData<Actor>("actor");
+        var actor = _partyOptions.CurrentItem.GetData<ActorBase>("actor");
         if (actor == null)
             return;
         var slotCategoryId = optionItem.GetData<string>(nameof(EquipmentSlotBase.SlotCategoryId));

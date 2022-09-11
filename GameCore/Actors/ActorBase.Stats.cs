@@ -3,7 +3,7 @@ using GameCore.Statistics;
 
 namespace GameCore.Actors;
 
-public partial class Actor
+public partial class ActorBase
 {
     private Stats _stats;
     public Stats Stats
@@ -28,8 +28,8 @@ public partial class Actor
             }
         }
     }
-    public event Action<Actor, ModChangeData> ModChanged;
-    public event Action<Actor> StatsChanged;
+    public event Action<ActorBase, ModChangeData> ModChanged;
+    public event Action<ActorBase> StatsChanged;
 
     protected virtual void ApplyDefaultStats() { }
 

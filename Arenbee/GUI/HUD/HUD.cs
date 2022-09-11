@@ -22,13 +22,13 @@ public partial class HUD : HUDBase
         _statusEffectDB = Locator.StatusEffectDB;
     }
 
-    public override void OnActorAdded(Actor actor)
+    public override void OnActorAdded(ActorBase actor)
     {
         if (actor.ActorType == ActorType.Player)
             UpdatePlayerStatsDisplay(actor);
     }
 
-    public override void OnActorDamaged(Actor actor, DamageData data)
+    public override void OnActorDamaged(ActorBase actor, DamageData data)
     {
         switch (data.ActionType)
         {
@@ -43,13 +43,13 @@ public partial class HUD : HUDBase
         }
     }
 
-    public override void OnActorDefeated(Actor actor)
+    public override void OnActorDefeated(ActorBase actor)
     {
         string defeatedMessage = $"{actor.Name} was defeated!";
         MessageQueue.Enqueue(defeatedMessage);
     }
 
-    public override void OnPlayerModChanged(Actor actor, ModChangeData data)
+    public override void OnPlayerModChanged(ActorBase actor, ModChangeData data)
     {
         if (data.Modifier.StatType == StatType.StatusEffect)
         {
@@ -63,7 +63,7 @@ public partial class HUD : HUDBase
         }
     }
 
-    public override void OnPlayerStatsChanged(Actor actor)
+    public override void OnPlayerStatsChanged(ActorBase actor)
     {
         UpdatePlayerStatsDisplay(actor);
     }
@@ -102,7 +102,7 @@ public partial class HUD : HUDBase
         };
     }
 
-    private void UpdatePlayerStatsDisplay(Actor actor)
+    private void UpdatePlayerStatsDisplay(ActorBase actor)
     {
         if (ProcessMode == ProcessModeEnum.Disabled)
             return;

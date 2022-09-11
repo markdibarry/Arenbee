@@ -4,7 +4,7 @@ namespace Arenbee.Actors.Enemies.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
-    public AirStateMachine(Actor actor)
+    public AirStateMachine(ActorBase actor)
         : base(actor)
     {
         AddState<Grounded>();

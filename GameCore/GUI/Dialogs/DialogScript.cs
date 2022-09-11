@@ -153,7 +153,7 @@ public class Condition
         if (values.Length != 2)
             return false;
         PlayerParty party = Locator.GetParty();
-        Actor actor = party.GetPlayerByName(values[0]);
+        ActorBase actor = party.GetPlayerByName(values[0]);
         var stat = actor.Stats.Attributes.GetStat(Enum.Parse<AttributeType>(values[1]));
 
         return CompareInt(stat.ModifiedValue);

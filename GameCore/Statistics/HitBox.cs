@@ -30,7 +30,7 @@ public partial class HitBox : AreaBox
     public ActionData ActionData { get; set; }
     public Func<ActionData> GetActionData { get; set; }
 
-    public void SetBasicMeleeBox(Actor actor)
+    public void SetBasicMeleeBox(ActorBase actor)
     {
         var actionData = ActionData;
         actionData.SourceName = actor.Name;

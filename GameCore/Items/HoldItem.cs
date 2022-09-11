@@ -4,7 +4,7 @@ using GameCore.Actors;
 
 namespace GameCore.Items;
 
-public abstract partial class Weapon : Node2D
+public abstract partial class HoldItem : Node2D
 {
     public AnimationPlayer AnimationPlayer { get; set; }
     public ItemBase Item
@@ -14,36 +14,27 @@ public abstract partial class Weapon : Node2D
     }
     public string ItemId { get; private set; }
     public Sprite2D Sprite { get; set; }
-    public string WeaponTypeName { get; set; }
-    protected Actor Holder { get; set; }
+    public string HoldItemType { get; set; }
+    protected ActorBase Actor { get; set; }
+    public ActionStateMachineBase StateMachine { get; protected set; }
 
     public override void _Ready()
     {
         SetNodeReferences();
         SetHitBoxes();
-        GetActionStateMachine();
+        StateMachine.Init();
     }
 
-    public void Init(Actor holder)
-    {
-        Holder = holder;
-    }
-
-    public abstract ActionStateMachineBase GetActionStateMachine();
+    public abstract void Init(ActorBase actor);
 
     public void PlaySoundFX(string soundPath)
     {
-        Holder.PlaySoundFX(soundPath);
+        Actor.PlaySoundFX(soundPath);
     }
 
     public void PlaySoundFX(AudioStream sound)
     {
-        Holder.PlaySoundFX(sound);
-    }
-
-    protected void SetItemId(string itemId)
-    {
-        Item = Locator.ItemDB.GetItem(itemId);
+        Actor.PlaySoundFX(sound);
     }
 
     protected virtual void SetHitBoxes() { }
@@ -52,5 +43,17 @@ public abstract partial class Weapon : Node2D
     {
         AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
         Sprite = GetNode<Sprite2D>("Sprite");
+    }
+
+    protected void Setup(
+        string itemId,
+        string holdItemType,
+        ActorBase actor,
+        ActionStateMachineBase stateMachine)
+    {
+        Item = Locator.ItemDB.GetItem(itemId);
+        HoldItemType = holdItemType;
+        Actor = actor;
+        StateMachine = stateMachine;
     }
 }

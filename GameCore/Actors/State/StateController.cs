@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GameCore.Input;
 using GameCore.Items;
 using Godot;
@@ -8,48 +9,44 @@ namespace GameCore.Actors;
 public class StateController : IStateController
 {
     public StateController(
-        Actor actor,
-        MoveStateMachineBase moveStateMachineBase,
-        AirStateMachineBase airStateMachineBase,
-        HealthStateMachineBase healthStateMachineBase,
-        Func<Actor, ActionStateMachineBase> actionStateMachineDelegate,
-        Func<Actor, BehaviorTree> behaviorTreeDelegate = null)
+        ActorBase actor,
+        MoveStateMachineBase moveStateMachine,
+        AirStateMachineBase airStateMachine,
+        HealthStateMachineBase healthStateMachine,
+        ActionStateMachineBase actionStateMachine,
+        Func<ActorBase, BehaviorTree> behaviorTreeDelegate = null)
     {
         _actor = actor;
-        HealthStateMachine = healthStateMachineBase;
-        AirStateMachine = airStateMachineBase;
-        MoveStateMachine = moveStateMachineBase;
-        _actionStateMachineDelegate = actionStateMachineDelegate;
-        _actionStateMachine = actionStateMachineDelegate(actor);
+        HealthStateMachine = healthStateMachine;
+        AirStateMachine = airStateMachine;
+        MoveStateMachine = moveStateMachine;
+        ActionStateMachine = actionStateMachine;
         _stateDisplayController = new();
         _behaviorTreeDelegate = behaviorTreeDelegate;
     }
 
-    private readonly Actor _actor;
+    private readonly ActorBase _actor;
+    private bool _baseActionDisabled;
     private readonly StateDisplayController _stateDisplayController;
-    private readonly Func<Actor, ActionStateMachineBase> _actionStateMachineDelegate;
-    private readonly Func<Actor, BehaviorTree> _behaviorTreeDelegate;
-    private ActionStateMachineBase _actionStateMachine;
+    private readonly Func<ActorBase, BehaviorTree> _behaviorTreeDelegate;
     public BehaviorTree BehaviorTree { get; set; }
     public AirStateMachineBase AirStateMachine { get; }
     public MoveStateMachineBase MoveStateMachine { get; }
-    public ActionStateMachineBase ActionStateMachine { get => _actionStateMachine; }
     public HealthStateMachineBase HealthStateMachine { get; }
+    public ActionStateMachineBase ActionStateMachine { get; }
     public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
-    public Weapon CurrentWeapon => _actor.WeaponSlot.CurrentWeapon;
-    public AnimationPlayer WeaponAnimationPlayer => CurrentWeapon?.AnimationPlayer;
-
-    public void ResetActionStateMachine()
+    public List<HoldItem> HoldItems => _actor.HoldItemController.HoldItems;
+    public bool BaseActionDisabled
     {
-        SwitchActionStateMachine(_actionStateMachineDelegate(_actor));
-        BehaviorTree = _behaviorTreeDelegate?.Invoke(_actor);
-    }
-
-    public void SwitchActionStateMachine(ActionStateMachineBase actionStateMachineBase)
-    {
-        ActionStateMachine?.ExitState();
-        _actionStateMachine = actionStateMachineBase;
-        ActionStateMachine.Init();
+        get => _baseActionDisabled;
+        set
+        {
+            if (_baseActionDisabled == value)
+                return;
+            _baseActionDisabled = value;
+            if (_baseActionDisabled)
+                ActionStateMachine?.ExitState();
+        }
     }
 
     public void Init()
@@ -74,29 +71,32 @@ public class StateController : IStateController
     {
         if (!ActorAnimationPlayer.HasAnimation(animationName))
             return false;
-        if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
-            CurrentWeapon.AnimationPlayer.Play("RESET");
+        foreach (var holdItem in HoldItems)
+        {
+            if (holdItem.AnimationPlayer.CurrentAnimation != "RESET")
+                holdItem.AnimationPlayer.Play("RESET");
+        }
         ActorAnimationPlayer.Play(animationName);
         return true;
     }
 
-    public bool PlayActionAnimation(string animationName)
+    public bool PlayActionAnimation(string animationName, HoldItem holdItem)
     {
         if (HealthStateMachine.State.AnimationName != null)
             return false;
         string playerAnimPath = animationName;
-        if (CurrentWeapon == null)
+        if (holdItem == null)
         {
             if (!ActorAnimationPlayer.HasAnimation(playerAnimPath))
                 return false;
         }
         else
         {
-            playerAnimPath = $"{CurrentWeapon.WeaponTypeName}/{animationName}";
+            playerAnimPath = $"{holdItem.HoldItemType}/{animationName}";
             if (!ActorAnimationPlayer.HasAnimation(playerAnimPath)
-                || !CurrentWeapon.AnimationPlayer.HasAnimation(animationName))
+                || !holdItem.AnimationPlayer.HasAnimation(animationName))
                 return false;
-            CurrentWeapon.AnimationPlayer.Play(animationName);
+            holdItem.AnimationPlayer.Play(animationName);
         }
         ActorAnimationPlayer.Play(playerAnimPath);
         return true;
@@ -109,8 +109,11 @@ public class StateController : IStateController
             return false;
         if (!ActorAnimationPlayer.HasAnimation(animationName))
             return false;
-        if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
-            CurrentWeapon.AnimationPlayer.Play("RESET");
+        foreach (var holdItem in HoldItems)
+        {
+            if (holdItem.AnimationPlayer.CurrentAnimation != "RESET")
+                holdItem.AnimationPlayer.Play("RESET");
+        }
         ActorAnimationPlayer.Play(animationName);
         return true;
     }
@@ -123,22 +126,26 @@ public class StateController : IStateController
             return false;
         if (!ActorAnimationPlayer.HasAnimation(animationName))
             return false;
-        if (CurrentWeapon != null && CurrentWeapon.AnimationPlayer.CurrentAnimation != "RESET")
-            CurrentWeapon.AnimationPlayer.Play("RESET");
+        foreach (var holdItem in HoldItems)
+        {
+            if (holdItem.AnimationPlayer.CurrentAnimation != "RESET")
+                holdItem.AnimationPlayer.Play("RESET");
+        }
         ActorAnimationPlayer.Play(animationName);
         return true;
     }
-
-    // public void PlaySubWeaponAttack(string animationName)
-    // {
-    // }
 
     public bool PlayFallbackAnimation()
     {
         if (HealthStateMachine.State.AnimationName != null)
             return PlayHealthAnimation(HealthStateMachine.State.AnimationName);
+        foreach (var holdItem in HoldItems)
+        {
+            if (holdItem.StateMachine.State.AnimationName != null)
+                return PlayActionAnimation(holdItem.StateMachine.State.AnimationName, holdItem);
+        }
         if (ActionStateMachine.State.AnimationName != null)
-            return PlayActionAnimation(ActionStateMachine.State.AnimationName);
+            return PlayActionAnimation(ActionStateMachine.State.AnimationName, null);
         else if (AirStateMachine.State.AnimationName != null)
             return PlayAirAnimation(AirStateMachine.State.AnimationName);
         else if (MoveStateMachine.State.AnimationName != null)
@@ -150,8 +157,11 @@ public class StateController : IStateController
     {
         MoveStateMachine.Update(delta);
         AirStateMachine.Update(delta);
-        ActionStateMachine.Update(delta);
         HealthStateMachine.Update(delta);
+        if (!BaseActionDisabled)
+            ActionStateMachine.Update(delta);
+        foreach (var holdItem in HoldItems)
+            holdItem.StateMachine.Update(delta);
         _stateDisplayController.Update(this);
         BehaviorTree?.Update(delta);
     }

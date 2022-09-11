@@ -14,7 +14,7 @@ speed = null
 use_palette1 = null
 use_palette2 = null
 
-[node name="Weapon" type="Node2D"]
+[node name="HoldItem" type="Node2D"]
 texture_filter = 1
 
 [node name="Sprite" type="Sprite2D" parent="."]

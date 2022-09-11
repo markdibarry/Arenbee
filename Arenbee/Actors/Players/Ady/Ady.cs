@@ -15,7 +15,7 @@ public partial class Ady : Actor
             new MoveStateMachine(this),
             new AirStateMachine(this),
             new HealthStateMachine(this),
-            (actor) => new ActionStateMachine(actor));
+            new ActionStateMachine(this));
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();

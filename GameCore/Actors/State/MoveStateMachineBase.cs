@@ -2,7 +2,7 @@
 
 public abstract class MoveStateMachineBase : ActorStateMachine<MoveState, MoveStateMachineBase>
 {
-    protected MoveStateMachineBase(Actor actor)
+    protected MoveStateMachineBase(ActorBase actor)
         : base(actor)
     { }
 }

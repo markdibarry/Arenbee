@@ -5,7 +5,7 @@ namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
 
 public class PatrolChaseGroundBT : BehaviorTree
 {
-    public PatrolChaseGroundBT(Actor actor) : base(actor) { }
+    public PatrolChaseGroundBT(ActorBase actor) : base(actor) { }
     protected override BTNode SetupTree()
     {
         return new Selector(new()

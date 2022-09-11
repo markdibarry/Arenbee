@@ -5,7 +5,7 @@ namespace Arenbee.Actors.Default.State;
 
 public class MoveStateMachine : MoveStateMachineBase
 {
-    public MoveStateMachine(Actor actor)
+    public MoveStateMachine(ActorBase actor)
         : base(actor)
     {
         AddState<Standing>();

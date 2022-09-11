@@ -6,17 +6,17 @@ namespace Arenbee.ActionEffects;
 
 public class RestoreHP : IActionEffect
 {
-    public bool CanUse(ActionEffectRequest request, Actor[] targets)
+    public bool CanUse(ActionEffectRequest request, ActorBase[] targets)
     {
         if (targets == null || targets.Length == 0)
             return false;
-        Actor target = targets[0];
+        ActorBase target = targets[0];
         return !target.Stats.HasFullHP() && !target.Stats.HasNoHP();
     }
 
-    public void Use(ActionEffectRequest request, Actor[] targets)
+    public void Use(ActionEffectRequest request, ActorBase[] targets)
     {
-        Actor target = targets[0];
+        ActorBase target = targets[0];
         var actionData = new ActionData()
         {
             SourceName = target.Name,

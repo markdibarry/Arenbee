@@ -8,9 +8,9 @@ namespace GameCore.Actors;
 /// <summary>
 /// Base character object.
 /// </summary>
-public abstract partial class Actor : CharacterBody2D, IDamageable
+public abstract partial class ActorBase : CharacterBody2D, IDamageable
 {
-    protected Actor()
+    protected ActorBase()
     {
         UpDirection = Vector2.Up;
         Acceleration = 600;
@@ -45,7 +45,7 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
                 _equipment.EquipmentSet += OnEquipmentSet;
         }
     }
-    public WeaponSlot WeaponSlot { get; private set; }
+    public HoldItemControllerBase HoldItemController { get; private set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
     public ShaderMaterial BodyShader { get; set; }
@@ -73,7 +73,7 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
         InitMovement();
         InitState();
         Init();
-        WeaponSlot.Init(this);
+        HoldItemController.Init(this);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -101,7 +101,7 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
     {
         oldItem?.RemoveFromStats(Stats);
         newItem?.AddToStats(Stats);
-        WeaponSlot?.SetWeapon(newItem);
+        HoldItemController?.SetHoldItem(oldItem, newItem);
     }
 
     private void SetNodeReferences()
@@ -110,7 +110,7 @@ public abstract partial class Actor : CharacterBody2D, IDamageable
         _body = GetNode<Node2D>("Body");
         BodySprite = _body.GetNode<Sprite2D>("BodySprite");
         BodyShader = (ShaderMaterial)BodySprite.Material;
-        WeaponSlot = _body.GetNode<WeaponSlot>("WeaponSlot");
+        HoldItemController = _body.GetNode<HoldItemControllerBase>("HoldItems");
         HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
         HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");
         AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");

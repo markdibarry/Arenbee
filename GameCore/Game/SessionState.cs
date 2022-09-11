@@ -12,7 +12,7 @@ public class SessionState
     public int TimesDied { get; set; }
     public int EnemiesDefeated { get; set; }
 
-    public void OnActorDefeated(Actor actor)
+    public void OnActorDefeated(ActorBase actor)
     {
         if (actor.ActorType == ActorType.Player)
             TimesDied++;
@@ -20,7 +20,7 @@ public class SessionState
             EnemiesDefeated++;
     }
 
-    public void OnActorDamaged(Actor actor, DamageData damageData)
+    public void OnActorDamaged(ActorBase actor, DamageData damageData)
     {
         if (actor.ActorType == ActorType.Player)
             TimesReceivedDamaged++;

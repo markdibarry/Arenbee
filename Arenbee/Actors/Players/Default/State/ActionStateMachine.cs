@@ -4,7 +4,7 @@ namespace Arenbee.Actors.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(Actor actor)
+    public ActionStateMachine(ActorBase actor)
         : base(actor)
     {
         AddState<NotAttacking>();

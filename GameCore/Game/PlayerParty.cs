@@ -9,13 +9,13 @@ public class PlayerParty
 {
     public PlayerParty()
     {
-        _actors = new List<Actor>();
+        _actors = new List<ActorBase>();
         Inventory = new Inventory();
     }
 
     public PlayerParty(IEnumerable<ActorData> actorData, ICollection<ItemStack> items)
     {
-        _actors = new List<Actor>();
+        _actors = new List<ActorBase>();
         Inventory = new Inventory(items);
         // var actor = GDEx.Instantiate<Actor>(Arenbee.Actors.Players.Ady.GetScenePath());
         // actor.Inventory = Inventory;
@@ -25,8 +25,8 @@ public class PlayerParty
             _actors.Add(data.GetActor(Inventory));
     }
 
-    private readonly List<Actor> _actors;
-    public IReadOnlyCollection<Actor> Actors => _actors.AsReadOnly();
+    private readonly List<ActorBase> _actors;
+    public IReadOnlyCollection<ActorBase> Actors => _actors.AsReadOnly();
     public Inventory Inventory { get; }
 
     public void DisableUserInput(bool disable)
@@ -37,11 +37,11 @@ public class PlayerParty
 
     public void Free()
     {
-        foreach (Actor actor in Actors)
+        foreach (ActorBase actor in Actors)
             actor.QueueFree();
     }
 
-    public Actor GetPlayerByName(string name)
+    public ActorBase GetPlayerByName(string name)
     {
         return _actors.Find(x => x.Name == name);
     }

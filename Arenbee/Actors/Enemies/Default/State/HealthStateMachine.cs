@@ -8,7 +8,7 @@ namespace Arenbee.Actors.Enemies.Default.State;
 
 public class HealthStateMachine : HealthStateMachineBase
 {
-    public HealthStateMachine(Actor actor)
+    public HealthStateMachine(ActorBase actor)
         : base(actor)
     {
         AddState<Normal>();

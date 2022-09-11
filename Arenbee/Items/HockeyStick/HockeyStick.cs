@@ -5,23 +5,20 @@ using GameCore.Statistics;
 
 namespace Arenbee.Items;
 
-public partial class HockeyStick : Weapon
+public partial class HockeyStick : HoldItem
 {
-    public HockeyStick()
+    public override void Init(ActorBase actor)
     {
-        SetItemId("HockeyStick");
-        WeaponTypeName = WeaponTypeConstants.LongStick;
+        Setup("HockeyStick", WeaponTypeConstants.LongStick, actor, new ActionStateMachine(actor, this));
     }
 
     public HitBox WeakAttack1HitBox { get; set; }
     public HitBox WeakAttack2HitBox { get; set; }
 
-    public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(Holder);
-
     protected override void SetHitBoxes()
     {
-        WeakAttack1HitBox.SetBasicMeleeBox(Holder);
-        WeakAttack2HitBox.SetBasicMeleeBox(Holder);
+        WeakAttack1HitBox.SetBasicMeleeBox(Actor);
+        WeakAttack2HitBox.SetBasicMeleeBox(Actor);
     }
 
     protected override void SetNodeReferences()
@@ -34,8 +31,8 @@ public partial class HockeyStick : Weapon
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(Actor actor)
-        : base(actor)
+    public ActionStateMachine(ActorBase actor, HoldItem holdItem)
+        : base(actor, holdItem)
     {
         AddState<NotAttacking>();
         AddState<WeakAttack1>();
@@ -83,7 +80,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
         public override void Exit()
         {
-            var hockeyStick = Weapon as HockeyStick;
+            var hockeyStick = HoldItem as HockeyStick;
             hockeyStick.WeakAttack1HitBox.SetMonitorableDeferred(false);
             hockeyStick.WeakAttack1HitBox.Visible = false;
         }
@@ -91,7 +88,7 @@ public class ActionStateMachine : ActionStateMachineBase
         public override ActionState CheckForTransitions()
         {
             if (StateController.IsBlocked(BlockedState.Attack)
-                || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
                 return GetState<NotAttacking>();
             if (InputHandler.Attack.IsActionJustPressed)
                 return GetState<WeakAttack2>();
@@ -115,7 +112,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
         public override void Exit()
         {
-            var hockeyStick = Weapon as HockeyStick;
+            var hockeyStick = HoldItem as HockeyStick;
             hockeyStick.WeakAttack2HitBox.SetMonitorableDeferred(false);
             hockeyStick.WeakAttack2HitBox.Visible = false;
         }
@@ -123,7 +120,7 @@ public class ActionStateMachine : ActionStateMachineBase
         public override ActionState CheckForTransitions()
         {
             if (StateController.IsBlocked(BlockedState.Attack)
-                || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
                 return GetState<NotAttacking>();
             return null;
         }

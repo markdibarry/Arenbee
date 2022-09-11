@@ -1,6 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://r7ccjejv8p58"]
+[gd_scene load_steps=13 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/Actor.tscn" id="1_xn6go"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/Actor.tscn" id="1_xn6go"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Ball/Ball.cs" id="2_b2iak"]
 [ext_resource type="AnimationLibrary" uid="uid://dnjmcl6uld6q2" path="res://GameCore/Actors/Animation/Null.res" id="3_my1o0"]
 [ext_resource type="Texture2D" uid="uid://cgwau3nhjhdew" path="res://GameCore/Actors/Animation/NullPalette.png" id="4_3r0oh"]

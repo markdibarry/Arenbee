@@ -36,7 +36,7 @@ public partial class FireballBig : Node2D
         GlobalPosition = new Vector2(x, GlobalPosition.y);
     }
 
-    public static void CreateFireball(Actor actor)
+    public static void CreateFireball(ActorBase actor)
     {
         var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<FireballBig>();
         var fireballOffset = 10;

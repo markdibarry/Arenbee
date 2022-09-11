@@ -6,7 +6,7 @@ public partial class Whisp : Actor
 {
     public class AirStateMachine : AirStateMachineBase
     {
-        public AirStateMachine(Actor actor)
+        public AirStateMachine(ActorBase actor)
             : base(actor)
         {
             AddState<Floating>();

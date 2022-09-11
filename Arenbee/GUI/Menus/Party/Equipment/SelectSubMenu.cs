@@ -23,7 +23,7 @@ public partial class SelectSubMenu : OptionSubMenu
     private PlayerParty _playerParty;
     private ActorStatsDisplay _actorStatsDisplay;
     private ItemStatsDisplay _itemStatsDisplay;
-    public Actor Actor { get; set; }
+    public ActorBase Actor { get; set; }
     public EquipmentSlotBase Slot { get; set; }
 
     protected override void ReplaceDefaultOptions()

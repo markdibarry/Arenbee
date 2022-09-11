@@ -22,15 +22,15 @@ public abstract partial class HUDBase : CanvasLayer
         MessageBoxList.AddMessageToTop(MessageQueue.Dequeue());
     }
 
-    public abstract void OnActorAdded(Actor actor);
+    public abstract void OnActorAdded(ActorBase actor);
 
-    public abstract void OnActorDamaged(Actor actor, DamageData data);
+    public abstract void OnActorDamaged(ActorBase actor, DamageData data);
 
-    public abstract void OnActorDefeated(Actor actor);
+    public abstract void OnActorDefeated(ActorBase actor);
 
-    public abstract void OnPlayerModChanged(Actor actor, ModChangeData data);
+    public abstract void OnPlayerModChanged(ActorBase actor, ModChangeData data);
 
-    public abstract void OnPlayerStatsChanged(Actor actor);
+    public abstract void OnPlayerStatsChanged(ActorBase actor);
 
     public virtual void Pause()
     {

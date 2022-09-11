@@ -5,15 +5,12 @@ using GameCore.Items;
 
 namespace Arenbee.Items;
 
-public partial class Wand : Weapon
+public partial class Wand : HoldItem
 {
-    public Wand()
+    public override void Init(ActorBase actor)
     {
-        SetItemId("Wand");
-        WeaponTypeName = WeaponTypeConstants.Wand;
+        Setup("Wand", WeaponTypeConstants.Wand, actor, new ActionStateMachine(actor, this));
     }
-
-    public override ActionStateMachineBase GetActionStateMachine() => new ActionStateMachine(Holder);
 
     protected override void SetHitBoxes()
     {
@@ -26,8 +23,8 @@ public partial class Wand : Weapon
 
     public class ActionStateMachine : ActionStateMachineBase
     {
-        public ActionStateMachine(Actor actor)
-            : base(actor)
+        public ActionStateMachine(ActorBase actor, HoldItem holdItem)
+            : base(actor, holdItem)
         {
             AddState<NotAttacking>();
             AddState<WeakAttack1>();
@@ -84,7 +81,7 @@ public partial class Wand : Weapon
             public override ActionState CheckForTransitions()
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || Weapon.AnimationPlayer.CurrentAnimation != AnimationName
+                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.Attack.IsActionPressed)
                     return GetState<NotAttacking>();
                 if (_counter <= 0)
@@ -136,7 +133,7 @@ public partial class Wand : Weapon
             public override ActionState CheckForTransitions()
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || Weapon.AnimationPlayer.CurrentAnimation != AnimationName)
+                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
                 if (!InputHandler.Attack.IsActionPressed)
                 {
@@ -171,7 +168,7 @@ public partial class Wand : Weapon
             public override ActionState CheckForTransitions()
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || Weapon.AnimationPlayer.CurrentAnimation != AnimationName
+                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.Attack.IsActionPressed)
                     return GetState<NotAttacking>();
                 return null;

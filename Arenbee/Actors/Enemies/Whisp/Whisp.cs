@@ -16,7 +16,7 @@ public partial class Whisp : Actor
             new MoveStateMachine(this),
             new AirStateMachine(this),
             new HealthStateMachine(this),
-            (actor) => new ActionStateMachine(actor),
+            new ActionStateMachine(this),
             (actor) => new PatrolChaseAirBT(actor));
     }
 

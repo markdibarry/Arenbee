@@ -4,8 +4,8 @@ namespace GameCore.ActionEffects;
 
 public interface IActionEffect
 {
-    bool CanUse(ActionEffectRequest request, Actor[] targets);
-    void Use(ActionEffectRequest request, Actor[] targets);
+    bool CanUse(ActionEffectRequest request, ActorBase[] targets);
+    void Use(ActionEffectRequest request, ActorBase[] targets);
 }
 
 public enum ActionEffectType

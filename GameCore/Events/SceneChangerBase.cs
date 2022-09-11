@@ -21,7 +21,7 @@ public abstract partial class SceneChangerBase : Area2D
     {
         if (IsActive || PackedScenePath == null)
             return;
-        if (body is not Actor actor || actor.ActorType != ActorType.Player)
+        if (body is not ActorBase actor || actor.ActorType != ActorType.Player)
             return;
         if (!File.FileExists(PackedScenePath))
             return;

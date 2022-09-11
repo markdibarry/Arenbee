@@ -83,10 +83,10 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            var actor = option.GetData<Actor>("actor");
+            var actor = option.GetData<ActorBase>("actor");
             if (actor == null)
                 continue;
-            var target = new Actor[] { actor };
+            var target = new ActorBase[] { actor };
             bool canUse = ActionEffect.CanUse(request, target);
             option.Disabled = !canUse || ItemStack.Amount <= 0;
             option.HPContainer.StatCurrentValueText = actor.Stats.GetHP().ToString();
@@ -113,10 +113,10 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (OptionItem item in selectedItems)
         {
-            var actor = item.GetData<Actor>("actor");
+            var actor = item.GetData<ActorBase>("actor");
             if (actor == null)
                 return;
-            ActionEffect.Use(request, new Actor[] { actor });
+            ActionEffect.Use(request, new ActorBase[] { actor });
         }
         ItemStack.RemoveAmount(1);
 

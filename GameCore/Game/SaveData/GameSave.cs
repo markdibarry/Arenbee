@@ -15,7 +15,7 @@ public class GameSave
     {
         Items = gameSession.Party?.Inventory?.Items;
         SessionState = gameSession.SessionState;
-        foreach (Actor actor in gameSession.Party?.Actors)
+        foreach (ActorBase actor in gameSession.Party?.Actors)
             ActorData.Add(new ActorData(actor));
     }
 

@@ -6,15 +6,15 @@ using Godot;
 
 namespace GameCore.Actors;
 
-public partial class Actor
+public partial class ActorBase
 {
     public int ContextAreasActive { get; set; }
     public Sprite2D BodySprite { get; private set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
     public IStateController StateController { get; protected set; }
     public IFrameController IFrameController { get; }
-    public event Action<Actor> Defeated;
-    public event Action<Actor, DamageData> DamageRecieved;
+    public event Action<ActorBase> Defeated;
+    public event Action<ActorBase, DamageData> DamageRecieved;
 
     public void PlaySoundFX(string soundPath)
     {

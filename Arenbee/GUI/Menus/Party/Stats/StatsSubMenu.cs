@@ -35,7 +35,7 @@ public partial class StatsSubMenu : OptionSubMenu
     protected override void OnItemFocused()
     {
         base.OnItemFocused();
-        var actor = CurrentContainer.CurrentItem.GetData<Actor>("actor");
+        var actor = CurrentContainer.CurrentItem.GetData<ActorBase>("actor");
         if (actor == null)
             return;
         _statsDisplay.UpdateStatsDisplay(actor);

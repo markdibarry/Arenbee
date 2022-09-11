@@ -12,7 +12,7 @@ public abstract class ActorState<TState, TStateMachine> : State<TState, TStateMa
     public BlockedState BlockedStates { get; set; }
     public ActorInputHandler InputHandler => Actor.InputHandler;
     public IStateController StateController => Actor.StateController;
-    protected Actor Actor { get; private set; }
+    protected ActorBase Actor { get; private set; }
 
     public override void Init(TStateMachine stateMachine)
     {
