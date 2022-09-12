@@ -22,6 +22,8 @@ public partial class HoldItemController : HoldItemControllerBase
     {
         if (!_holdItemIds.Contains(oldItem?.ItemCategoryId) && !_holdItemIds.Contains(newItem?.ItemCategoryId))
             return;
+        if (oldItem != null)
+            DetachHoldItem(oldItem.Id);
         if (oldItem?.ItemCategoryId == ItemCategoryIds.Weapon || newItem?.ItemCategoryId == ItemCategoryIds.Weapon)
         {
             if (oldItem == null && newItem != null)
@@ -29,12 +31,14 @@ public partial class HoldItemController : HoldItemControllerBase
             else if (oldItem != null && newItem == null)
                 Actor.StateController.BaseActionDisabled = false;
         }
-        if (oldItem != null)
-            DetachHoldItem(oldItem.Id);
         if (newItem != null)
         {
             var holdItem = GDEx.Instantiate<HoldItem>($"{Config.ItemPath}{newItem.Id}/{newItem.Id}.tscn");
             AttachHoldItem(holdItem);
+        }
+        else
+        {
+            Actor.StateController.PlayFallbackAnimation();
         }
     }
 }

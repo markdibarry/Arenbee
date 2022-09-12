@@ -104,7 +104,7 @@ public class StateControllerBase
         {
             if (stateMachineName == "Action")
                 return true;
-            if (ActionStateMachine.State.AnimationName == null &&
+            if ((BaseActionDisabled || ActionStateMachine.State.AnimationName == null) &&
                 HoldItems.All(x => x.StateMachine.State.AnimationName == null))
             {
                 if (stateMachineName == "Air")
@@ -128,7 +128,7 @@ public class StateControllerBase
             if (holdItem.StateMachine.State.AnimationName != null)
                 return PlayAnimation(holdItem.StateMachine.State.AnimationName, "Action", holdItem);
         }
-        if (ActionStateMachine.State.AnimationName != null)
+        if (!BaseActionDisabled && ActionStateMachine.State.AnimationName != null)
             return PlayAnimation(ActionStateMachine.State.AnimationName, "Action", null);
         else if (AirStateMachine.State.AnimationName != null)
             return PlayAnimation(AirStateMachine.State.AnimationName, "Air");

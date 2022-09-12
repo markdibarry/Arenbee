@@ -36,6 +36,7 @@ public abstract partial class HoldItemControllerBase : Node2D
         if (holdItem == null)
             return;
         HoldItems.Remove(holdItem);
+        holdItem.StateMachine.ExitState();
         RemoveChild(holdItem);
         holdItem.QueueFree();
     }
