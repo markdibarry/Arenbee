@@ -8,6 +8,6 @@ public abstract class ActionState : ActorState<ActionState, ActionStateMachineBa
 
     protected override void PlayAnimation(string animationName)
     {
-        StateController.PlayActionAnimation(animationName, HoldItem);
+        StateController.PlayAnimation(animationName, "Action", HoldItem);
     }
 }

@@ -9,7 +9,7 @@ namespace Arenbee.Items;
 
 public partial class HoldItemController : HoldItemControllerBase
 {
-    private readonly string[] _holdItemIds = { ItemCategoryIds.Weapon };
+    private readonly string[] _holdItemIds = { ItemCategoryIds.Weapon, ItemCategoryIds.SubWeapon };
 
     public override void Init(ActorBase actor)
     {

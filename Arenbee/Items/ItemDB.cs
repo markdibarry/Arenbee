@@ -51,7 +51,7 @@ public class ItemDB : ItemDBBase
             }
         });
 
-        items.Add(new("Wand", ItemCategoryIds.Weapon)
+        items.Add(new("Wand", ItemCategoryIds.SubWeapon)
         {
             DisplayName = "Magic Wand",
             Description = "Boom! Blast!",

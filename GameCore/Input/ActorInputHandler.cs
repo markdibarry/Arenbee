@@ -7,10 +7,12 @@ public class ActorInputHandler : InputHandler
         Jump = new InputAction(this);
         Attack = new InputAction(this);
         Run = new InputAction(this);
+        SubAction = new InputAction(this);
     }
 
     public InputAction Jump { get; protected set; }
     public InputAction Attack { get; protected set; }
+    public InputAction SubAction { get; protected set; }
     public InputAction Run { get; protected set; }
 
     public override void Update()
@@ -18,6 +20,7 @@ public class ActorInputHandler : InputHandler
         base.Update();
         Jump.ClearOneTimeActions();
         Attack.ClearOneTimeActions();
+        SubAction.ClearOneTimeActions();
         Run.ClearOneTimeActions();
     }
 }

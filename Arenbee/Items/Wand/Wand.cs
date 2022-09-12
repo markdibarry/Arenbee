@@ -51,7 +51,7 @@ public partial class Wand : HoldItem
             {
                 if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
                     return null;
-                if (InputHandler.Attack.IsActionJustPressed)
+                if (InputHandler.SubAction.IsActionJustPressed)
                     return GetState<WeakAttack1>();
                 return null;
             }
@@ -59,7 +59,11 @@ public partial class Wand : HoldItem
 
         protected class WeakAttack1 : ActionState
         {
-            public WeakAttack1() { AnimationName = "WeakAttack1"; }
+            public WeakAttack1()
+            {
+                AnimationName = "WeakAttack1";
+                BlockedStates = BlockedState.Jumping | BlockedState.Move;
+            }
             private double _counter;
             private readonly double _countTime = 0.5;
             public override void Enter()
@@ -82,7 +86,7 @@ public partial class Wand : HoldItem
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
-                    || !InputHandler.Attack.IsActionPressed)
+                    || !InputHandler.SubAction.IsActionPressed)
                     return GetState<NotAttacking>();
                 if (_counter <= 0)
                     return GetState<Charge>();
@@ -135,7 +139,7 @@ public partial class Wand : HoldItem
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
                     return GetState<NotAttacking>();
-                if (!InputHandler.Attack.IsActionPressed)
+                if (!InputHandler.SubAction.IsActionPressed)
                 {
                     if (_counter <= 0)
                         return GetState<BigAttack1>();
@@ -169,7 +173,7 @@ public partial class Wand : HoldItem
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
-                    || !InputHandler.Attack.IsActionPressed)
+                    || !InputHandler.SubAction.IsActionPressed)
                     return GetState<NotAttacking>();
                 return null;
             }

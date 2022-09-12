@@ -9,7 +9,7 @@ public partial class Plant : Actor
 {
     public Plant()
     {
-        StateController = new StateController(
+        StateController = new StateControllerBase(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

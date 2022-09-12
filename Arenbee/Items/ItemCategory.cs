@@ -21,4 +21,5 @@ public static class ItemCategoryIds
     public const string Pants = "Pants";
     public const string Footwear = "Footwear";
     public const string Accessory = "Accessory";
+    public const string SubWeapon = "SubWeapon";
 }

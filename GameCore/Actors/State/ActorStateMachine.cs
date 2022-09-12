@@ -16,5 +16,5 @@ public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TS
     /// </summary>
     /// <value></value>
     public ActorBase Actor { get; set; }
-    public IStateController StateController => Actor.StateController;
+    public StateControllerBase StateController => Actor.StateController;
 }

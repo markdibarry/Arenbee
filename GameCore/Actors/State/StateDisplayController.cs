@@ -27,7 +27,7 @@ public class StateDisplayController
         stateDisplay.Position = new Vector2(actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + actor.BodySprite.Position.y);
     }
 
-    public void Update(StateController stateController)
+    public void Update(StateControllerBase stateController)
     {
         _moveStateDisplay.Text = stateController.MoveStateMachine.State.GetType().Name;
         _airStateDisplay.Text = stateController.AirStateMachine.State.GetType().Name;

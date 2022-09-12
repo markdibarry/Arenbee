@@ -10,7 +10,7 @@ public partial class Ball : Actor
 {
     public Ball()
     {
-        StateController = new StateController(
+        StateController = new StateControllerBase(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

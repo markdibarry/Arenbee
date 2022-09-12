@@ -6,7 +6,7 @@ public abstract class HealthState : ActorState<HealthState, HealthStateMachineBa
 {
     protected override void PlayAnimation(string animationName)
     {
-        StateController.PlayHealthAnimation(animationName);
+        StateController.PlayAnimation(animationName, "Health");
     }
 
     public virtual void HandleDamage(DamageData damageData) { }

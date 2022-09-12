@@ -10,7 +10,7 @@ public partial class Ady : Actor
     public Ady()
     {
         WalkSpeed = 100;
-        StateController = new StateController(
+        StateController = new StateControllerBase(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

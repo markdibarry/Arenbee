@@ -11,7 +11,7 @@ public partial class ActorBase
     public int ContextAreasActive { get; set; }
     public Sprite2D BodySprite { get; private set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
-    public IStateController StateController { get; protected set; }
+    public StateControllerBase StateController { get; protected set; }
     public IFrameController IFrameController { get; }
     public event Action<ActorBase> Defeated;
     public event Action<ActorBase, DamageData> DamageRecieved;

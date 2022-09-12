@@ -8,6 +8,7 @@ public class Player1InputHandler : ActorInputHandler
     {
         Jump = new InputAction(this, "p1_jump");
         Attack = new InputAction(this, "p1_attack");
+        SubAction = new InputAction(this, "p1_subAction");
         Run = new InputAction(this, "p1_run");
         Up = new InputAction(this, "p1_up");
         Down = new InputAction(this, "p1_down");

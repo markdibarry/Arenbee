@@ -12,6 +12,7 @@ public class EquipmentSlotCategory : EquipmentSlotCategoryBase
 
 public static class EquipmentSlotCategoryIds
 {
+    public const string SubWeapon = "SubWeapon";
     public const string Weapon = "Weapon";
     public const string Headgear = "Headgear";
     public const string Shirt = "Shirt";

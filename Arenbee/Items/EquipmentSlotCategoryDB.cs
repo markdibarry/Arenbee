@@ -14,5 +14,6 @@ public class EquipmentSlotCategoryDB : EquipmentSlotCategoryDBBase
         categories.Add(new EquipmentSlotCategory(EquipmentSlotCategoryIds.Footwear, "Footwear", "Foot", ItemCategoryIds.Footwear));
         categories.Add(new EquipmentSlotCategory(EquipmentSlotCategoryIds.Accessory1, "Accessory 1", "Acc1", ItemCategoryIds.Accessory));
         categories.Add(new EquipmentSlotCategory(EquipmentSlotCategoryIds.Accessory2, "Accessory 2", "Acc2", ItemCategoryIds.Accessory));
+        categories.Add(new EquipmentSlotCategory(EquipmentSlotCategoryIds.SubWeapon, "SubWeapon", "SubW", ItemCategoryIds.SubWeapon));
     }
 }
