@@ -1,0 +1,236 @@
+{
+  "SessionState": {
+    "TotalGameTime": 0,
+    "CurrentGameTime": 0,
+    "TimesReceivedDamaged": 1,
+    "TimesDealtDamage": 1,
+    "TimesDied": 0,
+    "EnemiesDefeated": 0
+  },
+  "Items": [
+    {
+      "Amount": 1,
+      "ItemId": "HockeyStick"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "Wand"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "Uggs"
+    },
+    {
+      "Amount": 2,
+      "ItemId": "FingerlessGloves"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "MotleyCrueTee"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "Vibrams"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "MoodRing"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "MetalHockeyStick"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "FriendshipBracelet"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "OvenMitts"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "SunGlasses"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "JNCOJeans"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "ZubazPants"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "ClemsonHoodie"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "FaceMask"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "RamenBoushi"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "CheeseHat"
+    },
+    {
+      "Amount": 2,
+      "ItemId": "SubwaySandwich"
+    },
+    {
+      "Amount": 4,
+      "ItemId": "SuperDonut"
+    },
+    {
+      "Amount": 5,
+      "ItemId": "Potion"
+    },
+    {
+      "Amount": 2,
+      "ItemId": "FlavorAid"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "BunnyNugget"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "TurboEther"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "SnakeskinShoes"
+    },
+    {
+      "Amount": 1,
+      "ItemId": "SnakeRing"
+    }
+  ],
+  "ActorData": [
+    {
+      "ActorPath": "res://Arenbee/Actors/Players/Ady/Ady.tscn",
+      "EquipmentSlots": [
+        {
+          "ItemId": "HockeyStick",
+          "SlotCategoryId": "Weapon"
+        },
+        {
+          "ItemId": "FaceMask",
+          "SlotCategoryId": "Headgear"
+        },
+        {
+          "ItemId": "MotleyCrueTee",
+          "SlotCategoryId": "Shirt"
+        },
+        {
+          "ItemId": "JNCOJeans",
+          "SlotCategoryId": "Pants"
+        },
+        {
+          "ItemId": "SnakeskinShoes",
+          "SlotCategoryId": "Footwear"
+        },
+        {
+          "ItemId": "MoodRing",
+          "SlotCategoryId": "Accessory1"
+        },
+        {
+          "ItemId": "FingerlessGloves",
+          "SlotCategoryId": "Accessory2"
+        },
+        {
+          "ItemId": null,
+          "SlotCategoryId": "SubWeapon"
+        }
+      ],
+      "Stats": {
+        "Attributes": {
+          "StatsDict": {
+            "0": {
+              "AttributeType": "Level",
+              "BaseValue": 1,
+              "MaxValue": 99
+            },
+            "1": {
+              "AttributeType": "HP",
+              "BaseValue": 11,
+              "MaxValue": 999
+            },
+            "2": {
+              "AttributeType": "MaxHP",
+              "BaseValue": 12,
+              "MaxValue": 999
+            },
+            "3": {
+              "AttributeType": "MP",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "4": {
+              "AttributeType": "MaxMP",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "5": {
+              "AttributeType": "Attack",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "6": {
+              "AttributeType": "Defense",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "7": {
+              "AttributeType": "MagicAttack",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "8": {
+              "AttributeType": "MagicDefense",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "9": {
+              "AttributeType": "Luck",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "10": {
+              "AttributeType": "Evade",
+              "BaseValue": 0,
+              "MaxValue": 999
+            },
+            "11": {
+              "AttributeType": "Speed",
+              "BaseValue": 0,
+              "MaxValue": 999
+            }
+          }
+        },
+        "StatusEffects": {
+          "TempModifiers": [
+            {
+              "Modifier": {
+                "Chance": 100,
+                "IsHidden": false,
+                "ModOperator": "None",
+                "StatType": "StatusEffect",
+                "SubType": 5,
+                "Value": 2
+              },
+              "Notifier": {
+                "TypeDiscriminator": 1,
+                "OneShot": true,
+                "TimeRemaining": 1.56664634
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
