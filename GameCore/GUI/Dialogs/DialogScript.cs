@@ -34,7 +34,7 @@ public class DialogPart
     {
         return new DialogPart()
         {
-            Speakers = new List<Speaker> { new Speaker("Dani", "Neautral") },
+            Speakers = new List<Speaker> { new Speaker("Dani", "Neutral") },
             Text = "Hi!\n" +
             "My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
         };

@@ -159,7 +159,7 @@ public partial class DynamicTextBox : Control
     private int[] GetPageBreaks()
     {
         var pageBreaks = new List<int>() { 0 };
-        int totalLines = _dynamicText.GetLineCount();
+        int totalLines = _dynamicText.LineCount;
         float startLineOffset = 0;
         float currentLineOffset = 0;
         float nextLineOffset;
@@ -169,7 +169,7 @@ public partial class DynamicTextBox : Control
             if (i + 1 < totalLines)
                 nextLineOffset = _dynamicText.GetLineOffset(i + 1);
             else
-                nextLineOffset = _dynamicText.GetContentHeight();
+                nextLineOffset = _dynamicText.ContentHeight;
 
             newHeight = nextLineOffset - startLineOffset;
 
@@ -196,7 +196,7 @@ public partial class DynamicTextBox : Control
     private int GetEndChar(int page)
     {
         if (page + 1 >= _pageBreaks.Length)
-            return _dynamicText.GetTotalCharacterCount();
+            return _dynamicText.TotalCharacterCount;
         else
             return _dynamicText.LineBreaks[GetPageLine(page + 1)];
     }

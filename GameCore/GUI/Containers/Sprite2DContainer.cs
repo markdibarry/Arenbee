@@ -29,10 +29,10 @@ public partial class Sprite2DContainer : Container
         UpdateSize();
     }
 
-    private Vector2 GetNewSize()
+    private Vector2i GetNewSize()
     {
         if (Sprite2D?.Visible != true)
-            return Vector2.Zero;
+            return Vector2i.Zero;
         float v = 0;
         float h = 0;
         Rect2 rect = Sprite2D.GetRect();
@@ -41,7 +41,7 @@ public partial class Sprite2DContainer : Container
             h = spritePos.x;
         if (spritePos.y > v)
             v = spritePos.y;
-        return new Vector2(h, v);
+        return new Vector2i((int)h, (int)v);
     }
 
     private void OnChildEntered(Node node)

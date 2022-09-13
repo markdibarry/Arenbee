@@ -26,9 +26,7 @@ public partial class DynamicText : RichTextLabel
 
     private double _counter;
     private int _currentLine;
-    private bool _isTextDirty;
     private List<int> _lineBreaks;
-    private int _lineCount;
     private Dictionary<int, List<TextEvent>> _textEvents;
     [Export]
     public int CurrentLine
@@ -62,20 +60,21 @@ public partial class DynamicText : RichTextLabel
     public bool WriteTextEnabled { get; set; }
     [Export]
     public double Speed { get; set; }
+    public int ContentHeight { get; private set; }
     public ReadOnlyCollection<int> LineBreaks
     {
         get => _lineBreaks.AsReadOnly();
     }
+    public int LineCount { get; private set; }
     public bool SpeedUpText { get; set; }
+    public int TotalCharacterCount { get; private set; }
     public int EndChar { get; set; }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
     public event Action TextLoaded;
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
-        if (_isTextDirty)
-            UpdateTextData();
         if (!WriteTextEnabled)
             return;
         if (IsAtTextEnd())
@@ -84,8 +83,14 @@ public partial class DynamicText : RichTextLabel
             Write(delta);
     }
 
+    public void OnTextFinishedLoading()
+    {
+        UpdateTextData();
+    }
+
     public override void _Ready()
     {
+        Finished += OnTextFinishedLoading;
         Init();
     }
 
@@ -133,15 +138,14 @@ public partial class DynamicText : RichTextLabel
         Text = CustomText;
         Text = TextEventExtractor.Extract(GetParsedText(), CustomText, out _textEvents);
         VisibleCharacters = 0;
-        _isTextDirty = true;
     }
 
     private int GetValidLine(int line)
     {
         if (line < 1)
             return 0;
-        else if (line >= _lineCount)
-            return _lineCount - 1;
+        else if (line >= LineCount)
+            return LineCount - 1;
         else
             return line;
     }
@@ -149,9 +153,8 @@ public partial class DynamicText : RichTextLabel
     private List<int> GetLineBreaks()
     {
         var lineBreaks = new List<int>();
-        int totalCharacters = GetTotalCharacterCount();
         int currentLine = -1;
-        for (int i = 0; i < totalCharacters; i++)
+        for (int i = 0; i < TotalCharacterCount; i++)
         {
             int line = GetCharacterLine(i);
             if (line > currentLine)
@@ -165,10 +168,10 @@ public partial class DynamicText : RichTextLabel
 
     private float GetLineOffsetOrEnd(int line)
     {
-        if (line < _lineCount)
+        if (line < LineCount)
             return GetLineOffset(line);
         else
-            return GetContentHeight();
+            return ContentHeight;
     }
 
     private void HandleTextEvent(ITextEvent textEvent)
@@ -209,14 +212,15 @@ public partial class DynamicText : RichTextLabel
     private void UpdateLineBreaks()
     {
         _lineBreaks = GetLineBreaks();
-        if (GetTotalCharacterCount() > 0)
+        if (TotalCharacterCount > 0)
             VisibleCharacters = 0;
     }
 
     private void UpdateTextData()
     {
-        _isTextDirty = false;
-        _lineCount = GetLineCount();
+        LineCount = GetLineCount();
+        TotalCharacterCount = GetTotalCharacterCount();
+        ContentHeight = GetContentHeight();
         UpdateLineBreaks();
         TextLoaded?.Invoke();
     }
