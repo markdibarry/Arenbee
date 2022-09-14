@@ -59,7 +59,11 @@ public partial class OptionItem : MarginContainer
         if (!OptionData.TryGetValue(key, out Variant result))
             return default;
         if (result.Obj is not T)
+        {
+            if (result.Obj is long && typeof(T) == typeof(int))
+                return (T)result.Obj;
             return default;
+        }
         return (T)result.Obj;
     }
 

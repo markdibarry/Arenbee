@@ -1,4 +1,5 @@
 ﻿using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore;
@@ -35,6 +36,8 @@ public partial class GameCamera : Camera2D
 
     public void UpdateLimits()
     {
+        if (Locator.Root.GameState.MenuActive)
+            return;
         bool finishedUpdating = true;
         if (_goalLimitTop != LimitTop)
         {

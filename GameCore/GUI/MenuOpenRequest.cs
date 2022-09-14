@@ -20,5 +20,5 @@ public class MenuOpenRequest
     public string Path { get; set; }
     public PackedScene PackedScene { get; set; }
     public bool PreventAnimation { get; set; }
-    public Dictionary<string, object> GrabBag { get; set; }
+    public Dictionary<string, object> GrabBag { get; set; } = new();
 }

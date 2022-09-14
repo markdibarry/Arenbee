@@ -17,7 +17,7 @@
   },
   {
     "id": 3,
-    "speakers": [{"character":"Ady", "displayName":"Dani","mood":"annoyed"}],
+    "speakers": [{"character":"Dani", "displayName":"Dani (Annoyed)","mood":"annoyed"}],
     "text": "Why did you interrupt me?",
     "choices": [
       {"text":"Because I love you!","next": 4},

@@ -1,6 +1,6 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=13 format=3 uid="uid://x5nilmjfvbf5"]
 
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Actor.tscn" id="1_e7d2k"]
+[ext_resource type="PackedScene" uid="uid://2o12g702kcr6" path="res://Arenbee/Actors/Actor.tscn" id="1_e7d2k"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.cs" id="2_smssj"]
 [ext_resource type="AnimationLibrary" uid="uid://cc0dhjokcf6hg" path="res://Arenbee/Actors/Enemies/Whisp/Animation/WhispLibrary.res" id="3_6kwvn"]
 [ext_resource type="Texture2D" uid="uid://bryfxg1olnhug" path="res://Arenbee/Actors/Enemies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
@@ -50,8 +50,6 @@ material = SubResource("ShaderMaterial_esvcb")
 scale = Vector2(-1, 1)
 texture = ExtResource("3_gge5r")
 hframes = 21
-vframes = 1
-frame = 0
 
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_uvkvh")]
 modulate = Color(0, 1, 0, 1)

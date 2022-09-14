@@ -14,9 +14,9 @@
 [ext_resource type="PackedScene" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
-[ext_resource type="PackedScene" uid="uid://r7ccjejv8p58" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="15_5maqv"]
-[ext_resource type="PackedScene" uid="uid://bl58jthybjsit" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="16_8h35j"]
-[ext_resource type="PackedScene" uid="uid://dykieghkvjhee" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.tscn" id="17_g0fp2"]
+[ext_resource type="PackedScene" uid="uid://dmqmf430q1p0c" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="15_5maqv"]
+[ext_resource type="PackedScene" uid="uid://b531opjmqk3j4" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="16_8h35j"]
+[ext_resource type="PackedScene" uid="uid://x5nilmjfvbf5" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.tscn" id="17_g0fp2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)

@@ -1,23 +1,15 @@
 ﻿using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Events;
 
-[Tool]
 public partial class DialogArea : Area2D
 {
-    public DialogArea()
-    {
-        _gameSession = Locator.Session;
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
     private ActorBase _actor;
-    private readonly GameSessionBase _gameSession;
     private bool _canTrigger;
     private ColorRect _colorRect;
     [Export]
@@ -75,7 +67,7 @@ public partial class DialogArea : Area2D
         if (_actor.InputHandler.Attack.IsActionJustPressed)
         {
             DialogOpenRequest request = new(DialogPath);
-            _ = _gameSession?.OpenDialogAsync(request);
+            _ = Locator.Session?.OpenDialogAsync(request);
         }
     }
 }
