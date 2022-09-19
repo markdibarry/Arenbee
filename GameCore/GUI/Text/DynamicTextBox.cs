@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
 
@@ -25,7 +26,7 @@ public partial class DynamicTextBox : Control
         get => _page;
         set
         {
-            _page = value;
+            _page = GetAdjustedPageIndex(value);
             ToPage(value);
         }
     }
@@ -48,8 +49,12 @@ public partial class DynamicTextBox : Control
     [Export]
     public bool ShouldUpdateText
     {
-        get => false;
-        set { if (value) UpdateText(); }
+        get => Loading;
+        set
+        {
+            if (!Loading && value)
+                _ = UpdateTextAsync();
+        }
     }
     [Export]
     public bool ShouldWrite
@@ -78,15 +83,10 @@ public partial class DynamicTextBox : Control
                 _dynamicText.SpeedUpText = value;
         }
     }
+    public bool Loading { get; private set; }
 
     public event Action<ITextEvent> TextEventTriggered;
     public event Action StoppedWriting;
-    public event Action TextLoaded;
-
-    public override void _ExitTree()
-    {
-        UnsubscribeEvents();
-    }
 
     public override void _Ready()
     {
@@ -104,12 +104,6 @@ public partial class DynamicTextBox : Control
         return _dynamicText?.IsAtTextEnd() ?? false;
     }
 
-    public void NextPage()
-    {
-        if (CurrentPage + 1 < _pageBreaks.Length)
-            CurrentPage++;
-    }
-
     public void ShowAllPage(bool shouldShow)
     {
         if (shouldShow)
@@ -118,26 +112,21 @@ public partial class DynamicTextBox : Control
             ToPage(CurrentPage);
     }
 
-    public void ToPage(int newPage)
-    {
-        if (_dynamicText == null)
-            return;
-        newPage = GetAdjustedPageIndex(newPage);
-        int newPageLine = GetPageLine(newPage);
-        _dynamicText.MoveToLine(newPageLine);
-        _dynamicText.EndChar = GetEndChar(newPage);
-    }
-
-    public void UpdateText(string text)
+    public async Task UpdateTextAsync(string text)
     {
         CustomText = text;
-        UpdateText();
+        await UpdateTextAsync();
     }
 
-    public void UpdateText()
+    public async Task UpdateTextAsync()
     {
+        if (Loading)
+            return;
+        Loading = true;
         _displayHeight = _dynamicTextContainer.Size.y;
-        _dynamicText.UpdateText();
+        await _dynamicText.UpdateTextAsync();
+        UpdatePageBreaks();
+        Loading = false;
     }
 
     public void WritePage(bool shouldWrite)
@@ -218,12 +207,6 @@ public partial class DynamicTextBox : Control
             TextEventTriggered?.Invoke(textEvent);
     }
 
-    private void OnTextLoaded()
-    {
-        UpdatePageBreaks();
-        TextLoaded?.Invoke();
-    }
-
     private void SetDefault()
     {
         Speed = _speed;
@@ -232,8 +215,7 @@ public partial class DynamicTextBox : Control
         CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]\n" +
         "(pause){{pause time=2}}\n" +
         "{{speed time=0.5}}...{{speed time=0.05}}And here's the rest.";
-        UpdateText();
-        WritePage(true);
+        _ = UpdateTextAsync();
     }
 
     private void SetNodeReferences()
@@ -246,16 +228,17 @@ public partial class DynamicTextBox : Control
 
     private void SubscribeEvents()
     {
-        _dynamicText.TextLoaded += OnTextLoaded;
         _dynamicText.TextEventTriggered += OnTextEventTriggered;
         _dynamicText.StoppedWriting += OnStoppedWriting;
     }
 
-    private void UnsubscribeEvents()
+    private void ToPage(int newPage)
     {
-        _dynamicText.TextLoaded -= OnTextLoaded;
-        _dynamicText.TextEventTriggered -= OnTextEventTriggered;
-        _dynamicText.StoppedWriting -= OnStoppedWriting;
+        if (_dynamicText == null)
+            return;
+        int newPageLine = GetPageLine(newPage);
+        _dynamicText.MoveToLine(newPageLine);
+        _dynamicText.EndChar = GetEndChar(newPage);
     }
 
     private void UpdatePageBreaks()

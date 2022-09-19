@@ -33,7 +33,7 @@ public partial class InventorySubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         var typeOptions = GetItemTypeOptions();
         _typeList.GridContainer.Columns = typeOptions.Count;
@@ -45,7 +45,6 @@ public partial class InventorySubMenu : OptionSubMenu
 
     protected override void OnItemFocused()
     {
-        base.OnItemFocused();
         if (CurrentContainer == _typeList)
             UpdateItemList(CurrentContainer.CurrentItem, resetFocus: true);
         else
@@ -54,7 +53,6 @@ public partial class InventorySubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         if (CurrentContainer == _typeList)
             FocusContainer(_inventoryList);
         else if (CurrentContainer == _inventoryList)
@@ -124,9 +122,11 @@ public partial class InventorySubMenu : OptionSubMenu
         ItemStack itemStack = _inventory.GetItemStack(itemId);
         if (itemStack == null)
             return;
-        var useSubMenu = GDEx.Instantiate<UseSubMenu>(UseSubMenu.GetScenePath());
-        useSubMenu.ItemStack = itemStack;
-        RaiseRequestedAdd(useSubMenu);
+        var request = new GUIOpenRequest(UseSubMenu.GetScenePath())
+        {
+            Data = itemStack
+        };
+        RequestOpenSubMenu(request);
     }
 
     private void UpdateItemDescription(OptionItem optionItem)
@@ -134,7 +134,7 @@ public partial class InventorySubMenu : OptionSubMenu
         string itemId = optionItem?.GetData<string>(nameof(ItemStack.ItemId));
         ItemBase item = Locator.ItemDB.GetItem(itemId);
         _itemStatsDisplay.UpdateStatsDisplay(item);
-        _itemInfo.UpdateText(item?.Description);
+        _ = _itemInfo.UpdateTextAsync(item?.Description);
     }
 
     private void UpdateItemList(OptionItem optionItem, bool resetFocus)

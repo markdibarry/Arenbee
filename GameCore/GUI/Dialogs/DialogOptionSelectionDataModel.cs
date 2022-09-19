@@ -1,6 +1,6 @@
 ﻿namespace GameCore.GUI;
 
-public class DialogOptionClosedRequest
+public class DialogOptionSelectionDataModel
 {
     public int Next { get; set; }
 }

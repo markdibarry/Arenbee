@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.Input;
 using Godot;
@@ -10,65 +11,77 @@ public partial class Dialog : GUILayer
     public Dialog()
     {
         _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
-        _dialogOptionMenuScene = GD.Load<PackedScene>(DialogOptionMenu.GetScenePath());
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private int _currentPart;
     private readonly PackedScene _dialogBoxScene;
-    private readonly PackedScene _dialogOptionMenuScene;
     private DialogOptionMenu _dialogOptionMenu;
+    public bool Busy => LoadingDialog;
     public bool CanProceed { get; set; }
+    public bool LoadingDialog { get; set; } = true;
+    public bool LoadingDialogBox { get; set; }
     public DialogPart[] DialogParts { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
-    public event Action DialogStarted;
-    public event Action DialogEnded;
-    public event Action<MenuOpenRequest> OptionBoxRequested;
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
+        if (LoadingDialog || LoadingDialogBox)
+            return;
         if (menuInput.Enter.IsActionJustPressed)
-            Proceed();
+            _ = ProceedAsync();
         else if (menuInput.Enter.IsActionPressed)
             SpeedUpText();
     }
 
-    public void CloseBox(DialogBox box)
+    public async Task CloseDialogBoxAsync(DialogBox box)
     {
+        LoadingDialogBox = true;
         if (box == null)
             return;
-        box.DialogBoxLoaded -= OnDialogBoxLoaded;
+        await box.TransitionCloseAsync();
         box.TextEventTriggered -= OnTextEventTriggered;
         box.StoppedWriting -= OnStoppedWriting;
+        RemoveChild(box);
         box.QueueFree();
+        LoadingDialogBox = false;
     }
 
-    public void EndDialog()
+    public async Task CloseDialogBoxesAsync()
     {
-        CloseBox(UnfocusedBox);
+        await CloseDialogBoxAsync(UnfocusedBox);
         UnfocusedBox = null;
-        CloseBox(FocusedBox);
+        await CloseDialogBoxAsync(FocusedBox);
         FocusedBox = null;
-        var request = new GUILayerCloseRequest()
-        {
-            Layer = this
-        };
-        RaiseRequestedClose(request);
     }
 
-    public void NextDialogPart()
+    public override async Task InitAsync(
+        Action<GUIOpenRequest> openLayerDelegate,
+        Action<GUICloseRequest> closeLayerDelegate,
+        GUIOpenRequest request)
     {
-        NextDialogPart(_currentPart + 1);
+        OpenLayerDelegate = openLayerDelegate;
+        CloseLayerDelegate = closeLayerDelegate;
+        await TransitionOpenAsync();
+        await StartDialogAsync(request.Path);
+        LoadingDialog = false;
     }
 
-    public void NextDialogPart(int partId)
+    public async Task ToNextDialogPartAsync()
+    {
+        await ToDialogPartAsync(_currentPart + 1);
+    }
+
+    public async Task ToDialogPartAsync(int partId)
     {
         DialogPart previousPart = DialogParts[_currentPart];
         _currentPart = partId;
+        // If no more parts, end dialog
         if (partId >= DialogParts.Length)
         {
-            EndDialog();
+            await CloseDialogBoxesAsync();
+            RequestCloseDialog();
             return;
         }
         DialogPart newPart = DialogParts[partId];
@@ -78,14 +91,15 @@ public partial class Dialog : GUILayer
         if (Speaker.SameSpeakers(newPart.Speakers, previousPart.Speakers))
         {
             nextBox.CurrentDialogPart = newPart;
-            nextBox.UpdateDialogPart();
+            await nextBox.UpdateDialogPartAsync();
+            LoadingDialog = false;
             return;
         }
 
         // Remove current box if a speaker in the current box is needed in the next one.
         if (Speaker.AnySpeakers(newPart.Speakers, previousPart.Speakers))
         {
-            CloseBox(nextBox);
+            await CloseDialogBoxAsync(nextBox);
             nextBox = null;
         }
         else
@@ -104,26 +118,28 @@ public partial class Dialog : GUILayer
             {
                 nextBox.MoveToFront();
                 nextBox.CurrentDialogPart = newPart;
-                nextBox.UpdateDialogPart();
+                await nextBox.UpdateDialogPartAsync();
                 nextBox.Dim = false;
             }
             else
             {
-                CloseBox(nextBox);
+                await CloseDialogBoxAsync(nextBox);
                 nextBox = null;
             }
         }
 
-        nextBox ??= CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
+        nextBox ??= await CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
 
         UnfocusedBox = oldBox;
         FocusedBox = nextBox;
+        LoadingDialog = false;
     }
 
-    public void Proceed()
+    public async Task ProceedAsync()
     {
-        if (!CanProceed || !FocusedBox.IsAtPageEnd())
+        if (!CanProceed)
             return;
+        LoadingDialog = true;
         CanProceed = false;
         FocusedBox.NextArrow.Hide();
         if (!FocusedBox.IsAtLastPage())
@@ -133,48 +149,49 @@ public partial class Dialog : GUILayer
         }
 
         if (FocusedBox.CurrentDialogPart.Next != null)
-            NextDialogPart((int)FocusedBox.CurrentDialogPart.Next);
+            await ToDialogPartAsync((int)FocusedBox.CurrentDialogPart.Next);
         else
-            NextDialogPart();
+            await ToNextDialogPartAsync();
     }
 
-    public void StartDialog(string path)
+    public async Task StartDialogAsync(string path)
     {
         if (string.IsNullOrEmpty(path))
+        {
+            RequestCloseDialog();
             return;
-        DialogStarted?.Invoke();
+        }
         _currentPart = 0;
         DialogParts = DialogLoader.Load(path);
         if (DialogParts == null)
         {
             GD.PrintErr("No dialog found at location provided.");
-            EndDialog();
+            RequestCloseDialog();
             return;
         }
-        FocusedBox = CreateDialogBox(DialogParts[0], false);
+        FocusedBox = await CreateDialogBox(DialogParts[0], false);
     }
 
-    public DialogBox CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
+    public async Task<DialogBox> CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
     {
         var newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
         newBox.StoppedWriting += OnStoppedWriting;
-        newBox.DialogBoxLoaded += OnDialogBoxLoaded;
         newBox.CurrentDialogPart = dialogPart;
         newBox.ReverseDisplay = reverseDisplay;
         AddChild(newBox);
-        newBox.UpdateDialogPart();
+        await newBox.UpdateDialogPartAsync();
         return newBox;
     }
 
-    public void OnOptionBoxClosed(DialogOptionClosedRequest request)
+    public override void ReceiveData(object data)
     {
-        NextDialogPart(request.Next);
-    }
-
-    private void OnDialogBoxLoaded(DialogBox dialogBox)
-    {
-        dialogBox.WritePage(true);
+        if (data is not int next || next == 0)
+        {
+            RequestCloseDialog();
+            return;
+        }
+        _ = ToDialogPartAsync(next);
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
@@ -188,7 +205,7 @@ public partial class Dialog : GUILayer
             return;
         if (FocusedBox.CurrentDialogPart.DialogChoices?.Length > 0)
         {
-            OpenOptionBoxAsync();
+            OpenOptionBox();
             return;
         }
 
@@ -196,12 +213,19 @@ public partial class Dialog : GUILayer
         CanProceed = true;
     }
 
-    private void OpenOptionBoxAsync()
+    private void OpenOptionBox()
     {
-        MenuOpenRequest request = new(_dialogOptionMenuScene);
-        request.GrabBag["DialogChoices"] = FocusedBox.CurrentDialogPart.DialogChoices;
-        request.GrabBag["Dialog"] = this;
-        OptionBoxRequested?.Invoke(request);
+        GUIOpenRequest request = new(DialogOptionMenu.GetScenePath());
+        request.Data = new DialogOptionDataModel()
+        {
+            DialogChoices = FocusedBox.CurrentDialogPart.DialogChoices
+        };
+        OpenLayerDelegate?.Invoke(request);
+    }
+
+    private void RequestCloseDialog()
+    {
+        CloseLayerDelegate?.Invoke(new GUICloseRequest() { CloseRequestType = CloseRequestType.Layer });
     }
 
     private void SpeedUpText()

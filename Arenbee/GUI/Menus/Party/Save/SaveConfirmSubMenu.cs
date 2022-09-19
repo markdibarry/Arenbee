@@ -13,7 +13,6 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         var saveChoice = CurrentContainer.CurrentItem.GetData<string>("saveChoice");
         if (saveChoice == null)
             return;
@@ -23,7 +22,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
                 SaveGame();
                 break;
             case "No":
-                CloseSubMenu();
+                RequestCloseSubMenu(new());
                 break;
         }
     }
@@ -31,6 +30,6 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
     private void SaveGame()
     {
         SaveService.SaveGame(Locator.Session);
-        RaiseRequestedAdd(GDEx.Instantiate<SaveSuccessSubMenu>(SaveSuccessSubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(SaveSuccessSubMenu.GetScenePath()));
     }
 }

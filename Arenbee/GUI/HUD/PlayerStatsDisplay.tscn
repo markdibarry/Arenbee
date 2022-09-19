@@ -1,6 +1,5 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://b7inm7aq3md6g"]
 
-[ext_resource type="Font" path="res://Arenbee/GUI/Fonts/3x6.tres" id="1_hagkc"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/HUD/HeartDisplay.tscn" id="2_0dep3"]
 
 [node name="PlayerStatsDisplay" type="PanelContainer"]
@@ -9,42 +8,35 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 56.0
 offset_bottom = 48.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MarginWrapper" type="MarginContainer" parent="."]
+layout_mode = 2
 offset_left = 7.0
 offset_top = 7.0
 offset_right = 44.0
 offset_bottom = 36.0
-theme_override_constants/margin_right = 3
-theme_override_constants/margin_top = 3
 theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginWrapper"]
+layout_mode = 2
 offset_left = 3.0
 offset_top = 3.0
 offset_right = 34.0
 offset_bottom = 26.0
 
 [node name="Name" type="Label" parent="MarginWrapper/VBoxContainer"]
+layout_mode = 2
 offset_right = 31.0
-offset_bottom = 9.0
+offset_bottom = 7.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 0
 theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource( "1_hagkc" )
-text = "Ady"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+theme_override_constants/line_spacing = 0
 
-[node name="HeartDisplay" parent="MarginWrapper/VBoxContainer" instance=ExtResource( "2_0dep3" )]
-offset_top = 13.0
+[node name="HeartDisplay" parent="MarginWrapper/VBoxContainer" instance=ExtResource("2_0dep3")]
+layout_mode = 2
+offset_top = 11.0
 offset_right = 31.0
-offset_bottom = 13.0
+offset_bottom = 11.0

@@ -27,15 +27,14 @@ public partial class StatsSubMenu : OptionSubMenu
         _playerParty = Locator.GetParty() ?? new PlayerParty();
     }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         UpdatePartyMemberOptions();
     }
 
     protected override void OnItemFocused()
     {
-        base.OnItemFocused();
-        var actor = CurrentContainer.CurrentItem.GetData<ActorBase>("actor");
+        var actor = CurrentContainer.CurrentItem.GetData<ActorBase>(nameof(ActorBase));
         if (actor == null)
             return;
         _statsDisplay.UpdateStatsDisplay(actor);
@@ -47,7 +46,7 @@ public partial class StatsSubMenu : OptionSubMenu
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData["actor"] = actor;
+            textOption.OptionData[nameof(ActorBase)] = actor;
             textOption.LabelText = actor.Name;
             options.Add(textOption);
         }

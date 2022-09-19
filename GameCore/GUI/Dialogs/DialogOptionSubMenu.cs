@@ -9,26 +9,28 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
     public DialogChoice[] DialogChoices { get; set; }
-    public Dialog Dialog { get; set; }
     private PackedScene _textOptionScene;
     private OptionContainer _options;
 
+    public override void ReceiveData(object data)
+    {
+        if (data is not DialogOptionDataModel dataModel)
+            return;
+        DialogChoices = dataModel.DialogChoices;
+    }
+
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         int next = CurrentContainer.CurrentItem.GetData<int>("next");
-        var dialogRequest = new DialogOptionClosedRequest()
+        DialogOptionSelectionDataModel data = new()
         {
             Next = next
         };
-        var menuRequest = new SubMenuCloseRequest(() =>
-        {
-            Dialog.OnOptionBoxClosed(dialogRequest);
-        });
-        CloseSubMenu(menuRequest);
+        var closeRequest = new GUICloseRequest() { Data = data };
+        RequestCloseSubMenu(closeRequest);
     }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         if (DialogChoices == null || DialogChoices.Length == 0)
             return;

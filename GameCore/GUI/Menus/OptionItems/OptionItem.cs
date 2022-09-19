@@ -1,6 +1,6 @@
-﻿using GameCore.Constants;
+﻿using System.Collections.Generic;
+using GameCore.Constants;
 using Godot;
-using Godot.Collections;
 
 namespace GameCore.GUI;
 
@@ -9,7 +9,7 @@ public partial class OptionItem : MarginContainer
     public OptionItem()
     {
         DimUnfocused = true;
-        OptionData = new Dictionary<string, Variant>();
+        OptionData = new Dictionary<string, object>();
     }
 
     private bool _dimUnfocused;
@@ -45,8 +45,7 @@ public partial class OptionItem : MarginContainer
         }
     }
 
-    [Export]
-    public Dictionary<string, Variant> OptionData { get; set; }
+    public Dictionary<string, object> OptionData { get; set; }
     public bool Selected { get; set; }
 
     public override void _Ready()
@@ -56,15 +55,11 @@ public partial class OptionItem : MarginContainer
 
     public T GetData<T>(string key)
     {
-        if (!OptionData.TryGetValue(key, out Variant result))
+        if (!OptionData.TryGetValue(key, out object result))
             return default;
-        if (result.Obj is not T)
-        {
-            if (result.Obj is long && typeof(T) == typeof(int))
-                return (T)result.Obj;
+        if (result is not T)
             return default;
-        }
-        return (T)result.Obj;
+        return (T)result;
     }
 
     public void HandleDim()

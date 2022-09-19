@@ -25,15 +25,21 @@ public partial class UsePartySubMenu : OptionSubMenu
     public ActionEffectDBBase ActionEffectDB { get; set; }
     public IActionEffect ActionEffect { get; set; }
 
-    protected override void ReplaceDefaultOptions()
+    public override void ReceiveData(object data)
+    {
+        if (data is not ItemStack itemStack)
+            return;
+        ItemStack = itemStack;
+    }
+
+    protected override void SetupOptions()
     {
         DisplayOptions();
-        base.ReplaceDefaultOptions();
+        base.SetupOptions();
     }
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         HandleUse(CurrentContainer.CurrentItem);
     }
 

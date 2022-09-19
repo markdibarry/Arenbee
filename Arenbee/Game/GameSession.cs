@@ -10,14 +10,7 @@ namespace Arenbee;
 
 public partial class GameSession : GameSessionBase
 {
-    public GameSession()
-        : base()
-    {
-        _partyMenuScene = GD.Load<PackedScene>(PartyMenu.GetScenePath());
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly PackedScene _partyMenuScene;
 
     public override void _Ready()
     {
@@ -42,7 +35,7 @@ public partial class GameSession : GameSessionBase
 
     private async void OpenPartyMenuAsync()
     {
-        MenuOpenRequest request = new(_partyMenuScene);
-        await GUIController.OpenMenuAsync(request);
+        GUIOpenRequest request = new(PartyMenu.GetScenePath());
+        await GUIController.OpenLayerAsync(request);
     }
 }

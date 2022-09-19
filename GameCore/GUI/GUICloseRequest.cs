@@ -2,18 +2,18 @@
 
 namespace GameCore.GUI;
 
-public class GUILayerCloseRequest
+public class GUICloseRequest
 {
     public Action Callback { get; set; }
+    public Type CascadeTo { get; set; }
     public CloseRequestType CloseRequestType { get; set; }
-    public GUILayer Layer { get; set; }
     public bool PreventAnimation { get; set; }
+    public object Data { get; set; }
 }
 
 public enum CloseRequestType
 {
-    ProvidedLayer,
-    AllLayers,
-    AllMenus,
-    AllDialog
+    SubLayer,
+    Layer,
+    AllLayers
 }

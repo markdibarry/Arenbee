@@ -1,22 +1,36 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://dakighl02xwc0"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_h1eqx"]
+[ext_resource type="PackedScene" uid="uid://qbivbh8nuiuw" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_h1eqx"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/PartyMenu.cs" id="2_uav68"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Scroll.gdshader" id="3_c8k6s"]
-[ext_resource type="Texture2D" path="res://Arenbee/GUI/Backgrounds/star.png" id="4_7v3px"]
+[ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Arenbee/GUI/Backgrounds/star.png" id="4_7v3px"]
+[ext_resource type="PackedScene" uid="uid://cls5wk38nlc5v" path="res://Arenbee/GUI/Menus/Party/MainSubMenu.tscn" id="5_3yu3w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1f80b"]
-shader = ExtResource( "3_c8k6s" )
-scroll_speed = 0.3
-tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
+shader = ExtResource("3_c8k6s")
+shader_parameter/scroll_speed = 0.3
+shader_parameter/tint = Color(0.901961, 0.701961, 0.901961, 0.901961)
 
-[node name="PartyMenu" instance=ExtResource( "1_h1eqx" )]
+[node name="PartyMenu" instance=ExtResource("1_h1eqx")]
 visible = true
-script = ExtResource( "2_uav68" )
+script = ExtResource("2_uav68")
+
+[node name="Background" parent="ContentGroup/Content" index="0"]
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="ContentGroup/Content/Background" index="0"]
-material = SubResource( "ShaderMaterial_1f80b" )
+material = SubResource("ShaderMaterial_1f80b")
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = ExtResource( "4_7v3px" )
+texture = ExtResource("4_7v3px")
 stretch_mode = 1
+
+[node name="SubMenus" parent="ContentGroup/Content" index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainSubMenu" parent="ContentGroup/Content/SubMenus" index="0" instance=ExtResource("5_3yu3w")]
+layout_mode = 1

@@ -34,21 +34,19 @@ public partial class EquipmentSubMenu : OptionSubMenu
         base.ResumeSubMenu();
     }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         UpdatePartyMemberOptions();
     }
 
     protected override void OnItemFocused()
     {
-        base.OnItemFocused();
         if (CurrentContainer == _partyOptions)
             UpdateEquipmentDisplay(CurrentContainer.CurrentItem);
     }
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         if (CurrentContainer == _partyOptions)
             FocusContainer(_equipmentOptions);
         else
@@ -70,7 +68,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         var options = new List<EquipSelectOption>();
         if (optionItem == null)
             return options;
-        var actor = optionItem.GetData<ActorBase>("actor");
+        var actor = optionItem.GetData<ActorBase>(nameof(ActorBase));
         if (actor == null)
             return options;
         foreach (var slot in actor.Equipment.Slots)
@@ -78,7 +76,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
             var option = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
             option.KeyText = slot.SlotCategory.Name + ":";
             option.ValueText = slot.Item?.DisplayName ?? "<None>";
-            option.OptionData[nameof(EquipmentSlotBase.SlotCategoryId)] = slot.SlotCategoryId;
+            option.OptionData[nameof(EquipmentSlotBase)] = slot;
             options.Add(option);
         }
         return options;
@@ -90,7 +88,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData["actor"] = actor;
+            textOption.OptionData[nameof(ActorBase)] = actor;
             textOption.LabelText = actor.Name;
             options.Add(textOption);
         }
@@ -99,17 +97,21 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private void OpenEquipSelectMenu(OptionItem optionItem)
     {
-        var actor = _partyOptions.CurrentItem.GetData<ActorBase>("actor");
+        ActorBase actor = _partyOptions.CurrentItem.GetData<ActorBase>(nameof(ActorBase));
         if (actor == null)
             return;
-        var slotCategoryId = optionItem.GetData<string>(nameof(EquipmentSlotBase.SlotCategoryId));
-        if (string.IsNullOrEmpty(slotCategoryId))
+        EquipmentSlotBase slot = optionItem.GetData<EquipmentSlotBase>(nameof(EquipmentSlotBase));
+        if (slot == null)
             return;
-        var slot = actor.Equipment.GetSlot(slotCategoryId);
-        SelectSubMenu selectMenu = GDEx.Instantiate<SelectSubMenu>(SelectSubMenu.GetScenePath());
-        selectMenu.Slot = slot;
-        selectMenu.Actor = actor;
-        RaiseRequestedAdd(selectMenu);
+        GUIOpenRequest request = new(SelectSubMenu.GetScenePath())
+        {
+            Data = new SelectSubMenuDataModel()
+            {
+                Slot = slot,
+                Actor = actor
+            }
+        };
+        RequestOpenSubMenu(request);
     }
 
     private void UpdateEquipmentDisplay(OptionItem optionItem)

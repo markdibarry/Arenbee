@@ -15,15 +15,14 @@ public partial class UseSubMenu : OptionSubMenu
     public ItemStack ItemStack { get; set; }
     public ItemBase Item { get; set; }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         DisplayOptions();
-        base.ReplaceDefaultOptions();
+        base.SetupOptions();
     }
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         var optionValue = CurrentContainer.CurrentItem.GetData<string>("value");
         if (optionValue == null)
             return;
@@ -94,9 +93,11 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void OpenPartyUseSubMenu()
     {
-        var usePartySubMenu = GDEx.Instantiate<UsePartySubMenu>(UsePartySubMenu.GetScenePath());
-        usePartySubMenu.ItemStack = ItemStack;
-        RaiseRequestedAdd(usePartySubMenu);
+        var request = new GUIOpenRequest(UsePartySubMenu.GetScenePath())
+        {
+            Data = ItemStack
+        };
+        RequestOpenSubMenu(request);
     }
 
     private static void OpenEnemyUseSubMenu()

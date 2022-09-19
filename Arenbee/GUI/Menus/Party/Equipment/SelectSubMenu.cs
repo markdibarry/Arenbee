@@ -26,7 +26,7 @@ public partial class SelectSubMenu : OptionSubMenu
     public ActorBase Actor { get; set; }
     public EquipmentSlotBase Slot { get; set; }
 
-    protected override void ReplaceDefaultOptions()
+    protected override void SetupOptions()
     {
         UpdateEquippableOptions();
         _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
@@ -35,8 +35,6 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnItemFocused()
     {
-        base.OnItemFocused();
-
         if (CurrentContainer.CurrentItem == null)
         {
             _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
@@ -53,9 +51,8 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
         if (TryEquip(CurrentContainer.CurrentItem.GetData<string>(nameof(ItemStack.ItemId)), Slot))
-            CloseSubMenu();
+            RequestCloseSubMenu(new());
     }
 
     protected override void SetNodeReferences()

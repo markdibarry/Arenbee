@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ehgio70rd58c"]
+[gd_scene load_steps=5 format=3 uid="uid://ehgio70rd58c"]
 
 [ext_resource type="PackedScene" uid="uid://qbivbh8nuiuw" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_uqw5y"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/TitleMenu.cs" id="2_mnifr"]
 [ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Arenbee/GUI/Backgrounds/star.png" id="3_nxcs5"]
+[ext_resource type="PackedScene" uid="uid://cleuqn5dvsmvm" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.tscn" id="4_uv1me"]
 
 [node name="TitleMenu" instance=ExtResource("1_uqw5y")]
 visible = true
@@ -18,6 +19,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("3_nxcs5")
 stretch_mode = 1
@@ -25,3 +28,6 @@ stretch_mode = 1
 [node name="SubMenus" parent="ContentGroup/Content" index="1"]
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MainSubMenu" parent="ContentGroup/Content/SubMenus" index="0" instance=ExtResource("4_uv1me")]
+layout_mode = 1

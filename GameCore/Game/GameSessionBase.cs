@@ -70,11 +70,6 @@ public abstract partial class GameSessionBase : Node2D
         CurrentAreaScene?.OnGameStateChanged(gameState);
     }
 
-    public async Task OpenDialogAsync(DialogOpenRequest request)
-    {
-        await GUIController.OpenDialogAsync(request);
-    }
-
     public void Pause()
     {
         CurrentAreaScene.ProcessMode = ProcessModeEnum.Disabled;

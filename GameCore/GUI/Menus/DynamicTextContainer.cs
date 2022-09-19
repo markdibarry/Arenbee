@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
 
@@ -43,8 +44,12 @@ public partial class DynamicTextContainer : PanelContainer
     [Export]
     public bool ShouldUpdateText
     {
-        get => false;
-        set { if (value) UpdateText(); }
+        get => Loading;
+        set
+        {
+            if (!Loading && value)
+                _ = UpdateTextAsync();
+        }
     }
     [Export]
     public double Speed
@@ -58,6 +63,7 @@ public partial class DynamicTextContainer : PanelContainer
                 _dynamicTextBox.Speed = value;
         }
     }
+    public bool Loading { get; private set; }
     public event Action StoppedWriting;
 
     public override void _ExitTree()
@@ -72,33 +78,32 @@ public partial class DynamicTextContainer : PanelContainer
         Init();
     }
 
-    public void UpdateText(string text)
+    public async Task UpdateTextAsync(string text)
     {
         text ??= string.Empty;
         CustomText = text;
-        UpdateText();
+        await UpdateTextAsync();
     }
 
-    public void UpdateText()
+    public async Task UpdateTextAsync()
     {
-        _dynamicTextBox.UpdateText();
+        if (Loading)
+            return;
+        Loading = true;
+        await _dynamicTextBox.UpdateTextAsync();
+        Loading = false;
     }
 
     private void Init()
     {
         SubscribeEvents();
         SetDefault();
-        UpdateText();
+        _ = UpdateTextAsync();
     }
 
     private void OnStoppedWriting()
     {
         StoppedWriting?.Invoke();
-    }
-
-    private void OnTextLoaded()
-    {
-        _dynamicTextBox?.WritePage(true);
     }
 
     private void SetDefault()
@@ -114,13 +119,11 @@ public partial class DynamicTextContainer : PanelContainer
 
     private void SubscribeEvents()
     {
-        _dynamicTextBox.TextLoaded += OnTextLoaded;
         _dynamicTextBox.StoppedWriting += OnStoppedWriting;
     }
 
     private void UnsubscribeEvents()
     {
-        _dynamicTextBox.TextLoaded -= OnTextLoaded;
         _dynamicTextBox.StoppedWriting -= OnStoppedWriting;
     }
 }

@@ -134,7 +134,7 @@ public class NextTextEvent : TextEvent
     public override bool HandleEvent(DialogBox dialogBox) => false;
     public override bool HandleEvent(Dialog dialog)
     {
-        dialog.NextDialogPart();
+        _ = dialog.ProceedAsync();
         return true;
     }
 }

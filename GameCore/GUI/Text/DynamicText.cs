@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using GameCore.Constants;
 using GameCore.Extensions;
 using Godot;
 
@@ -53,8 +55,12 @@ public partial class DynamicText : RichTextLabel
     [Export]
     public bool UpdateTextEnabled
     {
-        get => false;
-        set { if (value) UpdateText(); }
+        get => Loading;
+        set
+        {
+            if (!Loading && value)
+                _ = UpdateTextAsync();
+        }
     }
     [Export]
     public bool WriteTextEnabled { get; set; }
@@ -69,13 +75,13 @@ public partial class DynamicText : RichTextLabel
     public bool SpeedUpText { get; set; }
     public int TotalCharacterCount { get; private set; }
     public int EndChar { get; set; }
+    public bool Loading { get; private set; }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
-    public event Action TextLoaded;
 
     public override void _Process(double delta)
     {
-        if (!WriteTextEnabled)
+        if (!WriteTextEnabled || Loading)
             return;
         if (IsAtTextEnd())
             StopWriting();
@@ -83,14 +89,8 @@ public partial class DynamicText : RichTextLabel
             Write(delta);
     }
 
-    public void OnTextFinishedLoading()
-    {
-        UpdateTextData();
-    }
-
     public override void _Ready()
     {
-        Finished += OnTextFinishedLoading;
         Init();
     }
 
@@ -127,17 +127,23 @@ public partial class DynamicText : RichTextLabel
         VisibleCharacters = show ? EndChar : 0;
     }
 
-    public void UpdateText(string text)
+    public async Task UpdateTextAsync(string text)
     {
         CustomText = text;
-        UpdateText();
+        await UpdateTextAsync();
     }
 
-    public void UpdateText()
+    public async Task UpdateTextAsync()
     {
+        if (Loading)
+            return;
+        Loading = true;
         Text = CustomText;
         Text = TextEventExtractor.Extract(GetParsedText(), CustomText, out _textEvents);
         VisibleCharacters = 0;
+        await ToSignal(this, GodotConstants.FinishedSignal);
+        UpdateTextData();
+        Loading = false;
     }
 
     private int GetValidLine(int line)
@@ -198,8 +204,7 @@ public partial class DynamicText : RichTextLabel
         if (!this.IsSceneRoot())
             return;
         const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
-        UpdateText(DefaultText);
-        WriteTextEnabled = true;
+        _ = UpdateTextAsync(DefaultText);
     }
 
     private void StopWriting()
@@ -222,7 +227,6 @@ public partial class DynamicText : RichTextLabel
         TotalCharacterCount = GetTotalCharacterCount();
         ContentHeight = GetContentHeight();
         UpdateLineBreaks();
-        TextLoaded?.Invoke();
     }
 
     private void Write(double delta)

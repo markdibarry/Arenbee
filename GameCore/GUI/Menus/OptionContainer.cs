@@ -207,111 +207,6 @@ public partial class OptionContainer : PanelContainer
         }
     }
 
-    public void FocusUp()
-    {
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = currentIndex - GridContainer.Columns;
-        if (IsValidIndex(nextIndex))
-            FocusItem(nextIndex);
-        else
-            LeaveItemFocus(Direction.Up);
-    }
-
-    public void FocusDown()
-    {
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = currentIndex + GridContainer.Columns;
-        if (IsValidIndex(nextIndex))
-            FocusItem(nextIndex);
-        else
-            LeaveItemFocus(Direction.Down);
-    }
-
-    public void FocusLeft()
-    {
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = CurrentIndex - 1;
-        if (IsValidIndex(nextIndex) && currentIndex % GridContainer.Columns != 0)
-            FocusItem(nextIndex);
-        else
-            LeaveItemFocus(Direction.Left);
-    }
-
-    public void FocusRight()
-    {
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = CurrentIndex + 1;
-        if (IsValidIndex(nextIndex) && (currentIndex + 1) % GridContainer.Columns != 0)
-            FocusItem(nextIndex);
-        else
-            LeaveItemFocus(Direction.Right);
-    }
-
-    public void FocusTopEnd()
-    {
-        if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
-        {
-            FocusItem(-1);
-            return;
-        }
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = currentIndex % GridContainer.Columns;
-        if (nextIndex == currentIndex)
-            return;
-        FocusItem(nextIndex);
-    }
-
-    public void FocusBottomEnd()
-    {
-        if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
-        {
-            FocusItem(-1);
-            return;
-        }
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int firstRowAdjIndex = currentIndex % GridContainer.Columns;
-        int lastIndex = OptionItems.Count - 1;
-        int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
-        int nextIndex = Math.Min(lastRowFirstIndex + firstRowAdjIndex, lastIndex);
-        if (nextIndex == currentIndex)
-            return;
-        FocusItem(nextIndex);
-    }
-
-    public void FocusLeftEnd()
-    {
-        if (IsSingleRow)
-        {
-            if (AllOptionEnabled && CurrentIndex != -1)
-                FocusItem(-1);
-            else
-                FocusItem(0);
-            return;
-        }
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = currentIndex / GridContainer.Columns * GridContainer.Columns;
-        if (nextIndex == currentIndex)
-            return;
-        FocusItem(nextIndex);
-    }
-
-    public void FocusRightEnd()
-    {
-        if (IsSingleRow)
-        {
-            if (AllOptionEnabled && CurrentIndex != -1)
-                FocusItem(-1);
-            else
-                FocusItem(OptionItems.Count - 1);
-            return;
-        }
-        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
-        int nextIndex = (((currentIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
-        if (nextIndex == currentIndex)
-            return;
-        FocusItem(nextIndex);
-    }
-
     public IEnumerable<OptionItem> GetSelectedItems()
     {
         return OptionItems.Where(x => x.Selected);
@@ -410,6 +305,112 @@ public partial class OptionContainer : PanelContainer
         }
     }
 
+
+    private void FocusUp()
+    {
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = currentIndex - GridContainer.Columns;
+        if (IsValidIndex(nextIndex))
+            FocusItem(nextIndex);
+        else
+            LeaveItemFocus(Direction.Up);
+    }
+
+    private void FocusDown()
+    {
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = currentIndex + GridContainer.Columns;
+        if (IsValidIndex(nextIndex))
+            FocusItem(nextIndex);
+        else
+            LeaveItemFocus(Direction.Down);
+    }
+
+    private void FocusLeft()
+    {
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = CurrentIndex - 1;
+        if (IsValidIndex(nextIndex) && currentIndex % GridContainer.Columns != 0)
+            FocusItem(nextIndex);
+        else
+            LeaveItemFocus(Direction.Left);
+    }
+
+    private void FocusRight()
+    {
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = CurrentIndex + 1;
+        if (IsValidIndex(nextIndex) && (currentIndex + 1) % GridContainer.Columns != 0)
+            FocusItem(nextIndex);
+        else
+            LeaveItemFocus(Direction.Right);
+    }
+
+    private void FocusTopEnd()
+    {
+        if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
+        {
+            FocusItem(-1);
+            return;
+        }
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = currentIndex % GridContainer.Columns;
+        if (nextIndex == currentIndex)
+            return;
+        FocusItem(nextIndex);
+    }
+
+    private void FocusBottomEnd()
+    {
+        if (AllOptionEnabled && !IsSingleRow && CurrentIndex != -1)
+        {
+            FocusItem(-1);
+            return;
+        }
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int firstRowAdjIndex = currentIndex % GridContainer.Columns;
+        int lastIndex = OptionItems.Count - 1;
+        int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
+        int nextIndex = Math.Min(lastRowFirstIndex + firstRowAdjIndex, lastIndex);
+        if (nextIndex == currentIndex)
+            return;
+        FocusItem(nextIndex);
+    }
+
+    private void FocusLeftEnd()
+    {
+        if (IsSingleRow)
+        {
+            if (AllOptionEnabled && CurrentIndex != -1)
+                FocusItem(-1);
+            else
+                FocusItem(0);
+            return;
+        }
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = currentIndex / GridContainer.Columns * GridContainer.Columns;
+        if (nextIndex == currentIndex)
+            return;
+        FocusItem(nextIndex);
+    }
+
+    private void FocusRightEnd()
+    {
+        if (IsSingleRow)
+        {
+            if (AllOptionEnabled && CurrentIndex != -1)
+                FocusItem(-1);
+            else
+                FocusItem(OptionItems.Count - 1);
+            return;
+        }
+        int currentIndex = CurrentIndex == -1 ? LastIndex : CurrentIndex;
+        int nextIndex = (((currentIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
+        if (nextIndex == currentIndex)
+            return;
+        FocusItem(nextIndex);
+    }
+
     private Vector2 GetGridContainerSize()
     {
         Vector2 newVec = Vector2.Zero;
@@ -434,8 +435,10 @@ public partial class OptionContainer : PanelContainer
     private void HandleChanges()
     {
         GridContainer.Size = GetGridContainerSize();
-        if (_fitContainer) FitToContent();
-        if (_expandContent) ExpandGridToContainer();
+        if (_fitContainer)
+            FitToContent();
+        if (_expandContent)
+            ExpandGridToContainer();
         _arrowsDirty = true;
         _changesDirty = false;
         ContainerUpdated?.Invoke(this);

@@ -66,8 +66,8 @@ public partial class DialogArea : Area2D
         }
         if (_actor.InputHandler.Attack.IsActionJustPressed)
         {
-            DialogOpenRequest request = new(DialogPath);
-            _ = Locator.Session?.OpenDialogAsync(request);
+            GUIOpenRequest request = new(DialogPath) { IsDialog = true };
+            _ = Locator.Root?.GUIController.OpenLayerAsync(request);
         }
     }
 }

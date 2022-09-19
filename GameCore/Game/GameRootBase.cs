@@ -76,14 +76,14 @@ public abstract partial class GameRootBase : Node
     {
         AudioController.Reset();
         Locator.ProvideGameSession(null);
-        GUILayerCloseRequest closeRequest = new()
+        GUICloseRequest closeRequest = new()
         {
             CloseRequestType = CloseRequestType.AllLayers,
             PreventAnimation = true
         };
         await GUIController.CloseLayerAsync(closeRequest);
-        MenuOpenRequest openRequest = new(titleMenuScene) { PreventAnimation = true };
-        await GUIController.OpenMenuAsync(openRequest);
+        GUIOpenRequest openRequest = new(titleMenuScene) { PreventAnimation = true };
+        await GUIController.OpenLayerAsync(openRequest);
     }
 
     protected void HandleInput(double delta)

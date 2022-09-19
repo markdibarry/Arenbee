@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using Godot;
 
 namespace GameCore.GUI;
 
-public class MenuOpenRequest
+public class GUIOpenRequest
 {
-    public MenuOpenRequest(string path)
+    public GUIOpenRequest(string path)
     {
         Path = path;
     }
 
-    public MenuOpenRequest(PackedScene packedScene)
+    public GUIOpenRequest(PackedScene packedScene)
     {
         PackedScene = packedScene;
     }
 
     public Action Callback { get; set; }
+    public bool IsDialog { get; set; }
     public string Path { get; set; }
     public PackedScene PackedScene { get; set; }
     public bool PreventAnimation { get; set; }
-    public Dictionary<string, object> GrabBag { get; set; } = new();
+    public object Data { get; set; }
 }

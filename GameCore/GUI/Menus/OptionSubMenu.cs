@@ -23,7 +23,6 @@ public partial class OptionSubMenu : SubMenu
     private Cursor _cursor;
     public OptionContainer CurrentContainer { get; private set; }
     public List<OptionContainer> OptionContainers { get; private set; }
-    public event Action ItemSelected;
 
     public override async void ResumeSubMenu()
     {
@@ -32,14 +31,14 @@ public partial class OptionSubMenu : SubMenu
         base.ResumeSubMenu();
     }
 
-    protected override void PreWaitFrameSetup()
+    protected sealed override void PreWaitFrameSetup()
     {
         if (!this.IsToolDebugMode())
-            ReplaceDefaultOptions();
+            SetupOptions();
         base.PreWaitFrameSetup();
     }
 
-    protected override async Task PostWaitFrameSetup()
+    protected sealed override async Task PostWaitFrameSetup()
     {
         Modulate = TempColor;
         foreach (var optionContainer in OptionContainers)
@@ -51,11 +50,6 @@ public partial class OptionSubMenu : SubMenu
         OptionContainers.ForEach(x => SubscribeToEvents(x));
         FocusContainer(OptionContainers.FirstOrDefault());
     }
-
-    /// <summary>
-    /// Overrides the items that should display
-    /// </summary>
-    protected virtual void ReplaceDefaultOptions() { }
 
     protected void FocusContainerClosestItem(OptionContainer optionContainer)
     {
@@ -86,19 +80,14 @@ public partial class OptionSubMenu : SubMenu
 
     protected virtual void OnFocusOOB(OptionContainer container, Direction direction) { }
 
-    protected virtual void OnItemSelected()
-    {
-        Locator.Audio.PlaySoundFX("menu_select1.wav");
-        ItemSelected?.Invoke();
-    }
+    protected virtual void OnItemFocused() { }
 
-    protected virtual void OnItemFocused()
-    {
-        _cursor.Visible = !CurrentContainer.AllSelected;
-        if (CurrentContainer.LastIndex != CurrentContainer.CurrentIndex)
-            Locator.Audio.PlaySoundFX("menu_bip1.wav");
-        MoveCursorToItem(CurrentContainer.CurrentItem);
-    }
+    protected virtual void OnItemSelected() { }
+
+    /// <summary>
+    /// Overrides the items that should display
+    /// </summary>
+    protected virtual void SetupOptions() { }
 
     protected override void SetNodeReferences()
     {
@@ -121,8 +110,8 @@ public partial class OptionSubMenu : SubMenu
 
     protected void SubscribeToEvents(OptionContainer optionContainer)
     {
-        optionContainer.ItemSelected += OnItemSelected;
-        optionContainer.ItemFocused += OnItemFocused;
+        optionContainer.ItemSelected += OnItemSelectedBase;
+        optionContainer.ItemFocused += OnItemFocusedBase;
         optionContainer.FocusOOB += OnFocusOOB;
         optionContainer.ContainerUpdated += OnContainerChanged;
     }
@@ -140,5 +129,20 @@ public partial class OptionSubMenu : SubMenu
     {
         if (optionContainer == CurrentContainer)
             MoveCursorToItem(optionContainer.CurrentItem);
+    }
+
+    private void OnItemFocusedBase()
+    {
+        _cursor.Visible = !CurrentContainer.AllSelected;
+        if (CurrentContainer.LastIndex != CurrentContainer.CurrentIndex)
+            Locator.Audio.PlaySoundFX("menu_bip1.wav");
+        MoveCursorToItem(CurrentContainer.CurrentItem);
+        OnItemFocused();
+    }
+
+    private void OnItemSelectedBase()
+    {
+        Locator.Audio.PlaySoundFX("menu_select1.wav");
+        OnItemSelected();
     }
 }

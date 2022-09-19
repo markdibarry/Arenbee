@@ -28,11 +28,10 @@ public partial class PromptSubMenu : SubMenu
 
     protected virtual void Confirm() { }
 
-    protected override void PreWaitFrameSetup()
+    protected override void CustomSetup()
     {
         if (_timeDuration > 0)
             _timerEnabled = true;
-        base.PreWaitFrameSetup();
     }
 
     protected virtual void OnTimeOut()

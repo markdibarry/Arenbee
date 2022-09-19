@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
 
@@ -10,6 +11,7 @@ public partial class DialogBox : Control
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
+    private const double DefaultSpeed = 0.05;
     private MarginContainer _dialogMargin;
     private PanelContainer _dialogPanel;
     private bool _dim;
@@ -69,8 +71,12 @@ public partial class DialogBox : Control
     [Export]
     public bool ShouldUpdateText
     {
-        get => false;
-        set { if (value) UpdateText(); }
+        get => LoadingDialog;
+        set
+        {
+            if (!LoadingDialog && value)
+                _ = UpdateTextAsync();
+        }
     }
     [Export]
     public double Speed
@@ -83,6 +89,7 @@ public partial class DialogBox : Control
         }
     }
     public DialogPart CurrentDialogPart { get; set; }
+    public bool LoadingDialog { get; private set; }
     public TextureRect NextArrow { get; set; }
     public bool ReverseDisplay { get; set; }
     public bool SpeedUpText
@@ -94,14 +101,8 @@ public partial class DialogBox : Control
                 _dynamicTextBox.SpeedUpText = value;
         }
     }
-    public event Action<DialogBox> DialogBoxLoaded;
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
-
-    public override void _ExitTree()
-    {
-        UnsubscribeEvents();
-    }
 
     public override void _Ready()
     {
@@ -126,7 +127,8 @@ public partial class DialogBox : Control
 
     public AnimatedSprite2D GetPortrait(string character)
     {
-        if (string.IsNullOrEmpty(character)) return null;
+        if (string.IsNullOrEmpty(character))
+            return null;
         return _portraitContainer.GetNodeOrNull<AnimatedSprite2D>(character.Capitalize());
     }
 
@@ -142,10 +144,67 @@ public partial class DialogBox : Control
 
     public void NextPage()
     {
-        _dynamicTextBox?.NextPage();
+        if (_dynamicTextBox == null)
+            return;
+        _dynamicTextBox.CurrentPage++;
     }
 
-    public void SetDisplayNames()
+    public virtual Task TransitionOpenAsync() => Task.CompletedTask;
+    public virtual Task TransitionCloseAsync() => Task.CompletedTask;
+
+    public async Task UpdateDialogPartAsync()
+    {
+        if (LoadingDialog)
+            return;
+        if (CurrentDialogPart == null)
+        {
+            GD.PrintErr("No DialogPart provided");
+            return;
+        }
+        if (CurrentDialogPart.Text == null)
+            return;
+        LoadingDialog = true;
+        SetPortraits();
+        SetDisplayNames();
+        _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? DefaultSpeed;
+        _dynamicTextBox.CustomText = CurrentDialogPart.Text;
+        await _dynamicTextBox.UpdateTextAsync();
+        LoadingDialog = false;
+        WritePage(true);
+    }
+
+    public async Task UpdateTextAsync()
+    {
+        await _dynamicTextBox.UpdateTextAsync();
+    }
+
+    public void WritePage(bool shouldWrite)
+    {
+        _dynamicTextBox?.WritePage(shouldWrite);
+    }
+
+    private void Init()
+    {
+        SubscribeEvents();
+        if (this.IsSceneRoot())
+        {
+            CurrentDialogPart = DialogPart.GetDefault();
+            _ = UpdateDialogPartAsync();
+        }
+    }
+
+    private void OnTextEventTriggered(ITextEvent textEvent)
+    {
+        if (!textEvent.HandleEvent(this))
+            TextEventTriggered?.Invoke(textEvent);
+    }
+
+    private void OnStoppedWriting()
+    {
+        StoppedWriting?.Invoke();
+    }
+
+    private void SetDisplayNames()
     {
         _nameLabel.Text = string.Empty;
         var speakers = CurrentDialogPart.Speakers.OrEmpty();
@@ -166,7 +225,7 @@ public partial class DialogBox : Control
         _namePanel.Show();
     }
 
-    public void SetPortraits()
+    private void SetPortraits()
     {
         int shiftBase = 30;
         _portraitContainer.QueueFreeAllChildren();
@@ -191,59 +250,6 @@ public partial class DialogBox : Control
         }
     }
 
-    public void UpdateDialogPart()
-    {
-        if (CurrentDialogPart == null)
-        {
-            GD.PrintErr("No DialogPart provided");
-            return;
-        }
-
-        SetPortraits();
-        SetDisplayNames();
-        if (CurrentDialogPart.Text == null)
-            return;
-        _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? 0.05;
-        _dynamicTextBox.CustomText = CurrentDialogPart.Text;
-        _dynamicTextBox.UpdateText();
-    }
-
-    public void UpdateText()
-    {
-        _dynamicTextBox.UpdateText();
-    }
-
-    public void WritePage(bool shouldWrite)
-    {
-        _dynamicTextBox?.WritePage(shouldWrite);
-    }
-
-    private void Init()
-    {
-        SubscribeEvents();
-        if (this.IsSceneRoot())
-        {
-            CurrentDialogPart = DialogPart.GetDefault();
-            UpdateDialogPart();
-        }
-    }
-
-    private void OnTextEventTriggered(ITextEvent textEvent)
-    {
-        if (!textEvent.HandleEvent(this))
-            TextEventTriggered?.Invoke(textEvent);
-    }
-
-    private void OnStoppedWriting()
-    {
-        StoppedWriting?.Invoke();
-    }
-
-    private void OnTextLoaded()
-    {
-        DialogBoxLoaded?.Invoke(this);
-    }
-
     private void SetNodeReferences()
     {
         _portraitContainer = GetNodeOrNull<Control>("PortraitContainer");
@@ -257,15 +263,7 @@ public partial class DialogBox : Control
 
     private void SubscribeEvents()
     {
-        _dynamicTextBox.TextLoaded += OnTextLoaded;
         _dynamicTextBox.TextEventTriggered += OnTextEventTriggered;
         _dynamicTextBox.StoppedWriting += OnStoppedWriting;
-    }
-
-    private void UnsubscribeEvents()
-    {
-        _dynamicTextBox.TextLoaded -= OnTextLoaded;
-        _dynamicTextBox.TextEventTriggered -= OnTextEventTriggered;
-        _dynamicTextBox.StoppedWriting -= OnStoppedWriting;
     }
 }

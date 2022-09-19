@@ -18,6 +18,6 @@ public partial class SaveSuccessSubMenu : PromptSubMenu
     protected override void OnTimeOut()
     {
         base.OnTimeOut();
-        CloseSubMenu(new SubMenuCloseRequest(cascadeTo: typeof(MainSubMenu)));
+        RequestCloseSubMenu(new GUICloseRequest() { CascadeTo = typeof(MainSubMenu) });
     }
 }

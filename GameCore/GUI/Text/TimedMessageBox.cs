@@ -1,4 +1,5 @@
-﻿using GameCore.Extensions;
+﻿using GameCore.Constants;
+using GameCore.Extensions;
 using Godot;
 
 namespace GameCore.GUI;
@@ -31,9 +32,9 @@ public partial class TimedMessageBox : MessageBox
 
     public async void TransitionOut()
     {
-        using Tween fadeTween = GetTree().CreateTween();
-        using PropertyTweener fade = fadeTween.TweenProperty(this, "modulate:a", 0f, 0.1f);
-        await ToSignal(fadeTween, "finished");
+        Tween fadeTween = GetTree().CreateTween();
+        fadeTween.TweenProperty(this, "modulate:a", 0f, 0.1f);
+        await ToSignal(fadeTween, GodotConstants.FinishedSignal);
         QueueFree();
     }
 }

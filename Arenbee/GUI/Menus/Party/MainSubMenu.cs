@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Party.Equipment;
 using GameCore.Extensions;
 using GameCore.GUI;
@@ -12,56 +13,85 @@ public partial class MainSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
+    private OptionContainer _optionList;
+
     protected override void OnItemSelected()
     {
-        base.OnItemSelected();
-        var subMenuName = CurrentContainer.CurrentItem.GetData<string>("subMenu");
+        var subMenuName = CurrentContainer.CurrentItem.GetData<string>("value");
         if (subMenuName == null)
             return;
 
         switch (subMenuName)
         {
-            case "Stats":
+            case PartyMenuOptions.Stats:
                 OpenStatsSubMenu();
                 break;
-            case "Inventory":
+            case PartyMenuOptions.Inventory:
                 OpenInventorySubMenu();
                 break;
-            case "Equipment":
+            case PartyMenuOptions.Equipment:
                 OpenEquipmentSubMenu();
                 break;
-            case "Save":
+            case PartyMenuOptions.Save:
                 OpenSaveGameConfirm();
                 break;
-            case "Quit":
+            case PartyMenuOptions.Quit:
                 QuitToTitle();
                 break;
         }
     }
 
+    protected override void SetupOptions()
+    {
+        var options = GetMenuOptions();
+        _optionList.ReplaceChildren(options);
+    }
+
+    protected override void SetNodeReferences()
+    {
+        base.SetNodeReferences();
+        _optionList = OptionContainers.Find(x => x.Name == "OptionContainer");
+    }
+
+    private static List<TextOption> GetMenuOptions()
+    {
+        var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+        var options = new List<TextOption>();
+        foreach (var optionString in PartyMenuOptions.GetAll())
+        {
+            var option = textOptionScene.Instantiate<TextOption>();
+            option.LabelText = optionString;
+            option.OptionData["value"] = optionString;
+            if (optionString == PartyMenuOptions.Options)
+                option.Disabled = true;
+            options.Add(option);
+        }
+        return options;
+    }
+
     private void OpenStatsSubMenu()
     {
-        RaiseRequestedAdd(GDEx.Instantiate<StatsSubMenu>(StatsSubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(StatsSubMenu.GetScenePath()));
     }
 
     private void OpenInventorySubMenu()
     {
-        RaiseRequestedAdd(GDEx.Instantiate<InventorySubMenu>(InventorySubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(InventorySubMenu.GetScenePath()));
     }
 
     private void OpenEquipmentSubMenu()
     {
-        RaiseRequestedAdd(GDEx.Instantiate<EquipmentSubMenu>(EquipmentSubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(EquipmentSubMenu.GetScenePath()));
     }
 
     private void OpenSaveGameConfirm()
     {
-        RaiseRequestedAdd(GDEx.Instantiate<SaveConfirmSubMenu>(SaveConfirmSubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(SaveConfirmSubMenu.GetScenePath()));
     }
 
     private void QuitToTitle()
     {
-        IsActive = false;
+        Loading = true;
         var tController = Locator.TransitionController;
         var request = new TransitionRequest(
             BasicLoadingScreen.GetScenePath(),
@@ -76,5 +106,27 @@ public partial class MainSubMenu : OptionSubMenu
                 return Task.CompletedTask;
             });
         tController.RequestTransition(request);
+    }
+
+    private static class PartyMenuOptions
+    {
+        public static List<string> GetAll()
+        {
+            return new List<string>()
+            {
+                Stats,
+                Inventory,
+                Equipment,
+                Options,
+                Save,
+                Quit
+            };
+        }
+        public const string Stats = "Stats";
+        public const string Inventory = "Inventory";
+        public const string Equipment = "Equipment";
+        public const string Options = "Options";
+        public const string Save = "Save";
+        public const string Quit = "Quit";
     }
 }

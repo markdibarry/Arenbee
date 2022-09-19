@@ -26,14 +26,16 @@ public partial class SubMenu : Control
             }
         }
     }
-    public bool IsActive { get; set; }
+    public bool Busy => Loading || Suspended;
+    public bool Loading { get; set; } = true;
+    public bool Suspended { get; set; }
     protected Control Background { get; set; }
     protected Control Foreground { get; set; }
     [Export] protected bool PreventCancel { get; set; }
     [Export] protected bool PreventCloseAll { get; set; }
     protected Color TempColor { get; set; }
-    public event Action<SubMenu> RequestedAdd;
-    public event Action<SubMenuCloseRequest> RequestedClose;
+    public Action<GUIOpenRequest> OpenSubMenuDelegate { get; set; }
+    public Action<GUICloseRequest> CloseSubMenuDelegate { get; set; }
 
     public override void _Ready()
     {
@@ -41,65 +43,64 @@ public partial class SubMenu : Control
         Modulate = Colors.Transparent;
         SetNodeReferences();
         if (this.IsSceneRoot())
-            Init();
+            _ = InitAsync(null, null, new GUIOpenRequest(packedScene: null));
     }
 
-    public virtual void CloseSubMenu()
+    public virtual void ReceiveData(object data) { }
+
+    public virtual void RequestCloseSubMenu(GUICloseRequest request)
     {
-        CloseSubMenu(new SubMenuCloseRequest());
+        Locator.Audio.PlaySoundFX("menu_close1.wav");
+        CloseSubMenuDelegate?.Invoke(request);
     }
 
-    public virtual void CloseSubMenu(SubMenuCloseRequest closeRequest)
+    public virtual void RequestOpenSubMenu(GUIOpenRequest request)
     {
-        RaiseRequestedClose(closeRequest);
+        OpenSubMenuDelegate?.Invoke(request);
     }
 
     public virtual void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && !PreventCancel)
-            CloseSubMenu(new SubMenuCloseRequest());
+            RequestCloseSubMenu(new GUICloseRequest());
         else if (menuInput.Start.IsActionJustPressed && !PreventCloseAll)
-            CloseSubMenu(new SubMenuCloseRequest(closeAll: true));
+            RequestCloseSubMenu(new GUICloseRequest() { CloseRequestType = CloseRequestType.Layer });
     }
 
-    public async void Init()
+    public async Task InitAsync(
+        Action<GUIOpenRequest> openSubMenuDelegate,
+        Action<GUICloseRequest> closeSubMenuDelegate,
+        GUIOpenRequest request)
     {
-        await InitAsync();
-    }
-
-    public async Task InitAsync()
-    {
+        OpenSubMenuDelegate = openSubMenuDelegate;
+        CloseSubMenuDelegate = closeSubMenuDelegate;
+        ReceiveData(request.Data);
+        CustomSetup();
         PreWaitFrameSetup();
         await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
         await PostWaitFrameSetup();
-        IsActive = true;
+        Loading = false;
     }
-
-    public virtual Task OnNavigationAsync(SubMenu subMenu) => Task.CompletedTask;
 
     public virtual void ResumeSubMenu()
     {
         ProcessMode = ProcessModeEnum.Inherit;
         Dim = false;
-        IsActive = true;
+        Suspended = false;
     }
 
     public virtual void SuspendSubMenu()
     {
-        IsActive = false;
         Dim = true;
         ProcessMode = ProcessModeEnum.Disabled;
+        Suspended = true;
     }
 
-    public virtual Task TransitionOpenAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task TransitionOpenAsync() => Task.CompletedTask;
 
-    public virtual Task TransitionCloseAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task TransitionCloseAsync() => Task.CompletedTask;
+
+    protected virtual void CustomSetup() { }
 
     /// <summary>
     /// Logic used for setup before needing to wait a frame to adjust.
@@ -115,17 +116,6 @@ public partial class SubMenu : Control
     {
         Modulate = TempColor;
         await TransitionOpenAsync();
-    }
-
-    protected void RaiseRequestedAdd(SubMenu subMenu)
-    {
-        RequestedAdd?.Invoke(subMenu);
-    }
-
-    protected void RaiseRequestedClose(SubMenuCloseRequest closeRequest)
-    {
-        Locator.Audio.PlaySoundFX("menu_close1.wav");
-        RequestedClose?.Invoke(closeRequest);
     }
 
     protected virtual void SetNodeReferences()

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using GameCore.Constants;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -21,13 +22,13 @@ public partial class FadeTransition : Transition
         _colorRect.Modulate = Colors.Transparent;
         var tween = GetTree().CreateTween()
             .TweenProperty(_colorRect, "modulate:a", 1f, 0.4f);
-        await _colorRect.ToSignal(tween, "finished");
+        await _colorRect.ToSignal(tween, GodotConstants.FinishedSignal);
     }
 
     public override async Task TransitionTo()
     {
         var tween = GetTree().CreateTween()
             .TweenProperty(_colorRect, "modulate:a", 0f, 0.4f);
-        await _colorRect.ToSignal(tween, "finished");
+        await _colorRect.ToSignal(tween, GodotConstants.FinishedSignal);
     }
 }

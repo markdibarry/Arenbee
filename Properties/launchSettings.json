@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Arenbee": {
+      "commandName": "Project"
+    },
+    "Launch": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Coding\\godot\\Godot_Latest\\godot.windows.tools.x86_64.mono.exe",
+      "workingDirectory": "D:\\Coding\\godot\\Arenbee"
+    }
+  }
+}
