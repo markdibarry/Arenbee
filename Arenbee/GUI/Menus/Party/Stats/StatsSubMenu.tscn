@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_0awv0"]
+[ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_0awv0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Stats/StatsSubMenu.cs" id="2_ah025"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_6bypr"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_th6t8"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ActorStatsDisplay.tscn" id="5_mp18g"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_6bypr"]
+[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_th6t8"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_mp18g"]
 
 [node name="StatsSubMenu" instance=ExtResource( "1_0awv0" )]
 script = ExtResource( "2_ah025" )

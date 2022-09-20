@@ -34,6 +34,8 @@ public abstract partial class AudioControllerBase : Node2D
 
     public virtual void PlaySoundFX(string soundName)
     {
+        if (string.IsNullOrEmpty(soundName))
+            return;
         var stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
         PlaySoundFX(stream);
     }
@@ -55,6 +57,8 @@ public abstract partial class AudioControllerBase : Node2D
 
     public virtual void PlaySoundFX(Node2D node2D, string soundName)
     {
+        if (string.IsNullOrEmpty(soundName))
+            return;
         var stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
         PlaySoundFX(node2D, stream);
     }

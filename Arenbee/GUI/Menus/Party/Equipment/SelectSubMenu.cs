@@ -26,6 +26,14 @@ public partial class SelectSubMenu : OptionSubMenu
     public ActorBase Actor { get; set; }
     public EquipmentSlotBase Slot { get; set; }
 
+    public override void ReceiveData(object data)
+    {
+        if (data is not SelectSubMenuDataModel dataModel)
+            return;
+        Actor = dataModel.Actor;
+        Slot = dataModel.Slot;
+    }
+
     protected override void SetupOptions()
     {
         UpdateEquippableOptions();
@@ -52,7 +60,10 @@ public partial class SelectSubMenu : OptionSubMenu
     protected override void OnItemSelected()
     {
         if (TryEquip(CurrentContainer.CurrentItem.GetData<string>(nameof(ItemStack.ItemId)), Slot))
+        {
+            CloseSoundPath = "";
             RequestCloseSubMenu(new());
+        }
     }
 
     protected override void SetNodeReferences()

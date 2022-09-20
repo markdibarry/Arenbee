@@ -1,6 +1,6 @@
 ﻿using Arenbee.Projectiles;
+using GameCore;
 using GameCore.Actors;
-using GameCore.Constants;
 using GameCore.Items;
 
 namespace Arenbee.Items;
@@ -9,7 +9,7 @@ public partial class Wand : HoldItem
 {
     public override void Init(ActorBase actor)
     {
-        Setup("Wand", WeaponTypeConstants.Wand, actor, new ActionStateMachine(actor, this));
+        Setup("Wand", WeaponTypes.Wand, actor, new ActionStateMachine(actor, this));
     }
 
     protected override void SetHitBoxes()

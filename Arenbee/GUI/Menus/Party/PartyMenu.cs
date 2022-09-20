@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using GameCore.Constants;
+using GameCore;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -16,13 +16,13 @@ public partial class PartyMenu : Menu
         ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
         Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 0.2f);
-        await ToSignal(tween, GodotConstants.FinishedSignal);
+        await ToSignal(tween, Signals.FinishedSignal);
     }
 
     public override async Task TransitionCloseAsync()
     {
         Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 0.2f);
-        await ToSignal(tween, GodotConstants.FinishedSignal);
+        await ToSignal(tween, Signals.FinishedSignal);
     }
 }

@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/ItemStatsDisplay.cs" id="1_8k7s8"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/StatContainer.tscn" id="2_l6yob"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ElementContainer.tscn" id="3_npw6o"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.cs" id="1_8k7s8"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.tscn" id="2_l6yob"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ElementContainer.tscn" id="3_npw6o"]
 
 [node name="ItemStatsDisplay" type="PanelContainer"]
 offset_right = 118.0

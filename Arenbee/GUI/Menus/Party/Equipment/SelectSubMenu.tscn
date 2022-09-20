@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_uvd47"]
+[ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_uvd47"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_5qnt3"]
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Cursors/HandCursor.tscn" id="4_jor24"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ActorStatsDisplay.tscn" id="6_dccvk"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ItemStatsDisplay.tscn" id="7_qosjr"]
+[ext_resource type="PackedScene" uid="uid://vm13acghyp35" path="res://GameCore/GUI/Menus/OptionItems/KeyValueOption.tscn" id="4_wyx2u"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="6_dccvk"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="7_qosjr"]
 
 [node name="SelectSubMenu" instance=ExtResource( "1_uvd47" )]
 script = ExtResource( "2_kopb2" )

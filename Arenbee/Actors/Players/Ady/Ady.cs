@@ -9,6 +9,7 @@ public partial class Ady : Actor
 {
     public Ady()
     {
+        ActorId = "Ady";
         WalkSpeed = 100;
         StateController = new StateControllerBase(
             this,

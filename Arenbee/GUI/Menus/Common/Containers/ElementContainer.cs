@@ -1,5 +1,4 @@
-﻿using GameCore.Constants;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
 
@@ -16,7 +15,7 @@ public partial class ElementContainer : HBoxContainer
         set
         {
             _dim = value;
-            Modulate = _dim ? ColorConstants.DimGrey : Colors.White;
+            Modulate = _dim ? GameCore.Colors.DimGrey : Colors.White;
         }
     }
     public HBoxContainer Elements { get; set; }

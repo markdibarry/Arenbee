@@ -1,5 +1,4 @@
-﻿using GameCore.Constants;
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using GameCore.Statistics;
 using Godot;
 
@@ -37,7 +36,7 @@ public partial class ElementLarge : ElementDisplay
         {
             case ElementDef.VeryWeak:
                 _effectivenessSprite.Frame = 0;
-                _effectivenessSprite.Modulate = ColorConstants.TextRed;
+                _effectivenessSprite.Modulate = GameCore.Colors.TextRed;
                 break;
             case ElementDef.Weak:
                 _effectivenessSprite.Frame = 0;
@@ -47,11 +46,11 @@ public partial class ElementLarge : ElementDisplay
                 break;
             case ElementDef.Nullify:
                 _effectivenessSprite.Frame = 2;
-                _effectivenessSprite.Modulate = ColorConstants.DimGrey;
+                _effectivenessSprite.Modulate = GameCore.Colors.DimGrey;
                 break;
             case ElementDef.Absorb:
                 _effectivenessSprite.Frame = 3;
-                _effectivenessSprite.Modulate = ColorConstants.TextGreen;
+                _effectivenessSprite.Modulate = GameCore.Colors.TextGreen;
                 break;
         }
     }

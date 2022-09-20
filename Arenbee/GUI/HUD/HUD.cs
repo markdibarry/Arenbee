@@ -12,20 +12,20 @@ public partial class HUD : HUDBase
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private HeartDisplay _heartDisplay;
     private StatusEffectDBBase _statusEffectDB;
+    private PlayerStatsDisplay _playerStatsDisplay;
 
     public override void _Ready()
     {
         MessageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
-        _heartDisplay = GetNode<HeartDisplay>("PlayerStatsDisplay/MarginWrapper/VBoxContainer/HeartDisplay");
+        _playerStatsDisplay = GetNode<PlayerStatsDisplay>("PlayerStatsDisplay");
         _statusEffectDB = Locator.StatusEffectDB;
     }
 
     public override void OnActorAdded(ActorBase actor)
     {
-        if (actor.ActorType == ActorType.Player)
-            UpdatePlayerStatsDisplay(actor);
+        if (actor.ActorType == ActorType.Player && ProcessMode != ProcessModeEnum.Disabled)
+            _playerStatsDisplay.Update(actor);
     }
 
     public override void OnActorDamaged(ActorBase actor, DamageData data)
@@ -65,7 +65,7 @@ public partial class HUD : HUDBase
 
     public override void OnPlayerStatsChanged(ActorBase actor)
     {
-        UpdatePlayerStatsDisplay(actor);
+        _playerStatsDisplay.Update(actor);
     }
 
     private void DisplayMeleeMessage(DamageData data)
@@ -100,15 +100,5 @@ public partial class HUD : HUDBase
             ElementDef.Nullify => "nullifies",
             _ => "absorbs"
         };
-    }
-
-    private void UpdatePlayerStatsDisplay(ActorBase actor)
-    {
-        if (ProcessMode == ProcessModeEnum.Disabled)
-            return;
-        int hp = actor.Stats.GetHP();
-        int maxHP = actor.Stats.GetMaxHP();
-        _heartDisplay.UpdateMaxHearts(maxHP);
-        _heartDisplay.UpdateCurrentHearts(hp);
     }
 }

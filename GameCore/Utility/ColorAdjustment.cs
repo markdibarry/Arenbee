@@ -46,7 +46,7 @@ public partial class ColorAdjustment : CanvasLayer
         {
             if (_colorShader != null)
                 return (Color)_colorShader.GetShaderParameter("_tint_color");
-            return Colors.White;
+            return Godot.Colors.White;
         }
         set => _colorShader?.SetShaderParameter("_tint_color", value);
     }

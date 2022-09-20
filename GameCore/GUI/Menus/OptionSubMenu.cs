@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameCore.Constants;
 using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.Utility;
@@ -23,10 +22,12 @@ public partial class OptionSubMenu : SubMenu
     private Cursor _cursor;
     public OptionContainer CurrentContainer { get; private set; }
     public List<OptionContainer> OptionContainers { get; private set; }
+    protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
+    protected string FocusedSoundPath { get; set; } = "menu_bip1.wav";
 
     public override async void ResumeSubMenu()
     {
-        await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
+        await ToSignal(GetTree(), Signals.ProcessFrameSignal);
         FocusContainer(CurrentContainer);
         base.ResumeSubMenu();
     }
@@ -135,14 +136,20 @@ public partial class OptionSubMenu : SubMenu
     {
         _cursor.Visible = !CurrentContainer.AllSelected;
         if (CurrentContainer.LastIndex != CurrentContainer.CurrentIndex)
-            Locator.Audio.PlaySoundFX("menu_bip1.wav");
+            Locator.Audio.PlaySoundFX(FocusedSoundPath);
         MoveCursorToItem(CurrentContainer.CurrentItem);
         OnItemFocused();
     }
 
     private void OnItemSelectedBase()
     {
-        Locator.Audio.PlaySoundFX("menu_select1.wav");
+        if (CurrentContainer.CurrentItem.Disabled)
+        {
+            Locator.Audio.PlaySoundFX(FocusedSoundPath);
+            return;
+        }
+
+        Locator.Audio.PlaySoundFX(SelectedSoundPath);
         OnItemSelected();
     }
 }

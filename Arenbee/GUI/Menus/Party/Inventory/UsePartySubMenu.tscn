@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_kkqj0"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="2_5u3oa"]
+[ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_kkqj0"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="2_5u3oa"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/UsePartySubMenu.cs" id="2_405mf"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/PartyMemberOption.tscn" id="3_5mj7i"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Options/PartyMemberOption.tscn" id="3_5mj7i"]
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Cursors/HandCursor.tscn" id="4_sno1y"]
 
 [node name="UsePartySubMenu" instance=ExtResource( "1_kkqj0" )]

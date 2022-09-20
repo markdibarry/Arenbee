@@ -1,5 +1,4 @@
 ﻿using GameCore.Actors;
-using GameCore.Constants;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -9,7 +8,7 @@ public partial class HockeyStick : HoldItem
 {
     public override void Init(ActorBase actor)
     {
-        Setup("HockeyStick", WeaponTypeConstants.LongStick, actor, new ActionStateMachine(actor, this));
+        Setup("HockeyStick", GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
     }
 
     public HitBox WeakAttack1HitBox { get; set; }

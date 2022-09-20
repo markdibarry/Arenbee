@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionSubMenu.tscn" id="1_o3wks"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/LoadGameSubMenu.cs" id="2_75x6o"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_04wvi"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Options/SaveGameOption.tscn" id="4_q648h"]
+
+[node name="LoadSaveSubMenu" instance=ExtResource("1_o3wks")]
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_75x6o")
+
+[node name="Background" parent="." index="0"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadOptions" parent="Foreground" index="0" instance=ExtResource("3_04wvi")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -52.0
+offset_right = 96.0
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" parent="Foreground/LoadOptions/MarginContainer/Control" index="0"]
+offset_right = 15.0
+offset_bottom = 21.0
+
+[node name="SaveGameOption" parent="Foreground/LoadOptions/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_q648h")]
+layout_mode = 2
+offset_right = 15.0
+offset_bottom = 21.0
+
+[editable path="Foreground/LoadOptions"]

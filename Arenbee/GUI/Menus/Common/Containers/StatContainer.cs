@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GameCore.Constants;
 using GameCore.Extensions;
-using GameCore.Items;
 using GameCore.Statistics;
 using Godot;
 
@@ -46,7 +44,7 @@ public partial class StatContainer : EqualContainer
         set
         {
             _dim = value;
-            Modulate = _dim ? ColorConstants.DimGrey : Colors.White;
+            Modulate = _dim ? GameCore.Colors.DimGrey : Colors.White;
         }
     }
 
@@ -98,9 +96,9 @@ public partial class StatContainer : EqualContainer
         }
 
         if (newValue > oldValue)
-            StatValueLabel.Modulate = ColorConstants.TextGreen;
+            StatValueLabel.Modulate = GameCore.Colors.TextGreen;
         else if (newValue < oldValue)
-            StatValueLabel.Modulate = ColorConstants.TextRed;
+            StatValueLabel.Modulate = GameCore.Colors.TextRed;
         else
             StatValueLabel.Modulate = Colors.White;
     }

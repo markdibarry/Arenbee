@@ -1,11 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://ca0mwsdfjohho"]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/InventorySubMenu.cs" id="2_funy4"]
 [ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_iv8vo"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/DynamicTextContainer.tscn" id="7_8v57d"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ItemStatsDisplay.tscn" id="8_c8not"]
+[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_iv8vo"]
+[ext_resource type="PackedScene" uid="uid://bphoaxtk672fw" path="res://GameCore/GUI/Menus/DynamicTextContainer.tscn" id="7_8v57d"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
 
 [node name="InventorySubMenu" instance=ExtResource("1_imt36")]
 grow_horizontal = 2

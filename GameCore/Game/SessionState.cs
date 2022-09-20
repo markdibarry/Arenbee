@@ -5,8 +5,9 @@ namespace GameCore;
 
 public class SessionState
 {
-    public int TotalGameTime { get; set; }
-    public int CurrentGameTime { get; set; }
+    public double TotalInGameTime { get; set; }
+    public double TotalGameTime { get; set; }
+    public long CurrentGameTime { get; set; }
     public int TimesReceivedDamaged { get; set; }
     public int TimesDealtDamage { get; set; }
     public int TimesDied { get; set; }
@@ -26,5 +27,12 @@ public class SessionState
             TimesReceivedDamaged++;
         else if (actor.ActorType == ActorType.Enemy)
             TimesDealtDamage++;
+    }
+
+    public void Update(double delta, bool paused)
+    {
+        TotalGameTime += delta;
+        if (!paused)
+            TotalInGameTime += delta; 
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GameCore.Constants;
 using GameCore.Extensions;
 using GameCore.Input;
 using GameCore.Utility;
@@ -21,7 +20,7 @@ public partial class SubMenu : Control
         {
             if (Foreground != null)
             {
-                Foreground.Modulate = value ? Colors.White.Darkened(0.3f) : Colors.White;
+                Foreground.Modulate = value ? Godot.Colors.White.Darkened(0.3f) : Godot.Colors.White;
                 _dim = value;
             }
         }
@@ -36,12 +35,12 @@ public partial class SubMenu : Control
     protected Color TempColor { get; set; }
     public Action<GUIOpenRequest> OpenSubMenuDelegate { get; set; }
     public Action<GUICloseRequest> CloseSubMenuDelegate { get; set; }
+    protected string CloseSoundPath { get; set; } = "menu_close1.wav";
 
     public override void _Ready()
     {
         TempColor = Modulate;
-        Modulate = Colors.Transparent;
-        SetNodeReferences();
+        Modulate = Godot.Colors.Transparent;
         if (this.IsSceneRoot())
             _ = InitAsync(null, null, new GUIOpenRequest(packedScene: null));
     }
@@ -50,7 +49,7 @@ public partial class SubMenu : Control
 
     public virtual void RequestCloseSubMenu(GUICloseRequest request)
     {
-        Locator.Audio.PlaySoundFX("menu_close1.wav");
+        Locator.Audio.PlaySoundFX(CloseSoundPath);
         CloseSubMenuDelegate?.Invoke(request);
     }
 
@@ -75,9 +74,10 @@ public partial class SubMenu : Control
         OpenSubMenuDelegate = openSubMenuDelegate;
         CloseSubMenuDelegate = closeSubMenuDelegate;
         ReceiveData(request.Data);
+        SetNodeReferences();
         CustomSetup();
         PreWaitFrameSetup();
-        await ToSignal(GetTree(), GodotConstants.ProcessFrameSignal);
+        await ToSignal(GetTree(), Signals.ProcessFrameSignal);
         await PostWaitFrameSetup();
         Loading = false;
     }

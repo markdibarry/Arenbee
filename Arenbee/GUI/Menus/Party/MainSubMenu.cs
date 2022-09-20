@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.Party.Equipment;
 using GameCore.Extensions;
 using GameCore.GUI;
@@ -86,7 +87,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     private void OpenSaveGameConfirm()
     {
-        RequestOpenSubMenu(new GUIOpenRequest(SaveConfirmSubMenu.GetScenePath()));
+        RequestOpenSubMenu(new GUIOpenRequest(SaveGameSubMenu.GetScenePath()));
     }
 
     private void QuitToTitle()

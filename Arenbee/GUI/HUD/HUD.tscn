@@ -1,17 +1,17 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://dstnpk2jrgkny"]
 
 [ext_resource type="Script" path="res://Arenbee/GUI/HUD/HUD.cs" id="1"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/HUD/TestDisplay.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://s701xt0wrthl" path="res://Arenbee/GUI/HUD/TestDisplay.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Text/MessageBoxList.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/HUD/PlayerStatsDisplay.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://b7inm7aq3md6g" path="res://Arenbee/GUI/HUD/PlayerStatsDisplay.tscn" id="4"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 10
-script = ExtResource( "1" )
+script = ExtResource("1")
 
-[node name="PlayerStatsDisplay" parent="." instance=ExtResource( "4" )]
+[node name="PlayerStatsDisplay" parent="." instance=ExtResource("4")]
 
-[node name="FPSDisplay" parent="." instance=ExtResource( "2" )]
+[node name="FPSDisplay" parent="." instance=ExtResource("2")]
 offset_left = 16.0
 offset_top = 52.0
 offset_right = 24.0
@@ -19,12 +19,16 @@ offset_bottom = 63.0
 text = "50"
 
 [node name="MessageBoxListWrapper" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -93.0
 offset_bottom = 99.0
+grow_horizontal = 0
 
-[node name="MessageBoxList" parent="MessageBoxListWrapper" instance=ExtResource( "3" )]
+[node name="MessageBoxList" parent="MessageBoxListWrapper" instance=ExtResource("3")]
+layout_mode = 0
 offset_right = 93.0
 offset_bottom = 40.0
 size_flags_horizontal = 1

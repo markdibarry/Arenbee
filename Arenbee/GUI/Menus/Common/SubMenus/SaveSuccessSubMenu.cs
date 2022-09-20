@@ -2,7 +2,7 @@
 using GameCore.GUI;
 using Godot;
 
-namespace Arenbee.GUI.Menus.Party;
+namespace Arenbee.GUI.Menus.Common;
 
 [Tool]
 public partial class SaveSuccessSubMenu : PromptSubMenu
@@ -18,6 +18,6 @@ public partial class SaveSuccessSubMenu : PromptSubMenu
     protected override void OnTimeOut()
     {
         base.OnTimeOut();
-        RequestCloseSubMenu(new GUICloseRequest() { CascadeTo = typeof(MainSubMenu) });
+        RequestCloseSubMenu(new GUICloseRequest() { CascadeTo = typeof(SaveGameSubMenu) });
     }
 }

@@ -1,5 +1,4 @@
-﻿using GameCore.Constants;
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using Godot;
 
 namespace GameCore.GUI;
@@ -34,7 +33,7 @@ public partial class TimedMessageBox : MessageBox
     {
         Tween fadeTween = GetTree().CreateTween();
         fadeTween.TweenProperty(this, "modulate:a", 0f, 0.1f);
-        await ToSignal(fadeTween, GodotConstants.FinishedSignal);
+        await ToSignal(fadeTween, Signals.FinishedSignal);
         QueueFree();
     }
 }

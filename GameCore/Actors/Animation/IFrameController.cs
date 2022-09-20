@@ -128,7 +128,7 @@ public class IFrameController
                 StatusEffectType.Freeze => new Color(0.4f, 0.9f, 1),
                 StatusEffectType.Paralysis => new Color(1, 0.9f, 0.45f),
                 StatusEffectType.Poison => new Color(1, 0.65f, 1),
-                _ => Colors.White
+                _ => Godot.Colors.White
             };
         }
         else

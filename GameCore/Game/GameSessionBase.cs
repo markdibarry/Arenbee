@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
+using Arenbee;
 using GameCore.Actors;
 using GameCore.AreaScenes;
 using GameCore.Extensions;
-using GameCore.SaveData;
 using GameCore.GUI;
 using GameCore.Input;
+using GameCore.SaveData;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -35,6 +35,11 @@ public abstract partial class GameSessionBase : Node2D
     public override void _Ready()
     {
         SetNodeReferences();
+    }
+
+    public override void _Process(double delta)
+    {
+        SessionState.Update(delta, CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled);
     }
 
     public abstract void HandleInput(GUIInputHandler menuInput, double delta);
@@ -99,7 +104,7 @@ public abstract partial class GameSessionBase : Node2D
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(Arenbee.Constants.PathConstants.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Paths.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }

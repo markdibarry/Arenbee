@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GameCore.Constants;
 using Godot;
 
 namespace GameCore.GUI;
@@ -64,11 +63,11 @@ public partial class OptionItem : MarginContainer
 
     public void HandleDim()
     {
-        Color color = Colors.White;
+        Color color = Godot.Colors.White;
         if (Disabled)
-            color = ColorConstants.DisabledGrey;
+            color = Colors.DisabledGrey;
         else if (DimUnfocused && !Focused)
-            color = ColorConstants.DimGrey;
+            color = Colors.DimGrey;
         Modulate = color;
     }
 }

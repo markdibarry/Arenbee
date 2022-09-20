@@ -4,7 +4,6 @@ using GameCore.AreaScenes;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
-using Godot;
 
 namespace Arenbee;
 
@@ -28,7 +27,7 @@ public partial class GameSession : GameSessionBase
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(Constants.PathConstants.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Paths.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }

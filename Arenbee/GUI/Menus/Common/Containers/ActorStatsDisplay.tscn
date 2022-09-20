@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvmhcdfi8nppo"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/ActorStatsDisplay.cs" id="1_qpsjs"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/StatContainer.tscn" id="2_y2ynj"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/PointContainer.tscn" id="3_k2ed3"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/ElementContainer.tscn" id="4_1eepv"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.cs" id="1_qpsjs"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.tscn" id="2_y2ynj"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_k2ed3"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ElementContainer.tscn" id="4_1eepv"]
 
 [node name="StatsDisplay" type="PanelContainer"]
 offset_right = 130.0

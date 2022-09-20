@@ -1,5 +1,4 @@
-﻿using GameCore.Constants;
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using GameCore.Statistics;
 using Godot;
 
@@ -20,7 +19,7 @@ public partial class PointContainer : EqualContainer
         set
         {
             _dim = value;
-            Modulate = _dim ? ColorConstants.DimGrey : Colors.White;
+            Modulate = _dim ? GameCore.Colors.DimGrey : Colors.White;
         }
     }
     [Export]
@@ -107,9 +106,9 @@ public partial class PointContainer : EqualContainer
         }
 
         if (newValue > oldValue)
-            StatMaxValueLabel.Modulate = ColorConstants.TextGreen;
+            StatMaxValueLabel.Modulate = GameCore.Colors.TextGreen;
         else if (newValue < oldValue)
-            StatMaxValueLabel.Modulate = ColorConstants.TextRed;
+            StatMaxValueLabel.Modulate = GameCore.Colors.TextRed;
         else
             StatMaxValueLabel.Modulate = Colors.White;
     }

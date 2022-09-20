@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Save/SaveConfirmSubMenu.cs" id="2_o5egm"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_af8ba"]
+[ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_8cyl3"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/SaveConfirmSubMenu.cs" id="2_o5egm"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_7nijv"]
+[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_af8ba"]
 
 [node name="SaveConfirmSubMenu" instance=ExtResource( "1_8cyl3" )]
 script = ExtResource( "2_o5egm" )

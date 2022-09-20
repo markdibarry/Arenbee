@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7inm7aq3md6g"]
+[gd_scene load_steps=3 format=3 uid="uid://b7inm7aq3md6g"]
 
+[ext_resource type="Script" path="res://Arenbee/GUI/HUD/PlayerStatsDisplay.cs" id="1_i4dqj"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/HUD/HeartDisplay.tscn" id="2_0dep3"]
 
 [node name="PlayerStatsDisplay" type="PanelContainer"]
@@ -8,6 +9,7 @@ offset_left = 5.0
 offset_top = 5.0
 offset_right = 56.0
 offset_bottom = 48.0
+script = ExtResource("1_i4dqj")
 
 [node name="MarginWrapper" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -36,6 +38,7 @@ theme_override_constants/outline_size = 2
 theme_override_constants/line_spacing = 0
 
 [node name="HeartDisplay" parent="MarginWrapper/VBoxContainer" instance=ExtResource("2_0dep3")]
+unique_name_in_owner = true
 layout_mode = 2
 offset_top = 11.0
 offset_right = 31.0

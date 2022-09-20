@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdwpahnv8nj6l"]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionSubMenu.tscn" id="1_5ndtn"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/SaveGameSubMenu.cs" id="2_p5u0p"]
+[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_cfmh3"]
+
+[node name="SaveGameSubMenu" instance=ExtResource("1_5ndtn")]
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_p5u0p")
+
+[node name="Background" parent="." index="0"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SaveOptions" parent="Foreground" index="0" instance=ExtResource("3_cfmh3")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -52.0
+offset_right = 96.0
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" parent="Foreground/SaveOptions/MarginContainer/Control" index="0"]
+layout_mode = 3
+
+[editable path="Foreground/SaveOptions"]

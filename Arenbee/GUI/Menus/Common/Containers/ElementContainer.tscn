@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/ElementContainer.cs" id="1_svip8"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/ElementContainer.cs" id="1_svip8"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Element/ElementLarge.tscn" id="1_uib7e"]
 
 [node name="ElementContainer" type="HBoxContainer"]

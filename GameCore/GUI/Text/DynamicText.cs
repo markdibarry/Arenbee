@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using GameCore.Constants;
 using GameCore.Extensions;
 using Godot;
 
@@ -141,7 +140,7 @@ public partial class DynamicText : RichTextLabel
         Text = CustomText;
         Text = TextEventExtractor.Extract(GetParsedText(), CustomText, out _textEvents);
         VisibleCharacters = 0;
-        await ToSignal(this, GodotConstants.FinishedSignal);
+        await ToSignal(this, Signals.FinishedSignal);
         UpdateTextData();
         Loading = false;
     }

@@ -1,10 +1,9 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionItems/OptionItem.tscn" id="1_74d75"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/PartyMemberOption.cs" id="2_3tesp"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/PointContainer.tscn" id="3_7i0tc"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Options/PartyMemberOption.cs" id="2_3tesp"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7i0tc"]
 
-[node name="PartyMemberOption" instance=ExtResource( "1_74d75" )]
+[node name="PartyMemberOption" type="MarginContainer"]
 script = ExtResource( "2_3tesp" )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]

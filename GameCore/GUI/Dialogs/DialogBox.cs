@@ -45,7 +45,7 @@ public partial class DialogBox : Control
         set
         {
             _dim = value;
-            Modulate = value ? Colors.White.Darkened(0.5f) : Colors.White;
+            Modulate = value ? Godot.Colors.White.Darkened(0.5f) : Godot.Colors.White;
         }
     }
     [Export]
