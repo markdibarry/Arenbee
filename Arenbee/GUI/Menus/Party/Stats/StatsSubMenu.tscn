@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c83isftcfx3xv"]
+[gd_scene load_steps=5 format=3 uid="uid://c83isftcfx3xv"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_0awv0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Stats/StatsSubMenu.cs" id="2_ah025"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_ietj2"]
-[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_th6t8"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_ietj2"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_mp18g"]
 
 [node name="StatsSubMenu" instance=ExtResource("1_0awv0")]
@@ -23,55 +22,16 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 80.0
 offset_top = 18.0
-offset_right = 216.0
+offset_right = 135.0
 offset_bottom = 48.0
 
 [node name="ContentGrid" parent="Foreground/PartyOptions" index="0"]
-offset_right = 132.0
+offset_right = 51.0
 offset_bottom = 26.0
 
 [node name="OptionGrid" parent="Foreground/PartyOptions/ContentGrid" index="0"]
-offset_right = 128.0
+offset_right = 47.0
 offset_bottom = 22.0
-
-[node name="MarginContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 128.0
-offset_bottom = 22.0
-
-[node name="Control" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/MarginContainer" index="0"]
-offset_right = 123.0
-offset_bottom = 17.0
-
-[node name="TextOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_th6t8")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_right = 22.0
-offset_bottom = 12.0
-LabelText = "Buggy"
-
-[node name="Arrows" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 128.0
-offset_bottom = 22.0
-
-[node name="ArrowUp" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 60.0
-offset_right = 67.0
-
-[node name="ArrowLeft" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 7.0
-offset_bottom = 14.0
-
-[node name="ArrowDown" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 60.0
-offset_top = 16.0
-offset_right = 67.0
-offset_bottom = 22.0
-
-[node name="ArrowRight" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 122.0
-offset_top = 7.0
-offset_right = 128.0
-offset_bottom = 14.0
 
 [node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource("5_mp18g")]
 layout_mode = 0
@@ -81,4 +41,3 @@ offset_right = 210.0
 offset_bottom = 104.0
 
 [editable path="Foreground/PartyOptions"]
-[editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]

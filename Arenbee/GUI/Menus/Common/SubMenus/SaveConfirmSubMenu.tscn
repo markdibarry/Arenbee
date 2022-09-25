@@ -62,11 +62,11 @@ offset_bottom = 52.0
 offset_right = 60.0
 offset_bottom = 35.0
 
-[node name="Control" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer" index="0"]
+[node name="Control" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 55.0
 offset_bottom = 30.0
 
-[node name="GridContainer" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/GridMargin/Control" index="0"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -80,14 +80,14 @@ offset_bottom = 12.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextOption" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_af8ba")]
+[node name="TextOption" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("4_af8ba")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 14.0
 offset_bottom = 12.0
 LabelText = "Yes"
 
-[node name="TextOption2" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("4_af8ba")]
+[node name="TextOption2" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("4_af8ba")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 13.0

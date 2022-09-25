@@ -7,7 +7,7 @@ public class MenuInputHandler : GUIInputHandler
     public MenuInputHandler()
     {
         Start = new InputAction(this, "menu_start");
-        Enter = new InputAction(this, "menu_enter");
+        Enter = new InputAction(this, "menu_select");
         Cancel = new InputAction(this, "menu_cancel");
         Up = new InputAction(this, "menu_up");
         Down = new InputAction(this, "menu_down");

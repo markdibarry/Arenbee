@@ -63,22 +63,22 @@ offset_bottom = 72.0
 offset_right = 107.0
 offset_bottom = 59.0
 
-[node name="Control" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/MarginContainer" index="0"]
+[node name="Control" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 102.0
 offset_bottom = 54.0
 
-[node name="GridContainer" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/MarginContainer/Control" index="0"]
+[node name="GridContainer" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/GridMargin/Control" index="0"]
 offset_right = 97.0
 offset_bottom = 49.0
 
-[node name="SaveGameOption" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_q648h")]
+[node name="SaveGameOption" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("4_q648h")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 97.0
 offset_bottom = 24.0
 Focused = true
 
-[node name="SaveGameOption2" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("4_q648h")]
+[node name="SaveGameOption2" parent="Foreground/LoadOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("4_q648h")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 25.0

@@ -38,16 +38,16 @@ offset_bottom = 59.0
 offset_right = 108.0
 offset_bottom = 59.0
 
-[node name="Control" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/MarginContainer" index="0"]
+[node name="Control" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 103.0
 offset_bottom = 54.0
 
-[node name="PartyMemberOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("3_5mj7i")]
+[node name="PartyMemberOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("3_5mj7i")]
 layout_mode = 2
 offset_right = 98.0
 offset_bottom = 24.0
 
-[node name="PartyMemberOption2" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("3_5mj7i")]
+[node name="PartyMemberOption2" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("3_5mj7i")]
 layout_mode = 2
 offset_top = 25.0
 offset_right = 98.0

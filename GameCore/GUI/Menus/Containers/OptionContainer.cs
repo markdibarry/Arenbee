@@ -8,24 +8,61 @@ namespace GameCore.GUI;
 [Tool]
 public partial class OptionContainer : PanelContainer
 {
-    private bool _fitToGrid;
+    private int _columns = 1;
+    private bool _fitXToContent;
+    private bool _fitYToContent;
     private Vector2 _padding;
     private bool _resizing;
-    public OptionItem CurrentItem => OptionGrid.CurrentItem;
-    public OptionGrid OptionGrid { get; set; }
-    public GridContainer ContentGrid { get; set; }
+    private bool _scrollBarEnabled;
+    [ExportGroup("Sizing")]
     [Export]
-    public bool FitToGrid
+    public bool FitXToContent
     {
-        get => _fitToGrid;
+        get => _fitXToContent;
         set
         {
-            _fitToGrid = value;
+            _fitXToContent = value;
+            if (value && OptionGrid != null)
+                FitToContent();
+        }
+    }
+    [Export]
+    public bool FitYToContent
+    {
+        get => _fitYToContent;
+        set
+        {
+            _fitYToContent = value;
             if (value && OptionGrid != null)
                 FitToContent();
         }
     }
     [Export] public Vector2 MaxSize { get; set; }
+    [Export]
+    public bool ScrollBarEnabled
+    {
+        get => _scrollBarEnabled;
+        set
+        {
+            _scrollBarEnabled = value;
+            if (OptionGrid != null)
+                OptionGrid.ScrollBarEnabled = value;
+        }
+    }
+    [Export(PropertyHint.Range, "1,20")]
+    public int Columns
+    {
+        get => _columns;
+        set
+        {
+            _columns = value;
+            if (OptionGrid != null)
+                OptionGrid.Columns = value;
+        }
+    }
+    public OptionItem CurrentItem => OptionGrid.CurrentItem;
+    public OptionGrid OptionGrid { get; set; }
+    public GridContainer ContentGrid { get; set; }
     public PackedScene CursorScene
     {
         get => OptionGrid.CursorScene;
@@ -86,6 +123,8 @@ public partial class OptionContainer : PanelContainer
         var stylebox = (StyleBoxTexture)GetThemeStylebox("panel");
         var paddingLeft = stylebox.ContentMarginLeft;
         _padding = new Vector2(paddingLeft, paddingLeft) * 2;
+        ScrollBarEnabled = _scrollBarEnabled;
+        Columns = _columns;
     }
 
     public void AddGridChild(OptionItem optionItem) => OptionGrid.AddChild(optionItem);
@@ -112,14 +151,23 @@ public partial class OptionContainer : PanelContainer
 
     private void FitToContent()
     {
-        float x;
-        float y;
+        float x = Size.x;
+        float y = Size.y;
         var otherItemsSize = Size - OptionGrid.Size - _padding;
         Vector2 totalGridSize = OptionGrid.Padding + OptionGrid.GridContainer.Size;
-        var yBase = ContentGrid.Columns is 1 ? totalGridSize.y + otherItemsSize.y : Mathf.Max(totalGridSize.y, otherItemsSize.y);
-        var xBase = ContentGrid.Columns is 1 ? Mathf.Max(totalGridSize.x, otherItemsSize.x) : totalGridSize.x + otherItemsSize.x;
-        y = MaxSize.y == 0 ? yBase + _padding.y : Mathf.Min(yBase + _padding.y, MaxSize.y);
-        x = MaxSize.x == 0 ? xBase + _padding.x : Mathf.Min(xBase + _padding.x, MaxSize.x);
+
+        if (_fitXToContent)
+        {
+            var xBase = ContentGrid.Columns is 1 ? Mathf.Max(totalGridSize.x, otherItemsSize.x) : totalGridSize.x + otherItemsSize.x;
+            x = MaxSize.x == 0 ? xBase + _padding.x : Mathf.Min(xBase + _padding.x, MaxSize.x);
+        }
+
+        if (_fitYToContent)
+        {
+            var yBase = ContentGrid.Columns is 1 ? totalGridSize.y + otherItemsSize.y : Mathf.Max(totalGridSize.y, otherItemsSize.y);
+            y = MaxSize.y == 0 ? yBase + _padding.y : Mathf.Min(yBase + _padding.y, MaxSize.y);
+        }
+
         Size = new Vector2(x, y);
         _resizing = true;
         if (AnchorsPreset == (int)LayoutPreset.Center)
@@ -132,7 +180,7 @@ public partial class OptionContainer : PanelContainer
 
     private void OnResized()
     {
-        if (FitToGrid && !_resizing)
+        if ((FitXToContent || FitYToContent) && !_resizing)
             FitToContent();
         ContainerUpdated?.Invoke(this);
     }

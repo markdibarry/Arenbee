@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://bdetoklfcxoov"]
 
 [ext_resource type="Script" path="res://GameCore/GUI/Menus/Containers/OptionContainer.cs" id="1_obuyk"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="2_refyu"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="2_refyu"]
 
 [node name="OptionContainer" type="PanelContainer"]
 offset_right = 18.0
@@ -22,11 +22,11 @@ layout_mode = 2
 offset_right = 10.0
 offset_bottom = 10.0
 
-[node name="MarginContainer" parent="ContentGrid/OptionGrid" index="0"]
+[node name="GridMargin" parent="ContentGrid/OptionGrid" index="0"]
 offset_right = 10.0
 offset_bottom = 10.0
 
-[node name="Control" parent="ContentGrid/OptionGrid/MarginContainer" index="0"]
+[node name="Control" parent="ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 5.0
 offset_bottom = 5.0
 
@@ -53,5 +53,9 @@ offset_left = 4.0
 offset_top = 1.0
 offset_right = 10.0
 offset_bottom = 8.0
+
+[node name="ScrollBars" parent="ContentGrid/OptionGrid" index="2"]
+offset_right = 10.0
+offset_bottom = 10.0
 
 [editable path="ContentGrid/OptionGrid"]

@@ -1,5 +1,6 @@
 ﻿using GameCore.Enums;
 using GameCore.Input;
+using Godot;
 
 namespace GameCore.GUI;
 

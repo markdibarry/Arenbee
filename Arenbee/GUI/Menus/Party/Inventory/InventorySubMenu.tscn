@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/InventorySubMenu.cs" id="2_funy4"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_sn8u5"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_sn8u5"]
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/DynamicTextContainer.tscn" id="7_8v57d"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
 
@@ -32,6 +32,7 @@ offset_left = 75.0
 offset_top = 49.0
 offset_right = 193.0
 offset_bottom = 249.0
+ScrollBarEnabled = true
 
 [node name="ItemInfo" parent="Foreground" index="2" instance=ExtResource("7_8v57d")]
 process_mode = 3
