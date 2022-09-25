@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bphoaxtk672fw"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://GameCore/GUI/Menus/DynamicTextContainer.cs" id="1_y41p2"]
+[ext_resource type="Script" path="res://GameCore/GUI/Menus/Containers/DynamicTextContainer.cs" id="1_y41p2"]
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="2_alwg4"]
 
 [node name="DynamicTextContainer" type="PanelContainer"]

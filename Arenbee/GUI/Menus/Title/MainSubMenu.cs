@@ -27,7 +27,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     public override async Task TransitionOpenAsync()
     {
-        var pos = _startOptions.Position;
+        Vector2 pos = (Size - _startOptions.Size) * 0.5f;
         _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);
         var tween = _startOptions.CreateTween();
         tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);

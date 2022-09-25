@@ -101,7 +101,7 @@ public partial class SelectSubMenu : OptionSubMenu
             if (!itemStack.CanReserve())
                 option.Disabled = true;
             if (itemStack.ItemId == Slot.ItemId)
-                _equipOptions.CurrentIndex = options.Count;
+                _equipOptions.FocusItem(options.Count);
             options.Add(option);
         }
         _equipOptions.ReplaceChildren(options);

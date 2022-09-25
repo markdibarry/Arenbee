@@ -186,12 +186,12 @@ public partial class Dialog : GUILayer
 
     public override void ReceiveData(object data)
     {
-        if (data is not int next || next == 0)
+        if (data is not DialogOptionSelectionDataModel model || model.Next == 0)
         {
             RequestCloseDialog();
             return;
         }
-        _ = ToDialogPartAsync(next);
+        _ = ToDialogPartAsync(model.Next);
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_22hay"]
+[ext_resource type="Script" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.cs" id="2_hu6av"]
+
+[node name="OptionSubMenu" instance=ExtResource( "1_22hay" )]
+script = ExtResource( "2_hu6av" )

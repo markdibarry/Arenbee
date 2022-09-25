@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Options/SaveGameOption.cs" id="1_qudwj"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/SaveGameOption.cs" id="1_qudwj"]
 
 [node name="SaveGameOption" type="MarginContainer"]
 modulate = Color(0.7, 0.7, 0.7, 1)

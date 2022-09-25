@@ -22,7 +22,7 @@ public partial class StatsSubMenu : OptionSubMenu
     {
         base.SetNodeReferences();
         _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        _partyOptions = OptionContainers.Find(x => x.Name == "PartyList");
+        _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
         _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
         _playerParty = Locator.GetParty() ?? new PlayerParty();
     }

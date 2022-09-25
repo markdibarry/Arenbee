@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://blcmbici0bj5f"]
 
-[ext_resource type="PackedScene" uid="uid://c76bshyrt78g" path="res://GameCore/GUI/Menus/SubMenu.tscn" id="1_imt36"]
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/InventorySubMenu.cs" id="2_funy4"]
-[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_0xw2g"]
-[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_iv8vo"]
-[ext_resource type="PackedScene" uid="uid://bphoaxtk672fw" path="res://GameCore/GUI/Menus/DynamicTextContainer.tscn" id="7_8v57d"]
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_sn8u5"]
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/DynamicTextContainer.tscn" id="7_8v57d"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
 
 [node name="InventorySubMenu" instance=ExtResource("1_imt36")]
@@ -20,145 +19,23 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TypeList" parent="Foreground" index="0" instance=ExtResource("3_0xw2g")]
+[node name="ItemTypeOptions" parent="Foreground" index="0" instance=ExtResource("3_sn8u5")]
 layout_mode = 0
 offset_left = 75.0
 offset_top = 16.0
 offset_right = 194.0
 offset_bottom = 46.0
-DimItems = true
-KeepHighlightPosition = true
 
-[node name="MarginContainer" parent="Foreground/TypeList" index="0"]
-offset_right = 112.0
-offset_bottom = 23.0
-
-[node name="Control" parent="Foreground/TypeList/MarginContainer" index="0"]
-offset_right = 103.0
-offset_bottom = 14.0
-
-[node name="GridContainer" parent="Foreground/TypeList/MarginContainer/Control" index="0"]
-offset_right = 115.0
-offset_bottom = 12.0
-columns = 5
-
-[node name="All" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_iv8vo")]
-layout_mode = 2
-offset_right = 12.0
-offset_bottom = 12.0
-LabelText = "All"
-OptionData = {}
-
-[node name="Restorative" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("4_iv8vo")]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 2
-offset_left = 15.0
-offset_right = 59.0
-offset_bottom = 12.0
-LabelText = "Restorative"
-OptionData = {}
-
-[node name="Field" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="2" instance=ExtResource("4_iv8vo")]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 2
-offset_left = 62.0
-offset_right = 81.0
-offset_bottom = 12.0
-LabelText = "Field"
-OptionData = {}
-
-[node name="Key" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="3" instance=ExtResource("4_iv8vo")]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 2
-offset_left = 84.0
-offset_right = 98.0
-offset_bottom = 12.0
-LabelText = "Key"
-OptionData = {}
-
-[node name="Key2" parent="Foreground/TypeList/MarginContainer/Control/GridContainer" index="4" instance=ExtResource("4_iv8vo")]
-modulate = Color(0.7, 0.7, 0.7, 1)
-layout_mode = 2
-offset_left = 101.0
-offset_right = 115.0
-offset_bottom = 12.0
-LabelText = "Key"
-OptionData = {}
-
-[node name="Arrows" parent="Foreground/TypeList" index="1"]
-offset_right = 112.0
-offset_bottom = 23.0
-
-[node name="ArrowUp" parent="Foreground/TypeList/Arrows" index="0"]
-offset_left = 49.0
-offset_right = 56.0
-
-[node name="ArrowLeft" parent="Foreground/TypeList/Arrows" index="1"]
-offset_top = 4.0
-offset_bottom = 11.0
-
-[node name="ArrowDown" parent="Foreground/TypeList/Arrows" index="2"]
-offset_left = 49.0
-offset_top = 13.0
-offset_right = 56.0
-offset_bottom = 19.0
-
-[node name="ArrowRight" parent="Foreground/TypeList/Arrows" index="3"]
-visible = true
-offset_left = 102.0
-offset_top = 4.0
-offset_right = 108.0
-offset_bottom = 11.0
-
-[node name="InventoryList" parent="Foreground" index="1" instance=ExtResource("3_0xw2g")]
+[node name="InventoryOptions" parent="Foreground" index="1" instance=ExtResource("3_sn8u5")]
 layout_mode = 0
 offset_left = 75.0
 offset_top = 49.0
 offset_right = 193.0
 offset_bottom = 249.0
-DimItems = true
-ExpandContent = true
-
-[node name="MarginContainer" parent="Foreground/InventoryList" index="0"]
-offset_right = 111.0
-offset_bottom = 193.0
-
-[node name="Control" parent="Foreground/InventoryList/MarginContainer" index="0"]
-offset_right = 102.0
-offset_bottom = 184.0
-
-[node name="GridContainer" parent="Foreground/InventoryList/MarginContainer/Control" index="0"]
-offset_right = 100.0
-grow_horizontal = 2
-
-[node name="Arrows" parent="Foreground/InventoryList" index="1"]
-offset_right = 111.0
-offset_bottom = 193.0
-
-[node name="ArrowUp" parent="Foreground/InventoryList/Arrows" index="0"]
-offset_left = 48.0
-offset_right = 55.0
-
-[node name="ArrowLeft" parent="Foreground/InventoryList/Arrows" index="1"]
-offset_top = 89.0
-offset_bottom = 96.0
-
-[node name="ArrowDown" parent="Foreground/InventoryList/Arrows" index="2"]
-offset_left = 48.0
-offset_top = 183.0
-offset_right = 55.0
-offset_bottom = 189.0
-
-[node name="ArrowRight" parent="Foreground/InventoryList/Arrows" index="3"]
-offset_left = 101.0
-offset_top = 89.0
-offset_right = 107.0
-offset_bottom = 96.0
 
 [node name="ItemInfo" parent="Foreground" index="2" instance=ExtResource("7_8v57d")]
 process_mode = 3
 layout_mode = 1
-anchors_preset = 15
 offset_left = 196.0
 offset_top = 186.0
 offset_right = -166.0
@@ -175,6 +52,3 @@ offset_left = 196.0
 offset_top = 119.0
 offset_right = 314.0
 offset_bottom = 183.0
-
-[editable path="Foreground/TypeList"]
-[editable path="Foreground/InventoryList"]

@@ -15,6 +15,7 @@ public partial class OptionItem : MarginContainer
     private bool _disabled;
     private bool _focused;
     public Cursor Cursor { get; set; }
+    [Export]
     public bool DimUnfocused
     {
         get => _dimUnfocused;
@@ -34,6 +35,7 @@ public partial class OptionItem : MarginContainer
             HandleDim();
         }
     }
+    [Export]
     public bool Focused
     {
         get => _focused;

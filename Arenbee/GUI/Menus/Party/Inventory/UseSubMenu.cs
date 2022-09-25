@@ -17,8 +17,15 @@ public partial class UseSubMenu : OptionSubMenu
 
     protected override void SetupOptions()
     {
+        _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
         DisplayOptions();
-        base.SetupOptions();
+    }
+
+    public override void ReceiveData(object data)
+    {
+        if (data is not ItemStack itemStack)
+            return;
+        ItemStack = itemStack;
     }
 
     protected override void OnItemSelected()
@@ -28,9 +35,9 @@ public partial class UseSubMenu : OptionSubMenu
             return;
         if (!CurrentContainer.CurrentItem.Disabled)
         {
-            if (optionValue == "use")
+            if (optionValue == UseOptions.Use)
                 HandleUse();
-            else if (optionValue == "drop")
+            else if (optionValue == UseOptions.Drop)
                 HandleDrop();
         }
     }
@@ -38,21 +45,17 @@ public partial class UseSubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
         _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        if (ItemStack == null)
-            return;
-        Item = ItemStack.Item;
     }
 
     private void DisplayOptions()
     {
         var options = new List<TextOption>();
         var option = _textOptionScene.Instantiate<TextOption>();
-        option.LabelText = "Use";
-        option.OptionData["value"] = "use";
+        option.LabelText = UseOptions.Use;
+        option.OptionData["value"] = UseOptions.Use;
         option.Disabled = true;
-        if (Item.UseData != null)
+        if (ItemStack.Item.UseData != null)
         {
             option.Disabled = false;
             if (ItemStack.Amount <= 0)
@@ -61,9 +64,9 @@ public partial class UseSubMenu : OptionSubMenu
         options.Add(option);
 
         option = _textOptionScene.Instantiate<TextOption>();
-        option.LabelText = "Drop";
-        option.OptionData["value"] = "drop";
-        option.Disabled = !Item.IsDroppable || ItemStack.Amount <= 0;
+        option.LabelText = UseOptions.Drop;
+        option.OptionData["value"] = UseOptions.Drop;
+        option.Disabled = !ItemStack.Item.IsDroppable || ItemStack.Amount <= 0;
         options.Add(option);
         _optionContainer.ReplaceChildren(options);
     }
@@ -75,7 +78,7 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void HandleUse()
     {
-        switch (Item.UseData.UseType)
+        switch (ItemStack.Item.UseData.UseType)
         {
             case ItemUseType.Self:
             case ItemUseType.PartyMember:
@@ -103,5 +106,19 @@ public partial class UseSubMenu : OptionSubMenu
     private static void OpenEnemyUseSubMenu()
     {
         // TODO
+    }
+
+    private static class UseOptions
+    {
+        public static List<string> GetAll()
+        {
+            return new List<string>()
+            {
+                Use,
+                Drop
+            };
+        }
+        public const string Use = "Use";
+        public const string Drop = "Drop";
     }
 }

@@ -8,71 +8,54 @@ using Godot;
 namespace GameCore.GUI;
 
 [Tool]
-public partial class OptionContainer : PanelContainer
+public partial class OptionGrid : MarginContainer
 {
-    public OptionContainer()
+    public OptionGrid()
     {
         SingleOptionsEnabled = true;
         FocusWrap = true;
         OptionItems = new List<OptionItem>();
     }
 
-    private bool _expandContent;
-    private bool _fitContainer;
-    private Control _control;
     private TextureRect _arrowUp;
     private TextureRect _arrowDown;
     private TextureRect _arrowLeft;
     private TextureRect _arrowRight;
     private bool _arrowsDirty;
-    private bool _changesDirty;
+    private bool _childrenDirty;
     [Export] public PackedScene CursorScene { get; set; }
     [Export] public bool DimItems { get; set; }
-    [Export]
-    public bool ExpandContent
-    {
-        get { return _expandContent; }
-        set
-        {
-            _expandContent = value;
-            _changesDirty = true;
-        }
-    }
-    [Export]
-    public bool FitContainer
-    {
-        get { return _fitContainer; }
-        set
-        {
-            _fitContainer = value;
-            _changesDirty = true;
-        }
-    }
     [Export] public bool FocusWrap { get; set; }
-    [Export] public SizeFlags HResize { get; set; }
-    [Export] public SizeFlags VResize { get; set; }
     [Export] public bool KeepHighlightPosition { get; set; }
     [Export] public bool AllOptionEnabled { get; set; }
     [Export] public bool SingleOptionsEnabled { get; set; }
+    public int Columns
+    {
+        get => GridContainer.Columns;
+        set => GridContainer.Columns = value;
+    }
     public OptionItem CurrentItem => OptionItems.ElementAtOrDefault(CurrentIndex);
     public GridContainer GridContainer { get; set; }
-    public int LastIndex { get; set; }
-    public int CurrentIndex { get; set; }
+    public Control GridWindow { get; set; }
+    public MarginContainer MarginContainer { get; set; }
+    public int CurrentIndex { get; private set; }
+    public int LastIndex { get; private set; }
     public bool AllSelected => CurrentIndex == -1;
-    public bool IsSingleRow => OptionItems.Count <= GridContainer.Columns;
-    public bool IsSingleColumn => GridContainer.Columns == 1;
+    public Vector2 Padding { get; private set; }
     public List<OptionItem> OptionItems { get; set; }
-    public event Action<OptionContainer> ContainerUpdated;
-    public event Action<OptionContainer, Direction> FocusOOB;
+    private bool IsSingleRow => OptionItems.Count <= GridContainer.Columns;
+
+    //private bool IsSingleColumn => GridContainer.Columns == 1;
+    public event Action<OptionGrid, Direction> FocusOOB;
     public event Action ItemFocused;
     public event Action ItemSelected;
 
     public override void _Process(double delta)
     {
+        if (_childrenDirty)
+            HandleChildrenDirty();
         if (_arrowsDirty)
-            HandleArrows();
-        if (_changesDirty)
-            HandleChanges();
+            HandleArrowsDirty();
     }
 
     public override void _Ready()
@@ -84,78 +67,12 @@ public partial class OptionContainer : PanelContainer
     public void AddGridChild(OptionItem optionItem)
     {
         GridContainer.AddChild(optionItem);
-        OptionItems.Add(optionItem);
-        optionItem.DimUnfocused = DimItems;
-        _changesDirty = true;
-    }
-
-    public void AddItemToSelection(OptionItem item)
-    {
-        if (item.Selected)
-            return;
-        item.Selected = true;
-        item.Focused = true;
-        if (item.Cursor != null)
-            return;
-        var cursor = CursorScene.Instantiate<Cursor>();
-        cursor.FlashEnabled = true;
-        float cursorX = item.GlobalPosition.x - 4;
-        float cursorY = (float)(item.GlobalPosition.y + Math.Round(item.Size.y * 0.5));
-        AddChild(cursor);
-        cursor.GlobalPosition = new Vector2(cursorX, cursorY);
-        item.Cursor = cursor;
-    }
-
-    public void RemoveItemFromSelection(OptionItem item)
-    {
-        if (!item.Selected)
-            return;
-        item.Selected = false;
-        item.Focused = false;
-        if (item.Cursor == null)
-            return;
-        var cursor = item.Cursor;
-        item.Cursor = null;
-        RemoveChild(cursor);
-        cursor.QueueFree();
     }
 
     public void Clear()
     {
         OptionItems.Clear();
         GridContainer.QueueFreeAllChildren();
-    }
-
-    public void ExpandGridToContainer()
-    {
-        GridContainer.Size = new Vector2(_control.Size.x, GridContainer.Size.y);
-    }
-
-    public void FitToContent()
-    {
-        FitToContent(Vector2.Zero);
-    }
-
-    public void FitToContent(Vector2 max)
-    {
-        Vector2 oldSize = Size;
-        Vector2 padding = GetPadding(GridContainer);
-        Vector2 newSize = GridContainer.Size + (padding * 2);
-        Vector2 newPos = Position;
-        if (max != Vector2.Zero)
-            newSize = new Vector2(Math.Min(newSize.x, max.x), Math.Min(newSize.y, max.x));
-
-        if (HResize == SizeFlags.ShrinkEnd)
-            newPos = new Vector2(newPos.x - newSize.x - oldSize.x, newPos.y);
-        else if (HResize == SizeFlags.ShrinkCenter)
-            newPos = new Vector2((int)Math.Floor(newPos.x - ((newSize.x - oldSize.x) * 0.5)), newPos.y);
-
-        if (VResize == SizeFlags.ShrinkEnd)
-            newPos = new Vector2(newPos.x, newPos.y - newSize.y - oldSize.y);
-        else if (VResize == SizeFlags.ShrinkCenter)
-            newPos = new Vector2(newPos.x, (int)Math.Floor(newPos.y - ((newSize.y - oldSize.y) * 0.5)));
-        Size = newSize;
-        Position = newPos;
     }
 
     public void FocusContainer(int index)
@@ -170,10 +87,9 @@ public partial class OptionContainer : PanelContainer
     {
         if (!SingleOptionsEnabled)
         {
-            if (AllOptionEnabled)
-                index = -1;
-            else
+            if (!AllOptionEnabled)
                 return;
+            index = -1;
         }
         LastIndex = CurrentIndex;
         if (OptionItems.Count == 0)
@@ -181,7 +97,7 @@ public partial class OptionContainer : PanelContainer
         if (CurrentItem != null)
             CurrentItem.Focused = false;
         CurrentIndex = GetValidIndex(index);
-        AdjustPosition(CurrentItem);
+        AdjustScroll(CurrentItem);
         HandleSelectAll();
         if (CurrentItem != null)
             CurrentItem.Focused = true;
@@ -210,12 +126,6 @@ public partial class OptionContainer : PanelContainer
     public IEnumerable<OptionItem> GetSelectedItems()
     {
         return OptionItems.Where(x => x.Selected);
-    }
-
-    public int GetValidIndex(int index)
-    {
-        int lowest = AllOptionEnabled ? -1 : 0;
-        return Math.Clamp(index, lowest, OptionItems.Count - 1);
     }
 
     public void HandleSelectAll()
@@ -269,42 +179,76 @@ public partial class OptionContainer : PanelContainer
         ItemSelected?.Invoke();
     }
 
-    private void AdjustPosition(OptionItem optionItem)
+    private void AdjustScroll(OptionItem optionItem)
     {
         if (optionItem == null)
         {
             GridContainer.Position = Vector2.Zero;
             return;
         }
+
+        var newPos = GridContainer.Position;
+
         // Adjust Right
-        if (_control.GlobalPosition.x + _control.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
+        if (GridWindow.GlobalPosition.x + GridWindow.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
         {
-            var newXPos = optionItem.Position.x + optionItem.Size.x - _control.Size.x;
-            GridContainer.Position = new Vector2(-newXPos, GridContainer.Position.y);
+            var newXPos = optionItem.Position.x + optionItem.Size.x - GridWindow.Size.x;
+            newPos = new Vector2(-newXPos, newPos.y);
         }
 
         // Adjust Down
-        if (_control.GlobalPosition.y + _control.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
+        if (GridWindow.GlobalPosition.y + GridWindow.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
         {
-            var newYPos = optionItem.Position.y + optionItem.Size.y - _control.Size.y;
-            GridContainer.Position = new Vector2(GridContainer.Position.x, -newYPos);
+            var newYPos = optionItem.Position.y + optionItem.Size.y - GridWindow.Size.y;
+            newPos = new Vector2(newPos.x, -newYPos);
         }
 
         // Adjust Left
-        if (_control.GlobalPosition.x > optionItem.GlobalPosition.x)
+        if (GridWindow.GlobalPosition.x > optionItem.GlobalPosition.x)
         {
             var newXPos = optionItem.Position.x;
-            GridContainer.Position = new Vector2(-newXPos, GridContainer.Position.y);
+            newPos = new Vector2(-newXPos, newPos.y);
         }
 
         // Adjust Up
-        if (_control.GlobalPosition.y > optionItem.GlobalPosition.y)
+        if (GridWindow.GlobalPosition.y > optionItem.GlobalPosition.y)
         {
             var newYPos = optionItem.Position.y;
-            GridContainer.Position = new Vector2(GridContainer.Position.x, -newYPos);
+            newPos = new Vector2(newPos.x, -newYPos);
         }
+        GridContainer.Position = newPos;
     }
 
+    private void AddItemToSelection(OptionItem item)
+    {
+        if (item.Selected)
+            return;
+        item.Selected = true;
+        item.Focused = true;
+        if (item.Cursor != null)
+            return;
+        var cursor = CursorScene.Instantiate<Cursor>();
+        cursor.FlashEnabled = true;
+        float cursorX = item.GlobalPosition.x - 4;
+        float cursorY = (float)(item.GlobalPosition.y + Math.Round(item.Size.y * 0.5));
+        AddChild(cursor);
+        cursor.GlobalPosition = new Vector2(cursorX, cursorY);
+        item.Cursor = cursor;
+    }
+
+    private void RemoveItemFromSelection(OptionItem item)
+    {
+        if (!item.Selected)
+            return;
+        item.Selected = false;
+        item.Focused = false;
+        if (item.Cursor == null)
+            return;
+        var cursor = item.Cursor;
+        item.Cursor = null;
+        RemoveChild(cursor);
+        cursor.QueueFree();
+    }
 
     private void FocusUp()
     {
@@ -411,59 +355,31 @@ public partial class OptionContainer : PanelContainer
         FocusItem(nextIndex);
     }
 
-    private Vector2 GetGridContainerSize()
+    private int GetValidIndex(int index)
     {
-        Vector2 newVec = Vector2.Zero;
-        foreach (var option in OptionItems)
-        {
-            if (!option.Visible) continue;
-            var optionPos = option.Position + option.Size;
-            newVec.x = Math.Max(newVec.x, optionPos.x);
-            newVec.y = Math.Max(newVec.y, optionPos.y);
-        }
-        return newVec.Round();
+        int lowest = AllOptionEnabled ? -1 : 0;
+        return Math.Clamp(index, lowest, OptionItems.Count - 1);
     }
 
-    private Vector2 GetPadding(Control subContainer)
+    private void HandleArrowsDirty()
     {
-        Vector2 itemsPosition = subContainer.GlobalPosition;
-        Vector2 containerPosition = GlobalPosition;
-
-        return (itemsPosition - containerPosition).Abs();
-    }
-
-    private void HandleChanges()
-    {
-        GridContainer.Size = GetGridContainerSize();
-        if (_fitContainer)
-            FitToContent();
-        if (_expandContent)
-            ExpandGridToContainer();
-        _arrowsDirty = true;
-        _changesDirty = false;
-        ContainerUpdated?.Invoke(this);
-    }
-
-    private void HandleHArrows()
-    {
-        if (GridContainer.Size.x > _control.Size.x)
+        _arrowsDirty = false;
+        // H arrows
+        if (GridContainer.Size.x > GridWindow.Size.x)
         {
             _arrowLeft.Visible = GridContainer.Position.x < 0;
-            _arrowRight.Visible = GridContainer.Size.x + GridContainer.Position.x > _control.Size.x;
+            _arrowRight.Visible = GridContainer.Size.x + GridContainer.Position.x > GridWindow.Size.x;
         }
         else
         {
             _arrowLeft.Visible = false;
             _arrowRight.Visible = false;
         }
-    }
-
-    private void HandleVArrows()
-    {
-        if (GridContainer.Size.y > _control.Size.y)
+        // V arrows
+        if (GridContainer.Size.y > GridWindow.Size.y)
         {
             _arrowUp.Visible = GridContainer.Position.y < 0;
-            _arrowDown.Visible = GridContainer.Size.y + GridContainer.Position.y > _control.Size.y;
+            _arrowDown.Visible = GridContainer.Size.y + GridContainer.Position.y > GridWindow.Size.y;
         }
         else
         {
@@ -472,15 +388,17 @@ public partial class OptionContainer : PanelContainer
         }
     }
 
-    private void HandleArrows()
+    private void HandleChildrenDirty()
     {
-        HandleHArrows();
-        HandleVArrows();
+        GridContainer.Size = Vector2.Zero;
         _arrowsDirty = false;
+        _childrenDirty = false;
     }
 
     private void Init()
     {
+        var margin = MarginContainer.GetThemeConstant("margin_left");
+        Padding = new Vector2(margin, margin) * 2;
         SubscribeEvents();
         foreach (var item in GridContainer.GetChildren<OptionItem>())
         {
@@ -501,20 +419,32 @@ public partial class OptionContainer : PanelContainer
         FocusOOB?.Invoke(this, direction);
     }
 
-    private void OnGridRectChanged()
+    private void OnChildAdded(Node node)
     {
-        _changesDirty = true;
+        if (node is not OptionItem optionItem)
+            return;
+        OptionItems.Add(optionItem);
+        optionItem.DimUnfocused = DimItems;
+    }
+
+    private void OnChildExiting(Node node)
+    {
+        if (node is not OptionItem optionItem)
+            return;
+        OptionItems.Remove(optionItem);
+        _childrenDirty = true;
     }
 
     private void OnResized()
     {
-        _changesDirty = true;
+        _arrowsDirty = true;
     }
 
     private void SetNodeReferences()
     {
-        _control = GetNodeOrNull<Control>("MarginContainer/Control");
-        GridContainer = _control.GetNodeOrNull<GridContainer>("GridContainer");
+        MarginContainer = GetNodeOrNull<MarginContainer>("MarginContainer");
+        GridWindow = GetNodeOrNull<Control>("MarginContainer/Control");
+        GridContainer = GridWindow.GetNodeOrNull<GridContainer>("GridContainer");
         _arrowUp = GetNodeOrNull<TextureRect>("Arrows/ArrowUp");
         _arrowDown = GetNodeOrNull<TextureRect>("Arrows/ArrowDown");
         _arrowLeft = GetNodeOrNull<TextureRect>("Arrows/ArrowLeft");
@@ -524,8 +454,10 @@ public partial class OptionContainer : PanelContainer
 
     private void SubscribeEvents()
     {
-        Resized += OnResized;
-        GridContainer.ItemRectChanged += OnGridRectChanged;
+        GridContainer.ChildEnteredTree += OnChildAdded;
+        GridContainer.ChildExitingTree += OnChildExiting;
+        GridContainer.Resized += OnResized;
+        GridWindow.Resized += OnResized;
     }
 
     private void WrapFocus(Direction direction)

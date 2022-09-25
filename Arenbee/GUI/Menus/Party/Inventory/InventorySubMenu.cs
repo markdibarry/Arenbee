@@ -36,9 +36,9 @@ public partial class InventorySubMenu : OptionSubMenu
     protected override void SetupOptions()
     {
         var typeOptions = GetItemTypeOptions();
-        _typeList.GridContainer.Columns = typeOptions.Count;
+        _typeList.OptionGrid.Columns = typeOptions.Count;
         _typeList.ReplaceChildren(typeOptions);
-        _typeList.CurrentIndex = 1;
+        _typeList.FocusItem(1);
         _inventoryList.Clear();
         UpdateItemDescription(null);
     }
@@ -68,8 +68,8 @@ public partial class InventorySubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _typeList = OptionContainers.Find(x => x.Name == "TypeList");
-        _inventoryList = OptionContainers.Find(x => x.Name == "InventoryList");
+        _typeList = OptionContainers.Find(x => x.Name == "ItemTypeOptions");
+        _inventoryList = OptionContainers.Find(x => x.Name == "InventoryOptions");
         _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
         _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
         _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());

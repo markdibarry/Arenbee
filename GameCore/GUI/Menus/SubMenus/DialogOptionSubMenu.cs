@@ -52,8 +52,6 @@ public partial class DialogOptionSubMenu : OptionSubMenu
     {
         base.SetNodeReferences();
         _options = OptionContainers.Find(x => x.Name == "OptionContainer");
-        _options.FitContainer = true;
-        _options.HResize = SizeFlags.ShrinkCenter;
-        _options.VResize = SizeFlags.ShrinkCenter;
+        //_options.FitContainer = true;
     }
 }

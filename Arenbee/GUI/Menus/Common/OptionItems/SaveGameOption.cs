@@ -64,7 +64,7 @@ public partial class SaveGameOption : OptionItem
 
     public void UpdateDisplay(GameSave gameSave)
     {
-        GameNameText = "TODO";
+        GameNameText = "File" + gameSave.Id;
         int level = gameSave.ActorData[0].Stats.Attributes.GetStat(AttributeType.Level).DisplayValue;
         LevelText = "Lv. " + level;
         var timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);

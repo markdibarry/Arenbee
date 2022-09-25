@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using Godot;
+﻿using System.IO;
+using System.Text.Json;
 
 namespace GameCore.GUI;
 
@@ -7,13 +7,10 @@ public static class DialogLoader
 {
     public static DialogPart[] Load(string path)
     {
-        string fullPath = $"{Config.DialogPath}{path}.json";
-        var file = new File();
-        if (!File.FileExists(fullPath))
+        path = Godot.ProjectSettings.GlobalizePath($"{Config.DialogPath}{path}.json");
+        if (!File.Exists(path))
             return null;
-        file.Open(fullPath, File.ModeFlags.Read);
-        string content = file.GetAsText();
-        file.Close();
+        string content = File.ReadAllText(path);
         return JsonSerializer.Deserialize<DialogPart[]>(content);
     }
 }

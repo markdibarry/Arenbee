@@ -48,7 +48,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         base.SetNodeReferences();
         Party = Locator.GetParty();
         ActionEffectDB = Locator.ActionEffectDB;
-        _partyContainer = OptionContainers.Find(x => x.Name == "Party");
+        _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions");
         _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
         if (ItemStack == null)
             return;

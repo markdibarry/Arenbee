@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Options/PartyMemberOption.cs" id="2_3tesp"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/PartyMemberOption.cs" id="2_3tesp"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7i0tc"]
 
 [node name="PartyMemberOption" type="MarginContainer"]

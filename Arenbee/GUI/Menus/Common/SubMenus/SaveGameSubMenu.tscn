@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bdwpahnv8nj6l"]
+[gd_scene load_steps=5 format=3 uid="uid://chrwmnjfvkgwm"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/OptionSubMenu.tscn" id="1_5ndtn"]
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_5ndtn"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/SaveGameSubMenu.cs" id="2_p5u0p"]
-[ext_resource type="PackedScene" uid="uid://8dlbcbpxu38g" path="res://GameCore/GUI/Menus/OptionContainer.tscn" id="3_cfmh3"]
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_nhakt"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/OptionItems/SaveGameOption.tscn" id="4_o6vhp"]
 
 [node name="SaveGameSubMenu" instance=ExtResource("1_5ndtn")]
 grow_horizontal = 2
@@ -17,21 +18,97 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SaveOptions" parent="Foreground" index="0" instance=ExtResource("3_cfmh3")]
+[node name="SaveOptions" parent="Foreground" index="0" instance=ExtResource("3_nhakt")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -96.0
-offset_top = -52.0
-offset_right = 96.0
-offset_bottom = 52.0
+offset_left = -57.5
+offset_top = -54.5
+offset_right = 57.5
+offset_bottom = 54.5
 grow_horizontal = 2
 grow_vertical = 2
+FitToGrid = true
 
-[node name="GridContainer" parent="Foreground/SaveOptions/MarginContainer/Control" index="0"]
-layout_mode = 3
+[node name="ContentGrid" parent="Foreground/SaveOptions" index="0"]
+offset_right = 111.0
+offset_bottom = 105.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/SaveOptions/ContentGrid" index="0"]
+layout_mode = 2
+offset_right = 107.0
+offset_bottom = 13.0
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+
+[node name="Label" type="Label" parent="Foreground/SaveOptions/ContentGrid/MarginContainer" index="0"]
+layout_mode = 2
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 104.0
+offset_bottom = 13.0
+text = "Saved Games:"
+
+[node name="OptionGrid" parent="Foreground/SaveOptions/ContentGrid" index="1"]
+offset_top = 17.0
+offset_right = 107.0
+offset_bottom = 101.0
+
+[node name="MarginContainer" parent="Foreground/SaveOptions/ContentGrid/OptionGrid" index="0"]
+offset_right = 107.0
+offset_bottom = 84.0
+
+[node name="Control" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer" index="0"]
+offset_right = 102.0
+offset_bottom = 79.0
+
+[node name="SaveGameOption" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="0" instance=ExtResource("4_o6vhp")]
+modulate = Color(1, 1, 1, 1)
+layout_mode = 2
+offset_right = 97.0
+offset_bottom = 24.0
+
+[node name="SaveGameOption2" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="1" instance=ExtResource("4_o6vhp")]
+modulate = Color(1, 1, 1, 1)
+layout_mode = 2
+offset_top = 25.0
+offset_right = 97.0
+offset_bottom = 49.0
+
+[node name="SaveGameOption3" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/MarginContainer/Control/GridContainer" index="2" instance=ExtResource("4_o6vhp")]
+modulate = Color(1, 1, 1, 1)
+layout_mode = 2
+offset_top = 50.0
+offset_right = 97.0
+offset_bottom = 74.0
+
+[node name="Arrows" parent="Foreground/SaveOptions/ContentGrid/OptionGrid" index="1"]
+offset_right = 107.0
+offset_bottom = 84.0
+
+[node name="ArrowUp" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/Arrows" index="0"]
+offset_left = 50.0
+offset_right = 57.0
+
+[node name="ArrowLeft" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/Arrows" index="1"]
+offset_top = 38.0
+offset_bottom = 45.0
+
+[node name="ArrowDown" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/Arrows" index="2"]
+offset_left = 50.0
+offset_top = 78.0
+offset_right = 57.0
+offset_bottom = 84.0
+
+[node name="ArrowRight" parent="Foreground/SaveOptions/ContentGrid/OptionGrid/Arrows" index="3"]
+offset_left = 101.0
+offset_top = 38.0
+offset_right = 107.0
+offset_bottom = 45.0
 
 [editable path="Foreground/SaveOptions"]
+[editable path="Foreground/SaveOptions/ContentGrid/OptionGrid"]

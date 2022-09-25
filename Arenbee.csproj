@@ -14,10 +14,13 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Arenbee\GUI\Menus\Common\Options\**" />
+    <EmbeddedResource Remove="Arenbee\GUI\Menus\Common\Options\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.VsixColorCompiler" Version="17.0.31709.430" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Arenbee\GUI\Menus\Common\Containers\" />
-    <Folder Include="Arenbee\GUI\Menus\Common\Options\" />
   </ItemGroup>
 </Project>

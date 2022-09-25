@@ -137,8 +137,7 @@ public partial class DynamicText : RichTextLabel
         if (Loading)
             return;
         Loading = true;
-        Text = CustomText;
-        Text = TextEventExtractor.Extract(GetParsedText(), CustomText, out _textEvents);
+        Text = TextEventExtractor.Extract(CustomText, out _textEvents);
         VisibleCharacters = 0;
         await ToSignal(this, Signals.FinishedSignal);
         UpdateTextData();

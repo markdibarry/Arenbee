@@ -7,8 +7,9 @@ namespace GameCore.GUI;
 
 public static class TextEventExtractor
 {
-    public static string Extract(string parsedText, string fullText, out Dictionary<int, List<TextEvent>> dialogEvents)
+    public static string Extract(string fullText, out Dictionary<int, List<TextEvent>> dialogEvents)
     {
+        string parsedText = StripBBCode(fullText);
         StringBuilder newTextBuilder = new();
         int fullTextAppendStart = 0;
         dialogEvents = new();
@@ -95,6 +96,42 @@ public static class TextEventExtractor
         if (textEvent?.Valid != true)
             GD.PrintErr("Text event is invalid!");
         return textEvent;
+    }
+
+    private static string StripBBCode(string text)
+    {
+        string newString = string.Empty;
+        for (int i = 0; i < text.Length; i++)
+        {
+            bool foundClose = false;
+            // Checks for "["
+            if (text[i] == '[')
+            {
+                int skipChar = 0;
+                for (int j = i + 1; j < text.Length; j++)
+                {
+                    skipChar++;
+                    // Checks for "]"
+                    if (text[j] == ']')
+                    {
+                        foundClose = true;
+                        break;
+                    }
+                    else if (text[j] == '[')
+                    {
+                        break;
+                    }
+                }
+                // Skip characters between brackets, if a full set is found.
+                if (foundClose)
+                {
+                    i += skipChar;
+                    continue;
+                }
+            }
+            newString += text[i];
+        }
+        return newString;
     }
 
     private static bool IsEventOpen(string text, int index)
