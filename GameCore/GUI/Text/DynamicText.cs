@@ -10,24 +10,15 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicText : RichTextLabel
 {
-    public DynamicText()
-    {
-        BbcodeEnabled = true;
-        CustomText = string.Empty;
-        _textEvents = new();
-        FitContentHeight = true;
-        ScrollActive = false;
-        WriteTextEnabled = false;
-        EndChar = -1;
-        VisibleCharacters = 0;
-        VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
-        _counter = Speed;
-        _lineBreaks = new();
-    }
-
     private double _counter;
     private int _currentLine;
+    private string _customText;
     private List<int> _lineBreaks;
+    private bool _loading;
+    private bool _showToEndCharEnabled;
+    private bool _sizeDirty;
+    private double _speed;
+    private bool _textDirty;
     private Dictionary<int, List<TextEvent>> _textEvents;
     [Export]
     public int CurrentLine
@@ -35,37 +26,49 @@ public partial class DynamicText : RichTextLabel
         get => _currentLine;
         set
         {
-            _currentLine = value;
-            MoveToLine(value);
+            _currentLine = GetValidLine(value);
+            MoveToLine(_currentLine);
         }
     }
     /// <summary>
-    /// The custom text to use for display. Use UpdateText() to update the display.
+    /// The custom text to use for display.
     /// </summary>
     /// <value></value>
     [Export(PropertyHint.MultilineText)]
-    public string CustomText { get; set; }
-    [Export]
-    public bool ShowToTextEndEnabled
+    public string CustomText
     {
-        get => IsAtTextEnd();
-        set => ShowToTextEnd(value);
-    }
-    [Export]
-    public bool UpdateTextEnabled
-    {
-        get => Loading;
+        get => _customText;
         set
         {
-            if (!Loading && value)
-                _ = UpdateTextAsync();
+            _customText = value;
+            _textDirty = true;
+        }
+    }
+    [Export]
+    public bool ShowToEndCharEnabled
+    {
+        get => _showToEndCharEnabled;
+        set
+        {
+            _showToEndCharEnabled = value;
+            if (value)
+                VisibleCharacters = EndChar;
         }
     }
     [Export]
     public bool WriteTextEnabled { get; set; }
     [Export]
-    public double Speed { get; set; }
+    public double Speed
+    {
+        get => _speed;
+        set
+        {
+            _speed = value;
+            _counter = _speed;
+        }
+    }
     public int ContentHeight { get; private set; }
+    public int EndChar { get; set; }
     public ReadOnlyCollection<int> LineBreaks
     {
         get => _lineBreaks.AsReadOnly();
@@ -73,19 +76,18 @@ public partial class DynamicText : RichTextLabel
     public int LineCount { get; private set; }
     public bool SpeedUpText { get; set; }
     public int TotalCharacterCount { get; private set; }
-    public int EndChar { get; set; }
-    public bool Loading { get; private set; }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
+    public event Action TextDataUpdated;
 
     public override void _Process(double delta)
     {
-        if (!WriteTextEnabled || Loading)
-            return;
-        if (IsAtTextEnd())
-            StopWriting();
-        else
-            Write(delta);
+        if (_textDirty)
+            HandleTextDirty();
+        else if (_sizeDirty)
+            HandleSizeDirty();
+        if (WriteTextEnabled && !_loading)
+            HandleWrite(delta);
     }
 
     public override void _Ready()
@@ -95,19 +97,17 @@ public partial class DynamicText : RichTextLabel
 
     public bool IsAtTextEnd()
     {
-        if (VisibleRatio >= 1)
+        if (VisibleCharacters >= TotalCharacterCount)
             return true;
-        if (EndChar < 0)
+        else if (EndChar < 0)
             return false;
         return VisibleCharacters >= EndChar;
     }
 
-    public void MoveToLine(int line)
+    public void OnResized()
     {
-        line = GetValidLine(line);
-        Position = new Vector2(0, -GetLineOffsetOrEnd(line));
-        if (line < LineBreaks.Count)
-            VisibleCharacters = LineBreaks[line];
+        GD.Print("Text resized: " + Size);
+        _sizeDirty = true;
     }
 
     public void SetPause(double time)
@@ -115,33 +115,23 @@ public partial class DynamicText : RichTextLabel
         _counter += time;
     }
 
-    public void SetSpeed(double time)
-    {
-        Speed = time;
-        _counter = Speed;
-    }
-
-    public void ShowToTextEnd(bool show)
-    {
-        VisibleCharacters = show ? EndChar : 0;
-    }
-
     public async Task UpdateTextAsync(string text)
     {
-        CustomText = text;
+        _customText = text ?? string.Empty;
         await UpdateTextAsync();
     }
 
     public async Task UpdateTextAsync()
     {
-        if (Loading)
+        if (_loading)
             return;
-        Loading = true;
-        Text = TextEventExtractor.Extract(CustomText, out _textEvents);
+        _loading = true;
+        Text = TextEventExtractor.Extract(_customText, out _textEvents);
         VisibleCharacters = 0;
-        await ToSignal(this, Signals.FinishedSignal);
+        if (!IsReady())
+            await ToSignal(this, Signals.FinishedSignal);
         UpdateTextData();
-        Loading = false;
+        _loading = false;
     }
 
     private int GetValidLine(int line)
@@ -156,8 +146,8 @@ public partial class DynamicText : RichTextLabel
 
     private List<int> GetLineBreaks()
     {
-        var lineBreaks = new List<int>();
-        int currentLine = -1;
+        var lineBreaks = new List<int>() { 0 };
+        int currentLine = 0;
         for (int i = 0; i < TotalCharacterCount; i++)
         {
             int line = GetCharacterLine(i);
@@ -178,15 +168,57 @@ public partial class DynamicText : RichTextLabel
             return ContentHeight;
     }
 
+    private void HandleSizeDirty()
+    {
+        GD.Print("Text Data updated: " + Size);
+        UpdateTextData();
+        _sizeDirty = false;
+    }
+
+    private void HandleTextDirty()
+    {
+        _ = UpdateTextAsync();
+        _textDirty = false;
+    }
+
     private void HandleTextEvent(ITextEvent textEvent)
     {
         if (!textEvent.HandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
     }
 
+    private void HandleWrite(double delta)
+    {
+        if (IsAtTextEnd())
+            StopWriting();
+        else
+            Write(delta);
+    }
+
     private void Init()
     {
+        BbcodeEnabled = true;
+        _textEvents = new();
+        _lineBreaks = new();
+        FitContentHeight = true;
+        _customText = string.Empty;
+        EndChar = -1;
+        VisibleCharacters = 0;
+        VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
+        _counter = Speed;
+        UpdateTextData();
+        Resized += OnResized;
         SetDefault();
+    }
+
+    /// <summary>
+    /// Positions text and sets VisibleCharacters to beginning of specified line. 
+    /// </summary>
+    /// <param name="line"></param>
+    private void MoveToLine(int line)
+    {
+        Position = new Vector2(0, -GetLineOffsetOrEnd(line));
+        ResetVisibleCharacters();
     }
 
     private void RaiseTextEvents()
@@ -197,12 +229,19 @@ public partial class DynamicText : RichTextLabel
             HandleTextEvent(textEvent);
     }
 
+    /// <summary>
+    /// Sets VisibleCharacters to start or end of display.
+    /// </summary>
+    private void ResetVisibleCharacters()
+    {
+        VisibleCharacters = _showToEndCharEnabled ? EndChar : _lineBreaks[_currentLine];
+    }
+
     private void SetDefault()
     {
         if (!this.IsSceneRoot())
             return;
-        const string DefaultText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
-        _ = UpdateTextAsync(DefaultText);
+        CustomText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
     }
 
     private void StopWriting()
@@ -212,21 +251,20 @@ public partial class DynamicText : RichTextLabel
         StoppedWriting?.Invoke();
     }
 
-    private void UpdateLineBreaks()
-    {
-        _lineBreaks = GetLineBreaks();
-        if (TotalCharacterCount > 0)
-            VisibleCharacters = 0;
-    }
-
     private void UpdateTextData()
     {
         LineCount = GetLineCount();
         TotalCharacterCount = GetTotalCharacterCount();
         ContentHeight = GetContentHeight();
-        UpdateLineBreaks();
+        _lineBreaks = GetLineBreaks();
+        ResetVisibleCharacters();
+        TextDataUpdated?.Invoke();
     }
 
+    /// <summary>
+    /// Writes out the text at a defined pace.
+    /// </summary>
+    /// <param name="delta"></param>
     private void Write(double delta)
     {
         if (_counter > 0)
@@ -235,7 +273,7 @@ public partial class DynamicText : RichTextLabel
             return;
         }
 
-        _counter = Speed;
+        _counter = _speed;
         RaiseTextEvents();
         if (SpeedUpText)
             _counter = 0;

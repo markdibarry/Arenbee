@@ -36,3 +36,14 @@ grow_vertical = 2
 
 [node name="MainSubMenu" parent="ContentGroup/Content/SubMenus" index="0" instance=ExtResource("5_3yu3w")]
 layout_mode = 1
+
+[node name="HScrollBar" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="0"]
+page = 92.4051
+
+[node name="VScrollBar" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="1"]
+visible = false
+page = 89.4737
+
+[editable path="ContentGroup/Content/SubMenus/MainSubMenu"]
+[editable path="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer"]
+[editable path="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid"]

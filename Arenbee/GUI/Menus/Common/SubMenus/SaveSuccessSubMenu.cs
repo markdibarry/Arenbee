@@ -9,8 +9,7 @@ public partial class SaveSuccessSubMenu : PromptSubMenu
 {
     public SaveSuccessSubMenu()
     {
-        PreventCloseAll = true;
-        PreventCancel = true;
+
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
@@ -19,5 +18,11 @@ public partial class SaveSuccessSubMenu : PromptSubMenu
     {
         base.OnTimeOut();
         RequestCloseSubMenu(new GUICloseRequest() { CascadeTo = typeof(SaveGameSubMenu) });
+    }
+
+    protected override void CustomSetup()
+    {
+        PreventCloseAll = true;
+        PreventCancel = true;
     }
 }

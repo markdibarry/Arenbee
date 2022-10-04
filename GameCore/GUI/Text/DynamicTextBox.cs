@@ -9,89 +9,63 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicTextBox : Control
 {
-    public DynamicTextBox()
-    {
-        CurrentPage = 0;
-    }
-
+    private int _currentPage;
     private float _displayHeight;
     private DynamicText _dynamicText;
-    private Control _dynamicTextContainer;
-    private int _page;
+    private Control _textWindow;
+    private bool _loading;
     private int[] _pageBreaks;
-    private double _speed;
     [Export]
     public int CurrentPage
     {
-        get => _page;
+        get => _currentPage;
         set
         {
-            _page = GetAdjustedPageIndex(value);
-            ToPage(value);
+            _currentPage = GetValidPage(value);
+            MoveToPage(_currentPage);
         }
     }
     [Export(PropertyHint.MultilineText)]
     public string CustomText
     {
-        get => _dynamicText?.CustomText ?? string.Empty;
-        set
-        {
-            if (_dynamicText != null)
-                _dynamicText.CustomText = value;
-        }
+        get => _dynamicText.CustomText;
+        set => _dynamicText.CustomText = value;
     }
     [Export]
-    public bool ShouldShowAllPage
+    public bool ShowToEndCharEnabled
     {
-        get => IsAtPageEnd();
-        set => ShowAllPage(value);
+        get => _dynamicText.ShowToEndCharEnabled;
+        set => _dynamicText.ShowToEndCharEnabled = value;
     }
     [Export]
-    public bool ShouldUpdateText
+    public bool WriteTextEnabled
     {
-        get => Loading;
-        set
-        {
-            if (!Loading && value)
-                _ = UpdateTextAsync();
-        }
-    }
-    [Export]
-    public bool ShouldWrite
-    {
-        get => _dynamicText?.WriteTextEnabled ?? false;
-        set => WritePage(value);
+        get => _dynamicText.WriteTextEnabled;
+        set => _dynamicText.WriteTextEnabled = value;
     }
     [Export]
     public double Speed
     {
-        get => _dynamicText?.Speed ?? _speed;
-        set
-        {
-            if (_dynamicText == null)
-                _speed = value;
-            else
-                _dynamicText.SetSpeed(value);
-        }
+        get => _dynamicText.Speed;
+        set => _dynamicText.Speed = value;
     }
     public bool SpeedUpText
     {
-        get => _dynamicText?.SpeedUpText ?? false;
-        set
-        {
-            if (_dynamicText != null)
-                _dynamicText.SpeedUpText = value;
-        }
+        get => _dynamicText.SpeedUpText;
+        set => _dynamicText.SpeedUpText = value;
     }
-    public bool Loading { get; private set; }
-
     public event Action<ITextEvent> TextEventTriggered;
     public event Action StoppedWriting;
 
+    public override void _Notification(long what)
+    {
+        if (what == NotificationSceneInstantiated)
+            Init();
+    }
+
     public override void _Ready()
     {
-        SetNodeReferences();
-        Init();
+        SetDefault();
     }
 
     public bool IsAtLastPage()
@@ -104,38 +78,18 @@ public partial class DynamicTextBox : Control
         return _dynamicText?.IsAtTextEnd() ?? false;
     }
 
-    public void ShowAllPage(bool shouldShow)
-    {
-        if (shouldShow)
-            _dynamicText?.ShowToTextEnd(true);
-        else
-            ToPage(CurrentPage);
-    }
-
     public async Task UpdateTextAsync(string text)
     {
-        CustomText = text;
-        await UpdateTextAsync();
-    }
-
-    public async Task UpdateTextAsync()
-    {
-        if (Loading)
+        if (_loading)
             return;
-        Loading = true;
-        _displayHeight = _dynamicTextContainer.Size.y;
-        await _dynamicText.UpdateTextAsync();
-        UpdatePageBreaks();
-        Loading = false;
+        GD.Print("Updating");
+        _loading = true;
+        await _dynamicText.UpdateTextAsync(text);
+        GD.Print("Updated");
+        _loading = false;
     }
 
-    public void WritePage(bool shouldWrite)
-    {
-        if (_dynamicText != null)
-            _dynamicText.WriteTextEnabled = shouldWrite;
-    }
-
-    private int GetAdjustedPageIndex(int page)
+    private int GetValidPage(int page)
     {
         if (page < 0 || _pageBreaks.IsEmpty())
             return 0;
@@ -159,9 +113,7 @@ public partial class DynamicTextBox : Control
                 nextLineOffset = _dynamicText.GetLineOffset(i + 1);
             else
                 nextLineOffset = _dynamicText.ContentHeight;
-
             newHeight = nextLineOffset - startLineOffset;
-
             if (newHeight > _displayHeight)
             {
                 pageBreaks.Add(i);
@@ -174,12 +126,7 @@ public partial class DynamicTextBox : Control
 
     private int GetPageLine(int page)
     {
-        if (page < 0 || _pageBreaks.IsEmpty())
-            return 0;
-        else if (page >= _pageBreaks.Length)
-            return _pageBreaks[^1];
-        else
-            return _pageBreaks[page];
+        return page == 0 ? 0 : _pageBreaks[page];
     }
 
     private int GetEndChar(int page)
@@ -192,13 +139,25 @@ public partial class DynamicTextBox : Control
 
     private void Init()
     {
+        SetNodeReferences();
         SubscribeEvents();
-        SetDefault();
+    }
+
+    private void OnResized()
+    {
+        GD.Print("Box resized: " + Size);
+        _dynamicText.Size = new Vector2(_textWindow.Size.x, _dynamicText.Size.y);
+        _dynamicText.OnResized();
     }
 
     private void OnStoppedWriting()
     {
         StoppedWriting?.Invoke();
+    }
+
+    private void OnTextDataUpdated()
+    {
+        UpdateTextData();
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
@@ -209,41 +168,43 @@ public partial class DynamicTextBox : Control
 
     private void SetDefault()
     {
-        Speed = _speed;
         if (!this.IsSceneRoot())
             return;
-        CustomText = "{{speed time=0.05}}Good morning. Here's some [wave]text![/wave]\n" +
+        CustomText = "{{speed time=0.03}}Life isn't about [wave]suffering![/wave]\n" +
         "(pause){{pause time=2}}\n" +
-        "{{speed time=0.5}}...{{speed time=0.05}}And here's the rest.";
-        _ = UpdateTextAsync();
+        "{{speed time=0.5}}...{{speed time=0.05}}It's about eating!.\n" +
+        "{{speed time=0.3}}...{{speed time=0.05}}and suffering.";
     }
 
     private void SetNodeReferences()
     {
-        _dynamicTextContainer = GetNodeOrNull<Control>("Control");
-        _dynamicText = _dynamicTextContainer.GetNodeOrNull<DynamicText>("DynamicText");
-        if (_dynamicText == null)
-            GD.PrintErr("No DynamicText provided");
+        _textWindow = GetNodeOrNull<Control>("TextWindow");
+        _dynamicText = _textWindow.GetNodeOrNull<DynamicText>("DynamicText");
     }
 
     private void SubscribeEvents()
     {
         _dynamicText.TextEventTriggered += OnTextEventTriggered;
         _dynamicText.StoppedWriting += OnStoppedWriting;
+        _dynamicText.TextDataUpdated += OnTextDataUpdated;
+        _textWindow.Resized += OnResized;
     }
 
-    private void ToPage(int newPage)
+    /// <summary>
+    /// Positions text and sets VisibleCharacters to beginning of specified page. 
+    /// </summary>
+    /// <param name="page"></param>
+    private void MoveToPage(int page)
     {
-        if (_dynamicText == null)
-            return;
-        int newPageLine = GetPageLine(newPage);
-        _dynamicText.MoveToLine(newPageLine);
-        _dynamicText.EndChar = GetEndChar(newPage);
+        _dynamicText.EndChar = GetEndChar(page);
+        _dynamicText.CurrentLine = GetPageLine(page);
     }
 
-    private void UpdatePageBreaks()
+    private void UpdateTextData()
     {
+        _displayHeight = _textWindow.Size.y;
         _pageBreaks = GetPageBreaks();
-        CurrentPage = 0;
+        _currentPage = 0;
+        MoveToPage(0);
     }
 }

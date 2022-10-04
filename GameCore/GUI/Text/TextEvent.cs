@@ -49,7 +49,7 @@ public class SpeedTextEvent : TextEvent
 
     public override bool HandleEvent(DynamicText dynamicText)
     {
-        dynamicText.SetSpeed(Time);
+        dynamicText.Speed = Time;
         return true;
     }
 }

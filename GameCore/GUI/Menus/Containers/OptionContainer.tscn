@@ -8,6 +8,8 @@ offset_right = 18.0
 offset_bottom = 18.0
 theme_type_variation = &"OptionContainer"
 script = ExtResource("1_obuyk")
+MaxSize = Vector2(-1, -1)
+Columns = 1
 
 [node name="ContentGrid" type="GridContainer" parent="."]
 layout_mode = 2
@@ -19,16 +21,25 @@ offset_bottom = 14.0
 [node name="OptionGrid" parent="ContentGrid" instance=ExtResource("2_refyu")]
 unique_name_in_owner = true
 layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
 offset_right = 10.0
 offset_bottom = 10.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="GridMargin" parent="ContentGrid/OptionGrid" index="0"]
 offset_right = 10.0
 offset_bottom = 10.0
 
-[node name="Control" parent="ContentGrid/OptionGrid/GridMargin" index="0"]
+[node name="GridWindow" parent="ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 5.0
 offset_bottom = 5.0
+
+[node name="GridContainer" parent="ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="Arrows" parent="ContentGrid/OptionGrid" index="1"]
 offset_right = 10.0

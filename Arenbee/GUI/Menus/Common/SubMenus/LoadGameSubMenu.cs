@@ -21,6 +21,11 @@ public partial class LoadGameSubMenu : OptionSubMenu
         ContinueSavedGame(loadChoice);
     }
 
+    protected override void CustomSetup()
+    {
+        PreventCloseAll = true;
+    }
+
     protected override void SetupOptions()
     {
         _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions");

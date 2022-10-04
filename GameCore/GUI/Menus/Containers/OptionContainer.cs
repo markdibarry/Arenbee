@@ -8,13 +8,22 @@ namespace GameCore.GUI;
 [Tool]
 public partial class OptionContainer : PanelContainer
 {
-    private int _columns = 1;
     private bool _fitXToContent;
     private bool _fitYToContent;
+    private Vector2 _maxSize = new(-1, -1);
     private Vector2 _padding;
-    private bool _resizing;
-    private bool _scrollBarEnabled;
+    private bool _parentIsContainer;
     [ExportGroup("Sizing")]
+    [Export(PropertyHint.Range, "1,20")]
+    public int Columns
+    {
+        get => OptionGrid.Columns;
+        set
+        {
+            if (OptionGrid != null)
+                OptionGrid.Columns = value;
+        }
+    }
     [Export]
     public bool FitXToContent
     {
@@ -22,8 +31,7 @@ public partial class OptionContainer : PanelContainer
         set
         {
             _fitXToContent = value;
-            if (value && OptionGrid != null)
-                FitToContent();
+            FitToContent();
         }
     }
     [Export]
@@ -33,39 +41,38 @@ public partial class OptionContainer : PanelContainer
         set
         {
             _fitYToContent = value;
-            if (value && OptionGrid != null)
-                FitToContent();
+            FitToContent();
         }
     }
-    [Export] public Vector2 MaxSize { get; set; }
+    [Export]
+    public Vector2 MaxSize
+    {
+        get => _maxSize;
+        set
+        {
+            _maxSize = value;
+            if (ContentGrid != null)
+                RefreshMaxSize();
+        }
+    }
     [Export]
     public bool ScrollBarEnabled
     {
-        get => _scrollBarEnabled;
-        set
-        {
-            _scrollBarEnabled = value;
-            if (OptionGrid != null)
-                OptionGrid.ScrollBarEnabled = value;
-        }
+        get => OptionGrid?.ScrollBarEnabled ?? false;
+        set => OptionGrid.ScrollBarEnabled = value;
     }
-    [Export(PropertyHint.Range, "1,20")]
-    public int Columns
+    [Export]
+    public bool SingleRow
     {
-        get => _columns;
-        set
-        {
-            _columns = value;
-            if (OptionGrid != null)
-                OptionGrid.Columns = value;
-        }
+        get => OptionGrid?.SingleRow ?? false;
+        set => OptionGrid.SingleRow = value;
     }
     public OptionItem CurrentItem => OptionGrid.CurrentItem;
     public OptionGrid OptionGrid { get; set; }
     public GridContainer ContentGrid { get; set; }
     public PackedScene CursorScene
     {
-        get => OptionGrid.CursorScene;
+        get => OptionGrid?.CursorScene;
         set => OptionGrid.CursorScene = value;
     }
     public bool DimItems
@@ -76,11 +83,7 @@ public partial class OptionContainer : PanelContainer
     public bool FocusWrap
     {
         get => OptionGrid.FocusWrap;
-        set
-        {
-            if (OptionGrid != null)
-                OptionGrid.FocusWrap = value;
-        }
+        set => OptionGrid.FocusWrap = value;
     }
     public bool KeepHighlightPosition
     {
@@ -95,11 +98,7 @@ public partial class OptionContainer : PanelContainer
     public bool SingleOptionsEnabled
     {
         get => OptionGrid.SingleOptionsEnabled;
-        set
-        {
-            if (OptionGrid != null)
-                OptionGrid.SingleOptionsEnabled = value;
-        }
+        set => OptionGrid.SingleOptionsEnabled = value;
     }
     public int LastIndex => OptionGrid.LastIndex;
     public int CurrentIndex => OptionGrid.CurrentIndex;
@@ -110,21 +109,12 @@ public partial class OptionContainer : PanelContainer
     public event Action ItemFocused;
     public event Action ItemSelected;
 
-    public override void _Process(double delta)
+    public override void _Notification(long what)
     {
-        if (_resizing)
-            _resizing = false;
-    }
-
-    public override void _Ready()
-    {
-        SetNodeReferences();
-        SubscribeEvents();
-        var stylebox = (StyleBoxTexture)GetThemeStylebox("panel");
-        var paddingLeft = stylebox.ContentMarginLeft;
-        _padding = new Vector2(paddingLeft, paddingLeft) * 2;
-        ScrollBarEnabled = _scrollBarEnabled;
-        Columns = _columns;
+        if (what == NotificationParented)
+            _parentIsContainer = GetParent() is Container;
+        else if (what == NotificationSceneInstantiated)
+            Init();
     }
 
     public void AddGridChild(OptionItem optionItem) => OptionGrid.AddChild(optionItem);
@@ -149,29 +139,54 @@ public partial class OptionContainer : PanelContainer
 
     public void SelectItem() => OptionGrid.SelectItem();
 
+    private void CalculateMaxSize()
+    {
+        Vector2 margin = GetSizeWithoutOptions();
+        Vector2 gridMaxSize;
+        gridMaxSize.x = MaxSize.x == -1 ? -1 : Math.Max(MaxSize.x - margin.x, 0);
+        gridMaxSize.y = MaxSize.y == -1 ? -1 : Math.Max(MaxSize.y - margin.y, 0);
+        OptionGrid.GridWindow.MaxSize = gridMaxSize;
+        OptionGrid.GridWindow.UpdateMinimumSize();
+    }
+
     private void FitToContent()
     {
-        float x = Size.x;
-        float y = Size.y;
-        var otherItemsSize = Size - OptionGrid.Size - _padding;
-        Vector2 totalGridSize = OptionGrid.Padding + OptionGrid.GridContainer.Size;
-
-        if (_fitXToContent)
+        OptionGrid.GridWindow.ClipX = !_fitXToContent;
+        OptionGrid.GridWindow.ClipY = !_fitYToContent;
+        if (_parentIsContainer)
         {
-            var xBase = ContentGrid.Columns is 1 ? Mathf.Max(totalGridSize.x, otherItemsSize.x) : totalGridSize.x + otherItemsSize.x;
-            x = MaxSize.x == 0 ? xBase + _padding.x : Mathf.Min(xBase + _padding.x, MaxSize.x);
+            SizeFlagsHorizontal = _fitXToContent ? (int)SizeFlags.ShrinkBegin : (int)SizeFlags.Fill;
+            SizeFlagsVertical = _fitYToContent ? (int)SizeFlags.ShrinkBegin : (int)SizeFlags.Fill;
         }
+        RefreshMaxSize();
+    }
 
-        if (_fitYToContent)
+    private Vector2 GetSizeWithoutOptions()
+    {
+        var margin = Vector2.Zero;
+        foreach (Control child in ContentGrid.GetChildren())
         {
-            var yBase = ContentGrid.Columns is 1 ? totalGridSize.y + otherItemsSize.y : Mathf.Max(totalGridSize.y, otherItemsSize.y);
-            y = MaxSize.y == 0 ? yBase + _padding.y : Mathf.Min(yBase + _padding.y, MaxSize.y);
+            if (child == OptionGrid)
+                continue;
+            Vector2 size = child.GetCombinedMinimumSize();
+            if (size.x > margin.x)
+                margin.x = size.x;
+            if (size.y > margin.y)
+                margin.y = size.y;
         }
+        margin += _padding + OptionGrid.Padding;
+        return margin;
+    }
 
-        Size = new Vector2(x, y);
-        _resizing = true;
-        if (AnchorsPreset == (int)LayoutPreset.Center)
-            AnchorsPreset = (int)LayoutPreset.Center;
+    private void Init()
+    {
+        var stylebox = GetThemeStylebox("panel", "OptionContainer") as StyleBoxTexture;
+        float padding = stylebox.ContentMarginLeft * 2;
+        _padding = new Vector2(padding, padding);
+        SetNodeReferences();
+        OptionGrid.Columns = Columns;
+        RefreshMaxSize();
+        SubscribeEvents();
     }
 
     private void OnItemSelected() => ItemSelected?.Invoke();
@@ -180,9 +195,33 @@ public partial class OptionContainer : PanelContainer
 
     private void OnResized()
     {
-        if ((FitXToContent || FitYToContent) && !_resizing)
-            FitToContent();
         ContainerUpdated?.Invoke(this);
+    }
+
+    private void OnSorted()
+    {
+        if (!_parentIsContainer)
+            ResizeToContent();
+        if (AnchorsPreset == (int)LayoutPreset.Center)
+            AnchorsPreset = (int)LayoutPreset.Center;
+    }
+
+    private void RefreshMaxSize()
+    {
+        CalculateMaxSize();
+        if (!_parentIsContainer)
+            ContentGrid.QueueSort();
+    }
+
+    private void ResizeToContent()
+    {
+        Vector2 margin = Size;
+        Vector2 max = GetCombinedMinimumSize();
+        if (_fitXToContent)
+            margin.x = max.x;
+        if (_fitYToContent)
+            margin.y = max.y;
+        Size = margin;
     }
 
     private void SetNodeReferences()
@@ -193,9 +232,8 @@ public partial class OptionContainer : PanelContainer
 
     private void SubscribeEvents()
     {
-        ContentGrid.Resized += OnResized;
-        OptionGrid.GridWindow.Resized += OnResized;
-        OptionGrid.GridContainer.Resized += OnResized;
+        ContentGrid.SortChildren += OnSorted;
+        Resized += OnResized;
         OptionGrid.ItemSelected += OnItemSelected;
         OptionGrid.ItemFocused += OnItemFocused;
         OptionGrid.FocusOOB += OnFocusOOB;

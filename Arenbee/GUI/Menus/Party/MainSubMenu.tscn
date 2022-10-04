@@ -26,7 +26,7 @@ offset_right = 72.0
 offset_bottom = 111.0
 FitXToContent = true
 FitYToContent = true
-Columns = 1
+MaxSize = Vector2(-1, -1)
 
 [node name="ContentGrid" parent="Foreground/OptionContainer" index="0"]
 offset_right = 52.0
@@ -35,21 +35,22 @@ offset_bottom = 91.0
 [node name="OptionGrid" parent="Foreground/OptionContainer/ContentGrid" index="0"]
 offset_right = 48.0
 offset_bottom = 87.0
-Columns = 1
 
 [node name="GridMargin" parent="Foreground/OptionContainer/ContentGrid/OptionGrid" index="0"]
 offset_right = 48.0
 offset_bottom = 87.0
 
-[node name="Control" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin" index="0"]
+[node name="GridWindow" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 43.0
 offset_bottom = 82.0
+ClipX = false
+ClipY = false
 
-[node name="GridContainer" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control" index="0"]
+[node name="GridContainer" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
 offset_right = 38.0
 offset_bottom = 77.0
 
-[node name="Stats" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("4_afdfe")]
+[node name="Stats" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 38.0
@@ -57,7 +58,7 @@ offset_bottom = 12.0
 LabelText = "Stats"
 Focused = true
 
-[node name="Inventory" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("4_afdfe")]
+[node name="Inventory" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 13.0
@@ -65,7 +66,7 @@ offset_right = 38.0
 offset_bottom = 25.0
 LabelText = "Inventory"
 
-[node name="Equipment" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="2" instance=ExtResource("4_afdfe")]
+[node name="Equipment" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="2" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 26.0
@@ -73,7 +74,7 @@ offset_right = 38.0
 offset_bottom = 38.0
 LabelText = "Equipment"
 
-[node name="Options" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="3" instance=ExtResource("4_afdfe")]
+[node name="Options" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="3" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 39.0
@@ -81,7 +82,7 @@ offset_right = 38.0
 offset_bottom = 51.0
 LabelText = "Options"
 
-[node name="Save" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="4" instance=ExtResource("4_afdfe")]
+[node name="Save" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="4" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 52.0
@@ -89,7 +90,7 @@ offset_right = 38.0
 offset_bottom = 64.0
 LabelText = "Save"
 
-[node name="Quit" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="5" instance=ExtResource("4_afdfe")]
+[node name="Quit" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="5" instance=ExtResource("4_afdfe")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 65.0
@@ -126,12 +127,10 @@ offset_right = 48.0
 offset_bottom = 87.0
 
 [node name="HScrollBar" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="0"]
-visible = true
-page = 51.8987
+page = 93.6709
 
 [node name="VScrollBar" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="1"]
-visible = true
-page = 71.0526
+page = 94.7368
 
 [editable path="Foreground/OptionContainer"]
 [editable path="Foreground/OptionContainer/ContentGrid/OptionGrid"]

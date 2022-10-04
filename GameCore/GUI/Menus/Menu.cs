@@ -52,11 +52,19 @@ public partial class Menu : GUILayer
         Action<GUICloseRequest> closeLayerDelegate,
         GUIOpenRequest request)
     {
-        OpenLayerDelegate = openLayerDelegate;
-        CloseLayerDelegate = closeLayerDelegate;
-        await TransitionOpenAsync();
-        await CurrentSubMenu.InitAsync(RequestOpenSubMenu, RequestCloseSubMenu, request);
-        OpeningSubMenu = false;
+        try
+        {
+            OpenLayerDelegate = openLayerDelegate;
+            CloseLayerDelegate = closeLayerDelegate;
+            await TransitionOpenAsync();
+            await CurrentSubMenu.InitAsync(RequestOpenSubMenu, RequestCloseSubMenu, request);
+            OpeningSubMenu = false;
+        }
+        catch(Exception ex)
+        {
+            GD.Print(ex);
+        }
+
     }
 
     public override void ReceiveData(object data)

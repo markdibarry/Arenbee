@@ -9,96 +9,63 @@ namespace GameCore.GUI;
 public partial class DynamicTextContainer : PanelContainer
 {
     private DynamicTextBox _dynamicTextBox;
-    private double _speed;
-
+    private bool _loading;
+    [Export]
+    public int CurrentPage
+    {
+        get => _dynamicTextBox.CurrentPage;
+        set => _dynamicTextBox.CurrentPage = value;
+    }
     [Export(PropertyHint.MultilineText)]
     public string CustomText
     {
-        get => _dynamicTextBox?.CustomText ?? string.Empty;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.CustomText = value;
-        }
+        get => _dynamicTextBox.CustomText;
+        set => _dynamicTextBox.CustomText = value;
     }
     [Export]
-    public bool ShouldWrite
+    public bool ShowToEndCharEnabled
     {
-        get => _dynamicTextBox?.ShouldWrite ?? false;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.ShouldWrite = value;
-        }
+        get => _dynamicTextBox.ShowToEndCharEnabled;
+        set => _dynamicTextBox.ShowToEndCharEnabled = value;
     }
     [Export]
-    public bool ShouldShowAllToStop
+    public bool WriteTextEnabled
     {
-        get => _dynamicTextBox?.ShouldShowAllPage ?? false;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.ShouldShowAllPage = value;
-        }
-    }
-    [Export]
-    public bool ShouldUpdateText
-    {
-        get => Loading;
-        set
-        {
-            if (!Loading && value)
-                _ = UpdateTextAsync();
-        }
+        get => _dynamicTextBox.WriteTextEnabled;
+        set => _dynamicTextBox.WriteTextEnabled = value;
     }
     [Export]
     public double Speed
     {
-        get => _dynamicTextBox?.Speed ?? _speed;
-        set
-        {
-            if (_dynamicTextBox == null)
-                _speed = value;
-            else
-                _dynamicTextBox.Speed = value;
-        }
+        get => _dynamicTextBox.Speed;
+        set => _dynamicTextBox.Speed = value;
     }
-    public bool Loading { get; private set; }
     public event Action StoppedWriting;
 
-    public override void _ExitTree()
+    public override void _Notification(long what)
     {
-        base._ExitTree();
-        UnsubscribeEvents();
+        if (what == NotificationSceneInstantiated)
+            Init();
     }
 
     public override void _Ready()
     {
-        SetNodeReferences();
-        Init();
+        SetDefault();
     }
 
     public async Task UpdateTextAsync(string text)
     {
-        text ??= string.Empty;
-        CustomText = text;
-        await UpdateTextAsync();
-    }
-
-    public async Task UpdateTextAsync()
-    {
-        if (Loading)
+        if (_loading)
             return;
-        Loading = true;
-        await _dynamicTextBox.UpdateTextAsync();
-        Loading = false;
+        _loading = true;
+        await _dynamicTextBox.UpdateTextAsync(text);
+        _loading = false;
     }
 
     private void Init()
     {
+        SetNodeReferences();
         SubscribeEvents();
-        SetDefault();
-        _ = UpdateTextAsync();
     }
 
     private void OnStoppedWriting()
@@ -108,8 +75,9 @@ public partial class DynamicTextContainer : PanelContainer
 
     private void SetDefault()
     {
-        Speed = _speed;
-        CustomText = this.IsSceneRoot() ? "Placeholder Text" : string.Empty;
+        if (!this.IsSceneRoot())
+            return;
+        CustomText = "Placeholder Text";
     }
 
     private void SetNodeReferences()

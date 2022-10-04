@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using GameCore.Extensions;
@@ -25,7 +26,7 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
         {
-            UpdateItemDescription(null);
+            _ = UpdateItemDescription(null);
             Locator.Audio.PlaySoundFX("menu_close1.wav");
             FocusContainer(_typeList);
             return;
@@ -36,11 +37,10 @@ public partial class InventorySubMenu : OptionSubMenu
     protected override void SetupOptions()
     {
         var typeOptions = GetItemTypeOptions();
-        _typeList.OptionGrid.Columns = typeOptions.Count;
         _typeList.ReplaceChildren(typeOptions);
         _typeList.FocusItem(1);
         _inventoryList.Clear();
-        UpdateItemDescription(null);
+        _ = UpdateItemDescription(null);
     }
 
     protected override void OnItemFocused()
@@ -48,7 +48,7 @@ public partial class InventorySubMenu : OptionSubMenu
         if (CurrentContainer == _typeList)
             UpdateItemList(CurrentContainer.CurrentItem, resetFocus: true);
         else
-            UpdateItemDescription(CurrentContainer.CurrentItem);
+            _ = UpdateItemDescription(CurrentContainer.CurrentItem);
     }
 
     protected override void OnItemSelected()
@@ -129,12 +129,13 @@ public partial class InventorySubMenu : OptionSubMenu
         RequestOpenSubMenu(request);
     }
 
-    private void UpdateItemDescription(OptionItem optionItem)
+    private async Task UpdateItemDescription(OptionItem optionItem)
     {
         string itemId = optionItem?.GetData<string>(nameof(ItemStack.ItemId));
         ItemBase item = Locator.ItemDB.GetItem(itemId);
         _itemStatsDisplay.UpdateStatsDisplay(item);
-        _ = _itemInfo.UpdateTextAsync(item?.Description);
+        await _itemInfo.UpdateTextAsync(item?.Description);
+        _itemInfo.WriteTextEnabled = true;
     }
 
     private void UpdateItemList(OptionItem optionItem, bool resetFocus)

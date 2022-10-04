@@ -42,14 +42,14 @@ offset_bottom = 35.0
 offset_right = 23.0
 offset_bottom = 30.0
 
-[node name="TextOption" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("3_axmp3")]
+[node name="TextOption" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("3_axmp3")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 18.0
 offset_bottom = 12.0
 LabelText = "Use"
 
-[node name="TextOption2" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("3_axmp3")]
+[node name="TextOption2" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("3_axmp3")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 13.0

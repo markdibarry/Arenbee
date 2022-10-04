@@ -14,6 +14,4 @@ visible_characters = 42
 visible_characters_behavior = 1
 visible_ratio = 0.976744
 script = ExtResource("1_b2t8a")
-CustomText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave]."
-WriteTextEnabled = true
 Speed = 0.05

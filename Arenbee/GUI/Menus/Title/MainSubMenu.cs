@@ -16,12 +16,6 @@ namespace Arenbee.GUI.Menus.Title;
 [Tool]
 public partial class MainSubMenu : OptionSubMenu
 {
-    public MainSubMenu()
-    {
-        PreventCancel = true;
-        PreventCloseAll = true;
-    }
-
     private OptionContainer _startOptions;
     public static string GetScenePath() => GDEx.GetScenePath();
 
@@ -32,6 +26,12 @@ public partial class MainSubMenu : OptionSubMenu
         var tween = _startOptions.CreateTween();
         tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
         await ToSignal(tween, Signals.FinishedSignal);
+    }
+
+    protected override void CustomSetup()
+    {
+        PreventCancel = true;
+        PreventCloseAll = true;
     }
 
     protected override void OnItemSelected()

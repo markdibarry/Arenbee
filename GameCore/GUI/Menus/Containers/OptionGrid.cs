@@ -22,13 +22,11 @@ public partial class OptionGrid : MarginContainer
     private TextureRect _arrowDown;
     private TextureRect _arrowLeft;
     private TextureRect _arrowRight;
-    private int _columns = 1;
+    private bool _singleRow;
     private bool _sizeDirty;
-    private bool _childrenDirty;
     private HScrollBar _hScrollBar;
     private VScrollBar _vScrollBar;
     private Control _scrollBars;
-    private bool _scrollBarEnabled;
     [ExportGroup("Selecting")]
     [Export] public PackedScene CursorScene { get; set; }
     [Export] public bool DimItems { get; set; }
@@ -37,13 +35,22 @@ public partial class OptionGrid : MarginContainer
     [Export] public bool AllOptionEnabled { get; set; }
     [Export] public bool SingleOptionsEnabled { get; set; }
     [ExportGroup("Sizing")]
+    [Export(PropertyHint.Range, "1,20")]
+    public int Columns
+    {
+        get => GridContainer.Columns;
+        set
+        {
+            if (GridContainer != null)
+                GridContainer.Columns = value;
+        }
+    }
     [Export]
     public bool ScrollBarEnabled
     {
-        get => _scrollBars?.Visible ?? _scrollBarEnabled;
+        get => _scrollBars.Visible;
         set
         {
-            _scrollBarEnabled = value;
             if (_scrollBars != null)
             {
                 _scrollBars.Visible = value;
@@ -51,48 +58,41 @@ public partial class OptionGrid : MarginContainer
             }
         }
     }
-    [Export(PropertyHint.Range, "1,20")]
-    public int Columns
+    [Export]
+    public bool SingleRow
     {
-        get => _columns;
+        get => _singleRow;
         set
         {
-            _columns = value;
-            if (GridContainer != null)
-            {
-                GridContainer.Columns = value;
-                GridContainer.Size = Vector2.Zero;
-            }
+            _singleRow = value;
+            UpdateRows();
         }
     }
+    public bool AllSelected => CurrentIndex == -1;
+    public int CurrentIndex { get; private set; }
     public OptionItem CurrentItem => OptionItems.ElementAtOrDefault(CurrentIndex);
     public GridContainer GridContainer { get; set; }
-    public Control GridWindow { get; set; }
+    public ClipContainer GridWindow { get; set; }
     public MarginContainer GridMargin { get; set; }
-    public int CurrentIndex { get; private set; }
-    public int LastIndex { get; private set; }
-    public bool AllSelected => CurrentIndex == -1;
-    public Vector2 Padding { get; private set; }
-    public List<OptionItem> OptionItems { get; set; }
     private bool IsSingleRow => OptionItems.Count <= GridContainer.Columns;
-
+    public int LastIndex { get; private set; }
+    public List<OptionItem> OptionItems { get; set; }
+    public Vector2 Padding { get; set; }
     //private bool IsSingleColumn => GridContainer.Columns == 1;
     public event Action<OptionGrid, Direction> FocusOOB;
     public event Action ItemFocused;
     public event Action ItemSelected;
 
-    public override void _Process(double delta)
+    public override void _Notification(long what)
     {
-        if (_childrenDirty)
-            HandleChildrenDirty();
-        if (_sizeDirty)
-            HandleSizeDirty();
+        if (what == NotificationSceneInstantiated)
+            Init();
     }
 
-    public override void _Ready()
+    public override void _Process(double delta)
     {
-        SetNodeReferences();
-        Init();
+        if (_sizeDirty)
+            HandleSizeDirty();
     }
 
     public void AddGridChild(OptionItem optionItem)
@@ -128,7 +128,7 @@ public partial class OptionGrid : MarginContainer
         if (CurrentItem != null)
             CurrentItem.Focused = false;
         CurrentIndex = GetValidIndex(index);
-        ScrollToItem(CurrentItem);
+        GridContainer.Position = GetScrollPosition(CurrentItem);
         HandleSelectAll();
         if (CurrentItem != null)
             CurrentItem.Focused = true;
@@ -359,19 +359,11 @@ public partial class OptionGrid : MarginContainer
         UpdateScrollBars();
     }
 
-    private void HandleChildrenDirty()
-    {
-        GridContainer.Size = Vector2.Zero;
-        //_sizeDirty = false;
-        _childrenDirty = false;
-    }
-
     private void Init()
     {
-        var margin = GridMargin.GetThemeConstant("margin_left");
-        Padding = new Vector2(margin, margin) * 2;
-        ScrollBarEnabled = _scrollBarEnabled;
-        Columns = _columns;
+        SetNodeReferences();
+        int padding = GridMargin.GetThemeConstant("margin_left") * 2;
+        Padding = new Vector2(padding, padding);
         SubscribeEvents();
         foreach (var item in GridContainer.GetChildren<OptionItem>())
         {
@@ -398,7 +390,8 @@ public partial class OptionGrid : MarginContainer
             return;
         OptionItems.Add(optionItem);
         optionItem.DimUnfocused = DimItems;
-        _childrenDirty = true;
+        UpdateRows();
+        _sizeDirty = true;
     }
 
     private void OnChildExiting(Node node)
@@ -406,15 +399,11 @@ public partial class OptionGrid : MarginContainer
         if (node is not OptionItem optionItem)
             return;
         OptionItems.Remove(optionItem);
-        _childrenDirty = true;
-    }
-
-    private void OnResized()
-    {
+        UpdateRows();
         _sizeDirty = true;
     }
 
-    private void OnGridChanged()
+    private void OnItemRectChanged()
     {
         _sizeDirty = true;
     }
@@ -426,36 +415,30 @@ public partial class OptionGrid : MarginContainer
         GridContainer.Position = new Vector2(x, y);
     }
 
-    private void ScrollToItem(OptionItem optionItem)
+    private Vector2 GetScrollPosition(OptionItem optionItem)
     {
         if (optionItem == null)
-        {
-            GridContainer.Position = Vector2.Zero;
-            UpdateScrollBars();
-            return;
-        }
-        float x = GridContainer.Position.x;
-        float y = GridContainer.Position.y;
+            return Vector2.Zero;
+        Vector2 position = GridContainer.Position;
         // Adjust Right
         if (GridWindow.GlobalPosition.x + GridWindow.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
-            x = (optionItem.Position.x + optionItem.Size.x - GridWindow.Size.x) * -1;
+            position.x = (optionItem.Position.x + optionItem.Size.x - GridWindow.Size.x) * -1;
         // Adjust Down
         if (GridWindow.GlobalPosition.y + GridWindow.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
-            y = (optionItem.Position.y + optionItem.Size.y - GridWindow.Size.y) * -1;
+            position.y = (optionItem.Position.y + optionItem.Size.y - GridWindow.Size.y) * -1;
         // Adjust Left
         if (GridWindow.GlobalPosition.x > optionItem.GlobalPosition.x)
-            x = -optionItem.Position.x;
+            position.x = -optionItem.Position.x;
         // Adjust Up
         if (GridWindow.GlobalPosition.y > optionItem.GlobalPosition.y)
-            y = -optionItem.Position.y;
-        GridContainer.Position = new Vector2(x, y);
-        UpdateScrollBars();
+            position.y = -optionItem.Position.y;
+        return position;
     }
 
     private void SetNodeReferences()
     {
         GridMargin = GetNodeOrNull<MarginContainer>("GridMargin");
-        GridWindow = GetNodeOrNull<Control>("GridMargin/Control");
+        GridWindow = GetNodeOrNull<ClipContainer>("GridMargin/GridWindow");
         GridContainer = GridWindow.GetNodeOrNull<GridContainer>("GridContainer");
         _arrows = GetNodeOrNull<MarginContainer>("Arrows");
         _arrowUp = GetNodeOrNull<TextureRect>("Arrows/ArrowUp");
@@ -472,8 +455,7 @@ public partial class OptionGrid : MarginContainer
     {
         GridContainer.ChildEnteredTree += OnChildAdded;
         GridContainer.ChildExitingTree += OnChildExiting;
-        GridContainer.ItemRectChanged += OnGridChanged;
-        GridWindow.Resized += OnResized;
+        GridContainer.ItemRectChanged += OnItemRectChanged;
         _hScrollBar.ValueChanged += OnScrollChanged;
         _vScrollBar.ValueChanged += OnScrollChanged;
     }
@@ -498,6 +480,12 @@ public partial class OptionGrid : MarginContainer
             _arrowUp.Visible = GridContainer.Position.y < 0;
             _arrowDown.Visible = GridContainer.Size.y + GridContainer.Position.y > GridWindow.Size.y;
         }
+    }
+
+    private void UpdateRows()
+    {
+        if (SingleRow)
+            Columns = Math.Max(OptionItems.Count, 1);
     }
 
     private void UpdateScrollBars()

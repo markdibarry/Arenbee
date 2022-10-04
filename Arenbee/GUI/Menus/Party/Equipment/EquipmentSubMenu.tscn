@@ -41,11 +41,11 @@ offset_bottom = 22.0
 offset_right = 124.0
 offset_bottom = 17.0
 
-[node name="GridContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/Control" index="0"]
+[node name="GridContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
 offset_right = 20.0
 offset_bottom = 12.0
 
-[node name="TextOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("4_ieu0a")]
+[node name="TextOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("4_ieu0a")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 20.0

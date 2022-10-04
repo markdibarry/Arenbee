@@ -50,11 +50,11 @@ offset_bottom = 35.0
 offset_right = 38.0
 offset_bottom = 30.0
 
-[node name="GridContainer" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control" index="0"]
+[node name="GridContainer" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
 offset_right = 33.0
 offset_bottom = 25.0
 
-[node name="TextOption" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="0" instance=ExtResource("4_t7dly")]
+[node name="TextOption" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("4_t7dly")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_right = 33.0
@@ -62,7 +62,7 @@ offset_bottom = 12.0
 LabelText = "Option 1"
 Focused = true
 
-[node name="TextOption2" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/Control/GridContainer" index="1" instance=ExtResource("4_t7dly")]
+[node name="TextOption2" parent="Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("4_t7dly")]
 modulate = Color(1, 1, 1, 1)
 layout_mode = 2
 offset_top = 13.0

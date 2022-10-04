@@ -22,22 +22,14 @@ public partial class DialogBox : Control
     [Export]
     public int CurrentPage
     {
-        get => _dynamicTextBox?.CurrentPage ?? 0;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.CurrentPage = value;
-        }
+        get => _dynamicTextBox.CurrentPage;
+        set => _dynamicTextBox.CurrentPage = value;
     }
     [Export(PropertyHint.MultilineText)]
     public string CustomText
     {
-        get => _dynamicTextBox?.CustomText ?? string.Empty;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.CustomText = value;
-        }
+        get => _dynamicTextBox.CustomText;
+        set => _dynamicTextBox.CustomText = value;
     }
     public bool Dim
     {
@@ -49,44 +41,22 @@ public partial class DialogBox : Control
         }
     }
     [Export]
-    public bool ShouldWrite
+    public bool WriteTextEnabled
     {
-        get => _dynamicTextBox?.ShouldWrite ?? false;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.ShouldWrite = value;
-        }
+        get => _dynamicTextBox.WriteTextEnabled;
+        set => _dynamicTextBox.WriteTextEnabled = value;
     }
     [Export]
-    public bool ShouldShowAllToStop
+    public bool ShowToEndCharEnabled
     {
-        get => _dynamicTextBox?.ShouldShowAllPage ?? false;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.ShouldShowAllPage = value;
-        }
-    }
-    [Export]
-    public bool ShouldUpdateText
-    {
-        get => LoadingDialog;
-        set
-        {
-            if (!LoadingDialog && value)
-                _ = UpdateTextAsync();
-        }
+        get => _dynamicTextBox.ShowToEndCharEnabled;
+        set => _dynamicTextBox.ShowToEndCharEnabled = value;
     }
     [Export]
     public double Speed
     {
-        get => _dynamicTextBox?.Speed ?? 0;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.Speed = value;
-        }
+        get => _dynamicTextBox.Speed;
+        set => _dynamicTextBox.Speed = value;
     }
     public DialogPart CurrentDialogPart { get; set; }
     public bool LoadingDialog { get; private set; }
@@ -94,20 +64,25 @@ public partial class DialogBox : Control
     public bool ReverseDisplay { get; set; }
     public bool SpeedUpText
     {
-        get => _dynamicTextBox?.SpeedUpText ?? false;
-        set
-        {
-            if (_dynamicTextBox != null)
-                _dynamicTextBox.SpeedUpText = value;
-        }
+        get => _dynamicTextBox.SpeedUpText;
+        set => _dynamicTextBox.SpeedUpText = value;
     }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
 
+    public override void _Notification(long what)
+    {
+        if (what == NotificationSceneInstantiated)
+            Init();
+    }
+
     public override void _Ready()
     {
-        SetNodeReferences();
-        Init();
+        if (this.IsSceneRoot())
+        {
+            CurrentDialogPart = DialogPart.GetDefault();
+            _ = UpdateDialogPartAsync();
+        }
     }
 
     public void ChangeMood(string newMood)
@@ -132,15 +107,9 @@ public partial class DialogBox : Control
         return _portraitContainer.GetNodeOrNull<AnimatedSprite2D>(character.Capitalize());
     }
 
-    public bool IsAtLastPage()
-    {
-        return _dynamicTextBox?.IsAtLastPage() ?? false;
-    }
+    public bool IsAtLastPage() => _dynamicTextBox.IsAtLastPage();
 
-    public bool IsAtPageEnd()
-    {
-        return _dynamicTextBox?.IsAtPageEnd() ?? false;
-    }
+    public bool IsAtPageEnd() => _dynamicTextBox.IsAtPageEnd();
 
     public void NextPage()
     {
@@ -167,30 +136,20 @@ public partial class DialogBox : Control
         SetPortraits();
         SetDisplayNames();
         _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? DefaultSpeed;
-        _dynamicTextBox.CustomText = CurrentDialogPart.Text;
-        await _dynamicTextBox.UpdateTextAsync();
+        await _dynamicTextBox.UpdateTextAsync(CurrentDialogPart.Text);
         LoadingDialog = false;
         WritePage(true);
     }
 
-    public async Task UpdateTextAsync()
-    {
-        await _dynamicTextBox.UpdateTextAsync();
-    }
-
     public void WritePage(bool shouldWrite)
     {
-        _dynamicTextBox?.WritePage(shouldWrite);
+        _dynamicTextBox.WriteTextEnabled = shouldWrite;
     }
 
     private void Init()
     {
+        SetNodeReferences();
         SubscribeEvents();
-        if (this.IsSceneRoot())
-        {
-            CurrentDialogPart = DialogPart.GetDefault();
-            _ = UpdateDialogPartAsync();
-        }
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
