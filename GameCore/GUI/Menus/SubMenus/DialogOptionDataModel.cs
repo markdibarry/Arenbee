@@ -2,5 +2,5 @@
 
 public class DialogOptionDataModel
 {
-    public DialogChoice[] DialogChoices { get; set; }
+    public Choice[] DialogChoices { get; set; }
 }

@@ -2,5 +2,5 @@
 
 public class DialogOptionSelectionDataModel
 {
-    public int Next { get; set; }
+    public string Next { get; set; }
 }

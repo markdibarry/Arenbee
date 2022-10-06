@@ -10,9 +10,6 @@ layout_direction = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( "2_c18hx" )
-CustomText = "Hi!
-My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
-Speed = 0.05
 
 [node name="PortraitContainer" type="Control" parent="."]
 layout_direction = 2

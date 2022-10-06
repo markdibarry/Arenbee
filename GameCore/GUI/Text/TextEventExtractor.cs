@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Godot;
@@ -9,53 +10,48 @@ public static class TextEventExtractor
 {
     public static string Extract(string fullText, out Dictionary<int, List<TextEvent>> dialogEvents)
     {
-        string strippedText = StripBBCode(fullText);
         StringBuilder newTextBuilder = new();
-        int fullTextAppendStart = 0;
+        int appendStart = 0;
         dialogEvents = new();
-        int fullTextIndex = 0;
-        for (int i = 0; i < strippedText.Length; i++)
+        int renderedIndex = 0;
+        for (int i = 0; i < fullText.Length; i++)
         {
             // If Bbcode found, skip over
-            if (fullText[fullTextIndex] == '[')
-                fullTextIndex = GetCloseBracketIndex(fullText, fullTextIndex);
+            while (fullText[i] == '[')
+                i = GetCloseBracketIndex(fullText, i);
 
-            if (IsEventOpen(strippedText, i))
+            if (IsEventOpen(fullText, i))
             {
-                newTextBuilder.Append(fullText[fullTextAppendStart..fullTextIndex]);
-                int eventLength = ParseEvent(dialogEvents, strippedText, i);
-                i += eventLength;
-                fullTextIndex += eventLength;
-                fullTextAppendStart = fullTextIndex;
+                newTextBuilder.Append(fullText[appendStart..i]);
+                i = ParseEvent(dialogEvents, fullText, i, renderedIndex);
+                appendStart = i + 1;
             }
 
-            if (i + 1 == strippedText.Length)
-                newTextBuilder.Append(fullText[fullTextAppendStart..]);
-            fullTextIndex++;
+            if (i + 1 == fullText.Length)
+                newTextBuilder.Append(fullText[appendStart..]);
+            renderedIndex++;
         }
         return newTextBuilder.ToString();
     }
 
-    private static int ParseEvent(Dictionary<int, List<TextEvent>> dialogEvents, string text, int startIndex)
+    private static int ParseEvent(Dictionary<int, List<TextEvent>> dialogEvents, string text, int index, int renderedIndex)
     {
-        int index = startIndex;
-        int eventLength = 2;
+        int startIndex = index;
         index += 2;
         while (index < text.Length)
         {
             if (IsEventClose(text, index))
             {
                 TextEvent newEvent = GetTextEvent(text[(startIndex + 2)..index]);
-                if (!dialogEvents.ContainsKey(startIndex))
-                    dialogEvents.Add(startIndex, new());
-                dialogEvents[startIndex].Add(newEvent);
-                eventLength += 2;
+                if (!dialogEvents.ContainsKey(renderedIndex))
+                    dialogEvents.Add(renderedIndex, new());
+                dialogEvents[renderedIndex].Add(newEvent);
+                index++;
                 break;
             }
             index++;
-            eventLength++;
         }
-        return eventLength;
+        return index;
     }
 
     private static int GetCloseBracketIndex(string text, int currentIndex)

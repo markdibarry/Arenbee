@@ -1,72 +1,128 @@
-[
-  {
-    "id": 0,
-    "speakers": [{"character":"Renly","mood":"neutral"}],
-    "text": "Hi my name is{{speed time=0.5}}...{{speed time=default}} Renly!"
-  },
-  {
-    "id": 1,
-    "speakers": [{"character":"Dani","mood":"neutral"}],
-    "text": "[wave amp=10]Hi[/wave] my name is Da-{{next}}"
-  },
-  {
-    "id": 2,
-    "speakers": [{"character":"Ady","mood":"neutral"}],
-    "speed": 0.02,
-    "text": "My name {{mood character=Dani mood=annoyed}}is Ady."
-  },
-  {
-    "id": 3,
-    "speakers": [{"character":"Dani", "displayName":"Dani (Annoyed)","mood":"annoyed"}],
-    "text": "Why did you interrupt me?",
-    "choices": [
-      {"text":"Because I love you!","next": 4},
-      {"text":"Because it was funny!","next": 6},
-      {
-        "condition": {
-          "category": "attribute",
-          "type": "int",
-          "target": "Ady:Level",
-          "comparison": ">",
-          "toCompare": "5"
+{
+  "id": "example",
+  "parts":
+  [
+    {
+      "speakers": [
+        {
+          "character": "Renly",
+          "mood": "neutral"
+        }
+      ],
+      "text": "Hi my name is{{speed time=0.5}}...{{speed time=default}} Renly!"
+    },
+    {
+      "speakers": [
+        {
+          "character": "Dani",
+          "mood": "neutral"
+        }
+      ],
+      "text": "[wave amp=10]Hi[/wave] my name is Da-{{next}}"
+    },
+    {
+      "speakers": [
+        {
+          "character": "Ady",
+          "mood": "neutral"
+        }
+      ],
+      "speed": 0.02,
+      "text": "My name {{mood character=Dani mood=annoyed}}is Ady."
+    },
+    {
+      "speakers": [
+        {
+          "character": "Dani",
+          "displayName": "Dani (Annoyed)",
+          "mood": "annoyed"
+        }
+      ],
+      "text": "Why did you interrupt me?",
+      "choices": [
+        {
+          "text": "Because I love you!",
+          "next": "love"
         },
-        "text":"You're right. That was out of line. I'm sorry",
-        "next":5
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "speakers": [{"character":"Ady","mood":"happy"}],
-    "text": "Because I love you! I tease because I care!"
-  },
-  {
-    "id": 5,
-    "speakers": [{"character":"Dani","mood":"neutral"}],
-    "text": "Well, whatever.",
-    "next": 8
-  },
-  {
-    "id": 6,
-    "speakers": [{"character":"Ady","mood":"happy"}],
-    "text": "Because it was funny!"
-  },
-  {
-    "id": 7,
-    "speakers": [{"character":"Dani","mood":"neutral"}],
-    "text": "It wasn't funny, but whatever."
-  },
-  {
-    "id": 8,
-    "speakers": [{"character":"Renly","mood":"neutral"}],
-    "text": "I want lunch!"
-  },
-  {
-    "id": 9,
-    "speakers": [
-      {"character":"Ady", "mood":"annoyed"}, 
-      {"character":"Dani", "mood": "annoyed"}
-    ],
-    "text": "Not now!"
-  }
-]
+        {
+          "text": "Because it was funny!",
+          "next": "funny"
+        },
+        {
+          "condition": {
+            "category": "attribute",
+            "type": "int",
+            "target": "Ady:Level",
+            "comparison": ">",
+            "toCompare": "5"
+          },
+          "text": "You're right. That was out of line. I'm sorry",
+          "next": "whatever"
+        }
+      ]
+    },
+    {
+      "id":  "love",
+      "speakers": [
+        {
+          "character": "Ady",
+          "mood": "happy"
+        }
+      ],
+      "text": "Because I love you! I tease because I care!"
+    },
+    {
+      "id": "whatever",
+      "speakers": [
+        {
+          "character": "Dani",
+          "mood": "neutral"
+        }
+      ],
+      "text": "Well, whatever.",
+      "next": "lunch"
+    },
+    {
+      "id": "funny",
+      "speakers": [
+        {
+          "character": "Ady",
+          "mood": "happy"
+        }
+      ],
+      "text": "Because it was funny!"
+    },
+    {
+      "speakers": [
+        {
+          "character": "Dani",
+          "mood": "neutral"
+        }
+      ],
+      "text": "It wasn't funny, but whatever."
+    },
+    {
+      "id": "lunch",
+      "speakers": [
+        {
+          "character": "Renly",
+          "mood": "neutral"
+        }
+      ],
+      "text": "I want lunch!"
+    },
+    {
+      "speakers": [
+        {
+          "character": "Ady",
+          "mood": "annoyed"
+        },
+        {
+          "character": "Dani",
+          "mood": "annoyed"
+        }
+      ],
+      "text": "Not now!"
+    }
+  ]
+}

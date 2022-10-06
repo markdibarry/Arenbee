@@ -12,15 +12,18 @@ namespace GameCore.GUI;
 
 public class DialogScript
 {
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+    [JsonPropertyName("parts")]
     public DialogPart[] DialogParts { get; set; }
 }
 
 public class DialogPart
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public string Id { get; set; }
     [JsonPropertyName("choices")]
-    public DialogChoice[] DialogChoices { get; set; }
+    public Choice[] Choices { get; set; }
     [JsonPropertyName("speakers")]
     public List<Speaker> Speakers { get; set; }
     [JsonPropertyName("speed")]
@@ -28,7 +31,7 @@ public class DialogPart
     [JsonPropertyName("text")]
     public string Text { get; set; }
     [JsonPropertyName("next")]
-    public int? Next { get; set; }
+    public string Next { get; set; }
 
     public static DialogPart GetDefault()
     {
@@ -112,12 +115,12 @@ public class Speaker
     }
 }
 
-public class DialogChoice
+public class Choice
 {
     [JsonPropertyName("text")]
     public string Text { get; set; }
     [JsonPropertyName("next")]
-    public int Next { get; set; }
+    public string Next { get; set; }
     [JsonPropertyName("event")]
     public string CustomEvent { get; set; }
     [JsonPropertyName("condition")]

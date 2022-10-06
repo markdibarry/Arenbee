@@ -5,7 +5,7 @@
     },
     "Launch": {
       "commandName": "Executable",
-      "executablePath": "D:\\Coding\\godot\\Godot_Latest\\godot.windows.tools.x86_64.mono.exe",
+      "executablePath": "D:\\Coding\\godot\\Godot_Latest\\godot.windows.editor.x86_64.mono.exe",
       "workingDirectory": "D:\\Coding\\godot\\Arenbee"
     }
   }

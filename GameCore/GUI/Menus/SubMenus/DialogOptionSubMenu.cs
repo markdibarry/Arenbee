@@ -8,7 +8,7 @@ namespace GameCore.GUI;
 public partial class DialogOptionSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    public DialogChoice[] DialogChoices { get; set; }
+    public Choice[] DialogChoices { get; set; }
     private PackedScene _textOptionScene;
     private OptionContainer _options;
 
@@ -21,7 +21,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        int next = CurrentContainer.CurrentItem.GetData<int>("next");
+        string next = CurrentContainer.CurrentItem.GetData<string>("next");
         DialogOptionSelectionDataModel data = new()
         {
             Next = next
