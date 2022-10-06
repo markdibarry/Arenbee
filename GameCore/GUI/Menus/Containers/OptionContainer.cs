@@ -58,13 +58,13 @@ public partial class OptionContainer : PanelContainer
     [Export]
     public bool ScrollBarEnabled
     {
-        get => OptionGrid?.ScrollBarEnabled ?? false;
+        get => OptionGrid.ScrollBarEnabled;
         set => OptionGrid.ScrollBarEnabled = value;
     }
     [Export]
     public bool SingleRow
     {
-        get => OptionGrid?.SingleRow ?? false;
+        get => OptionGrid.SingleRow;
         set => OptionGrid.SingleRow = value;
     }
     public OptionItem CurrentItem => OptionGrid.CurrentItem;
@@ -72,7 +72,7 @@ public partial class OptionContainer : PanelContainer
     public GridContainer ContentGrid { get; set; }
     public PackedScene CursorScene
     {
-        get => OptionGrid?.CursorScene;
+        get => OptionGrid.CursorScene;
         set => OptionGrid.CursorScene = value;
     }
     public bool DimItems

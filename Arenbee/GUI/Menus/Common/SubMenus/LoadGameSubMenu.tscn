@@ -9,6 +9,7 @@
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_75x6o")
+NodePaths = [NodePath("Foreground/LoadOptions")]
 PreventCloseAll = true
 
 [node name="Background" parent="." index="0"]

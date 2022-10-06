@@ -9,66 +9,71 @@ public static class TextEventExtractor
 {
     public static string Extract(string fullText, out Dictionary<int, List<TextEvent>> dialogEvents)
     {
-        string parsedText = StripBBCode(fullText);
+        string strippedText = StripBBCode(fullText);
         StringBuilder newTextBuilder = new();
         int fullTextAppendStart = 0;
         dialogEvents = new();
-        int parsedTextEventStart = 0;
-        bool inEvent = false;
         int fullTextIndex = 0;
-        int dTextIndex = 0;
-        int dTextEventStart = 0;
-        for (int parsedTextIndex = 0; parsedTextIndex < parsedText.Length; parsedTextIndex++)
+        for (int i = 0; i < strippedText.Length; i++)
         {
-            // If Bbcode found
-            while (fullTextIndex < fullText.Length
-                && fullText[fullTextIndex] != parsedText[parsedTextIndex])
+            // If Bbcode found, skip over
+            if (fullText[fullTextIndex] == '[')
+                fullTextIndex = GetCloseBracketIndex(fullText, fullTextIndex);
+
+            if (IsEventOpen(strippedText, i))
             {
-                fullTextIndex++;
+                newTextBuilder.Append(fullText[fullTextAppendStart..fullTextIndex]);
+                int eventLength = ParseEvent(dialogEvents, strippedText, i);
+                i += eventLength;
+                fullTextIndex += eventLength;
+                fullTextAppendStart = fullTextIndex;
             }
 
-            if (inEvent)
-            {
-                if (IsEventClose(parsedText, parsedTextIndex))
-                {
-                    if (!dialogEvents.ContainsKey(dTextEventStart))
-                        dialogEvents.Add(dTextEventStart, new List<TextEvent>());
-                    TextEvent newEvent = Parse(parsedText[parsedTextEventStart..parsedTextIndex]);
-                    dialogEvents[dTextEventStart].Add(newEvent);
-                    fullTextAppendStart = fullTextIndex + 2;
-                    inEvent = false;
-                    parsedTextIndex++;
-                    fullTextIndex++;
-                }
-            }
-            else if (IsEventOpen(parsedText, parsedTextIndex))
-            {
-                if (parsedTextIndex - 1 > 0)
-                {
-                    // Add non-event text
-                    newTextBuilder.Append(fullText[fullTextAppendStart..fullTextIndex]);
-                }
-                parsedTextEventStart = parsedTextIndex + 2;
-                dTextEventStart = dTextIndex;
-                inEvent = true;
-                parsedTextIndex++;
-                fullTextIndex++;
-            }
-            else if (parsedTextIndex == parsedText.Length - 1)
-            {
-                // if last iteration, add remaining text
+            if (i + 1 == strippedText.Length)
                 newTextBuilder.Append(fullText[fullTextAppendStart..]);
-            }
-            else
-            {
-                dTextIndex++;
-            }
             fullTextIndex++;
         }
         return newTextBuilder.ToString();
     }
 
-    public static TextEvent Parse(string eventText)
+    private static int ParseEvent(Dictionary<int, List<TextEvent>> dialogEvents, string text, int startIndex)
+    {
+        int index = startIndex;
+        int eventLength = 2;
+        index += 2;
+        while (index < text.Length)
+        {
+            if (IsEventClose(text, index))
+            {
+                TextEvent newEvent = GetTextEvent(text[(startIndex + 2)..index]);
+                if (!dialogEvents.ContainsKey(startIndex))
+                    dialogEvents.Add(startIndex, new());
+                dialogEvents[startIndex].Add(newEvent);
+                eventLength += 2;
+                break;
+            }
+            index++;
+            eventLength++;
+        }
+        return eventLength;
+    }
+
+    private static int GetCloseBracketIndex(string text, int currentIndex)
+    {
+        int openBrackets = 1;
+        currentIndex++;
+        while (currentIndex < text.Length && openBrackets > 0)
+        {
+            if (text[currentIndex] == ']')
+                openBrackets--;
+            else if (text[currentIndex] == '[')
+                openBrackets++;
+            currentIndex++;
+        }
+        return currentIndex;
+    }
+
+    public static TextEvent GetTextEvent(string eventText)
     {
         string name = string.Empty;
         Dictionary<string, string> options = new();

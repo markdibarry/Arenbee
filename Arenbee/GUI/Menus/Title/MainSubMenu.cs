@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.Actors.Players;
 using Arenbee.GUI.Menus.Common;
+using Arenbee.Localization;
 using GameCore;
 using GameCore.Actors;
 using GameCore.Extensions;
@@ -41,10 +43,10 @@ public partial class MainSubMenu : OptionSubMenu
             return;
         switch (titleChoice)
         {
-            case TitleMenuOptions.Continue:
+            case nameof(TitleMenuOptions.KEY01Continue):
                 OpenContiueSaveSubMenu();
                 break;
-            case TitleMenuOptions.NewGame:
+            case nameof(TitleMenuOptions.KEY02NewGame):
                 StartNewGame();
                 break;
         }
@@ -67,12 +69,14 @@ public partial class MainSubMenu : OptionSubMenu
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
         var gameSaves = SaveService.GetGameSaves();
-        foreach (var optionString in TitleMenuOptions.GetAll())
+        var resourceSet = TitleMenuOptions.ResourceManager.GetEntries()
+            .OrderBy(i => i.Key);
+        foreach (var optionString in resourceSet)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = optionString;
-            option.OptionData["value"] = optionString;
-            if (optionString == TitleMenuOptions.Continue && gameSaves.Count == 0)
+            option.LabelText = optionString.Value.ToString();
+            option.OptionData["value"] = optionString.Key.ToString();
+            if (optionString.Key.ToString() == TitleMenuOptions.KEY01Continue && gameSaves.Count == 0)
                 option.Disabled = true;
             options.Add(option);
         }
@@ -115,19 +119,5 @@ public partial class MainSubMenu : OptionSubMenu
     {
         GUIOpenRequest request = new(LoadGameSubMenu.GetScenePath());
         RequestOpenSubMenu(request);
-    }
-
-    private static class TitleMenuOptions
-    {
-        public static List<string> GetAll()
-        {
-            return new List<string>()
-            {
-                Continue,
-                NewGame
-            };
-        }
-        public const string Continue = "Continue";
-        public const string NewGame = "New Game";
     }
 }

@@ -9,6 +9,7 @@
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_ah025")
+NodePaths = [NodePath("Foreground/PartyOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -22,16 +23,20 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 80.0
 offset_top = 18.0
-offset_right = 135.0
-offset_bottom = 48.0
-
-[node name="ContentGrid" parent="Foreground/PartyOptions" index="0"]
-offset_right = 51.0
-offset_bottom = 26.0
+offset_right = 98.0
+offset_bottom = 36.0
+FitXToContent = true
+FitYToContent = true
+MaxSize = Vector2(138, -1)
+SingleRow = true
 
 [node name="OptionGrid" parent="Foreground/PartyOptions/ContentGrid" index="0"]
-offset_right = 47.0
-offset_bottom = 22.0
+SingleRow = true
+
+[node name="GridWindow" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
+ClipX = false
+ClipY = false
+MaxSize = Vector2(120, -1)
 
 [node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource("5_mp18g")]
 layout_mode = 0
@@ -41,3 +46,4 @@ offset_right = 210.0
 offset_bottom = 104.0
 
 [editable path="Foreground/PartyOptions"]
+[editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]

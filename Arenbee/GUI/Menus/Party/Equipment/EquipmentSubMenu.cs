@@ -84,8 +84,10 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private List<TextOption> GetPartyMemberOptions()
     {
-        _partyOptions.OptionGrid.Columns = _playerParty.Actors.Count;
         var options = new List<TextOption>();
+        if (_playerParty.Actors.Count == 0)
+            return options;
+        _partyOptions.OptionGrid.Columns = _playerParty.Actors.Count;
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();

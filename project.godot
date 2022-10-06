@@ -17,6 +17,10 @@ config/custom_user_dir_name="Godot_User_Data"
 config/features=PackedStringArray("4.0", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+LocatorAutoload="*res://Arenbee/Game/LocatorAutoload.cs"
+
 [debug]
 
 shapes/collision/shape_color=Color(1, 1, 1, 0.419608)

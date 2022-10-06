@@ -1,14 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://b70r5pjt1xrlu"]
+[gd_scene load_steps=4 format=3 uid="uid://b70r5pjt1xrlu"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_g7lyy"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.cs" id="2_cyvws"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_jffcr"]
-[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="6_had5t"]
 
 [node name="MainSubMenu" instance=ExtResource("1_g7lyy")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_cyvws")
+NodePaths = [NodePath("Foreground/MainOptions")]
 PreventCancel = true
 PreventCloseAll = true
 
@@ -35,73 +35,3 @@ grow_horizontal = 2
 grow_vertical = 2
 FitXToContent = true
 FitYToContent = true
-MaxSize = Vector2(-1, -1)
-
-[node name="ContentGrid" parent="Foreground/MainOptions" index="0"]
-offset_right = 53.0
-offset_bottom = 39.0
-
-[node name="OptionGrid" parent="Foreground/MainOptions/ContentGrid" index="0"]
-offset_right = 49.0
-offset_bottom = 35.0
-
-[node name="GridMargin" parent="Foreground/MainOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 49.0
-offset_bottom = 35.0
-
-[node name="GridWindow" parent="Foreground/MainOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-offset_right = 44.0
-offset_bottom = 30.0
-ClipX = false
-ClipY = false
-
-[node name="GridContainer" parent="Foreground/MainOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
-offset_right = 39.0
-offset_bottom = 25.0
-
-[node name="Continue" parent="Foreground/MainOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("6_had5t")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_right = 39.0
-offset_bottom = 12.0
-LabelText = "Continue"
-Focused = true
-
-[node name="New Game" parent="Foreground/MainOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("6_had5t")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_top = 13.0
-offset_right = 39.0
-offset_bottom = 25.0
-LabelText = "New Game"
-
-[node name="Arrows" parent="Foreground/MainOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 49.0
-offset_bottom = 35.0
-
-[node name="ArrowUp" parent="Foreground/MainOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 21.0
-offset_right = 28.0
-
-[node name="ArrowLeft" parent="Foreground/MainOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 14.0
-offset_bottom = 21.0
-
-[node name="ArrowDown" parent="Foreground/MainOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 21.0
-offset_top = 29.0
-offset_right = 28.0
-offset_bottom = 35.0
-
-[node name="ArrowRight" parent="Foreground/MainOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 43.0
-offset_top = 14.0
-offset_right = 49.0
-offset_bottom = 21.0
-
-[node name="ScrollBars" parent="Foreground/MainOptions/ContentGrid/OptionGrid" index="2"]
-offset_right = 49.0
-offset_bottom = 35.0
-
-[editable path="Foreground/MainOptions"]
-[editable path="Foreground/MainOptions/ContentGrid/OptionGrid"]

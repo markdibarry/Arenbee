@@ -9,6 +9,7 @@
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_p5u0p")
+NodePaths = [NodePath("Foreground/SaveOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2

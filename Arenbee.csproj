@@ -3,6 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>10.0</LangVersion>
+    <RootNamespace />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>10.0</LangVersion>
@@ -15,5 +16,29 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.VsixColorCompiler" Version="17.0.31709.430" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Arenbee\Localization\PartyMenuOptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PartyMenuOptions.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Arenbee\Localization\TitleMenuOptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TitleMenuOptions.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Arenbee\Localization\PartyMenuOptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PartyMenuOptions.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Arenbee.Localization</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Arenbee\Localization\TitleMenuOptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TitleMenuOptions.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Arenbee.Localization</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

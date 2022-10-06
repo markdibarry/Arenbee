@@ -3,12 +3,13 @@
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_kkqj0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/UsePartySubMenu.cs" id="2_405mf"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/OptionItems/PartyMemberOption.tscn" id="3_5mj7i"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_5231r"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_5231r"]
 
 [node name="UsePartySubMenu" instance=ExtResource("1_kkqj0")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_405mf")
+NodePaths = [NodePath("Foreground/PartyOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -18,13 +19,14 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PartyOptions" parent="Foreground" index="1" instance=ExtResource("3_5231r")]
+[node name="PartyOptions" parent="Foreground" index="0" instance=ExtResource("3_5231r")]
 layout_mode = 0
 offset_left = 235.0
 offset_top = 49.0
 offset_right = 351.0
 offset_bottom = 116.0
-FitToGrid = true
+FitXToContent = true
+FitYToContent = true
 
 [node name="ContentGrid" parent="Foreground/PartyOptions" index="0"]
 offset_right = 112.0
@@ -34,13 +36,19 @@ offset_bottom = 63.0
 offset_right = 108.0
 offset_bottom = 59.0
 
-[node name="MarginContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="0"]
+[node name="GridMargin" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="0"]
 offset_right = 108.0
 offset_bottom = 59.0
 
-[node name="Control" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
+[node name="GridWindow" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 103.0
 offset_bottom = 54.0
+ClipX = false
+ClipY = false
+
+[node name="GridContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
+offset_right = 98.0
+offset_bottom = 49.0
 
 [node name="PartyMemberOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("3_5mj7i")]
 layout_mode = 2
@@ -76,6 +84,10 @@ offset_left = 102.0
 offset_top = 26.0
 offset_right = 108.0
 offset_bottom = 33.0
+
+[node name="ScrollBars" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="2"]
+offset_right = 108.0
+offset_bottom = 59.0
 
 [editable path="Foreground/PartyOptions"]
 [editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]

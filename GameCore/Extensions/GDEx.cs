@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Arenbee.Localization;
 using Godot;
 
 namespace GameCore.Extensions;
@@ -102,6 +105,12 @@ public static class GDEx
         {
             return stat;
         }
+    }
+
+    public static IEnumerable<DictionaryEntry> GetEntries(this System.Resources.ResourceManager rm)
+    {
+        return rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true)
+            .OfType<DictionaryEntry>();
     }
 
     public static string GetScenePath([CallerFilePath] string csPath = "")

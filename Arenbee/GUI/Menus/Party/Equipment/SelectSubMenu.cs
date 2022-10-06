@@ -36,7 +36,8 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void SetupOptions()
     {
-        UpdateEquippableOptions();
+        var options = GetEquippableOptions();
+        _equipOptions.ReplaceChildren(options);
         _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
         _itemStatsDisplay.UpdateStatsDisplay(null);
     }
@@ -84,7 +85,7 @@ public partial class SelectSubMenu : OptionSubMenu
         return Actor.Equipment.TrySetItemById(slot, itemId);
     }
 
-    private void UpdateEquippableOptions()
+    private List<KeyValueOption> GetEquippableOptions()
     {
         var options = new List<KeyValueOption>();
         var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
@@ -92,6 +93,8 @@ public partial class SelectSubMenu : OptionSubMenu
         unequipOption.ValueText = string.Empty;
         unequipOption.OptionData[nameof(ItemStack.ItemId)] = "";
         options.Add(unequipOption);
+        if (Slot == null)
+            return options;
         foreach (var itemStack in _playerParty.Inventory?.GetItemsByType(Slot.SlotCategory.ItemCategoryId))
         {
             var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
@@ -104,6 +107,6 @@ public partial class SelectSubMenu : OptionSubMenu
                 _equipOptions.FocusItem(options.Count);
             options.Add(option);
         }
-        _equipOptions.ReplaceChildren(options);
+        return options;
     }
 }

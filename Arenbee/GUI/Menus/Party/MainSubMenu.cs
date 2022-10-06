@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Globalization;
 using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.Party.Equipment;
@@ -6,6 +8,9 @@ using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
+using Arenbee.Localization;
+using System.Collections;
+using System.Linq;
 
 namespace Arenbee.GUI.Menus.Party;
 
@@ -24,19 +29,19 @@ public partial class MainSubMenu : OptionSubMenu
 
         switch (subMenuName)
         {
-            case PartyMenuOptions.Stats:
+            case nameof(PartyMenuOptions.KEY01Stats):
                 OpenStatsSubMenu();
                 break;
-            case PartyMenuOptions.Inventory:
+            case nameof(PartyMenuOptions.KEY02Inventory):
                 OpenInventorySubMenu();
                 break;
-            case PartyMenuOptions.Equipment:
+            case nameof(PartyMenuOptions.KEY03Equipment):
                 OpenEquipmentSubMenu();
                 break;
-            case PartyMenuOptions.Save:
+            case nameof(PartyMenuOptions.KEY05Save):
                 OpenSaveGameConfirm();
                 break;
-            case PartyMenuOptions.Quit:
+            case nameof(PartyMenuOptions.KEY06Quit):
                 QuitToTitle();
                 break;
         }
@@ -58,12 +63,15 @@ public partial class MainSubMenu : OptionSubMenu
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
-        foreach (var optionString in PartyMenuOptions.GetAll())
+        var resourceSet = PartyMenuOptions.ResourceManager.GetEntries()
+            .OrderBy(i => i.Key);
+        foreach (DictionaryEntry entry in resourceSet)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = optionString;
-            option.OptionData["value"] = optionString;
-            if (optionString == PartyMenuOptions.Options)
+            option.LabelText = entry.Value.ToString();
+            var optionValue = entry.Key.ToString();
+            option.OptionData["value"] = optionValue;
+            if (optionValue == PartyMenuOptions.KEY04Options)
                 option.Disabled = true;
             options.Add(option);
         }
@@ -107,27 +115,5 @@ public partial class MainSubMenu : OptionSubMenu
                 return Task.CompletedTask;
             });
         tController.RequestTransition(request);
-    }
-
-    private static class PartyMenuOptions
-    {
-        public static List<string> GetAll()
-        {
-            return new List<string>()
-            {
-                Stats,
-                Inventory,
-                Equipment,
-                Options,
-                Save,
-                Quit
-            };
-        }
-        public const string Stats = "Stats";
-        public const string Inventory = "Inventory";
-        public const string Equipment = "Equipment";
-        public const string Options = "Options";
-        public const string Save = "Save";
-        public const string Quit = "Quit";
     }
 }

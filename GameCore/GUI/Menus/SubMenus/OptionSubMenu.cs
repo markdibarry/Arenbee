@@ -20,6 +20,7 @@ public partial class OptionSubMenu : SubMenu
 
     private PackedScene _cursorScene;
     private Cursor _cursor;
+    [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; }
     public OptionContainer CurrentContainer { get; private set; }
     public List<OptionContainer> OptionContainers { get; private set; }
     protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
@@ -34,8 +35,7 @@ public partial class OptionSubMenu : SubMenu
 
     protected sealed override void PreWaitFrameSetup()
     {
-        if (!this.IsToolDebugMode())
-            SetupOptions();
+        SetupOptions();
         base.PreWaitFrameSetup();
     }
 
@@ -88,7 +88,12 @@ public partial class OptionSubMenu : SubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        OptionContainers = Foreground.GetChildren<OptionContainer>().ToList();
+        foreach (var nodePath in NodePaths)
+        {
+            var container = GetNodeOrNull<OptionContainer>(nodePath);
+            if (container != null)
+                OptionContainers.Add(container);
+        }
         _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
         AddCursor();
     }

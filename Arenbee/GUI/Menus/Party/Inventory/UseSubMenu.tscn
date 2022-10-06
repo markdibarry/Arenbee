@@ -3,12 +3,13 @@
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_d15qu"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/UseSubMenu.cs" id="2_ne4ov"]
 [ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="3_axmp3"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_os84m"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_os84m"]
 
 [node name="UseSubMenu" instance=ExtResource("1_d15qu")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_ne4ov")
+NodePaths = [NodePath("Foreground/UseOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -18,13 +19,14 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="UseOptions" parent="Foreground" index="1" instance=ExtResource("3_os84m")]
+[node name="UseOptions" parent="Foreground" index="0" instance=ExtResource("3_os84m")]
 layout_mode = 0
 offset_left = 196.0
 offset_top = 49.0
 offset_right = 232.0
 offset_bottom = 92.0
-FitToGrid = true
+FitXToContent = true
+FitYToContent = true
 
 [node name="ContentGrid" parent="Foreground/UseOptions" index="0"]
 offset_right = 32.0
@@ -34,13 +36,19 @@ offset_bottom = 39.0
 offset_right = 28.0
 offset_bottom = 35.0
 
-[node name="MarginContainer" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="0"]
+[node name="GridMargin" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="0"]
 offset_right = 28.0
 offset_bottom = 35.0
 
-[node name="Control" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
+[node name="GridWindow" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 offset_right = 23.0
 offset_bottom = 30.0
+ClipX = false
+ClipY = false
+
+[node name="GridContainer" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
+offset_right = 18.0
+offset_bottom = 25.0
 
 [node name="TextOption" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("3_axmp3")]
 modulate = Color(1, 1, 1, 1)
@@ -80,6 +88,10 @@ offset_left = 22.0
 offset_top = 14.0
 offset_right = 28.0
 offset_bottom = 21.0
+
+[node name="ScrollBars" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="2"]
+offset_right = 28.0
+offset_bottom = 35.0
 
 [editable path="Foreground/UseOptions"]
 [editable path="Foreground/UseOptions/ContentGrid/OptionGrid"]

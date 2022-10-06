@@ -1,14 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://dv3iohprmvplj"]
+[gd_scene load_steps=4 format=3 uid="uid://dv3iohprmvplj"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_qqjb6"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Equipment/EquipmentSubMenu.cs" id="2_wyy0h"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_eomiq"]
-[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="4_ieu0a"]
 
 [node name="EquipmentSubMenu" instance=ExtResource("1_qqjb6")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_wyy0h")
+NodePaths = [NodePath("Foreground/PartyOptions"), NodePath("Foreground/EquipmentOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -22,64 +22,12 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 75.0
 offset_top = 16.0
-offset_right = 212.0
-offset_bottom = 46.0
-
-[node name="ContentGrid" parent="Foreground/PartyOptions" index="0"]
-offset_right = 133.0
-offset_bottom = 26.0
-
-[node name="OptionGrid" parent="Foreground/PartyOptions/ContentGrid" index="0"]
-offset_right = 129.0
-offset_bottom = 22.0
-
-[node name="GridMargin" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 129.0
-offset_bottom = 22.0
-
-[node name="Control" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-offset_right = 124.0
-offset_bottom = 17.0
-
-[node name="GridContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
-offset_right = 20.0
-offset_bottom = 12.0
-
-[node name="TextOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("4_ieu0a")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_right = 20.0
-offset_bottom = 12.0
-LabelText = "Boris"
-Focused = true
-
-[node name="Arrows" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 129.0
-offset_bottom = 22.0
-
-[node name="ArrowUp" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 61.0
-offset_right = 68.0
-
-[node name="ArrowLeft" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 7.0
-offset_bottom = 14.0
-
-[node name="ArrowDown" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 61.0
-offset_top = 16.0
-offset_right = 68.0
-offset_bottom = 22.0
-
-[node name="ArrowRight" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 123.0
-offset_top = 7.0
-offset_right = 129.0
-offset_bottom = 14.0
-
-[node name="ScrollBars" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="2"]
-offset_right = 129.0
-offset_bottom = 22.0
+offset_right = 93.0
+offset_bottom = 34.0
+FitXToContent = true
+FitYToContent = true
+MaxSize = Vector2(137, -1)
+SingleRow = true
 
 [node name="EquipmentOptions" parent="Foreground" index="1" instance=ExtResource("3_eomiq")]
 layout_mode = 0
@@ -87,54 +35,4 @@ offset_left = 75.0
 offset_top = 49.0
 offset_right = 212.0
 offset_bottom = 157.0
-
-[node name="ContentGrid" parent="Foreground/EquipmentOptions" index="0"]
-offset_right = 133.0
-offset_bottom = 104.0
-
-[node name="OptionGrid" parent="Foreground/EquipmentOptions/ContentGrid" index="0"]
-offset_right = 129.0
-offset_bottom = 100.0
 ScrollBarEnabled = true
-
-[node name="GridMargin" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 129.0
-offset_bottom = 100.0
-
-[node name="Control" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-offset_right = 124.0
-offset_bottom = 95.0
-
-[node name="Arrows" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 129.0
-offset_bottom = 100.0
-
-[node name="ArrowUp" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 61.0
-offset_right = 68.0
-
-[node name="ArrowLeft" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 46.0
-offset_bottom = 53.0
-
-[node name="ArrowDown" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 61.0
-offset_top = 94.0
-offset_right = 68.0
-offset_bottom = 100.0
-
-[node name="ArrowRight" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 123.0
-offset_top = 46.0
-offset_right = 129.0
-offset_bottom = 53.0
-
-[node name="ScrollBars" parent="Foreground/EquipmentOptions/ContentGrid/OptionGrid" index="2"]
-visible = true
-offset_right = 129.0
-offset_bottom = 100.0
-
-[editable path="Foreground/PartyOptions"]
-[editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]
-[editable path="Foreground/EquipmentOptions"]
-[editable path="Foreground/EquipmentOptions/ContentGrid/OptionGrid"]
