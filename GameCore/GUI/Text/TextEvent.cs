@@ -60,7 +60,11 @@ public class SpeedTextEvent : TextEvent
             if (double.TryParse(options["speed"], out double time))
                 Time = time;
             else
-                Valid = false;
+                Time = DefaultSpeed;
+        }
+        else
+        {
+            Valid = false;
         }
     }
 

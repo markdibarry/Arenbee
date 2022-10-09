@@ -7,23 +7,81 @@ using GameCore.Actors;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
-
 namespace GameCore.GUI;
 
 public class DialogScript
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-    [JsonPropertyName("speed")]
-    public double? Speed { get; set; }
+    [JsonConstructor]
+    public DialogScript(Section[] dialogParts)
+    {
+        DialogParts = dialogParts;
+        LineStack = new();
+        if (dialogParts.Length > 0 && dialogParts[0].DialogLines.Length > 0)
+            LineStack.Push(new(dialogParts[0].DialogLines));
+    }
+
     [JsonPropertyName("parts")]
-    public DialogPart[] DialogParts { get; set; }
+    public Section[] DialogParts { get; set; }
+    public Stack<LineCollection> LineStack { get; set; }
+
+    public Line GetNextLine(Line[] lines)
+    {
+        LineStack.Push(new(lines));
+        return GetNextLine();
+    }
+
+    public Line GetNextLine(string partId = null)
+    {
+        if (partId != null)
+        {
+            LineStack.Clear();
+            var part = DialogParts.FirstOrDefault(x => x.Id == partId);
+            if (part == null || part.DialogLines.Length == 0)
+                return null;
+            LineStack.Push(new(part.DialogLines));
+            return part.DialogLines[0];
+        }
+
+        Line result = null;
+        while (LineStack.Count > 0 && result == null)
+        {
+            result = LineStack.Peek().GetNextLine();
+            if (result == null)
+                LineStack.Pop();
+        }
+        return result;
+    }
 }
 
-public class DialogPart
+public class Section
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
+    [JsonPropertyName("lines")]
+    public Line[] DialogLines { get; set; }
+}
+
+public class LineCollection
+{
+    public LineCollection(Line[] lines)
+    {
+        _index = -1;
+        Lines = lines;
+    }
+    private int _index;
+    public Line[] Lines { get; set; }
+
+    public Line GetNextLine()
+    {
+        _index++;
+        if (_index < Lines.Length)
+            return Lines[_index];
+        return null;
+    }
+}
+
+public class Line
+{
     [JsonPropertyName("choices")]
     public Choice[] Choices { get; set; }
     [JsonPropertyName("speakers")]
@@ -37,9 +95,9 @@ public class DialogPart
     [JsonPropertyName("next")]
     public string Next { get; set; }
 
-    public static DialogPart GetDefault()
+    public static Line GetDefault()
     {
-        return new DialogPart()
+        return new Line()
         {
             Speakers = new List<Speaker> { new Speaker("Dani", "Neutral") },
             Text = "Hi!\n" +
@@ -125,6 +183,8 @@ public class Choice
     public string Text { get; set; }
     [JsonPropertyName("next")]
     public string Next { get; set; }
+    [JsonPropertyName("lines")]
+    public Line[] Lines { get; set; }
     [JsonPropertyName("event")]
     public string CustomEvent { get; set; }
     [JsonPropertyName("condition")]

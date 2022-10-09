@@ -58,7 +58,7 @@ public partial class DialogBox : Control
         get => _dynamicTextBox.Speed;
         set => _dynamicTextBox.Speed = value;
     }
-    public DialogPart CurrentDialogPart { get; set; }
+    public Line DialogLine { get; set; }
     public bool LoadingDialog { get; private set; }
     public TextureRect NextArrow { get; set; }
     public bool ReverseDisplay { get; set; }
@@ -80,8 +80,8 @@ public partial class DialogBox : Control
     {
         if (this.IsSceneRoot())
         {
-            CurrentDialogPart = DialogPart.GetDefault();
-            _ = UpdateDialogPartAsync();
+            DialogLine = Line.GetDefault();
+            _ = UpdateDialogLineAsync();
         }
     }
 
@@ -121,22 +121,22 @@ public partial class DialogBox : Control
     public virtual Task TransitionOpenAsync() => Task.CompletedTask;
     public virtual Task TransitionCloseAsync() => Task.CompletedTask;
 
-    public async Task UpdateDialogPartAsync()
+    public async Task UpdateDialogLineAsync()
     {
         if (LoadingDialog)
             return;
-        if (CurrentDialogPart == null)
+        if (DialogLine == null)
         {
-            GD.PrintErr("No DialogPart provided");
+            GD.PrintErr("No DialogLine provided");
             return;
         }
-        if (CurrentDialogPart.Text == null)
+        if (DialogLine.Text == null)
             return;
         LoadingDialog = true;
         SetPortraits();
         SetDisplayNames();
-        _dynamicTextBox.Speed = CurrentDialogPart.Speed ?? DefaultSpeed;
-        await _dynamicTextBox.UpdateTextAsync(CurrentDialogPart.Text);
+        _dynamicTextBox.Speed = DialogLine.Speed ?? DefaultSpeed;
+        await _dynamicTextBox.UpdateTextAsync(DialogLine.Text);
         LoadingDialog = false;
         WritePage(true);
     }
@@ -166,7 +166,7 @@ public partial class DialogBox : Control
     private void SetDisplayNames()
     {
         _nameLabel.Text = string.Empty;
-        var speakers = CurrentDialogPart.Speakers.OrEmpty();
+        var speakers = DialogLine.Speakers.OrEmpty();
         if (speakers.Any(x => string.IsNullOrEmpty(x.DisplayName)))
         {
             _namePanel.Hide();
@@ -195,7 +195,7 @@ public partial class DialogBox : Control
             _portraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
             _dialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
         }
-        foreach (Speaker speaker in CurrentDialogPart.Speakers.OrEmpty())
+        foreach (Speaker speaker in DialogLine.Speakers.OrEmpty())
         {
             float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
             AnimatedSprite2D portrait = speaker.GetPortrait(shiftAmount, ReverseDisplay);

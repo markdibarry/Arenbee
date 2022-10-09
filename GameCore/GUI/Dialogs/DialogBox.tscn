@@ -43,8 +43,6 @@ offset_top = 4.0
 offset_right = 175.0
 offset_bottom = 54.0
 theme_override_constants/margin_top = 1
-CustomText = "Hi!
-My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
 ShouldShowAllPage = false
 
 [node name="ArrowMargin" type="MarginContainer" parent="DialogPanel"]

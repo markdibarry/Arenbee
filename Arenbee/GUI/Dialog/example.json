@@ -1,128 +1,127 @@
 {
-  "id": "example",
-  "parts":
-  [
+  "parts": [
     {
-      "speakers": [
+      "id": "example",
+      "lines": [
         {
-          "character": "Renly",
-          "mood": "neutral"
-        }
-      ],
-      "text": "Hi my name is[speed=0.3]...[speed] Renly!"
-    },
-    {
-      "speakers": [
-        {
-          "character": "Dani",
-          "mood": "neutral"
-        }
-      ],
-      "auto": true,
-      "text": "[wave amp=10]Hi[/wave] my name is Da-[pause=2]"
-    },
-    {
-      "speakers": [
-        {
-          "character": "Ady",
-          "mood": "neutral"
-        }
-      ],
-      "text": "[speed=0]My name [mood=annoyed character=Dani]is Ady."
-    },
-    {
-      "speakers": [
-        {
-          "character": "Dani",
-          "displayName": "Dani (Annoyed)",
-          "mood": "annoyed"
-        }
-      ],
-      "text": "Why did you interrupt me?",
-      "choices": [
-        {
-          "text": "Because I love you!",
-          "next": "love"
+          "speakers": [
+            {
+              "character": "Renly",
+              "mood": "neutral"
+            }
+          ],
+          "text": "Hi my name is[speed=0.3]...[speed] Renly!"
         },
         {
-          "text": "Because it was funny!",
-          "next": "funny"
+          "speakers": [
+            {
+              "character": "Dani",
+              "mood": "neutral"
+            }
+          ],
+          "auto": true,
+          "text": "[pause=2][wave amp=10]Hi[/wave] my name is Da-"
         },
         {
-          "condition": {
-            "category": "attribute",
-            "type": "int",
-            "target": "Ady:Level",
-            "comparison": ">",
-            "toCompare": "5"
-          },
-          "text": "You're right. That was out of line. I'm sorry",
-          "next": "whatever"
+          "speakers": [
+            {
+              "character": "Ady",
+              "mood": "neutral"
+            }
+          ],
+          "text": "[speed=0]My name [mood=annoyed character=Dani]is Ady."
+        },
+        {
+          "speakers": [
+            {
+              "character": "Dani",
+              "displayName": "Dani (Annoyed)",
+              "mood": "annoyed"
+            }
+          ],
+          "text": "Why did you interrupt me?",
+          "choices": [
+            {
+              "text": "Because I love you!",
+              "lines": [
+                {
+                  "speakers": [
+                    {
+                      "character": "Ady",
+                      "mood": "happy"
+                    }
+                  ],
+                  "text": "Because I love you! I tease because I care!"
+                },
+                {
+                  "speakers": [
+                    {
+                      "character": "Dani",
+                      "mood": "neutral"
+                    }
+                  ],
+                  "text": "Well, whatever."
+                }
+              ]
+            },
+            {
+              "text": "Because it was funny!",
+              "lines": [
+                {
+                  "speakers": [
+                    {
+                      "character": "Ady",
+                      "mood": "happy"
+                    }
+                  ],
+                  "text": "Because it was funny!"
+                },
+                {
+                  "speakers": [
+                    {
+                      "character": "Dani",
+                      "mood": "neutral"
+                    }
+                  ],
+                  "text": "It wasn't funny, but whatever."
+                }
+              ]
+            },
+            {
+              "condition": {
+                "category": "attribute",
+                "type": "int",
+                "target": "Ady:Level",
+                "comparison": ">",
+                "toCompare": "5"
+              },
+              "text": "You're right. That was out of line. I'm sorry"
+            }
+          ]
+        },
+        {
+          "speakers": [
+            {
+              "character": "Renly",
+              "mood": "neutral"
+            }
+          ],
+          "text": "I want lunch!"
+        },
+        {
+          "speakers": [
+            {
+              "character": "Ady",
+              "mood": "annoyed"
+            },
+            {
+              "character": "Dani",
+              "mood": "annoyed"
+            }
+          ],
+          "text": "Not now!"
         }
       ]
-    },
-    {
-      "id":  "love",
-      "speakers": [
-        {
-          "character": "Ady",
-          "mood": "happy"
-        }
-      ],
-      "text": "Because I love you! I tease because I care!"
-    },
-    {
-      "id": "whatever",
-      "speakers": [
-        {
-          "character": "Dani",
-          "mood": "neutral"
-        }
-      ],
-      "text": "Well, whatever.",
-      "next": "lunch"
-    },
-    {
-      "id": "funny",
-      "speakers": [
-        {
-          "character": "Ady",
-          "mood": "happy"
-        }
-      ],
-      "text": "Because it was funny!"
-    },
-    {
-      "speakers": [
-        {
-          "character": "Dani",
-          "mood": "neutral"
-        }
-      ],
-      "text": "It wasn't funny, but whatever."
-    },
-    {
-      "id": "lunch",
-      "speakers": [
-        {
-          "character": "Renly",
-          "mood": "neutral"
-        }
-      ],
-      "text": "I want lunch!"
-    },
-    {
-      "speakers": [
-        {
-          "character": "Ady",
-          "mood": "annoyed"
-        },
-        {
-          "character": "Dani",
-          "mood": "annoyed"
-        }
-      ],
-      "text": "Not now!"
     }
   ]
 }

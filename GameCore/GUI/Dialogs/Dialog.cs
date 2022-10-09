@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
@@ -15,7 +16,7 @@ public partial class Dialog : GUILayer
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private int _currentPartIndex;
+    private int _currentLineIndex;
     private readonly PackedScene _dialogBoxScene;
     private DialogOptionMenu _dialogOptionMenu;
     public bool Busy => LoadingDialog;
@@ -23,6 +24,7 @@ public partial class Dialog : GUILayer
     public bool LoadingDialog { get; set; } = true;
     public bool LoadingDialogBox { get; set; }
     public DialogScript DialogScript { get; set; }
+    public Line CurrentLine { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
@@ -75,32 +77,30 @@ public partial class Dialog : GUILayer
         LoadingDialog = false;
     }
 
-    public async Task ToDialogPartAsync(string partId = null)
+    public async Task ToDialogPartAsync(Line newLine)
     {
         SpeedUpEnabled = false;
-        DialogPart previousPart = DialogScript.DialogParts[_currentPartIndex];
-        _currentPartIndex = GetDialogPartIndex(partId);
+        Line previousLine = FocusedBox.DialogLine;
         // If part not found, end dialog
-        if (_currentPartIndex == -1)
+        if (newLine == null)
         {
             await CloseDialogBoxesAsync();
             RequestCloseDialog();
             return;
         }
-        DialogPart newPart = DialogScript.DialogParts[_currentPartIndex];
         DialogBox nextBox = FocusedBox;
 
         // Reuse current box if next speaker(s) is same as current speaker(s).
-        if (Speaker.SameSpeakers(newPart.Speakers, previousPart.Speakers))
+        if (Speaker.SameSpeakers(newLine.Speakers, previousLine.Speakers))
         {
-            nextBox.CurrentDialogPart = newPart;
-            await nextBox.UpdateDialogPartAsync();
+            nextBox.DialogLine = newLine;
+            await nextBox.UpdateDialogLineAsync();
             LoadingDialog = false;
             return;
         }
 
         // Remove current box if a speaker in the current box is needed in the next one.
-        if (Speaker.AnySpeakers(newPart.Speakers, previousPart.Speakers))
+        if (Speaker.AnySpeakers(newLine.Speakers, previousLine.Speakers))
         {
             await CloseDialogBoxAsync(nextBox);
             nextBox = null;
@@ -117,11 +117,11 @@ public partial class Dialog : GUILayer
         if (nextBox != null)
         {
             // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
-            if (Speaker.SameSpeakers(newPart.Speakers, nextBox.CurrentDialogPart.Speakers))
+            if (Speaker.SameSpeakers(newLine.Speakers, nextBox.DialogLine.Speakers))
             {
                 nextBox.MoveToFront();
-                nextBox.CurrentDialogPart = newPart;
-                await nextBox.UpdateDialogPartAsync();
+                nextBox.DialogLine = newLine;
+                await nextBox.UpdateDialogLineAsync();
                 nextBox.Dim = false;
             }
             else
@@ -131,7 +131,7 @@ public partial class Dialog : GUILayer
             }
         }
 
-        nextBox ??= await CreateDialogBox(newPart, !oldBox?.ReverseDisplay ?? false);
+        nextBox ??= await OpenDialogBox(newLine, !oldBox?.ReverseDisplay ?? false);
 
         UnfocusedBox = oldBox;
         FocusedBox = nextBox;
@@ -151,7 +151,8 @@ public partial class Dialog : GUILayer
             return;
         }
 
-        await ToDialogPartAsync(FocusedBox.CurrentDialogPart.Next);
+        Line line = DialogScript.GetNextLine(FocusedBox.DialogLine.Next);
+        await ToDialogPartAsync(line);
     }
 
     public override void ReceiveData(object data)
@@ -161,29 +162,12 @@ public partial class Dialog : GUILayer
             RequestCloseDialog();
             return;
         }
-        _ = ToDialogPartAsync(model.Next);
-    }
-
-    private async Task<DialogBox> CreateDialogBox(DialogPart dialogPart, bool reverseDisplay)
-    {
-        var newBox = _dialogBoxScene.Instantiate<DialogBox>();
-        newBox.TextEventTriggered += OnTextEventTriggered;
-        newBox.StoppedWriting += OnStoppedWriting;
-        newBox.CurrentDialogPart = dialogPart;
-        newBox.ReverseDisplay = reverseDisplay;
-        AddChild(newBox);
-        await newBox.UpdateDialogPartAsync();
-        return newBox;
-    }
-
-    private int GetDialogPartIndex(string partId)
-    {
-        int index = -1;
-        if (partId != null)
-            index = Array.FindIndex(DialogScript.DialogParts, x => x.Id == partId);
-        else if (_currentPartIndex + 1 < DialogScript.DialogParts.Length)
-            index = _currentPartIndex + 1;
-        return index;
+        Line line = null;
+        if (model.Next != null)
+            line = DialogScript.GetNextLine(model.Next);
+        else if (model.Lines != null && model.Lines.Length > 0)
+            line = DialogScript.GetNextLine(model.Lines);
+        _ = ToDialogPartAsync(line);
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
@@ -195,15 +179,16 @@ public partial class Dialog : GUILayer
     {
         if (!FocusedBox.IsAtPageEnd())
             return;
-        if (FocusedBox.CurrentDialogPart.Choices?.Length > 0)
+        if (FocusedBox.DialogLine.Choices?.Length > 0)
         {
             OpenOptionBox();
             return;
         }
 
-        if (FocusedBox.CurrentDialogPart.Auto)
+        if (FocusedBox.DialogLine.Auto)
         {
-            _ = ToDialogPartAsync();
+            Line line = DialogScript.GetNextLine();
+            _ = ToDialogPartAsync(line);
             return;
         }
 
@@ -211,12 +196,24 @@ public partial class Dialog : GUILayer
         CanProceed = true;
     }
 
+    private async Task<DialogBox> OpenDialogBox(Line line, bool reverseDisplay)
+    {
+        var newBox = _dialogBoxScene.Instantiate<DialogBox>();
+        newBox.TextEventTriggered += OnTextEventTriggered;
+        newBox.StoppedWriting += OnStoppedWriting;
+        newBox.DialogLine = line;
+        newBox.ReverseDisplay = reverseDisplay;
+        AddChild(newBox);
+        await newBox.UpdateDialogLineAsync();
+        return newBox;
+    }
+
     private void OpenOptionBox()
     {
         GUIOpenRequest request = new(DialogOptionMenu.GetScenePath());
         request.Data = new DialogOptionDataModel()
         {
-            DialogChoices = FocusedBox.CurrentDialogPart.Choices
+            DialogChoices = FocusedBox.DialogLine.Choices
         };
         OpenLayerDelegate?.Invoke(request);
     }
@@ -233,14 +230,14 @@ public partial class Dialog : GUILayer
             RequestCloseDialog();
             return;
         }
-        _currentPartIndex = 0;
+        _currentLineIndex = 0;
         DialogScript = DialogLoader.Load(path);
-        if (DialogScript == null)
+        if (DialogScript == null || !DialogScript.DialogParts.Any() || !DialogScript.DialogParts[0].DialogLines.Any())
         {
             GD.PrintErr("No dialog found at location provided.");
             RequestCloseDialog();
             return;
         }
-        FocusedBox = await CreateDialogBox(DialogScript.DialogParts[0], false);
+        FocusedBox = await OpenDialogBox(DialogScript.GetNextLine(), false);
     }
 }

@@ -22,9 +22,11 @@ public partial class DialogOptionSubMenu : OptionSubMenu
     protected override void OnItemSelected()
     {
         string next = CurrentContainer.CurrentItem.GetData<string>("next");
+        Line[] lines = CurrentContainer.CurrentItem.GetData<Line[]>("lines");
         DialogOptionSelectionDataModel data = new()
         {
-            Next = next
+            Next = next,
+            Lines = lines
         };
         var closeRequest = new GUICloseRequest() { Data = data };
         RequestCloseSubMenu(closeRequest);
@@ -42,6 +44,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
                 continue;
             var textOption = _textOptionScene.Instantiate<TextOption>();
             textOption.OptionData["next"] = choice.Next;
+            textOption.OptionData["lines"] = choice.Lines;
             textOption.LabelText = choice.Text;
             options.Add(textOption);
         }
