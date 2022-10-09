@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "type": "object",
+  "required": [ "id", "parts" ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "speakers", "text" ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "text": { "type": "string" },
+          "next": { "type": "string" },
+          "speakers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "character": { "type": "string" },
+                "displayName": { "type": "string" },
+                "mood": { "type": "string" }
+              },
+              "required": [ "character" ],
+              "additionalProperties": false
+            }
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [ "text", "next" ],
+              "properties": {
+                "text": { "type": "string" },
+                "next": { "type": "string" },
+                "conditions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "category": { "type": "string" },
+                      "type": { "type": "string" },
+                      "target": { "type": "string" },
+                      "comparison": { "type": "string" },
+                      "toCompare": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

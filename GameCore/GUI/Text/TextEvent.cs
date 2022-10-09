@@ -13,31 +13,51 @@ public interface ITextEvent
 
 public class TextEvent : ITextEvent
 {
-    public TextEvent(string name)
+    public TextEvent(string name, Dictionary<string, string> options, int index)
     {
         Valid = true;
         Name = name;
+        Index = index;
+        if (options.ContainsKey("oneTime"))
+            OneTime = true;
     }
 
     public string Name { get; set; }
     public bool Valid { get; set; }
+    public bool Seen { get; set; }
+    public bool OneTime { get; set; }
+    public int Index { get; set; }
 
     public virtual bool HandleEvent(DynamicText dynamicText) => true;
     public virtual bool HandleEvent(DynamicTextBox dynamicTextBox) => true;
     public virtual bool HandleEvent(DialogBox dialogBox) => true;
     public virtual bool HandleEvent(Dialog dialog) => true;
+
+    public static TextEvent GetTextEvent(string name, Dictionary<string, string> options, int index)
+    {
+        return name switch
+        {
+            "speed" => new SpeedTextEvent(name, options, index),
+            "pause" => new PauseTextEvent(name, options, index),
+            "mood" => new MoodTextEvent(name, options, index),
+            "custom" => new CustomTextEvent(name, options, index),
+            _ => null
+        };
+    }
 }
 
 public class SpeedTextEvent : TextEvent
 {
-    public SpeedTextEvent(string name, Dictionary<string, string> options)
-        : base(name)
+    public SpeedTextEvent(string name, Dictionary<string, string> options, int index)
+        : base(name, options, index)
     {
-        if (options.ContainsKey("time"))
+        if (options.Count == 0)
         {
-            if (options["time"] == "default")
-                Time = DefaultSpeed;
-            else if (double.TryParse(options["time"], out double time))
+            Time = DefaultSpeed;
+        }
+        else if (options.ContainsKey("speed"))
+        {
+            if (double.TryParse(options["speed"], out double time))
                 Time = time;
             else
                 Valid = false;
@@ -56,20 +76,13 @@ public class SpeedTextEvent : TextEvent
 
 public class PauseTextEvent : TextEvent
 {
-    public PauseTextEvent(string name, Dictionary<string, string> options)
-        : base(name)
+    public PauseTextEvent(string name, Dictionary<string, string> options, int index)
+        : base(name, options, index)
     {
-        if (options.ContainsKey("time"))
-        {
-            if (double.TryParse(options["time"], out double time))
-                Time = time;
-            else
-                Valid = false;
-        }
+        if (options.ContainsKey("pause") && double.TryParse(options["pause"], out double time))
+            Time = time;
         else
-        {
             Valid = false;
-        }
     }
 
     public double Time { get; set; }
@@ -83,8 +96,8 @@ public class PauseTextEvent : TextEvent
 
 public class MoodTextEvent : TextEvent
 {
-    public MoodTextEvent(string name, Dictionary<string, string> options)
-        : base(name)
+    public MoodTextEvent(string name, Dictionary<string, string> options, int index)
+        : base(name, options, index)
     {
         if (options.ContainsKey("mood"))
             Mood = options["mood"];
@@ -125,24 +138,10 @@ public class MoodTextEvent : TextEvent
     }
 }
 
-public class NextTextEvent : TextEvent
-{
-    public NextTextEvent(string name) : base(name) { }
-
-    public override bool HandleEvent(DynamicText dynamicText) => false;
-    public override bool HandleEvent(DynamicTextBox dynamicTextBox) => false;
-    public override bool HandleEvent(DialogBox dialogBox) => false;
-    public override bool HandleEvent(Dialog dialog)
-    {
-        _ = dialog.ToDialogPartAsync();
-        return true;
-    }
-}
-
 public class CustomTextEvent : TextEvent
 {
-    public CustomTextEvent(string name, Dictionary<string, string> options)
-        : base(name)
+    public CustomTextEvent(string name, Dictionary<string, string> options, int index)
+        : base(name, options, index)
     {
         Options = options;
     }

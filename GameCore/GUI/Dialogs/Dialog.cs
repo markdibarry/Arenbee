@@ -25,15 +25,21 @@ public partial class Dialog : GUILayer
     public DialogScript DialogScript { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
+    public bool SpeedUpEnabled { get; set; }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (LoadingDialog || LoadingDialogBox)
             return;
         if (menuInput.Enter.IsActionJustPressed)
-            _ = ProceedAsync();
-        else if (menuInput.Enter.IsActionPressed)
-            SpeedUpText();
+        {
+            if (CanProceed)
+                _ = ProceedAsync();
+            else
+                SpeedUpEnabled = true;
+        }
+        if (menuInput.Enter.IsActionPressed && SpeedUpEnabled)
+            FocusedBox.SpeedUpText = true;
     }
 
     public async Task CloseDialogBoxAsync(DialogBox box)
@@ -71,6 +77,7 @@ public partial class Dialog : GUILayer
 
     public async Task ToDialogPartAsync(string partId = null)
     {
+        SpeedUpEnabled = false;
         DialogPart previousPart = DialogScript.DialogParts[_currentPartIndex];
         _currentPartIndex = GetDialogPartIndex(partId);
         // If part not found, end dialog
@@ -194,6 +201,12 @@ public partial class Dialog : GUILayer
             return;
         }
 
+        if (FocusedBox.CurrentDialogPart.Auto)
+        {
+            _ = ToDialogPartAsync();
+            return;
+        }
+
         FocusedBox.NextArrow.Show();
         CanProceed = true;
     }
@@ -211,11 +224,6 @@ public partial class Dialog : GUILayer
     private void RequestCloseDialog()
     {
         CloseLayerDelegate?.Invoke(new GUICloseRequest() { CloseRequestType = CloseRequestType.Layer });
-    }
-
-    private void SpeedUpText()
-    {
-        FocusedBox.SpeedUpText = true;
     }
 
     private async Task StartDialogAsync(string path)

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Godot.NET.Sdk/4.0.0-beta">
+﻿<Project Sdk="Godot.NET.Sdk/4.0.0-dev8">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -14,9 +14,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ExportRelease|AnyCPU'">
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="GameCore\GUI\Dialogs\dialog_schema.json" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.VsixColorCompiler" Version="17.0.31709.430" />
   </ItemGroup>

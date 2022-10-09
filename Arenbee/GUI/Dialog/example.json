@@ -9,7 +9,7 @@
           "mood": "neutral"
         }
       ],
-      "text": "Hi my name is{{speed time=0.5}}...{{speed time=default}} Renly!"
+      "text": "Hi my name is[speed=0.3]...[speed] Renly!"
     },
     {
       "speakers": [
@@ -18,7 +18,8 @@
           "mood": "neutral"
         }
       ],
-      "text": "[wave amp=10]Hi[/wave] my name is Da-{{next}}"
+      "auto": true,
+      "text": "[wave amp=10]Hi[/wave] my name is Da-[pause=2]"
     },
     {
       "speakers": [
@@ -27,8 +28,7 @@
           "mood": "neutral"
         }
       ],
-      "speed": 0.02,
-      "text": "My name {{mood character=Dani mood=annoyed}}is Ady."
+      "text": "[speed=0]My name [mood=annoyed character=Dani]is Ady."
     },
     {
       "speakers": [

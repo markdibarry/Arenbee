@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
@@ -19,7 +20,8 @@ public partial class DynamicText : RichTextLabel
     private bool _sizeDirty;
     private double _speed;
     private bool _textDirty;
-    private Dictionary<int, List<TextEvent>> _textEvents;
+    private List<TextEvent> _textEvents;
+    private bool _writeTextEnabled;
     [Export]
     public int CurrentLine
     {
@@ -52,19 +54,32 @@ public partial class DynamicText : RichTextLabel
         {
             _showToEndCharEnabled = value;
             if (value)
+            {
                 VisibleCharacters = EndChar;
+                RaiseTextEvents();
+            }
         }
     }
     [Export]
-    public bool WriteTextEnabled { get; set; }
+    public bool WriteTextEnabled
+    {
+        get => _writeTextEnabled;
+        set
+        {
+            _writeTextEnabled = value;
+            if (value)
+                RaiseTextEvents();
+        }
+    }
     [Export]
     public double Speed
     {
         get => _speed;
         set
         {
+            if (value > _speed)
+                _counter = value - _speed;
             _speed = value;
-            _counter = _speed;
         }
     }
     public int ContentHeight { get; private set; }
@@ -97,11 +112,11 @@ public partial class DynamicText : RichTextLabel
 
     public bool IsAtTextEnd()
     {
-        if (VisibleCharacters >= TotalCharacterCount)
+        if (VisibleCharacters >= TotalCharacterCount && _counter <= 0)
             return true;
         else if (EndChar < 0)
             return false;
-        return VisibleCharacters >= EndChar;
+        return VisibleCharacters >= EndChar && _counter <= 0;
     }
 
     public void OnResized()
@@ -126,7 +141,9 @@ public partial class DynamicText : RichTextLabel
         if (_loading)
             return;
         _loading = true;
-        Text = TextEventExtractor.Extract(_customText, out _textEvents);
+        // Set it so it can be parsed
+        Text = _customText;
+        Text = TextEventExtractor.Extract(_customText, GetParsedText(), out _textEvents);
         VisibleCharacters = 0;
         if (!IsReady())
             await ToSignal(this, Signals.FinishedSignal);
@@ -223,10 +240,14 @@ public partial class DynamicText : RichTextLabel
 
     private void RaiseTextEvents()
     {
-        if (!_textEvents.ContainsKey(VisibleCharacters))
-            return;
-        foreach (var textEvent in _textEvents[VisibleCharacters])
+        var textEvents = _textEvents.Where(x => !x.Seen && x.Index <= VisibleCharacters);
+        GD.Print("raised");
+        foreach (var textEvent in textEvents)
+        {
+            GD.Print("seen " + textEvent.Name);
+            textEvent.Seen = true;
             HandleTextEvent(textEvent);
+        }
     }
 
     /// <summary>
@@ -241,13 +262,12 @@ public partial class DynamicText : RichTextLabel
     {
         if (!this.IsSceneRoot())
             return;
-        CustomText = "Once{{speed time=0.3}}... {{speed time=0.05}}there was a toad that ate the [wave]moon[/wave].";
+        CustomText = "Once[speed=0.3]... [speed]there was a toad that ate the [wave]moon[/wave][pause=3].";
     }
 
     private void StopWriting()
     {
         WriteTextEnabled = false;
-        RaiseTextEvents();
         StoppedWriting?.Invoke();
     }
 
@@ -267,17 +287,21 @@ public partial class DynamicText : RichTextLabel
     /// <param name="delta"></param>
     private void Write(double delta)
     {
+        if (SpeedUpText && VisibleCharacters < TotalCharacterCount)
+        {
+            SpeedUpText = false;
+            _counter = 0;
+        }
+
         if (_counter > 0)
         {
             _counter -= delta;
             return;
         }
-
         _counter = _speed;
-        RaiseTextEvents();
-        if (SpeedUpText)
-            _counter = 0;
-        SpeedUpText = false;
         VisibleCharacters++;
+        if (VisibleCharacters >= TotalCharacterCount)
+            _counter = 0;
+        RaiseTextEvents();
     }
 }

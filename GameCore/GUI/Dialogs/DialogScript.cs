@@ -14,6 +14,8 @@ public class DialogScript
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
+    [JsonPropertyName("speed")]
+    public double? Speed { get; set; }
     [JsonPropertyName("parts")]
     public DialogPart[] DialogParts { get; set; }
 }
@@ -30,6 +32,8 @@ public class DialogPart
     public double? Speed { get; set; }
     [JsonPropertyName("text")]
     public string Text { get; set; }
+    [JsonPropertyName("auto")]
+    public bool Auto { get; set; }
     [JsonPropertyName("next")]
     public string Next { get; set; }
 
@@ -39,7 +43,7 @@ public class DialogPart
         {
             Speakers = new List<Speaker> { new Speaker("Dani", "Neutral") },
             Text = "Hi!\n" +
-            "My name is{{speed time=0.5}}... {{speed time=default}}{{mood mood=happy}}[wave]Dani![/wave]"
+            "My name is[speed=0.5]... [speed][mood=happy][wave]Dani![/wave]"
         };
     }
 }

@@ -170,10 +170,10 @@ public partial class DynamicTextBox : Control
     {
         if (!this.IsSceneRoot())
             return;
-        CustomText = "{{speed time=0.03}}Life isn't about [wave]suffering![/wave]\n" +
-        "(pause){{pause time=2}}\n" +
-        "{{speed time=0.5}}...{{speed time=0.05}}It's about eating!.\n" +
-        "{{speed time=0.3}}...{{speed time=0.05}}and suffering.";
+        CustomText = "[speed=0.03]Life isn't about [wave]suffering![/wave]\n" +
+        "(pause)[pause=2]\n" +
+        "[speed=0.5]...[speed=0.05]It's about eating!.\n" +
+        "[speed=0.3]...[speed=0.05]and suffering.";
     }
 
     private void SetNodeReferences()
