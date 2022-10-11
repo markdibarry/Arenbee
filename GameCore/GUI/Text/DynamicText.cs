@@ -11,9 +11,11 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicText : RichTextLabel
 {
+    private const double DefaultSpeed = 0.05;
     private double _counter;
     private int _currentLine;
     private string _customText;
+    private int _endChar;
     private List<int> _lineBreaks;
     private bool _loading;
     private bool _showToEndCharEnabled;
@@ -74,23 +76,34 @@ public partial class DynamicText : RichTextLabel
     [Export]
     public double Speed
     {
-        get => _speed;
+        get => SpeedOverride != -1 ? SpeedOverride : _speed;
         set
         {
-            if (value > _speed)
-                _counter = value - _speed;
+            if (value > Speed)
+                Counter = value - Speed;
             _speed = value;
         }
     }
     public int ContentHeight { get; private set; }
-    public int EndChar { get; set; }
+    public int EndChar
+    {
+        get => _endChar == -1 ? TotalCharacterCount : _endChar;
+        set => _endChar = value;
+    }
     public ReadOnlyCollection<int> LineBreaks
     {
         get => _lineBreaks.AsReadOnly();
     }
     public int LineCount { get; private set; }
     public bool SpeedUpText { get; set; }
+    public double SpeedOverride { get; set; }
+    public ILookupContext TempLookup { get; set; }
     public int TotalCharacterCount { get; private set; }
+    private double Counter
+    {
+        get => _counter;
+        set => _counter = Math.Max(value, 0);
+    }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
     public event Action TextDataUpdated;
@@ -101,7 +114,7 @@ public partial class DynamicText : RichTextLabel
             HandleTextDirty();
         else if (_sizeDirty)
             HandleSizeDirty();
-        if (WriteTextEnabled && !_loading)
+        if (WriteTextEnabled)
             HandleWrite(delta);
     }
 
@@ -112,22 +125,23 @@ public partial class DynamicText : RichTextLabel
 
     public bool IsAtTextEnd()
     {
-        if (VisibleCharacters >= TotalCharacterCount && _counter <= 0)
-            return true;
-        else if (EndChar < 0)
-            return false;
-        return VisibleCharacters >= EndChar && _counter <= 0;
+        return VisibleCharacters >= EndChar && Counter == 0;
     }
 
     public void OnResized()
     {
-        GD.Print("Text resized: " + Size);
         _sizeDirty = true;
+    }
+
+    public void ResetSpeed()
+    {
+        SpeedOverride = -1;
+        Speed = DefaultSpeed;
     }
 
     public void SetPause(double time)
     {
-        _counter += time;
+        Counter += time;
     }
 
     public async Task UpdateTextAsync(string text)
@@ -136,14 +150,23 @@ public partial class DynamicText : RichTextLabel
         await UpdateTextAsync();
     }
 
-    public async Task UpdateTextAsync()
+    private async Task UpdateTextAsync()
     {
         if (_loading)
             return;
         _loading = true;
+        GD.Print("parsing");
         // Set it so it can be parsed
-        Text = _customText;
-        Text = TextEventExtractor.Extract(_customText, GetParsedText(), out _textEvents);
+        try
+        {
+            Text = TextEventExtractor.Extract(_customText, _textEvents, GetTemporaryLookup());
+        }
+        catch(Exception ex)
+        {
+            GD.Print(ex);
+        }
+
+        GD.Print("parsed");
         VisibleCharacters = 0;
         if (!IsReady())
             await ToSignal(this, Signals.FinishedSignal);
@@ -179,15 +202,16 @@ public partial class DynamicText : RichTextLabel
 
     private float GetLineOffsetOrEnd(int line)
     {
-        if (line < LineCount)
-            return GetLineOffset(line);
-        else
-            return ContentHeight;
+        return line < LineCount ? GetLineOffset(line) : ContentHeight;
+    }
+
+    private ILookupContext GetTemporaryLookup()
+    {
+        return TempLookup ?? new TempLookup();
     }
 
     private void HandleSizeDirty()
     {
-        GD.Print("Text Data updated: " + Size);
         UpdateTextData();
         _sizeDirty = false;
     }
@@ -206,7 +230,7 @@ public partial class DynamicText : RichTextLabel
 
     private void HandleWrite(double delta)
     {
-        if (IsAtTextEnd())
+        if (IsAtTextEnd() || _loading)
             StopWriting();
         else
             Write(delta);
@@ -222,7 +246,8 @@ public partial class DynamicText : RichTextLabel
         EndChar = -1;
         VisibleCharacters = 0;
         VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
-        _counter = Speed;
+        SpeedOverride = -1;
+        Counter = Speed;
         UpdateTextData();
         Resized += OnResized;
         SetDefault();
@@ -241,10 +266,8 @@ public partial class DynamicText : RichTextLabel
     private void RaiseTextEvents()
     {
         var textEvents = _textEvents.Where(x => !x.Seen && x.Index <= VisibleCharacters);
-        GD.Print("raised");
         foreach (var textEvent in textEvents)
         {
-            GD.Print("seen " + textEvent.Name);
             textEvent.Seen = true;
             HandleTextEvent(textEvent);
         }
@@ -287,21 +310,20 @@ public partial class DynamicText : RichTextLabel
     /// <param name="delta"></param>
     private void Write(double delta)
     {
-        if (SpeedUpText && VisibleCharacters < TotalCharacterCount)
+        if (SpeedUpText)
         {
             SpeedUpText = false;
-            _counter = 0;
+            Counter = 0;
         }
 
-        if (_counter > 0)
+        if (Counter > 0)
         {
-            _counter -= delta;
+            Counter -= delta;
             return;
         }
-        _counter = _speed;
+
         VisibleCharacters++;
-        if (VisibleCharacters >= TotalCharacterCount)
-            _counter = 0;
+        Counter = VisibleCharacters < EndChar ? Speed : 0;
         RaiseTextEvents();
     }
 }

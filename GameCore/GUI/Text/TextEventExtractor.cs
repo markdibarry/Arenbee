@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Godot;
 
@@ -6,67 +7,70 @@ namespace GameCore.GUI;
 
 public static class TextEventExtractor
 {
-    public static string Extract(string fullText, string strippedText, out List<TextEvent> dialogEvents)
+    public static string Extract(string fullText, List<TextEvent> textEvents, ILookupContext lookupContext)
     {
         StringBuilder newTextBuilder = new();
         int appendStart = 0;
-        dialogEvents = new();
         int renderedIndex = 0;
-        int strippedIndex = 0;
-        int fullIndex = 0;
-        while (fullIndex < fullText.Length)
+        int i = 0;
+
+        while (i < fullText.Length)
         {
-            if (fullText[fullIndex] != '[')
+            if (fullText[i] != '[')
             {
-                fullIndex++;
+                i++;
                 renderedIndex++;
-                strippedIndex++;
                 continue;
             }
 
-            int bracketLength = GetBracketLength(fullText, fullIndex);
+            int bracketLength = GetBracketLength(fullText, i);
 
-            if (fullText[fullIndex + bracketLength - 1] != ']')
+            // If doesn't close, ignore
+            if (fullText[i + bracketLength - 1] != ']')
             {
-                fullIndex += bracketLength;
-                strippedIndex += bracketLength;
+                i += bracketLength;
                 renderedIndex += bracketLength;
                 continue;
             }
 
-            if (IsBBCode(fullText, fullIndex, strippedText, strippedIndex, bracketLength))
+            Tag tag = new(fullText[i..(i + bracketLength)], renderedIndex);
+
+            if (tag.IsBBCode())
             {
-                fullIndex += bracketLength;
+                i += bracketLength;
                 continue;
             }
 
-            TextEvent newEvent = GetTextEvent(fullText, fullIndex, bracketLength, renderedIndex);
+            if (tag.Name == "get")
+            {
+                newTextBuilder.Append(fullText[appendStart..i]);
+                i += bracketLength;
+                appendStart = i;
+                if (tag.Attributes["get"] != null &&
+                    lookupContext != null &&
+                    lookupContext.TryGetValueAsString(tag.Attributes["get"], out string lookupValue))
+                {
+                    newTextBuilder.Append(lookupValue);
+                    renderedIndex += lookupValue.Length;
+                }
+                continue;
+            }
+            TextEvent newEvent = TextEvent.CreateTextEvent(tag);
 
             if (newEvent == null)
             {
-                fullIndex += bracketLength;
-                strippedIndex += bracketLength;
+                i += bracketLength;
                 renderedIndex += bracketLength;
                 continue;
             }
 
-            dialogEvents.Add(newEvent);
-            newTextBuilder.Append(fullText[appendStart..fullIndex]);
-            fullIndex += bracketLength;
-            strippedIndex += bracketLength;
-            appendStart = fullIndex;
+            newTextBuilder.Append(fullText[appendStart..i]);
+            textEvents.Add(newEvent);
+            i += bracketLength;
+            appendStart = i;
         }
         newTextBuilder.Append(fullText[appendStart..]);
         return newTextBuilder.ToString();
-    }
-
-    private static bool IsBBCode(string fullText, int fullIndex, string strippedText, int strippedIndex, int bracketLength)
-    {
-        if (strippedIndex + bracketLength > strippedText.Length)
-            return false;
-        string fullBracket = fullText[fullIndex..(fullIndex + bracketLength)];
-        string strippedBracket = strippedText[strippedIndex..(strippedIndex + bracketLength)];
-        return fullBracket != strippedBracket;
     }
 
     private static int GetBracketLength(string text, int currentIndex)
@@ -88,32 +92,5 @@ public static class TextEventExtractor
             currentIndex++;
         }
         return length;
-    }
-
-    private static TextEvent GetTextEvent(string fullText, int fullIndex, int bracketLength, int renderedIndex)
-    {
-        string eventText = fullText[(fullIndex + 1)..(fullIndex + bracketLength - 1)];
-        string[] eventParts = eventText.Split(' ');
-        if (eventParts.Length == 0)
-            return null;
-        string name = eventParts[0].Split('=')[0];
-        Dictionary<string, string> options = new();
-        foreach (var part in eventParts)
-        {
-            string[] split = part.Split('=');
-            if (split.Length == 2)
-                options.Add(split[0], split[1]);
-            else
-                options.Add(split[0], "true");
-        }
-
-        TextEvent textEvent = TextEvent.GetTextEvent(name, options, renderedIndex);
-        if (textEvent != null && !textEvent.Valid)
-        {
-            GD.PrintErr("Text event is invalid!");
-            return null;
-        }
-
-        return textEvent;
     }
 }

@@ -40,6 +40,11 @@ public partial class DynamicTextContainer : PanelContainer
         get => _dynamicTextBox.Speed;
         set => _dynamicTextBox.Speed = value;
     }
+    public ILookupContext TempLookup
+    {
+        get => _dynamicTextBox.TempLookup;
+        set => _dynamicTextBox.TempLookup = value;
+    }
     public event Action StoppedWriting;
 
     public override void _Notification(long what)

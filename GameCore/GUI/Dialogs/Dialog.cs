@@ -24,6 +24,7 @@ public partial class Dialog : GUILayer
     public bool LoadingDialog { get; set; } = true;
     public bool LoadingDialogBox { get; set; }
     public DialogScript DialogScript { get; set; }
+    public Dictionary<string, object> LocalStorage { get; set; }
     public Line CurrentLine { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
@@ -142,15 +143,16 @@ public partial class Dialog : GUILayer
     {
         if (!CanProceed)
             return;
-        LoadingDialog = true;
+
         CanProceed = false;
         FocusedBox.NextArrow.Hide();
         if (!FocusedBox.IsAtLastPage())
         {
             FocusedBox.NextPage();
+            FocusedBox.WritePage(true);
             return;
         }
-
+        LoadingDialog = true;
         Line line = DialogScript.GetNextLine(FocusedBox.DialogLine.Next);
         await ToDialogPartAsync(line);
     }
@@ -179,6 +181,7 @@ public partial class Dialog : GUILayer
     {
         if (!FocusedBox.IsAtPageEnd())
             return;
+        SpeedUpEnabled = false;
         if (FocusedBox.DialogLine.Choices?.Length > 0)
         {
             OpenOptionBox();

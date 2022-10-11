@@ -11,7 +11,6 @@ public partial class DialogBox : Control
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private const double DefaultSpeed = 0.05;
     private MarginContainer _dialogMargin;
     private PanelContainer _dialogPanel;
     private bool _dim;
@@ -57,6 +56,11 @@ public partial class DialogBox : Control
     {
         get => _dynamicTextBox.Speed;
         set => _dynamicTextBox.Speed = value;
+    }
+    public ILookupContext TempLookup
+    {
+        get => _dynamicTextBox.TempLookup;
+        set => _dynamicTextBox.TempLookup = value;
     }
     public Line DialogLine { get; set; }
     public bool LoadingDialog { get; private set; }
@@ -135,7 +139,9 @@ public partial class DialogBox : Control
         LoadingDialog = true;
         SetPortraits();
         SetDisplayNames();
-        _dynamicTextBox.Speed = DialogLine.Speed ?? DefaultSpeed;
+        _dynamicTextBox.ResetSpeed();
+        if (DialogLine.Speed != null)
+            _dynamicTextBox.Speed = (double)DialogLine.Speed;
         await _dynamicTextBox.UpdateTextAsync(DialogLine.Text);
         LoadingDialog = false;
         WritePage(true);

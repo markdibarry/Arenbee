@@ -10,7 +10,7 @@
               "mood": "neutral"
             }
           ],
-          "text": "Hi my name is[speed=0.3]...[speed] Renly!"
+          "text": "[get=greeting] my name is[speed=0.3]...[/speed] Renly [get=coolTitle]!\nWhen I was 4 I ate a bee and I didn't get stung!\nI'm gonna be an army when I grow up!\nI can eat a lot of crackers and whistle!"
         },
         {
           "speakers": [
@@ -20,7 +20,7 @@
             }
           ],
           "auto": true,
-          "text": "[pause=2][wave amp=10]Hi[/wave] my name is Da-"
+          "text": "[wave amp=10]Hi[/wave] my name is Da-"
         },
         {
           "speakers": [
@@ -29,7 +29,8 @@
               "mood": "neutral"
             }
           ],
-          "text": "[speed=0]My name [mood=annoyed character=Dani]is Ady."
+          "speed":  0,
+          "text": "My name [mood=annoyed character=Dani]is Ady."
         },
         {
           "speakers": [

@@ -1,46 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
-
 namespace GameCore.GUI;
 
 public interface ITextEvent
 {
-    bool HandleEvent(DynamicText dynamicText);
-    bool HandleEvent(DynamicTextBox dynamicTextBox);
-    bool HandleEvent(DialogBox dialogBox);
-    bool HandleEvent(Dialog dialog);
+    bool HandleEvent(object context);
 }
 
 public class TextEvent : ITextEvent
 {
-    public TextEvent(string name, Dictionary<string, string> options, int index)
+    public TextEvent(Tag tag)
     {
         Valid = true;
-        Name = name;
-        Index = index;
-        if (options.ContainsKey("oneTime"))
-            OneTime = true;
+        Name = tag.Name;
+        Index = tag.Index;
+        Length = tag.Length;
+        Attributes = tag.Attributes;
     }
 
     public string Name { get; set; }
     public bool Valid { get; set; }
     public bool Seen { get; set; }
-    public bool OneTime { get; set; }
+    public int Length { get; set; }
+    public Dictionary<string, string> Attributes { get; set; }
     public int Index { get; set; }
 
-    public virtual bool HandleEvent(DynamicText dynamicText) => true;
-    public virtual bool HandleEvent(DynamicTextBox dynamicTextBox) => true;
-    public virtual bool HandleEvent(DialogBox dialogBox) => true;
-    public virtual bool HandleEvent(Dialog dialog) => true;
+    public virtual bool HandleEvent(object context) => true;
 
-    public static TextEvent GetTextEvent(string name, Dictionary<string, string> options, int index)
+    public static TextEvent CreateTextEvent(Tag tag)
     {
-        return name switch
+        return tag.Name switch
         {
-            "speed" => new SpeedTextEvent(name, options, index),
-            "pause" => new PauseTextEvent(name, options, index),
-            "mood" => new MoodTextEvent(name, options, index),
-            "custom" => new CustomTextEvent(name, options, index),
+            "speed" => new SpeedTextEvent(tag),
+            "pause" => new PauseTextEvent(tag),
+            "mood" => new MoodTextEvent(tag),
             _ => null
         };
     }
@@ -48,42 +43,30 @@ public class TextEvent : ITextEvent
 
 public class SpeedTextEvent : TextEvent
 {
-    public SpeedTextEvent(string name, Dictionary<string, string> options, int index)
-        : base(name, options, index)
+    public SpeedTextEvent(Tag tag)
+        : base(tag)
     {
-        if (options.Count == 0)
-        {
-            Time = DefaultSpeed;
-        }
-        else if (options.ContainsKey("speed"))
-        {
-            if (double.TryParse(options["speed"], out double time))
-                Time = time;
-            else
-                Time = DefaultSpeed;
-        }
-        else
-        {
-            Valid = false;
-        }
+        Time = -1;
+        if (double.TryParse(tag.Attributes["speed"], out double time))
+            Time = time;
     }
-
-    private const double DefaultSpeed = 0.05;
     public double Time { get; set; }
 
-    public override bool HandleEvent(DynamicText dynamicText)
+    public override bool HandleEvent(object context)
     {
-        dynamicText.Speed = Time;
+        if (context is not DynamicText dynamicText)
+            return true;
+        dynamicText.SpeedOverride = Time;
         return true;
     }
 }
 
 public class PauseTextEvent : TextEvent
 {
-    public PauseTextEvent(string name, Dictionary<string, string> options, int index)
-        : base(name, options, index)
+    public PauseTextEvent(Tag tag)
+        : base(tag)
     {
-        if (options.ContainsKey("pause") && double.TryParse(options["pause"], out double time))
+        if (double.TryParse(Attributes["pause"], out double time))
             Time = time;
         else
             Valid = false;
@@ -91,8 +74,10 @@ public class PauseTextEvent : TextEvent
 
     public double Time { get; set; }
 
-    public override bool HandleEvent(DynamicText dynamicText)
+    public override bool HandleEvent(object context)
     {
+        if (context is not DynamicText dynamicText)
+            return true;
         dynamicText.SetPause(Time);
         return true;
     }
@@ -100,13 +85,13 @@ public class PauseTextEvent : TextEvent
 
 public class MoodTextEvent : TextEvent
 {
-    public MoodTextEvent(string name, Dictionary<string, string> options, int index)
-        : base(name, options, index)
+    public MoodTextEvent(Tag tag)
+        : base(tag)
     {
-        if (options.ContainsKey("mood"))
-            Mood = options["mood"];
-        if (options.ContainsKey("character"))
-            Character = options["character"];
+        if (Attributes.ContainsKey("mood"))
+            Mood = Attributes["mood"];
+        if (Attributes.ContainsKey("character"))
+            Character = Attributes["character"];
         if (string.IsNullOrEmpty(Mood))
             Valid = false;
     }
@@ -114,40 +99,93 @@ public class MoodTextEvent : TextEvent
     public string Mood { get; set; }
     public string Character { get; set; }
 
-    public override bool HandleEvent(DynamicText dynamicText) => false;
-    public override bool HandleEvent(DynamicTextBox dynamicTextBox) => false;
-    public override bool HandleEvent(DialogBox dialogBox)
+    public override bool HandleEvent(object context)
     {
-        if (string.IsNullOrWhiteSpace(Character))
+        if (context is DialogBox dialogBox)
         {
-            dialogBox.ChangeMood(Mood);
-            return true;
+            if (string.IsNullOrWhiteSpace(Character))
+            {
+                dialogBox.ChangeMood(Mood);
+                return true;
+            }
+            AnimatedSprite2D portrait = dialogBox.GetPortrait(Character);
+            if (portrait != null)
+            {
+                dialogBox.ChangeMood(Mood, portrait);
+                return true;
+            }
+            return false;
         }
-        AnimatedSprite2D portrait = dialogBox.GetPortrait(Character);
-        if (portrait != null)
+        else if (context is Dialog dialog)
         {
-            dialogBox.ChangeMood(Mood, portrait);
+            var portrait = dialog.UnfocusedBox.GetPortrait(Character);
+            if (portrait != null)
+                dialog.UnfocusedBox.ChangeMood(Mood, portrait);
             return true;
         }
 
         return false;
     }
-
-    public override bool HandleEvent(Dialog dialog)
-    {
-        var portrait = dialog.UnfocusedBox.GetPortrait(Character);
-        if (portrait != null)
-            dialog.UnfocusedBox.ChangeMood(Mood, portrait);
-        return true;
-    }
 }
 
-public class CustomTextEvent : TextEvent
+public class Tag
 {
-    public CustomTextEvent(string name, Dictionary<string, string> options, int index)
-        : base(name, options, index)
+    public Tag(string text, int index)
     {
-        Options = options;
+        // strip brackets
+        text = text[1..^1];
+        Length = -1;
+        Index = index;
+        string[] tagParts = text.Split(' ');
+        if (tagParts.Length == 0)
+            return;
+        if (tagParts[0].StartsWith('/'))
+        {
+            IsClosing = true;
+            tagParts[0] = tagParts[0][1..];
+        }
+        Name = tagParts[0].Split('=')[0];
+        foreach (var part in tagParts)
+        {
+            string[] split = part.Split('=');
+            if (split.Length == 2)
+                Attributes.Add(split[0], split[1]);
+            else
+                Attributes.Add(split[0], string.Empty);
+        }
     }
-    public Dictionary<string, string> Options { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+    public bool IsClosing { get; set; }
+    public int Length { get; set; }
+    public int Index { get; set; }
+    public Dictionary<string, string> Attributes { get; set; } = new();
+    public static string[] BBCodeTags = new[]
+    {
+            "b",
+            "i",
+            "u",
+            "s",
+            "code",
+            "center",
+            "right",
+            "fill",
+            "indent",
+            "url",
+            "image",
+            "font",
+            "table",
+            "cell",
+            "color",
+            "wave",
+            "tornado",
+            "fade",
+            "rainbow",
+            "shake"
+        };
+
+    public bool IsBBCode()
+    {
+        return BBCodeTags.Contains(Name);
+    }
 }

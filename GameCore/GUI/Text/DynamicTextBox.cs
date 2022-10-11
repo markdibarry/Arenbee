@@ -54,6 +54,18 @@ public partial class DynamicTextBox : Control
         get => _dynamicText.SpeedUpText;
         set => _dynamicText.SpeedUpText = value;
     }
+    public ILookupContext TempLookup
+    {
+        get => _dynamicText.TempLookup;
+        set => _dynamicText.TempLookup = value;
+    }
+
+    public double SpeedOverride
+    {
+        get => _dynamicText.SpeedOverride;
+        set => _dynamicText.SpeedOverride = value;
+    }
+
     public event Action<ITextEvent> TextEventTriggered;
     public event Action StoppedWriting;
 
@@ -76,6 +88,11 @@ public partial class DynamicTextBox : Control
     public bool IsAtPageEnd()
     {
         return _dynamicText?.IsAtTextEnd() ?? false;
+    }
+
+    public void ResetSpeed()
+    {
+        _dynamicText.ResetSpeed();
     }
 
     public async Task UpdateTextAsync(string text)
@@ -172,8 +189,8 @@ public partial class DynamicTextBox : Control
             return;
         CustomText = "[speed=0.03]Life isn't about [wave]suffering![/wave]\n" +
         "(pause)[pause=2]\n" +
-        "[speed=0.5]...[speed=0.05]It's about eating!.\n" +
-        "[speed=0.3]...[speed=0.05]and suffering.";
+        "[speed=0.5]...[/speed]It's about eating!.\n" +
+        "[speed=0.3]...[/speed]and suffering.";
     }
 
     private void SetNodeReferences()

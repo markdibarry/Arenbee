@@ -28,7 +28,7 @@ layout_direction = 2
 offset_left = 120.0
 offset_top = 192.0
 offset_right = 309.0
-offset_bottom = 265.0
+offset_bottom = 257.0
 
 [node name="DialogMargin" type="MarginContainer" parent="DialogPanel"]
 offset_left = 7.0
