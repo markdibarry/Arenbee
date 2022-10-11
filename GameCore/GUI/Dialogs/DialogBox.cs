@@ -156,15 +156,15 @@ public partial class DialogBox : Control
         SubscribeEvents();
     }
 
+    private void OnStoppedWriting()
+    {
+        StoppedWriting?.Invoke();
+    }
+
     private void OnTextEventTriggered(ITextEvent textEvent)
     {
         if (!textEvent.HandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
-    }
-
-    private void OnStoppedWriting()
-    {
-        StoppedWriting?.Invoke();
     }
 
     private void SetDisplayNames()

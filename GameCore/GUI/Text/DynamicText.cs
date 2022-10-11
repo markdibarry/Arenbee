@@ -16,7 +16,7 @@ public partial class DynamicText : RichTextLabel
     private int _currentLine;
     private string _customText;
     private int _endChar;
-    private List<int> _lineBreaks;
+    private List<int> _lineBreakCharIndices;
     private bool _loading;
     private bool _showToEndCharEnabled;
     private bool _sizeDirty;
@@ -90,10 +90,6 @@ public partial class DynamicText : RichTextLabel
         get => _endChar == -1 ? TotalCharacterCount : _endChar;
         set => _endChar = value;
     }
-    public ReadOnlyCollection<int> LineBreaks
-    {
-        get => _lineBreaks.AsReadOnly();
-    }
     public int LineCount { get; private set; }
     public double SpeedOverride { get; set; }
     public ILookupContext TempLookup { get; set; }
@@ -119,6 +115,12 @@ public partial class DynamicText : RichTextLabel
     public override void _Ready()
     {
         Init();
+    }
+
+    public int GetFirstCharIndexByLine(int line)
+    {
+        line = Math.Clamp(line, 0, _lineBreakCharIndices.Count - 1);
+        return _lineBreakCharIndices[line];
     }
 
     public bool IsAtTextEnd()
@@ -155,7 +157,6 @@ public partial class DynamicText : RichTextLabel
         if (_loading)
             return;
         _loading = true;
-        GD.Print("parsing");
         // Set it so it can be parsed
         try
         {
@@ -174,19 +175,11 @@ public partial class DynamicText : RichTextLabel
         _loading = false;
     }
 
-    private int GetValidLine(int line)
-    {
-        if (line < 1)
-            return 0;
-        else if (line >= LineCount)
-            return LineCount - 1;
-        else
-            return line;
-    }
+    private int GetValidLine(int line) => Math.Clamp(line, 0, LineCount - 1);
 
-    private List<int> GetLineBreaks()
+    private List<int> GetLineBreakCharIndices()
     {
-        var lineBreaks = new List<int>() { 0 };
+        List<int> lineBreakCharIndices = new() { 0 };
         int currentLine = 0;
         for (int i = 0; i < TotalCharacterCount; i++)
         {
@@ -194,10 +187,10 @@ public partial class DynamicText : RichTextLabel
             if (line > currentLine)
             {
                 currentLine = line;
-                lineBreaks.Add(i - 1);
+                lineBreakCharIndices.Add(i - 1);
             }
         }
-        return lineBreaks;
+        return lineBreakCharIndices;
     }
 
     private float GetLineOffsetOrEnd(int line)
@@ -242,7 +235,7 @@ public partial class DynamicText : RichTextLabel
     {
         BbcodeEnabled = true;
         _textEvents = new();
-        _lineBreaks = new();
+        _lineBreakCharIndices = new();
         FitContentHeight = true;
         _customText = string.Empty;
         EndChar = -1;
@@ -280,7 +273,7 @@ public partial class DynamicText : RichTextLabel
     /// </summary>
     private void ResetVisibleCharacters()
     {
-        VisibleCharacters = _showToEndCharEnabled ? EndChar : _lineBreaks[_currentLine];
+        VisibleCharacters = _showToEndCharEnabled ? EndChar : _lineBreakCharIndices[_currentLine];
     }
 
     private void SetDefault()
@@ -301,7 +294,7 @@ public partial class DynamicText : RichTextLabel
         LineCount = GetLineCount();
         TotalCharacterCount = GetTotalCharacterCount();
         ContentHeight = GetContentHeight();
-        _lineBreaks = GetLineBreaks();
+        _lineBreakCharIndices = GetLineBreakCharIndices();
         ResetVisibleCharacters();
         TextDataUpdated?.Invoke();
     }

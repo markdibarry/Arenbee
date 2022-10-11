@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
@@ -13,9 +12,9 @@ public partial class DynamicTextBox : Control
     private int _currentPage;
     private float _displayHeight;
     private DynamicText _dynamicText;
-    private Control _textWindow;
     private bool _loading;
-    private int[] _pageBreaks;
+    private int[] _pageBreakLineIndices;
+    private Control _textWindow;
     [Export]
     public int CurrentPage
     {
@@ -76,20 +75,11 @@ public partial class DynamicTextBox : Control
         SetDefault();
     }
 
-    public bool IsAtLastPage()
-    {
-        return _pageBreaks.IsEmpty() || CurrentPage == _pageBreaks.Length - 1;
-    }
+    public bool IsAtLastPage() => CurrentPage == _pageBreakLineIndices.Length - 1;
 
-    public bool IsAtPageEnd()
-    {
-        return _dynamicText?.IsAtTextEnd() ?? false;
-    }
+    public bool IsAtPageEnd() => _dynamicText.IsAtTextEnd();
 
-    public void ResetSpeed()
-    {
-        _dynamicText.ResetSpeed();
-    }
+    public void ResetSpeed() => _dynamicText.ResetSpeed();
 
     public void SpeedUpText() => _dynamicText.SpeedUpText();
 
@@ -97,26 +87,29 @@ public partial class DynamicTextBox : Control
     {
         if (_loading)
             return;
-        GD.Print("Updating");
         _loading = true;
         await _dynamicText.UpdateTextAsync(text);
         GD.Print("Updated");
         _loading = false;
     }
 
-    private int GetValidPage(int page)
+    private int GetEndChar(int page)
     {
-        if (page < 0 || _pageBreaks.IsEmpty())
-            return 0;
-        else if (page >= _pageBreaks.Length)
-            return _pageBreaks.Length - 1;
-        else
-            return page;
+        if (page + 1 >= _pageBreakLineIndices.Length)
+            return _dynamicText.TotalCharacterCount;
+        return GetFirstCharIndexByPage(page + 1);
     }
 
-    private int[] GetPageBreaks()
+    private int GetFirstCharIndexByPage(int page)
     {
-        var pageBreaks = new List<int>() { 0 };
+        page = GetValidPage(page);
+        int line = _pageBreakLineIndices[page];
+        return _dynamicText.GetFirstCharIndexByLine(line);
+    }
+
+    private int[] GetPageBreakLineIndices()
+    {
+        List<int> pageBreaksLineIndices = new() { 0 };
         int totalLines = _dynamicText.LineCount;
         float startLineOffset = 0;
         float currentLineOffset = 0;
@@ -131,36 +124,25 @@ public partial class DynamicTextBox : Control
             newHeight = nextLineOffset - startLineOffset;
             if (newHeight > _displayHeight)
             {
-                pageBreaks.Add(i);
+                pageBreaksLineIndices.Add(i);
                 startLineOffset = currentLineOffset;
             }
             currentLineOffset = nextLineOffset;
         }
-        return pageBreaks.ToArray();
+        return pageBreaksLineIndices.ToArray();
     }
 
-    private int GetPageLine(int page)
-    {
-        return page == 0 ? 0 : _pageBreaks[page];
-    }
-
-    private int GetEndChar(int page)
-    {
-        if (page + 1 >= _pageBreaks.Length)
-            return _dynamicText.TotalCharacterCount;
-        else
-            return _dynamicText.LineBreaks[GetPageLine(page + 1)];
-    }
+    private int GetValidPage(int page) => Math.Clamp(page, 0, _pageBreakLineIndices.Length - 1);
 
     private void Init()
     {
+        _pageBreakLineIndices = new[] { 0 };
         SetNodeReferences();
         SubscribeEvents();
     }
 
     private void OnResized()
     {
-        GD.Print("Box resized: " + Size);
         _dynamicText.Size = new Vector2(_textWindow.Size.x, _dynamicText.Size.y);
         _dynamicText.OnResized();
     }
@@ -212,13 +194,13 @@ public partial class DynamicTextBox : Control
     private void MoveToPage(int page)
     {
         _dynamicText.EndChar = GetEndChar(page);
-        _dynamicText.CurrentLine = GetPageLine(page);
+        _dynamicText.CurrentLine = _pageBreakLineIndices[page];
     }
 
     private void UpdateTextData()
     {
         _displayHeight = _textWindow.Size.y;
-        _pageBreaks = GetPageBreaks();
+        _pageBreakLineIndices = GetPageBreakLineIndices();
         _currentPage = 0;
         MoveToPage(0);
     }
