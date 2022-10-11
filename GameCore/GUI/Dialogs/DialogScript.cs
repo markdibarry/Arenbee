@@ -118,9 +118,10 @@ public class Speaker
         Character = character;
         Portrait = portrait ?? character;
         DisplayName = displayName ?? character;
-        Mood = mood;
+        Mood = mood ?? DefaultMood;
     }
 
+    private const string DefaultMood = "neutral";
     [JsonPropertyName("character")]
     public string Character { get; set; }
     [JsonPropertyName("portrait")]

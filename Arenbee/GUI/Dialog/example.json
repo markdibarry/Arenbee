@@ -6,8 +6,7 @@
         {
           "speakers": [
             {
-              "character": "Renly",
-              "mood": "neutral"
+              "character": "Renly"
             }
           ],
           "text": "[get=greeting] my name is[speed=0.3]...[/speed] Renly [get=coolTitle]!\nWhen I was 4 I ate a bee and I didn't get stung!\nI'm gonna be an army when I grow up!\nI can eat a lot of crackers and whistle!"
@@ -15,8 +14,7 @@
         {
           "speakers": [
             {
-              "character": "Dani",
-              "mood": "neutral"
+              "character": "Dani"
             }
           ],
           "auto": true,
@@ -25,11 +23,10 @@
         {
           "speakers": [
             {
-              "character": "Ady",
-              "mood": "neutral"
+              "character": "Ady"
             }
           ],
-          "speed":  0,
+          "speed": 0,
           "text": "My name [mood=annoyed character=Dani]is Ady."
         },
         {
@@ -57,8 +54,7 @@
                 {
                   "speakers": [
                     {
-                      "character": "Dani",
-                      "mood": "neutral"
+                      "character": "Dani"
                     }
                   ],
                   "text": "Well, whatever."
@@ -80,8 +76,7 @@
                 {
                   "speakers": [
                     {
-                      "character": "Dani",
-                      "mood": "neutral"
+                      "character": "Dani"
                     }
                   ],
                   "text": "It wasn't funny, but whatever."
@@ -103,8 +98,7 @@
         {
           "speakers": [
             {
-              "character": "Renly",
-              "mood": "neutral"
+              "character": "Renly"
             }
           ],
           "text": "I want lunch!"

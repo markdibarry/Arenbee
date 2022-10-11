@@ -42,7 +42,7 @@ public partial class Dialog : GUILayer
                 SpeedUpEnabled = true;
         }
         if (menuInput.Enter.IsActionPressed && SpeedUpEnabled)
-            FocusedBox.SpeedUpText = true;
+            FocusedBox.SpeedUpText();
     }
 
     public async Task CloseDialogBoxAsync(DialogBox box)

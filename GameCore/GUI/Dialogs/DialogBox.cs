@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
@@ -66,11 +67,6 @@ public partial class DialogBox : Control
     public bool LoadingDialog { get; private set; }
     public TextureRect NextArrow { get; set; }
     public bool ReverseDisplay { get; set; }
-    public bool SpeedUpText
-    {
-        get => _dynamicTextBox.SpeedUpText;
-        set => _dynamicTextBox.SpeedUpText = value;
-    }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
 
@@ -121,6 +117,8 @@ public partial class DialogBox : Control
             return;
         _dynamicTextBox.CurrentPage++;
     }
+
+    public void SpeedUpText() => _dynamicTextBox.SpeedUpText();
 
     public virtual Task TransitionOpenAsync() => Task.CompletedTask;
     public virtual Task TransitionCloseAsync() => Task.CompletedTask;

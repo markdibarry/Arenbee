@@ -95,7 +95,6 @@ public partial class DynamicText : RichTextLabel
         get => _lineBreaks.AsReadOnly();
     }
     public int LineCount { get; private set; }
-    public bool SpeedUpText { get; set; }
     public double SpeedOverride { get; set; }
     public ILookupContext TempLookup { get; set; }
     public int TotalCharacterCount { get; private set; }
@@ -114,8 +113,7 @@ public partial class DynamicText : RichTextLabel
             HandleTextDirty();
         else if (_sizeDirty)
             HandleSizeDirty();
-        if (WriteTextEnabled)
-            HandleWrite(delta);
+        HandleWrite(delta);
     }
 
     public override void _Ready()
@@ -143,6 +141,8 @@ public partial class DynamicText : RichTextLabel
     {
         Counter += time;
     }
+
+    public void SpeedUpText() => Counter = 0;
 
     public async Task UpdateTextAsync(string text)
     {
@@ -230,6 +230,8 @@ public partial class DynamicText : RichTextLabel
 
     private void HandleWrite(double delta)
     {
+        if (!WriteTextEnabled)
+            return;
         if (IsAtTextEnd() || _loading)
             StopWriting();
         else
@@ -310,12 +312,6 @@ public partial class DynamicText : RichTextLabel
     /// <param name="delta"></param>
     private void Write(double delta)
     {
-        if (SpeedUpText)
-        {
-            SpeedUpText = false;
-            Counter = 0;
-        }
-
         if (Counter > 0)
         {
             Counter -= delta;

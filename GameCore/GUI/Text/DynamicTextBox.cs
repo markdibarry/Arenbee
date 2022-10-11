@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using Godot;
@@ -49,11 +50,6 @@ public partial class DynamicTextBox : Control
         get => _dynamicText.Speed;
         set => _dynamicText.Speed = value;
     }
-    public bool SpeedUpText
-    {
-        get => _dynamicText.SpeedUpText;
-        set => _dynamicText.SpeedUpText = value;
-    }
     public ILookupContext TempLookup
     {
         get => _dynamicText.TempLookup;
@@ -94,6 +90,8 @@ public partial class DynamicTextBox : Control
     {
         _dynamicText.ResetSpeed();
     }
+
+    public void SpeedUpText() => _dynamicText.SpeedUpText();
 
     public async Task UpdateTextAsync(string text)
     {
