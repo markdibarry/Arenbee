@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.Input;
+using GameCore.GUI.GameDialog;
 using Godot;
 
 namespace GameCore.GUI;
@@ -13,6 +14,7 @@ public partial class Dialog : GUILayer
     public Dialog()
     {
         _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
+        DialogScriptReader = new(this);
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
@@ -25,10 +27,11 @@ public partial class Dialog : GUILayer
     public bool LoadingDialogBox { get; set; }
     public DialogScript DialogScript { get; set; }
     public Dictionary<string, object> LocalStorage { get; set; }
-    public Line CurrentLine { get; set; }
+    public LineData CurrentLine { get; set; }
     public DialogBox UnfocusedBox { get; set; }
     public DialogBox FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
+    public DialogScriptReader DialogScriptReader { get; set; }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -78,10 +81,10 @@ public partial class Dialog : GUILayer
         LoadingDialog = false;
     }
 
-    public async Task ToDialogPartAsync(Line newLine)
+    public async Task ToDialogPartAsync(LineData newLine)
     {
         SpeedUpEnabled = false;
-        Line previousLine = FocusedBox.DialogLine;
+        LineData previousLine = FocusedBox.DialogLine;
         // If part not found, end dialog
         if (newLine == null)
         {
@@ -153,7 +156,7 @@ public partial class Dialog : GUILayer
             return;
         }
         LoadingDialog = true;
-        Line line = DialogScript.GetNextLine(FocusedBox.DialogLine.Next);
+        LineData line = DialogScript.GetNextLine(FocusedBox.DialogLine.Next);
         await ToDialogPartAsync(line);
     }
 
@@ -164,7 +167,7 @@ public partial class Dialog : GUILayer
             RequestCloseDialog();
             return;
         }
-        Line line = null;
+        LineData line = null;
         if (model.Next != null)
             line = DialogScript.GetNextLine(model.Next);
         else if (model.Lines != null && model.Lines.Length > 0)
@@ -190,7 +193,7 @@ public partial class Dialog : GUILayer
 
         if (FocusedBox.DialogLine.Auto)
         {
-            Line line = DialogScript.GetNextLine();
+            LineData line = DialogScript.GetNextLine();
             _ = ToDialogPartAsync(line);
             return;
         }
@@ -199,7 +202,7 @@ public partial class Dialog : GUILayer
         CanProceed = true;
     }
 
-    private async Task<DialogBox> OpenDialogBox(Line line, bool reverseDisplay)
+    private async Task<DialogBox> OpenDialogBox(LineData line, bool reverseDisplay)
     {
         var newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
@@ -213,10 +216,12 @@ public partial class Dialog : GUILayer
 
     private void OpenOptionBox()
     {
-        GUIOpenRequest request = new(DialogOptionMenu.GetScenePath());
-        request.Data = new DialogOptionDataModel()
+        GUIOpenRequest request = new(DialogOptionMenu.GetScenePath())
         {
-            DialogChoices = FocusedBox.DialogLine.Choices
+            Data = new DialogOptionDataModel()
+            {
+                DialogChoices = FocusedBox.DialogLine.Choices
+            }
         };
         OpenLayerDelegate?.Invoke(request);
     }
@@ -235,12 +240,19 @@ public partial class Dialog : GUILayer
         }
         _currentLineIndex = 0;
         DialogScript = DialogLoader.Load(path);
-        if (DialogScript == null || !DialogScript.DialogParts.Any() || !DialogScript.DialogParts[0].DialogLines.Any())
+        if (DialogScript == null || !DialogScript.Sections.Any())
         {
             GD.PrintErr("No dialog found at location provided.");
             RequestCloseDialog();
             return;
         }
+        DialogScriptReader.ReadScript(DialogScript);
+
         FocusedBox = await OpenDialogBox(DialogScript.GetNextLine(), false);
+    }
+
+    public void HandleLine(LineData line)
+    {
+        if ()
     }
 }

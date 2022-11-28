@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+namespace GameCore.GUI;
+
 public class TempLookup : ILookupContext
 {
     public TempLookup()

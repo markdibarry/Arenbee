@@ -1,4 +1,6 @@
-﻿public interface ILookupContext
+﻿namespace Arenbee;
+
+public interface ILookupContext
 {
     void Clear();
     bool Contains(string key);

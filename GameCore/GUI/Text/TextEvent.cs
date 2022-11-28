@@ -11,20 +11,9 @@ public interface ITextEvent
 
 public class TextEvent : ITextEvent
 {
-    public TextEvent(Tag tag)
-    {
-        Valid = true;
-        Name = tag.Name;
-        Index = tag.Index;
-        Length = tag.Length;
-        Attributes = tag.Attributes;
-    }
-
     public string Name { get; set; }
     public bool Valid { get; set; }
     public bool Seen { get; set; }
-    public int Length { get; set; }
-    public Dictionary<string, string> Attributes { get; set; }
     public int Index { get; set; }
 
     public virtual bool HandleEvent(object context) => true;
@@ -43,20 +32,22 @@ public class TextEvent : ITextEvent
 
 public class SpeedTextEvent : TextEvent
 {
+    public SpeedTextEvent()
+    { }
+
     public SpeedTextEvent(Tag tag)
-        : base(tag)
     {
-        Time = -1;
+        TimeMulitplier = -1;
         if (double.TryParse(tag.Attributes["speed"], out double time))
-            Time = time;
+            TimeMulitplier = time;
     }
-    public double Time { get; set; }
+    public double TimeMulitplier { get; set; }
 
     public override bool HandleEvent(object context)
     {
         if (context is not DynamicText dynamicText)
             return true;
-        dynamicText.SpeedOverride = Time;
+        dynamicText.SpeedOverride = TimeMulitplier;
         return true;
     }
 }

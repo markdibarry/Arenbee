@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
@@ -245,6 +244,7 @@ public partial class DynamicText : RichTextLabel
         Counter = Speed;
         UpdateTextData();
         Resized += OnResized;
+        ThemeChanged += OnResized;
         SetDefault();
     }
 

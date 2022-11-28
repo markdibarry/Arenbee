@@ -7,7 +7,7 @@ using GameCore.Actors;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
-namespace GameCore.GUI;
+namespace GameCore.GUI.Temporary;
 
 public class DialogScript
 {
@@ -101,7 +101,7 @@ public class Line
         {
             Speakers = new List<Speaker> { new Speaker("Dani", "Neutral") },
             Text = "Hi!\n" +
-            "My name is[speed=0.5]... [speed][mood=happy][wave]Dani![/wave]"
+            "My name is[speed=0.5]... [/speed][mood=happy][wave]Dani![/wave]"
         };
     }
 }
