@@ -7,18 +7,25 @@ using System.Reflection;
 
 namespace GameCore.GUI.GameDialog;
 
-public class LookupRegister
+public class DialogBridgeRegister
 {
-    public LookupRegister(DialogBridgeBase dialogBridgeBase)
+    public DialogBridgeRegister(DialogBridgeBase dialogBridgeBase)
     {
         _bridge = dialogBridgeBase;
+        Evaluator = new(this);
         Properties = new(GenerateProperties());
         Methods = new(GenerateMethods());
     }
 
+    public Evaluator Evaluator { get; }
     private readonly DialogBridgeBase _bridge;
     public ReadOnlyDictionary<string, VarDef> Properties { get; }
     public ReadOnlyDictionary<string, FuncDef> Methods { get; }
+
+    public DialogLine BuildLine(DialogScript dialogScript, LineData lineData)
+    {
+        return LineBuilder.BuildLine(Evaluator, dialogScript, lineData);
+    }
 
     private Dictionary<string, VarDef> GenerateProperties()
     {
@@ -28,7 +35,7 @@ public class LookupRegister
         {
             var getter = propertyInfo.GetGetMethod().CreateDelegate(GetDelegateType(propertyInfo.GetGetMethod()), _bridge);
             var setter = propertyInfo.GetSetMethod().CreateDelegate(GetDelegateType(propertyInfo.GetSetMethod()), _bridge);
-            properties.Add(propertyInfo.Name, new(getter, setter, propertyInfo.PropertyType));
+            properties.Add(propertyInfo.Name, new(getter, setter, GetVarType(propertyInfo.PropertyType)));
         }
         return properties;
     }
@@ -40,8 +47,29 @@ public class LookupRegister
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(x => !x.IsSpecialName);
         foreach (var methodInfo in methodInfos)
-            methods.Add(methodInfo.Name, new(CreateDynamicDelegate(methodInfo, _bridge), methodInfo.ReturnType));
+        {
+            var del = CreateDynamicDelegate(methodInfo, _bridge);
+            List<VarType> argTypes = new();
+            foreach (var paramInfo in methodInfo.GetParameters())
+                argTypes.Add(GetVarType(paramInfo.ParameterType));
+            FuncDef funcDef = new(del, GetVarType(methodInfo.ReturnType), argTypes);
+            methods.Add(methodInfo.Name, funcDef);
+        }
+
         return methods;
+    }
+
+    private static VarType GetVarType(Type type)
+    {
+        if (type == typeof(float))
+            return VarType.Float;
+        else if (type == typeof(bool))
+            return VarType.Bool;
+        else if (type == typeof(string))
+            return VarType.String;
+        else if (type == typeof(void))
+            return VarType.Void;
+        return VarType.Undefined;
     }
 
     private static Type GetDelegateType(MethodInfo methodInfo)
@@ -93,28 +121,30 @@ public class LookupRegister
 
 public class VarDef
 {
-    public VarDef(Delegate getter, Delegate setter, Type type)
+    public VarDef(Delegate getter, Delegate setter, VarType varType)
     {
         Getter = getter;
         Setter = setter;
-        Type = type;
+        VarType = varType;
     }
 
-    public Type Type { get; }
+    public VarType VarType { get; }
     public Delegate Getter { get; }
     public Delegate Setter { get; }
 }
 
 public class FuncDef
 {
-    public FuncDef(Func<object[], object> method, Type type)
+    public FuncDef(Func<object[], object> method, VarType returnType, List<VarType> argTypes)
     {
         Method = method;
-        Type = type;
+        ReturnType = returnType;
+        ArgTypes = argTypes.ToArray();
     }
 
-    public Type Type { get; }
+    public VarType ReturnType { get; }
     public Func<object[], object> Method { get; }
+    public VarType[] ArgTypes { get; }
 }
 
 public enum VarType

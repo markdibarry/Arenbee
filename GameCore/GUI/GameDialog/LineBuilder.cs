@@ -4,154 +4,148 @@ namespace GameCore.GUI.GameDialog;
 
 public class LineBuilder
 {
-    public LineBuilder(LineData lineData, DialogScript dialogScript, LookupRegister lookupRegister)
+    public static DialogLine BuildLine(Evaluator evaluator, DialogScript dialogScript, LineData lineData)
     {
-        DialogScript = dialogScript;
-        LineData = lineData;
-        _lookupRegister = lookupRegister;
-    }
-
-    private readonly LookupRegister _lookupRegister;
-    public DialogScript DialogScript { get; set; }
-    public LineData LineData { get; set; }
-    public Line Line { get; set; } = new();
-    public StringBuilder StringBuilder { get; set; } = new();
-    public int RenderIndex { get; set; }
-    public int TextIndex { get; set; }
-
-    private Line ExtractEvents()
-    {
+        DialogLine line = new();
+        StringBuilder stringBuilder = new();
         int appendStart = 0;
-
-        while (TextIndex < LineData.Text.Length)
+        int textIndex = 0;
+        int renderIndex = 0;
+        while (textIndex < lineData.Text.Length)
         {
-            if (LineData.Text[TextIndex] != '[')
+            if (lineData.Text[textIndex] != '[')
             {
-                TextIndex++;
-                RenderIndex++;
+                textIndex++;
+                renderIndex++;
                 continue;
             }
 
-            if (TextIndex == 0 || LineData.Text[TextIndex - 1] != '\\')
+            if (textIndex == 0 || lineData.Text[textIndex - 1] != '\\')
             {
-                StringBuilder.Append(LineData.Text[appendStart..TextIndex]);
-                appendStart = TextIndex;
-                int bracketLength = GetBracketLength(LineData.Text, TextIndex);
-                if (!int.TryParse(LineData.Text[(TextIndex + 1)..(TextIndex + bracketLength)], out int intValue))
+                stringBuilder.Append(lineData.Text[appendStart..textIndex]);
+                int bracketLength = GetBracketLength(lineData.Text, textIndex);
+                if (bracketLength == -1)
                     return null;
-                int[] instr = DialogScript.Instructions[LineData.InstructionIndices[intValue]];
+                if (!int.TryParse(lineData.Text[(textIndex + 1)..(textIndex + bracketLength)], out int intValue))
+                    return null;
+                int[] instr = dialogScript.Instructions[lineData.InstructionIndices[intValue]];
                 HandleEventTag(instr);
-                TextIndex += bracketLength;
+                textIndex += bracketLength;
+                appendStart = textIndex;
             }
         }
-    }
+        stringBuilder.Append(lineData.Text[appendStart..textIndex]);
 
-    private void HandleEventTag(int[] instructions)
-    {
-        switch ((InstructionType)instructions[0])
+        line.Text = stringBuilder.ToString();
+        return line;
+
+        void HandleEventTag(int[] instructions)
         {
-            case InstructionType.BBCode:
-                HandleBBCode(instructions);
-                break;
-            case InstructionType.NewLine:
-                HandleNewLine();
-                break;
-            case InstructionType.Speed:
-                HandleSpeed(instructions);
-                break;
-            case InstructionType.Goto:
-                HandleGoTo(instructions);
-                break;
-            case InstructionType.Auto:
-                HandleAuto(instructions);
-                break;
-            case InstructionType.Assign:
-            case InstructionType.MultAssign:
-            case InstructionType.DivAssign:
-            case InstructionType.AddAssign:
-            case InstructionType.SubAssign:
-                HandleAssign(instructions);
-                break;
-            case InstructionType.Float:
-            case InstructionType.String:
-            case InstructionType.Bool:
-            case InstructionType.Var:
-            case InstructionType.Func:
-            case InstructionType.Mult:
-            case InstructionType.Div:
-            case InstructionType.Add:
-            case InstructionType.Sub:
-            case InstructionType.LessEquals:
-            case InstructionType.GreaterEquals:
-            case InstructionType.Less:
-            case InstructionType.Greater:
-            case InstructionType.Equals:
-            case InstructionType.NotEquals:
-                HandleEvaluate(instructions);
-                break;
+            switch ((InstructionType)instructions[0])
+            {
+                case InstructionType.Assign:
+                case InstructionType.MultAssign:
+                case InstructionType.DivAssign:
+                case InstructionType.AddAssign:
+                case InstructionType.SubAssign:
+                    HandleDeferredEvaluate();
+                    break;
+                case InstructionType.String:
+                case InstructionType.Float:
+                case InstructionType.Mult:
+                case InstructionType.Div:
+                case InstructionType.Add:
+                case InstructionType.Sub:
+                case InstructionType.Var:
+                case InstructionType.Func:
+                    HandleEvaluate();
+                    break;
+                case InstructionType.BBCode:
+                    HandleBBCode();
+                    break;
+                case InstructionType.NewLine:
+                    HandleNewLine();
+                    break;
+                case InstructionType.Speed:
+                    HandleSpeed();
+                    break;
+                case InstructionType.Goto:
+                    HandleGoTo();
+                    break;
+                case InstructionType.Auto:
+                    HandleAuto();
+                    break;
+            };
+
+            void HandleDeferredEvaluate()
+            {
+                InstructionTextEvent textEvent = new()
+                {
+                    Index = renderIndex,
+                    Instructions = instructions
+                };
+                line.Events.Add(textEvent);
+            }
+
+            void HandleEvaluate()
+            {
+                string result = string.Empty;
+                switch (evaluator.GetReturnType(dialogScript, instructions, 0))
+                {
+                    case VarType.String:
+                        result = evaluator.GetStringInstResult(dialogScript, instructions);
+                        break;
+                    case VarType.Float:
+                        result = evaluator.GetFloatInstResult(dialogScript, instructions).ToString();
+                        break;
+                    case VarType.Void:
+                        HandleDeferredEvaluate();
+                        break;
+                }
+                stringBuilder.Append(result);
+                renderIndex += result.Length;
+            }
+
+            void HandleAuto() => line.Auto = instructions[1] == 1;
+
+            void HandleBBCode()
+            {
+                stringBuilder.Append('[' + dialogScript.InstStrings[instructions[1]] + ']');
+            }
+
+            void HandleNewLine()
+            {
+                stringBuilder.Append('\r');
+                renderIndex++;
+            }
+
+            void HandleSpeed()
+            {
+                SpeedTextEvent textEvent = new()
+                {
+                    TimeMulitplier = dialogScript.InstFloats[instructions[1]],
+                    Index = renderIndex
+                };
+                line.Events.Add(textEvent);
+            }
+
+            void HandleGoTo() => line.Next = new GoTo(StatementType.Section, instructions[1]);
         }
-    }
 
-    private void HandleAssign(int[] instructions)
-    {
-
-    }
-
-    private void HandleEvaluate(int[] instructions)
-    {
-
-    }
-
-    private void HandleAuto(int[] instructions)
-    {
-        Line.Auto = instructions[1] == 1;
-    }
-
-    private void HandleBBCode(int[] instructions)
-    {
-        StringBuilder.Append('[' + DialogScript.InstStrings[instructions[1]] + ']');
-    }
-
-    private void HandleNewLine()
-    {
-        StringBuilder.Append('\r');
-    }
-
-    private void HandleSpeed(int[] instructions)
-    {
-        SpeedTextEvent textEvent = new();
-        textEvent.TimeMulitplier = DialogScript.InstFloats[instructions[1]];
-        textEvent.Index = RenderIndex;
-        Line.Events.Add(textEvent);
-    }
-
-    private void HandleGoTo(int[] instructions)
-    {
-        Line.Next = new GoTo(StatementType.Section, instructions[1]);
-    }
-
-    private static int GetBracketLength(string text, int i)
-    {
-        int length = 1;
-        i++;
-        while (i < text.Length)
+        static int GetBracketLength(string text, int i)
         {
-            if (text[i] == ']')
-                return ++length;
-            else if (text[i] == '[')
-                return length;
-            length++;
+            int length = 1;
             i++;
+            while (i < text.Length)
+            {
+                if (text[i] == ']')
+                    return ++length;
+                else if (text[i] == '[')
+                    return length;
+                length++;
+                i++;
+            }
+            return -1;
         }
-        return length;
     }
-}
-
-public class EventExtractor
-{
-
-
-
-
-
 }

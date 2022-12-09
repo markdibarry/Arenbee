@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
+using GameCore.GUI.GameDialog;
 using Godot;
 
 namespace GameCore.GUI;
@@ -62,10 +63,10 @@ public partial class DialogBox : Control
         get => _dynamicTextBox.TempLookup;
         set => _dynamicTextBox.TempLookup = value;
     }
-    public Line DialogLine { get; set; }
+    public DialogLine DialogLine { get; set; }
     public bool LoadingDialog { get; private set; }
     public TextureRect NextArrow { get; set; }
-    public bool ReverseDisplay { get; set; }
+    public bool DisplayRight { get; set; }
     public event Action StoppedWriting;
     public event Action<ITextEvent> TextEventTriggered;
 
@@ -79,7 +80,7 @@ public partial class DialogBox : Control
     {
         if (this.IsSceneRoot())
         {
-            DialogLine = Line.GetDefault();
+            //DialogLine = Line.GetDefault();
             _ = UpdateDialogLineAsync();
         }
     }
@@ -182,7 +183,7 @@ public partial class DialogBox : Control
             else
                 _nameLabel.Text += $" & {speaker.DisplayName}";
         }
-        if (ReverseDisplay)
+        if (DisplayRight)
             _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
         _namePanel.Show();
     }
@@ -192,7 +193,7 @@ public partial class DialogBox : Control
         int shiftBase = 30;
         _portraitContainer.QueueFreeAllChildren();
 
-        if (ReverseDisplay)
+        if (DisplayRight)
         {
             shiftBase *= -1;
             _portraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
@@ -201,7 +202,7 @@ public partial class DialogBox : Control
         foreach (Speaker speaker in DialogLine.Speakers.OrEmpty())
         {
             float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
-            AnimatedSprite2D portrait = speaker.GetPortrait(shiftAmount, ReverseDisplay);
+            AnimatedSprite2D portrait = speaker.GetPortrait(shiftAmount, DisplayRight);
             if (portrait != null)
             {
                 _portraitContainer.AddChild(portrait);

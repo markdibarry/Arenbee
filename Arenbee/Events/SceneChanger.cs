@@ -19,8 +19,7 @@ public partial class SceneChanger : SceneChangerBase
             async (loader) =>
             {
                 var newAreaScene = loader.GetObject<PackedScene>(PackedScenePath);
-                GUICloseRequest closeRequest = new() { CloseRequestType = CloseRequestType.AllLayers };
-                await Locator.Root?.GUIController.CloseLayerAsync(closeRequest);
+                await Locator.Root?.GUIController.CloseAllLayersAsync();
                 Locator.Session?.RemoveAreaScene();
                 Locator.Session?.AddAreaScene(newAreaScene.Instantiate<AreaScene>());
             });

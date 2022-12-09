@@ -106,15 +106,13 @@ public partial class EquipmentSubMenu : OptionSubMenu
         EquipmentSlotBase slot = optionItem.GetData<EquipmentSlotBase>(nameof(EquipmentSlotBase));
         if (slot == null)
             return;
-        GUIOpenRequest request = new(SelectSubMenu.GetScenePath())
+
+        var data = new SelectSubMenuDataModel()
         {
-            Data = new SelectSubMenuDataModel()
-            {
-                Slot = slot,
-                Actor = actor
-            }
+            Slot = slot,
+            Actor = actor
         };
-        RequestOpenSubMenu(request);
+        _ = OpenSubMenuAsync(path: SelectSubMenu.GetScenePath(), data: data);
     }
 
     private void UpdateEquipmentDisplay(OptionItem optionItem)

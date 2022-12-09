@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.Input;
@@ -34,8 +33,8 @@ public partial class SubMenu : Control
     [Export] protected bool PreventCancel { get; set; }
     [Export] protected bool PreventCloseAll { get; set; }
     protected Color TempColor { get; set; }
-    public Action<GUIOpenRequest> OpenSubMenuDelegate { get; set; }
-    public Action<GUICloseRequest> CloseSubMenuDelegate { get; set; }
+    protected IGUIController GUIController { get; set; }
+    protected IMenu Menu { get; set; }
     protected string CloseSoundPath { get; set; } = "menu_close1.wav";
 
     public override void _Ready()
@@ -43,43 +42,54 @@ public partial class SubMenu : Control
         TempColor = Modulate;
         Modulate = Godot.Colors.Transparent;
         if (this.IsSceneRoot())
-            _ = InitAsync(null, null, new GUIOpenRequest(packedScene: null));
+            _ = InitAsync(null, null);
     }
 
-    public virtual void ReceiveData(object data) { }
+    public virtual void SetupData(object data) { }
 
-    public virtual void RequestCloseSubMenu(GUICloseRequest request)
+    public virtual void UpdateData(object data) { }
+
+    public virtual async Task CloseMenuAsync(bool preventAnimation = false, object data = null)
+    {
+        await GUIController.CloseLayerAsync(preventAnimation, data);
+    }
+
+    public virtual async Task CloseSubMenuAsync(Type cascadeTo = null, bool preventAnimation = false, object data = null)
     {
         Locator.Audio.PlaySoundFX(CloseSoundPath);
-        CloseSubMenuDelegate?.Invoke(request);
+        await Menu.CloseSubMenuAsync(cascadeTo, preventAnimation, data);
     }
 
-    public virtual void RequestOpenSubMenu(GUIOpenRequest request)
+    public virtual async Task OpenSubMenuAsync(string path, bool preventAnimation = false, object data = null)
     {
-        OpenSubMenuDelegate?.Invoke(request);
+        await Menu.OpenSubMenuAsync(path, preventAnimation, data);
+    }
+
+    public virtual async Task OpenSubMenuAsync(PackedScene packedScene, bool preventAnimation = false, object data = null)
+    {
+        await Menu.OpenSubMenuAsync(packedScene, preventAnimation, data);
     }
 
     public virtual void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && !PreventCancel)
-            RequestCloseSubMenu(new GUICloseRequest());
+            _ = CloseSubMenuAsync();
         else if (menuInput.Start.IsActionJustPressed && !PreventCloseAll)
-            RequestCloseSubMenu(new GUICloseRequest() { CloseRequestType = CloseRequestType.Layer });
+            _ = GUIController.CloseLayerAsync();
     }
 
-    public async Task InitAsync(
-        Action<GUIOpenRequest> openSubMenuDelegate,
-        Action<GUICloseRequest> closeSubMenuDelegate,
-        GUIOpenRequest request)
+    public async Task InitAsync(IGUIController guiController, IMenu menu, object data = null)
     {
-        OpenSubMenuDelegate = openSubMenuDelegate;
-        CloseSubMenuDelegate = closeSubMenuDelegate;
-        ReceiveData(request.Data);
+        GUIController = guiController;
+        Menu = menu;
+        SetupData(data);
         SetNodeReferences();
         CustomSetup();
         PreWaitFrameSetup();
         await ToSignal(GetTree(), Signals.ProcessFrameSignal);
-        await PostWaitFrameSetup();
+        Modulate = TempColor;
+        await TransitionOpenAsync();
+        PostWaitFrameSetup();
         Loading = false;
     }
 
@@ -113,11 +123,7 @@ public partial class SubMenu : Control
     /// Logic used for setup after the controls have adjusted.
     /// </summary>
     /// <returns></returns>
-    protected virtual async Task PostWaitFrameSetup()
-    {
-        Modulate = TempColor;
-        await TransitionOpenAsync();
-    }
+    protected virtual void PostWaitFrameSetup() { }
 
     protected virtual void SetNodeReferences()
     {

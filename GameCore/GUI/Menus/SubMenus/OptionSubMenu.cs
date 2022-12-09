@@ -39,10 +39,8 @@ public partial class OptionSubMenu : SubMenu
         base.PreWaitFrameSetup();
     }
 
-    protected sealed override async Task PostWaitFrameSetup()
+    protected sealed override void PostWaitFrameSetup()
     {
-        Modulate = TempColor;
-        await TransitionOpenAsync();
         OptionContainers.ForEach(x => SubscribeToEvents(x));
         FocusContainer(OptionContainers.FirstOrDefault());
     }

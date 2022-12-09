@@ -40,11 +40,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
         {
             var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
             var session = sessionScene.Instantiate<GameSessionBase>();
-            await Locator.Root?.GUIController.CloseLayerAsync(new GUICloseRequest()
-            {
-                CloseRequestType = CloseRequestType.AllLayers,
-                PreventAnimation = true
-            });
+            await GUIController.CloseAllLayersAsync(true);
             Locator.ProvideGameSession(session);
             Locator.Root?.GameSessionContainer.AddChild(session);
             session.Init(gameSave);
@@ -56,12 +52,12 @@ public partial class LoadGameSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { Locator.Root?.GameSessionScenePath},
+            new string[] { Locator.Root?.GameSessionScenePath },
             Callback);
         tController.RequestTransition(request);
     }
 
-    private List<SaveGameOption> GetSaveGameOptions()
+    private static List<SaveGameOption> GetSaveGameOptions()
     {
         var saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
         var gameSaves = SaveService.GetGameSaves();

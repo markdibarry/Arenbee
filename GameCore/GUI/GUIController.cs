@@ -7,7 +7,7 @@ using Godot;
 
 namespace GameCore.GUI;
 
-public partial class GUIController : CanvasLayer
+public partial class GUIController : CanvasLayer, IGUIController
 {
     public GUIController()
     {
@@ -15,6 +15,7 @@ public partial class GUIController : CanvasLayer
     }
 
     private readonly List<GUILayer> _guiLayers;
+    private readonly PackedScene _dialogPackedScene = GD.Load<PackedScene>(Dialog.GetScenePath());
     private GUILayer CurrentLayer => _guiLayers.Count > 0 ? _guiLayers[^1] : null;
     public bool Busy => ClosingLayer || OpeningLayer;
     public bool ClosingLayer { get; private set; }
@@ -22,150 +23,87 @@ public partial class GUIController : CanvasLayer
     public bool MenuActive { get; set; }
     public bool DialogActive { get; set; }
     public bool GUIActive => MenuActive || DialogActive;
-    public GUIOpenRequest OpenRequest { get; set; }
-    public GUICloseRequest CloseRequest { get; set; }
     public event Action<GUIController> GUIStatusChanged;
-
-    public override void _Process(double delta)
-    {
-        HandleCloseRequests();
-        HandleOpenRequests();
-    }
 
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        if (_guiLayers.Count == 0 || Busy)
+        if (Busy || CurrentLayer == null)
             return;
-        _guiLayers[^1].HandleInput(menuInput, delta);
+        CurrentLayer.HandleInput(menuInput, delta);
     }
 
-    public async Task CloseLayerAsync(GUICloseRequest closeRequest)
+    public async Task CloseLayerAsync(bool preventAnimation = false, object data = null)
     {
-        await HandleCloseRequestsAsync(closeRequest);
+        ClosingLayer = true;
+        await CloseLayerInternalAsync(preventAnimation, data);
+        ClosingLayer = false;
     }
 
-    public async Task OpenLayerAsync(GUIOpenRequest openRequest)
+    public async Task CloseAllLayersAsync(bool preventAnimation = false)
     {
-        await HandleOpenRequestsAsync(openRequest);
-    }
-
-    protected virtual Task TransitionOpenAsync() => Task.CompletedTask;
-
-    protected virtual Task TransitionCloseAsync() => Task.CompletedTask;
-
-    private async Task CloseAllLayersAsync(GUICloseRequest request)
-    {
+        ClosingLayer = true;
         foreach (var layer in _guiLayers)
         {
-            if (!request.PreventAnimation)
+            if (!preventAnimation)
                 await layer.TransitionCloseAsync();
             RemoveChild(layer);
             layer.QueueFree();
         }
         _guiLayers.Clear();
         UpdateCurrentGUI();
-        request.Callback?.Invoke();
+        ClosingLayer = false;
     }
 
-    private async Task CloseSingleLayerAsync(GUICloseRequest request)
+    public async Task OpenDialogAsync(string dialogPath, bool preventAnimation = false)
     {
-        var layer = CurrentLayer;
+        OpeningLayer = true;
+        Dialog dialog = _dialogPackedScene.Instantiate<Dialog>();
+        AddChild(dialog);
+        _guiLayers.Add(dialog);
+        UpdateCurrentGUI();
+        await dialog.InitAsync(this, dialogPath);
+        OpeningLayer = false;
+    }
+
+    public async Task OpenMenuAsync(string scenePath, bool preventAnimation = false, object data = null)
+    {
+        OpeningLayer = true;
+        await OpenMenuInternalAsync(GD.Load<PackedScene>(scenePath), preventAnimation, data);
+        OpeningLayer = false;
+    }
+
+    public async Task OpenMenuAsync(PackedScene packedScene, bool preventAnimation = false, object data = null)
+    {
+        OpeningLayer = true;
+        await OpenMenuInternalAsync(packedScene, preventAnimation, data);
+        OpeningLayer = false;
+    }
+
+    protected virtual Task TransitionOpenAsync() => Task.CompletedTask;
+
+    protected virtual Task TransitionCloseAsync() => Task.CompletedTask;
+
+    private async Task CloseLayerInternalAsync(bool preventAnimation = false, object data = null)
+    {
+        GUILayer layer = CurrentLayer;
         if (layer == null)
             return;
-        if (!request.PreventAnimation)
+        if (!preventAnimation)
             await layer.TransitionCloseAsync();
-        if (!_guiLayers.Contains(layer))
-            return;
         RemoveChild(layer);
         layer.QueueFree();
         _guiLayers.Remove(layer);
         UpdateCurrentGUI();
-        CurrentLayer?.ReceiveData(request.Data);
-        request.Callback?.Invoke();
+        CurrentLayer?.UpdateData(data);
     }
 
-    private async Task HandleCloseRequestAsync(GUICloseRequest request)
+    private async Task OpenMenuInternalAsync(PackedScene packedScene, bool preventAnimation = false, object data = null)
     {
-        switch (request.CloseRequestType)
-        {
-            case CloseRequestType.AllLayers:
-                await CloseAllLayersAsync(request);
-                break;
-            case CloseRequestType.Layer:
-            case CloseRequestType.SubLayer:
-                await CloseSingleLayerAsync(request);
-                break;
-        }
-    }
-
-    private void HandleCloseRequests()
-    {
-        if (CloseRequest == null)
-            return;
-        _ = HandleCloseRequestsAsync(CloseRequest);
-    }
-
-    private async Task HandleCloseRequestsAsync(GUICloseRequest request)
-    {
-        if (Busy || request == null)
-            return;
-        while (request != null)
-        {
-            CloseRequest = null;
-            ClosingLayer = true;
-            await HandleCloseRequestAsync(request);
-            request = CloseRequest;
-        }
-        ClosingLayer = false;
-    }
-
-    private void HandleOpenRequests()
-    {
-        if (OpenRequest == null)
-            return;
-        _ = HandleOpenRequestsAsync(OpenRequest);
-    }
-
-    private async Task HandleOpenRequestsAsync(GUIOpenRequest request)
-    {
-        if (Busy || request == null)
-            return;
-        while (request != null)
-        {
-            OpenRequest = null;
-            OpeningLayer = true;
-            await OpenSingleLayerAsync(request);
-            request = OpenRequest;
-        }
-        OpeningLayer = false;
-    }
-
-    private async Task OpenSingleLayerAsync(GUIOpenRequest request)
-    {
-        PackedScene packedScene = request.PackedScene;
-        if (packedScene == null)
-        {
-            if (request.IsDialog)
-                packedScene = GD.Load<PackedScene>(Dialog.GetScenePath());
-            else
-                packedScene = GD.Load<PackedScene>(request.Path);
-        }
-        GUILayer layer = packedScene.Instantiate<GUILayer>();
-        AddChild(layer);
-        _guiLayers.Add(layer);
+        Menu menu = packedScene.Instantiate<Menu>();
+        AddChild(menu);
+        _guiLayers.Add(menu);
         UpdateCurrentGUI();
-        await layer.InitAsync(RequestOpenLayer, RequestCloseLayer, request);
-        request.Callback?.Invoke();
-    }
-
-    private void RequestCloseLayer(GUICloseRequest request)
-    {
-        CloseRequest = request;
-    }
-
-    private void RequestOpenLayer(GUIOpenRequest request)
-    {
-        OpenRequest = request;
+        await menu.InitAsync(this, data);
     }
 
     private void UpdateCurrentGUI()

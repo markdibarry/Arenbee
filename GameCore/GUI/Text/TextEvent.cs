@@ -30,6 +30,18 @@ public class TextEvent : ITextEvent
     }
 }
 
+public class InstructionTextEvent : TextEvent
+{
+    public int[] Instructions { get; set; }
+
+    public override bool HandleEvent(object context)
+    {
+        if (context is not Dialog dialog)
+            return false;
+        return true;
+    }
+}
+
 public class SpeedTextEvent : TextEvent
 {
     public SpeedTextEvent()
@@ -153,27 +165,39 @@ public class Tag
     public Dictionary<string, string> Attributes { get; set; } = new();
     public static string[] BBCodeTags = new[]
     {
-            "b",
-            "i",
-            "u",
-            "s",
-            "code",
-            "center",
-            "right",
-            "fill",
-            "indent",
-            "url",
-            "image",
-            "font",
-            "table",
-            "cell",
-            "color",
-            "wave",
-            "tornado",
-            "fade",
-            "rainbow",
-            "shake"
-        };
+        "b",
+        "i",
+        "u",
+        "s",
+        "code",
+        "p",
+        "center",
+        "right",
+        "left",
+        "fill",
+        "indent",
+        "url",
+        "img",
+        "font",
+        "font_size",
+        "opentype_features",
+        "table",
+        "cell",
+        "ul",
+        "ol",
+        "lb",
+        "rb",
+        "color",
+        "bgcolor",
+        "fgcolor",
+        "outline_size",
+        "outline_color",
+        "wave",
+        "tornado",
+        "fade",
+        "rainbow",
+        "shake"
+    };
 
     public bool IsBBCode()
     {

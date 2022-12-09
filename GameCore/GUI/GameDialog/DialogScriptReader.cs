@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GameCore.GUI.GameDialog;
 
 public class DialogScriptReader
 {
-    public DialogScriptReader(Dialog dialog)
+    public DialogScriptReader(Dialog dialog, DialogBridgeRegister register)
     {
         _dialog = dialog;
+        _register = register;
     }
 
     private readonly Dialog _dialog;
+    private readonly DialogBridgeRegister _register;
     private DialogScript _currentScript;
     public List<Speaker> Speakers { get; set; }
 
@@ -22,52 +22,54 @@ public class DialogScriptReader
         HandleNext(_currentScript.Sections[0]);
     }
 
-    public void HandleLineStatement(int index)
-    {
-        LineData lineData = _currentScript.Lines[index];
-
-        _dialog.HandleLine(lineData);
-    }
-
-    private void HandleSectionStatement(int index)
-    {
-        HandleNext(_currentScript.Sections[index]);
-    }
-
-    private void HandleInstructionStatement(int index)
-    {
-        InstructionStatement instruction = _currentScript.InstructionStmts[index];
-    }
-
-    private void HandleConditionalStatement(int index)
-    {
-        InstructionStatement[] conditions = _currentScript.ConditionalSets[index];
-    }
-
-    private void HandleChoiceStatement(int index)
-    {
-        int[] choiceSet = _currentScript.ChoiceSets[index];
-    }
-
-    private void HandleNext(IStatement stmt)
+    public void HandleNext(IStatement stmt)
     {
         switch (stmt.Next.Type)
         {
             case StatementType.Line:
-                HandleLineStatement(stmt.Next.Index);
+                HandleLineStatement();
                 break;
             case StatementType.Section:
-                HandleSectionStatement(stmt.Next.Index);
+                HandleSectionStatement();
                 break;
             case StatementType.Instruction:
-                HandleInstructionStatement(stmt.Next.Index);
+                HandleInstructionStatement();
                 break;
             case StatementType.Conditional:
-                HandleConditionalStatement(stmt.Next.Index);
+                HandleConditionalStatement();
                 break;
             case StatementType.Choice:
-                HandleChoiceStatement(stmt.Next.Index);
+                HandleChoiceStatement();
                 break;
+        }
+
+        void HandleLineStatement()
+        {
+            LineData lineData = _currentScript.Lines[stmt.Next.Index];
+            DialogLine line = _register.BuildLine(_currentScript, lineData);
+            for (int i = 0; i < lineData.SpeakerIndices.Length; i++)
+                line.Speakers.Add(Speakers[lineData.SpeakerIndices[i]]);
+            _dialog.HandleLineAsync(line);
+        }
+
+        void HandleSectionStatement()
+        {
+            HandleNext(_currentScript.Sections[stmt.Next.Index]);
+        }
+
+        void HandleInstructionStatement()
+        {
+            InstructionStatement instruction = _currentScript.InstructionStmts[stmt.Next.Index];
+        }
+
+        void HandleConditionalStatement()
+        {
+            InstructionStatement[] conditions = _currentScript.ConditionalSets[stmt.Next.Index];
+        }
+
+        void HandleChoiceStatement()
+        {
+            int[] choiceSet = _currentScript.ChoiceSets[stmt.Next.Index];
         }
     }
 

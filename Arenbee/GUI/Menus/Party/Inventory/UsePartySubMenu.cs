@@ -25,7 +25,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     public ActionEffectDBBase ActionEffectDB { get; set; }
     public IActionEffect ActionEffect { get; set; }
 
-    public override void ReceiveData(object data)
+    public override void SetupData(object data)
     {
         if (data is not ItemStack itemStack)
             return;

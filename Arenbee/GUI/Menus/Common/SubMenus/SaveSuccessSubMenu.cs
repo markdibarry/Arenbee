@@ -17,7 +17,7 @@ public partial class SaveSuccessSubMenu : PromptSubMenu
     protected override void OnTimeOut()
     {
         base.OnTimeOut();
-        RequestCloseSubMenu(new GUICloseRequest() { CascadeTo = typeof(SaveGameSubMenu) });
+        CloseSubMenuAsync(cascadeTo: typeof(SaveGameSubMenu));
     }
 
     protected override void CustomSetup()

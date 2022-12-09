@@ -21,7 +21,7 @@ public partial class UseSubMenu : OptionSubMenu
         DisplayOptions();
     }
 
-    public override void ReceiveData(object data)
+    public override void SetupData(object data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -96,11 +96,7 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void OpenPartyUseSubMenu()
     {
-        var request = new GUIOpenRequest(UsePartySubMenu.GetScenePath())
-        {
-            Data = ItemStack
-        };
-        RequestOpenSubMenu(request);
+        _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: ItemStack);
     }
 
     private static void OpenEnemyUseSubMenu()

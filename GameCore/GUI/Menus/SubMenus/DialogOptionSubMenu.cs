@@ -12,7 +12,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
     private PackedScene _textOptionScene;
     private OptionContainer _options;
 
-    public override void ReceiveData(object data)
+    public override void SetupData(object data)
     {
         if (data is not DialogOptionDataModel dataModel)
             return;
@@ -21,15 +21,10 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        string next = CurrentContainer.CurrentItem.GetData<string>("next");
-        Line[] lines = CurrentContainer.CurrentItem.GetData<Line[]>("lines");
-        DialogOptionSelectionDataModel data = new()
-        {
-            Next = next,
-            Lines = lines
-        };
-        var closeRequest = new GUICloseRequest() { Data = data };
-        RequestCloseSubMenu(closeRequest);
+        int selectedIndex = CurrentContainer.CurrentItem.GetData<int>("index");
+        var next = DialogChoices[selectedIndex].Next;
+        DialogOptionSelectionDataModel data = new() { Next = next };
+        _ = CloseSubMenuAsync(data: data);
     }
 
     protected override void SetupOptions()
@@ -38,14 +33,12 @@ public partial class DialogOptionSubMenu : OptionSubMenu
             return;
         _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
-        foreach (var choice in DialogChoices)
+        for (int i = 0; i < DialogChoices.Length; i++)
         {
-            if (choice.Condition != null && !choice.Condition.Evaluate())
+            if (!DialogChoices[i].Selectable)
                 continue;
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData["next"] = choice.Next;
-            textOption.OptionData["lines"] = choice.Lines;
-            textOption.LabelText = choice.Text;
+            textOption.OptionData["index"] = i;
             options.Add(textOption);
         }
         _options.ReplaceChildren(options);

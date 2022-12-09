@@ -80,22 +80,22 @@ public partial class MainSubMenu : OptionSubMenu
 
     private void OpenStatsSubMenu()
     {
-        RequestOpenSubMenu(new GUIOpenRequest(StatsSubMenu.GetScenePath()));
+        _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath());
     }
 
     private void OpenInventorySubMenu()
     {
-        RequestOpenSubMenu(new GUIOpenRequest(InventorySubMenu.GetScenePath()));
+        _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath());
     }
 
     private void OpenEquipmentSubMenu()
     {
-        RequestOpenSubMenu(new GUIOpenRequest(EquipmentSubMenu.GetScenePath()));
+        _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath());
     }
 
     private void OpenSaveGameConfirm()
     {
-        RequestOpenSubMenu(new GUIOpenRequest(SaveGameSubMenu.GetScenePath()));
+        _ = OpenSubMenuAsync(SaveGameSubMenu.GetScenePath());
     }
 
     private void QuitToTitle()

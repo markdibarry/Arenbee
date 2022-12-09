@@ -34,7 +34,6 @@ public partial class GameSession : GameSessionBase
 
     private async void OpenPartyMenuAsync()
     {
-        GUIOpenRequest request = new(PartyMenu.GetScenePath());
-        await GUIController.OpenLayerAsync(request);
+        await GUIController.OpenMenuAsync(PartyMenu.GetScenePath());
     }
 }

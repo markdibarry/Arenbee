@@ -97,11 +97,7 @@ public partial class MainSubMenu : OptionSubMenu
             Locator.ProvideGameSession(session);
             Locator.Root?.GameSessionContainer.AddChild(session);
             session.Init(gameSave);
-            await Locator.Root?.GUIController.CloseLayerAsync(new GUICloseRequest()
-            {
-                CloseRequestType = CloseRequestType.AllLayers,
-                PreventAnimation = true
-            });
+            await Locator.Root?.GUIController.CloseAllLayersAsync(true);
         }
 
         var tController = Locator.TransitionController;
@@ -117,7 +113,6 @@ public partial class MainSubMenu : OptionSubMenu
 
     private void OpenContiueSaveSubMenu()
     {
-        GUIOpenRequest request = new(LoadGameSubMenu.GetScenePath());
-        RequestOpenSubMenu(request);
+        _ = OpenSubMenuAsync(LoadGameSubMenu.GetScenePath());
     }
 }

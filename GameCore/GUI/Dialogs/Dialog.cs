@@ -28,10 +28,12 @@ public partial class Dialog : GUILayer
     public DialogScript DialogScript { get; set; }
     public Dictionary<string, object> LocalStorage { get; set; }
     public LineData CurrentLine { get; set; }
-    public DialogBox UnfocusedBox { get; set; }
+    public DialogBox SecondaryBox { get; set; }
     public DialogBox FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
     public DialogScriptReader DialogScriptReader { get; set; }
+    public bool SpeechBubbleEnabled { get; set; }
+    public bool DualBoxEnabled { get; set; }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -50,95 +52,27 @@ public partial class Dialog : GUILayer
 
     public async Task CloseDialogBoxAsync(DialogBox box)
     {
-        LoadingDialogBox = true;
         if (box == null)
             return;
+        LoadingDialogBox = true;
         await box.TransitionCloseAsync();
         box.TextEventTriggered -= OnTextEventTriggered;
         box.StoppedWriting -= OnStoppedWriting;
         RemoveChild(box);
         box.QueueFree();
-        LoadingDialogBox = false;
     }
 
     public async Task CloseDialogBoxesAsync()
     {
-        await CloseDialogBoxAsync(UnfocusedBox);
-        UnfocusedBox = null;
+        await CloseDialogBoxAsync(SecondaryBox);
         await CloseDialogBoxAsync(FocusedBox);
-        FocusedBox = null;
     }
 
-    public override async Task InitAsync(
-        Action<GUIOpenRequest> openLayerDelegate,
-        Action<GUICloseRequest> closeLayerDelegate,
-        GUIOpenRequest request)
+    public async Task InitAsync(GUIController guiController, string dialogPath)
     {
-        OpenLayerDelegate = openLayerDelegate;
-        CloseLayerDelegate = closeLayerDelegate;
+        GUIController = guiController;
         await TransitionOpenAsync();
-        await StartDialogAsync(request.Path);
-        LoadingDialog = false;
-    }
-
-    public async Task ToDialogPartAsync(LineData newLine)
-    {
-        SpeedUpEnabled = false;
-        LineData previousLine = FocusedBox.DialogLine;
-        // If part not found, end dialog
-        if (newLine == null)
-        {
-            await CloseDialogBoxesAsync();
-            RequestCloseDialog();
-            return;
-        }
-        DialogBox nextBox = FocusedBox;
-
-        // Reuse current box if next speaker(s) is same as current speaker(s).
-        if (Speaker.SameSpeakers(newLine.Speakers, previousLine.Speakers))
-        {
-            nextBox.DialogLine = newLine;
-            await nextBox.UpdateDialogLineAsync();
-            LoadingDialog = false;
-            return;
-        }
-
-        // Remove current box if a speaker in the current box is needed in the next one.
-        if (Speaker.AnySpeakers(newLine.Speakers, previousLine.Speakers))
-        {
-            await CloseDialogBoxAsync(nextBox);
-            nextBox = null;
-        }
-        else
-        {
-            nextBox.Dim = true;
-        }
-
-        // Current box cannot be reused, try old unfocused box if there is one
-        DialogBox oldBox = nextBox;
-        nextBox = UnfocusedBox;
-
-        if (nextBox != null)
-        {
-            // Reuse old unfocused box if next speaker(s) is same as old unfocused box speaker(s)
-            if (Speaker.SameSpeakers(newLine.Speakers, nextBox.DialogLine.Speakers))
-            {
-                nextBox.MoveToFront();
-                nextBox.DialogLine = newLine;
-                await nextBox.UpdateDialogLineAsync();
-                nextBox.Dim = false;
-            }
-            else
-            {
-                await CloseDialogBoxAsync(nextBox);
-                nextBox = null;
-            }
-        }
-
-        nextBox ??= await OpenDialogBox(newLine, !oldBox?.ReverseDisplay ?? false);
-
-        UnfocusedBox = oldBox;
-        FocusedBox = nextBox;
+        await StartDialogAsync(dialogPath);
         LoadingDialog = false;
     }
 
@@ -160,7 +94,7 @@ public partial class Dialog : GUILayer
         await ToDialogPartAsync(line);
     }
 
-    public override void ReceiveData(object data)
+    public override void UpdateData(object data)
     {
         if (data is not DialogOptionSelectionDataModel model)
         {
@@ -202,13 +136,13 @@ public partial class Dialog : GUILayer
         CanProceed = true;
     }
 
-    private async Task<DialogBox> OpenDialogBox(LineData line, bool reverseDisplay)
+    private async Task<DialogBox> OpenDialogBox(DialogLine line, bool displayRight)
     {
         var newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
         newBox.StoppedWriting += OnStoppedWriting;
         newBox.DialogLine = line;
-        newBox.ReverseDisplay = reverseDisplay;
+        newBox.DisplayRight = displayRight;
         AddChild(newBox);
         await newBox.UpdateDialogLineAsync();
         return newBox;
@@ -247,12 +181,101 @@ public partial class Dialog : GUILayer
             return;
         }
         DialogScriptReader.ReadScript(DialogScript);
-
-        FocusedBox = await OpenDialogBox(DialogScript.GetNextLine(), false);
     }
 
-    public void HandleLine(LineData line)
+    public async Task HandleLineAsync(DialogLine newLine)
     {
-        if ()
+        if (SpeechBubbleEnabled)
+        {
+            RequestCloseDialog();
+            return;
+        }
+        if (DualBoxEnabled)
+            await HandleDualBoxLineAsync(newLine);
+        else
+            await HandleSingleBoxLineAsync(newLine);
+
+        LoadingDialog = false;
+    }
+
+    public async Task HandleSingleBoxLineAsync(DialogLine newLine)
+    {
+        if (SecondaryBox != null)
+        {
+            await CloseDialogBoxAsync(SecondaryBox);
+            SecondaryBox = null;
+        }
+
+        // If no box exists, make one.
+        if (FocusedBox == null)
+        {
+            await OpenDialogBox(newLine, false);
+            return;
+        }
+
+        // Try to reuse existing box
+        if (await TryUseDialogBoxAsync(newLine, FocusedBox))
+            return;
+
+        await CloseDialogBoxAsync(FocusedBox);
+        FocusedBox = null;
+        await OpenDialogBox(newLine, false);
+        return;
+    }
+
+    public async Task HandleDualBoxLineAsync(DialogLine newLine)
+    {
+        // If no box exists, make one.
+        if (FocusedBox == null)
+        {
+            await OpenDialogBox(newLine, false);
+            return;
+        }
+
+        // Try to reuse existing box
+        if (await TryUseDialogBoxAsync(newLine, FocusedBox))
+            return;
+
+        bool displayRight = FocusedBox.DisplayRight;
+
+        // Close if contains overlapping speakers
+        if (newLine.AnySpeakers(FocusedBox.DialogLine))
+        {
+            await CloseDialogBoxAsync(FocusedBox);
+            FocusedBox = null;
+        }
+        else
+        {
+            FocusedBox.Dim = true;
+        }
+
+        // First box can't be used, so swap them
+        (FocusedBox, SecondaryBox) = (SecondaryBox, FocusedBox);
+
+        // If no second box exists, make one
+        if (FocusedBox == null)
+        {
+            await OpenDialogBox(newLine, !displayRight);
+            return;
+        }
+
+        // Try to reuse existing second box
+        if (await TryUseDialogBoxAsync(newLine, FocusedBox))
+            return;
+
+        await CloseDialogBoxAsync(FocusedBox);
+        FocusedBox = null;
+        await OpenDialogBox(newLine, !displayRight);
+    }
+
+    private async Task<bool> TryUseDialogBoxAsync(DialogLine line, DialogBox box)
+    {
+        if (!line.SameSpeakers(box.DialogLine))
+            return false;
+        box.MoveToFront();
+        box.DialogLine = line;
+        await box.UpdateDialogLineAsync();
+        box.Dim = false;
+        return true;
     }
 }

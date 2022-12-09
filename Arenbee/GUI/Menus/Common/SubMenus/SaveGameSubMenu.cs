@@ -27,9 +27,7 @@ public partial class SaveGameSubMenu : OptionSubMenu
 
     private void OpenSaveGameConfirmSubMenu(GameSave gameSave)
     {
-        GUIOpenRequest request = new(SaveConfirmSubMenu.GetScenePath());
-        request.Data = gameSave.Id;
-        RequestOpenSubMenu(request);
+        _ = OpenSubMenuAsync(path: SaveConfirmSubMenu.GetScenePath(), data: gameSave.Id);
     }
 
     private List<SaveGameOption> GetSaveGameOptions()

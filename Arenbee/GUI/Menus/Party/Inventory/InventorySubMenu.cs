@@ -122,11 +122,7 @@ public partial class InventorySubMenu : OptionSubMenu
         ItemStack itemStack = _inventory.GetItemStack(itemId);
         if (itemStack == null)
             return;
-        var request = new GUIOpenRequest(UseSubMenu.GetScenePath())
-        {
-            Data = itemStack
-        };
-        RequestOpenSubMenu(request);
+        _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: itemStack);
     }
 
     private async Task UpdateItemDescription(OptionItem optionItem)

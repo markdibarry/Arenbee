@@ -26,7 +26,7 @@ public partial class SelectSubMenu : OptionSubMenu
     public ActorBase Actor { get; set; }
     public EquipmentSlotBase Slot { get; set; }
 
-    public override void ReceiveData(object data)
+    public override void SetupData(object data)
     {
         if (data is not SelectSubMenuDataModel dataModel)
             return;
@@ -62,8 +62,8 @@ public partial class SelectSubMenu : OptionSubMenu
     {
         if (TryEquip(CurrentContainer.CurrentItem.GetData<string>(nameof(ItemStack.ItemId)), Slot))
         {
-            CloseSoundPath = "";
-            RequestCloseSubMenu(new());
+            CloseSoundPath = string.Empty;
+            _ = CloseSubMenuAsync();
         }
     }
 

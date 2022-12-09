@@ -14,7 +14,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
     private OptionContainer _saveOptions;
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    public override void ReceiveData(object data)
+    public override void SetupData(object data)
     {
         if (data is not int gameSaveId)
             return;
@@ -39,7 +39,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
                 SaveGame();
                 break;
             case SaveConfirmOptions.No:
-                RequestCloseSubMenu(new());
+                _ = CloseSubMenuAsync();
                 break;
         }
     }
@@ -47,7 +47,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
     private void SaveGame()
     {
         SaveService.SaveGame(_gameSaveId, Locator.Session);
-        RequestOpenSubMenu(new GUIOpenRequest(SaveSuccessSubMenu.GetScenePath()));
+        _ = OpenSubMenuAsync(SaveSuccessSubMenu.GetScenePath());
     }
 
     private static List<TextOption> GetMenuOptions()
