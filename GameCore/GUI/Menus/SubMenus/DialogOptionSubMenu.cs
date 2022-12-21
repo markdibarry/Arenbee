@@ -21,7 +21,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        int selectedIndex = CurrentContainer.CurrentItem.GetData<int>("index");
+        int selectedIndex = CurrentContainer.CurrentItem.TryGetData<int>("index");
         var next = DialogChoices[selectedIndex].Next;
         DialogOptionSelectionDataModel data = new() { Next = next };
         _ = CloseSubMenuAsync(data: data);

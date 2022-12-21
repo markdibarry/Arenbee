@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b4w61od6u6rj4"
+
+[deps]
+
+files=["res://Arenbee/GUI/Localization/Menus.en.translation"]
+
+source_file="res://Arenbee/GUI/Localization/Menus.csv"
+dest_files=["res://Arenbee/GUI/Localization/Menus.en.translation"]
+
+[params]
+
+compress=true
+delimiter=0

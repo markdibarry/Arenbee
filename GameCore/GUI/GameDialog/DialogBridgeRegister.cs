@@ -12,29 +12,24 @@ public class DialogBridgeRegister
     public DialogBridgeRegister(DialogBridgeBase dialogBridgeBase)
     {
         _bridge = dialogBridgeBase;
-        Evaluator = new(this);
         Properties = new(GenerateProperties());
         Methods = new(GenerateMethods());
     }
 
-    public Evaluator Evaluator { get; }
     private readonly DialogBridgeBase _bridge;
     public ReadOnlyDictionary<string, VarDef> Properties { get; }
     public ReadOnlyDictionary<string, FuncDef> Methods { get; }
 
-    public DialogLine BuildLine(DialogScript dialogScript, LineData lineData)
-    {
-        return LineBuilder.BuildLine(Evaluator, dialogScript, lineData);
-    }
-
     private Dictionary<string, VarDef> GenerateProperties()
     {
         Dictionary<string, VarDef> properties = new();
-        var propertyInfos = _bridge.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-        foreach (var propertyInfo in propertyInfos)
+        PropertyInfo[] propertyInfos = _bridge.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+        foreach (PropertyInfo propertyInfo in propertyInfos)
         {
-            var getter = propertyInfo.GetGetMethod().CreateDelegate(GetDelegateType(propertyInfo.GetGetMethod()), _bridge);
-            var setter = propertyInfo.GetSetMethod().CreateDelegate(GetDelegateType(propertyInfo.GetSetMethod()), _bridge);
+            MethodInfo getMethodInfo = propertyInfo.GetGetMethod()!;
+            MethodInfo setMethodInfo = propertyInfo.GetSetMethod()!;
+            var getter = getMethodInfo.CreateDelegate(GetDelegateType(getMethodInfo), _bridge);
+            var setter = setMethodInfo.CreateDelegate(GetDelegateType(setMethodInfo), _bridge);
             properties.Add(propertyInfo.Name, new(getter, setter, GetVarType(propertyInfo.PropertyType)));
         }
         return properties;
@@ -91,7 +86,7 @@ public class DialogBridgeRegister
             .ToArray();
     }
 
-    public static Func<object[], object> CreateDynamicDelegate(MethodInfo methodInfo, object target)
+    public static Func<object[], object?> CreateDynamicDelegate(MethodInfo methodInfo, object target)
     {
         ParameterExpression argParams = Expression.Parameter(typeof(object[]), "args");
         MethodCallExpression call = Expression.Call(
@@ -101,7 +96,7 @@ public class DialogBridgeRegister
 
         if (methodInfo.ReturnType != typeof(void))
         {
-            var lambda = Expression.Lambda<Func<object[], object>>(
+            var lambda = Expression.Lambda<Func<object[], object?>>(
                 Expression.Convert(call, typeof(object)),
                 argParams);
             return lambda.Compile();
@@ -117,41 +112,4 @@ public class DialogBridgeRegister
             };
         }
     }
-}
-
-public class VarDef
-{
-    public VarDef(Delegate getter, Delegate setter, VarType varType)
-    {
-        Getter = getter;
-        Setter = setter;
-        VarType = varType;
-    }
-
-    public VarType VarType { get; }
-    public Delegate Getter { get; }
-    public Delegate Setter { get; }
-}
-
-public class FuncDef
-{
-    public FuncDef(Func<object[], object> method, VarType returnType, List<VarType> argTypes)
-    {
-        Method = method;
-        ReturnType = returnType;
-        ArgTypes = argTypes.ToArray();
-    }
-
-    public VarType ReturnType { get; }
-    public Func<object[], object> Method { get; }
-    public VarType[] ArgTypes { get; }
-}
-
-public enum VarType
-{
-    Undefined = 0,
-    Float = 1,
-    String = 2,
-    Bool = 3,
-    Void = 4
 }

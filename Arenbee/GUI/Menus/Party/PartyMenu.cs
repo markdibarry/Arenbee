@@ -16,13 +16,13 @@ public partial class PartyMenu : Menu
         ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
         Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 1f, 0.2f);
-        await ToSignal(tween, Signals.FinishedSignal);
+        await ToSignal(tween, Tween.SignalName.Finished);
     }
 
     public override async Task TransitionCloseAsync()
     {
         Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 0f, 0.2f);
-        await ToSignal(tween, Signals.FinishedSignal);
+        await ToSignal(tween, Tween.SignalName.Finished);
     }
 }

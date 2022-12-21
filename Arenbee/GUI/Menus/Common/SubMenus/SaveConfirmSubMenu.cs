@@ -30,7 +30,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var saveChoice = CurrentContainer.CurrentItem.GetData<string>("value");
+        var saveChoice = CurrentContainer.CurrentItem.TryGetData<string>("value");
         if (saveChoice == null)
             return;
         switch (saveChoice)

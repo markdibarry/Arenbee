@@ -10,12 +10,6 @@ public static class Colors
     public static readonly Color DisabledGrey = Godot.Colors.White.Darkened(0.5f);
 }
 
-public static class Signals
-{
-    public const string ProcessFrameSignal = "process_frame";
-    public const string FinishedSignal = "finished";
-}
-
 public static class WeaponTypes
 {
     public const string LongStick = "LongStick";

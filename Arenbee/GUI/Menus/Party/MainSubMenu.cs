@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Globalization;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.Party.Equipment;
@@ -8,9 +8,6 @@ using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
-using Arenbee.Localization;
-using System.Collections;
-using System.Linq;
 
 namespace Arenbee.GUI.Menus.Party;
 
@@ -20,28 +17,37 @@ public partial class MainSubMenu : OptionSubMenu
     public static string GetScenePath() => GDEx.GetScenePath();
 
     private OptionContainer _optionList;
+    private readonly List<string> _menuKeys = new()
+    {
+        Localization.Menus.Menus_Party_Stats,
+        Localization.Menus.Menus_Party_Inventory,
+        Localization.Menus.Menus_Party_Equipment,
+        Localization.Menus.Menus_Party_Options,
+        Localization.Menus.Menus_Party_Save,
+        Localization.Menus.Menus_Party_Quit
+    };
 
     protected override void OnItemSelected()
     {
-        var subMenuName = CurrentContainer.CurrentItem.GetData<string>("value");
+        var subMenuName = CurrentContainer.CurrentItem.TryGetData<string>("value");
         if (subMenuName == null)
             return;
 
         switch (subMenuName)
         {
-            case nameof(PartyMenuOptions.KEY01Stats):
-                OpenStatsSubMenu();
+            case Localization.Menus.Menus_Party_Stats:
+                _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath());
                 break;
-            case nameof(PartyMenuOptions.KEY02Inventory):
-                OpenInventorySubMenu();
+            case Localization.Menus.Menus_Party_Inventory:
+                _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath());
                 break;
-            case nameof(PartyMenuOptions.KEY03Equipment):
-                OpenEquipmentSubMenu();
+            case Localization.Menus.Menus_Party_Equipment:
+                _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath());
                 break;
-            case nameof(PartyMenuOptions.KEY05Save):
-                OpenSaveGameConfirm();
+            case Localization.Menus.Menus_Party_Save:
+                _ = OpenSubMenuAsync(SaveGameSubMenu.GetScenePath());
                 break;
-            case nameof(PartyMenuOptions.KEY06Quit):
+            case Localization.Menus.Menus_Party_Quit:
                 QuitToTitle();
                 break;
         }
@@ -49,8 +55,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void SetupOptions()
     {
-        var options = GetMenuOptions();
-        _optionList.ReplaceChildren(options);
+        _optionList.ReplaceChildren(GetMenuOptions());
     }
 
     protected override void SetNodeReferences()
@@ -59,48 +64,25 @@ public partial class MainSubMenu : OptionSubMenu
         _optionList = OptionContainers.Find(x => x.Name == "OptionContainer");
     }
 
-    private static List<TextOption> GetMenuOptions()
+    private IEnumerable<TextOption> GetMenuOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
-        var resourceSet = PartyMenuOptions.ResourceManager.GetEntries()
-            .OrderBy(i => i.Key);
-        foreach (DictionaryEntry entry in resourceSet)
+        foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = entry.Value.ToString();
-            var optionValue = entry.Key.ToString();
-            option.OptionData["value"] = optionValue;
-            if (optionValue == PartyMenuOptions.KEY04Options)
+            option.LabelText = Tr(menuKey);
+            option.OptionData["value"] = menuKey;
+            if (menuKey == Localization.Menus.Menus_Party_Options)
                 option.Disabled = true;
             options.Add(option);
         }
         return options;
     }
 
-    private void OpenStatsSubMenu()
-    {
-        _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath());
-    }
-
-    private void OpenInventorySubMenu()
-    {
-        _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath());
-    }
-
-    private void OpenEquipmentSubMenu()
-    {
-        _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath());
-    }
-
-    private void OpenSaveGameConfirm()
-    {
-        _ = OpenSubMenuAsync(SaveGameSubMenu.GetScenePath());
-    }
-
     private void QuitToTitle()
     {
-        Loading = true;
+        CurrentState = State.Busy;
         var tController = Locator.TransitionController;
         var request = new TransitionRequest(
             BasicLoadingScreen.GetScenePath(),

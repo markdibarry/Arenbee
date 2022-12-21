@@ -11,10 +11,9 @@ public partial class DynamicTextBox : Control
 {
     private int _currentPage;
     private float _displayHeight;
-    private DynamicText _dynamicText;
-    private bool _loading;
-    private int[] _pageBreakLineIndices;
-    private Control _textWindow;
+    private DynamicText _dynamicText = null!;
+    private IList<int> _pageBreakLineIndices = new[] { 0 };
+    private Control _textWindow = null!;
     [Export]
     public int CurrentPage
     {
@@ -38,10 +37,16 @@ public partial class DynamicTextBox : Control
         set => _dynamicText.ShowToEndCharEnabled = value;
     }
     [Export]
-    public bool WriteTextEnabled
+    public bool Writing
     {
-        get => _dynamicText.WriteTextEnabled;
-        set => _dynamicText.WriteTextEnabled = value;
+        get => CurrentState == State.Writing;
+        set
+        {
+            if (value)
+                StartWriting();
+            else
+                StopWriting();
+        }
     }
     [Export]
     public double Speed
@@ -49,20 +54,28 @@ public partial class DynamicTextBox : Control
         get => _dynamicText.Speed;
         set => _dynamicText.Speed = value;
     }
+    public State CurrentState { get; private set; }
     public ILookupContext TempLookup
     {
         get => _dynamicText.TempLookup;
         set => _dynamicText.TempLookup = value;
     }
-
     public double SpeedOverride
     {
         get => _dynamicText.SpeedOverride;
         set => _dynamicText.SpeedOverride = value;
     }
 
-    public event Action<ITextEvent> TextEventTriggered;
-    public event Action StoppedWriting;
+    public event Action<ITextEvent>? TextEventTriggered;
+    public event Action? StartedWriting;
+    public event Action? StoppedWriting;
+    public enum State
+    {
+        Opening,
+        Loading,
+        Idle,
+        Writing
+    }
 
     public override void _Notification(long what)
     {
@@ -75,7 +88,7 @@ public partial class DynamicTextBox : Control
         SetDefault();
     }
 
-    public bool IsAtLastPage() => CurrentPage == _pageBreakLineIndices.Length - 1;
+    public bool IsAtLastPage() => CurrentPage == _pageBreakLineIndices.Count - 1;
 
     public bool IsAtPageEnd() => _dynamicText.IsAtTextEnd();
 
@@ -83,19 +96,28 @@ public partial class DynamicTextBox : Control
 
     public void SpeedUpText() => _dynamicText.SpeedUpText();
 
+    public void StartWriting()
+    {
+        if (CurrentState != State.Idle)
+            return;
+        _dynamicText.StartWriting();
+    }
+
+    public void StopWriting()
+    {
+        if (CurrentState != State.Writing)
+            return;
+        _dynamicText.StopWriting();
+    }
+
     public async Task UpdateTextAsync(string text)
     {
-        if (_loading)
-            return;
-        _loading = true;
         await _dynamicText.UpdateTextAsync(text);
-        GD.Print("Updated");
-        _loading = false;
     }
 
     private int GetEndChar(int page)
     {
-        if (page + 1 >= _pageBreakLineIndices.Length)
+        if (page + 1 >= _pageBreakLineIndices.Count)
             return _dynamicText.TotalCharacterCount;
         return GetFirstCharIndexByPage(page + 1);
     }
@@ -107,7 +129,7 @@ public partial class DynamicTextBox : Control
         return _dynamicText.GetFirstCharIndexByLine(line);
     }
 
-    private int[] GetPageBreakLineIndices()
+    private IList<int> GetPageBreakLineIndices()
     {
         List<int> pageBreaksLineIndices = new() { 0 };
         int totalLines = _dynamicText.LineCount;
@@ -129,16 +151,21 @@ public partial class DynamicTextBox : Control
             }
             currentLineOffset = nextLineOffset;
         }
-        return pageBreaksLineIndices.ToArray();
+        return pageBreaksLineIndices;
     }
 
-    private int GetValidPage(int page) => Math.Clamp(page, 0, _pageBreakLineIndices.Length - 1);
+    private int GetValidPage(int page) => Math.Clamp(page, 0, _pageBreakLineIndices.Count - 1);
 
     private void Init()
     {
-        _pageBreakLineIndices = new[] { 0 };
         SetNodeReferences();
         SubscribeEvents();
+        CurrentState = State.Idle;
+    }
+
+    private void OnLoadingStarted()
+    {
+        CurrentState = State.Loading;
     }
 
     private void OnResized()
@@ -146,15 +173,26 @@ public partial class DynamicTextBox : Control
         _dynamicText.Size = new Vector2(_textWindow.Size.x, _dynamicText.Size.y);
         _dynamicText.OnResized();
     }
+    private void OnStartedWriting()
+    {
+        CurrentState = State.Writing;
+        StartedWriting?.Invoke();
+    }
 
     private void OnStoppedWriting()
     {
+        CurrentState = State.Idle;
         StoppedWriting?.Invoke();
     }
 
     private void OnTextDataUpdated()
     {
         UpdateTextData();
+    }
+
+    private void OnTextUpdated()
+    {
+        CurrentState = State.Idle;
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
@@ -175,15 +213,18 @@ public partial class DynamicTextBox : Control
 
     private void SetNodeReferences()
     {
-        _textWindow = GetNodeOrNull<Control>("TextWindow");
-        _dynamicText = _textWindow.GetNodeOrNull<DynamicText>("DynamicText");
+        _textWindow = GetNode<Control>("TextWindow");
+        _dynamicText = _textWindow.GetNode<DynamicText>("DynamicText");
     }
 
     private void SubscribeEvents()
     {
-        _dynamicText.TextEventTriggered += OnTextEventTriggered;
+        _dynamicText.LoadingStarted += OnLoadingStarted;
+        _dynamicText.StartedWriting += OnStartedWriting;
         _dynamicText.StoppedWriting += OnStoppedWriting;
+        _dynamicText.TextEventTriggered += OnTextEventTriggered;
         _dynamicText.TextDataUpdated += OnTextDataUpdated;
+        _dynamicText.TextUpdated += OnTextUpdated;
         _textWindow.Resized += OnResized;
     }
 

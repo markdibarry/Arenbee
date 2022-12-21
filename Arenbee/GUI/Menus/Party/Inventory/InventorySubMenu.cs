@@ -118,7 +118,7 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void OpenUseSubMenu(OptionItem optionItem)
     {
-        string itemId = optionItem.GetData<string>(nameof(ItemStack.ItemId));
+        string itemId = optionItem.TryGetData<string>(nameof(ItemStack.ItemId));
         ItemStack itemStack = _inventory.GetItemStack(itemId);
         if (itemStack == null)
             return;
@@ -127,7 +127,7 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private async Task UpdateItemDescription(OptionItem optionItem)
     {
-        string itemId = optionItem?.GetData<string>(nameof(ItemStack.ItemId));
+        string itemId = optionItem?.TryGetData<string>(nameof(ItemStack.ItemId));
         ItemBase item = Locator.ItemDB.GetItem(itemId);
         _itemStatsDisplay.UpdateStatsDisplay(item);
         await _itemInfo.UpdateTextAsync(item?.Description);
@@ -140,7 +140,7 @@ public partial class InventorySubMenu : OptionSubMenu
             return;
         if (resetFocus)
             _inventoryList.ResetContainerFocus();
-        string itemCategoryId = optionItem.GetData<string>(nameof(Item.ItemCategoryId));
+        string? itemCategoryId = optionItem.TryGetData<string>(nameof(Item.ItemCategoryId));
         List<KeyValueOption> options = GetItemOptions(itemCategoryId);
         _inventoryList.ReplaceChildren(options);
     }

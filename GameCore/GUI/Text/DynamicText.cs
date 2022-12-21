@@ -13,15 +13,14 @@ public partial class DynamicText : RichTextLabel
     private const double DefaultSpeed = 0.05;
     private double _counter;
     private int _currentLine;
-    private string _customText;
+    private string _customText = string.Empty;
     private int _endChar;
-    private List<int> _lineBreakCharIndices;
-    private bool _loading;
+    private List<int> _lineBreakCharIndices = new();
     private bool _showToEndCharEnabled;
     private bool _sizeDirty;
     private double _speed;
     private bool _textDirty;
-    private List<TextEvent> _textEvents;
+    private List<TextEvent> _textEvents = new();
     private bool _writeTextEnabled;
     [Export]
     public int CurrentLine
@@ -62,14 +61,15 @@ public partial class DynamicText : RichTextLabel
         }
     }
     [Export]
-    public bool WriteTextEnabled
+    public bool Writing
     {
-        get => _writeTextEnabled;
+        get => CurrentState == State.Writing;
         set
         {
-            _writeTextEnabled = value;
             if (value)
-                RaiseTextEvents();
+                StartWriting();
+            else
+                StopWriting();
         }
     }
     [Export]
@@ -83,6 +83,7 @@ public partial class DynamicText : RichTextLabel
             _speed = value;
         }
     }
+    public State CurrentState { get; private set; }
     public int ContentHeight { get; private set; }
     public int EndChar
     {
@@ -98,17 +99,36 @@ public partial class DynamicText : RichTextLabel
         get => _counter;
         set => _counter = Math.Max(value, 0);
     }
-    public event Action StoppedWriting;
-    public event Action<ITextEvent> TextEventTriggered;
-    public event Action TextDataUpdated;
+    public event Action? LoadingStarted;
+    public event Action? StartedWriting;
+    public event Action? StoppedWriting;
+    public event Action<ITextEvent>? TextEventTriggered;
+    public event Action? TextDataUpdated;
+    public event Action? TextUpdated;
+
+    public enum State
+    {
+        Opening,
+        Loading,
+        Idle,
+        Writing
+    }
 
     public override void _Process(double delta)
     {
+        if (CurrentState == State.Loading)
+            return;
         if (_textDirty)
-            HandleTextDirty();
+            _ = HandleTextDirtyAsync();
         else if (_sizeDirty)
             HandleSizeDirty();
-        HandleWrite(delta);
+        else if (CurrentState == State.Writing)
+        {
+            if (IsAtTextEnd())
+                StopWriting();
+            else
+                Write(delta);
+        }
     }
 
     public override void _Ready()
@@ -127,10 +147,7 @@ public partial class DynamicText : RichTextLabel
         return VisibleCharacters >= EndChar && Counter == 0;
     }
 
-    public void OnResized()
-    {
-        _sizeDirty = true;
-    }
+    public void OnResized() => _sizeDirty = true;
 
     public void ResetSpeed()
     {
@@ -138,40 +155,31 @@ public partial class DynamicText : RichTextLabel
         Speed = DefaultSpeed;
     }
 
-    public void SetPause(double time)
-    {
-        Counter += time;
-    }
+    public void SetPause(double time) => Counter += time;
 
     public void SpeedUpText() => Counter = 0;
 
-    public async Task UpdateTextAsync(string text)
+    public void StartWriting()
     {
-        _customText = text ?? string.Empty;
-        await UpdateTextAsync();
+        if (CurrentState != State.Idle)
+            return;
+        CurrentState = State.Writing;
+        StartedWriting?.Invoke();
+        RaiseTextEvents();
     }
 
-    private async Task UpdateTextAsync()
+    public void StopWriting()
     {
-        if (_loading)
+        if (CurrentState != State.Writing)
             return;
-        _loading = true;
-        // Set it so it can be parsed
-        try
-        {
-            Text = TextEventExtractor.Extract(_customText, _textEvents, GetTemporaryLookup());
-        }
-        catch(Exception ex)
-        {
-            GD.Print(ex);
-        }
+        CurrentState = State.Idle;
+        StoppedWriting?.Invoke();
+    }
 
-        GD.Print("parsed");
-        VisibleCharacters = 0;
-        if (!IsReady())
-            await ToSignal(this, Signals.FinishedSignal);
-        UpdateTextData();
-        _loading = false;
+    public async Task UpdateTextAsync(string text)
+    {
+        _customText = text;
+        await UpdateTextAsync();
     }
 
     private int GetValidLine(int line) => Math.Clamp(line, 0, LineCount - 1);
@@ -199,7 +207,7 @@ public partial class DynamicText : RichTextLabel
 
     private ILookupContext GetTemporaryLookup()
     {
-        return TempLookup ?? new TempLookup();
+        return TempLookup ?? new TextStorage();
     }
 
     private void HandleSizeDirty()
@@ -208,9 +216,9 @@ public partial class DynamicText : RichTextLabel
         _sizeDirty = false;
     }
 
-    private void HandleTextDirty()
+    private async Task HandleTextDirtyAsync()
     {
-        _ = UpdateTextAsync();
+        await UpdateTextAsync();
         _textDirty = false;
     }
 
@@ -220,23 +228,10 @@ public partial class DynamicText : RichTextLabel
             TextEventTriggered?.Invoke(textEvent);
     }
 
-    private void HandleWrite(double delta)
-    {
-        if (!WriteTextEnabled)
-            return;
-        if (IsAtTextEnd() || _loading)
-            StopWriting();
-        else
-            Write(delta);
-    }
-
     private void Init()
     {
         BbcodeEnabled = true;
-        _textEvents = new();
-        _lineBreakCharIndices = new();
         FitContentHeight = true;
-        _customText = string.Empty;
         EndChar = -1;
         VisibleCharacters = 0;
         VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
@@ -246,6 +241,7 @@ public partial class DynamicText : RichTextLabel
         Resized += OnResized;
         ThemeChanged += OnResized;
         SetDefault();
+        CurrentState = State.Idle;
     }
 
     /// <summary>
@@ -283,10 +279,17 @@ public partial class DynamicText : RichTextLabel
         CustomText = "Once[speed=0.3]... [speed]there was a toad that ate the [wave]moon[/wave][pause=3].";
     }
 
-    private void StopWriting()
+    private async Task UpdateTextAsync()
     {
-        WriteTextEnabled = false;
-        StoppedWriting?.Invoke();
+        CurrentState = State.Loading;
+        LoadingStarted?.Invoke();
+        // TODO: This could take awhile, run some tests
+        Text = await Task.Run(() => TextEventExtractor.Extract(_customText, _textEvents, GetTemporaryLookup()));
+        VisibleCharacters = 0;
+        UpdateTextData();
+
+        CurrentState = State.Idle;
+        TextUpdated?.Invoke();
     }
 
     private void UpdateTextData()

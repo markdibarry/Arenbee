@@ -2,7 +2,7 @@
 
 namespace GameCore.GUI.GameDialog;
 
-public class DialogLine
+public class DialogLine : IStatement, ITextLine
 {
     public bool Auto { get; set; }
     public List<TextEvent> Events { get; } = new();

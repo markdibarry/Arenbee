@@ -10,14 +10,20 @@ namespace GameCore.GUI;
 [Tool]
 public partial class Menu : GUILayer, IMenu
 {
-    private SubMenu CurrentSubMenu => SubMenus.Count > 0 ? SubMenus.Peek() : null;
-    protected bool Busy => OpeningSubMenu || ClosingSubMenu;
-    protected bool ClosingSubMenu { get; set; }
-    protected bool OpeningSubMenu { get; set; } = true;
-    protected CanvasGroup ContentGroup { get; set; }
-    protected Control Background { get; set; }
-    protected Control SubMenuContainer { get; set; }
-    protected Stack<SubMenu> SubMenus { get; set; } = new();
+    private SubMenu? CurrentSubMenu => SubMenus.Count > 0 ? SubMenus.Peek() : null;
+    public State CurrentState { get; private set; }
+    protected CanvasGroup ContentGroup { get; private set; } = null!;
+    protected Control Background { get; private set; } = null!;
+    protected Control SubMenuContainer { get; private set; } = null!;
+    protected Stack<SubMenu> SubMenus { get; private set; } = new();
+
+    public enum State
+    {
+        Opening,
+        Available,
+        Closing,
+        Closed
+    }
 
     public override void _Ready()
     {
@@ -26,56 +32,49 @@ public partial class Menu : GUILayer, IMenu
         SubMenuContainer = ContentGroup.GetNode<Control>("Content/SubMenus");
         SubMenus = new(SubMenuContainer.GetChildren<SubMenu>());
         if (this.IsToolDebugMode())
-            _ = InitAsync(null);
+            _ = InitAsync(null!);
     }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        if (Busy || CurrentSubMenu == null || CurrentSubMenu.Busy)
+        if (CurrentState != State.Available
+            || CurrentSubMenu == null
+            || CurrentSubMenu.CurrentState != SubMenu.State.Available)
             return;
         CurrentSubMenu.HandleInput(menuInput, delta);
     }
 
-    public async Task InitAsync(IGUIController guiController, object data = null)
+    public async Task InitAsync(IGUIController guiController, object? data = null)
     {
         GUIController = guiController;
         await TransitionOpenAsync();
-        await CurrentSubMenu.InitAsync(guiController, this, data);
-        OpeningSubMenu = false;
+        await CurrentSubMenu!.InitAsync(guiController, this, data);
+        CurrentState = State.Available;
     }
 
-    public override void UpdateData(object data) => CurrentSubMenu.UpdateData(data);
+    public override void UpdateData(object? data) => CurrentSubMenu!.UpdateData(data);
 
-    public async Task CloseSubMenuAsync(Type cascadeTo = null, bool preventAnimation = false, object data = null)
+    public async Task OpenSubMenuAsync(string path, bool preventAnimation = false, object? data = null)
     {
-        ClosingSubMenu = true;
-        await CloseSubMenuInternalAsync(cascadeTo, preventAnimation, data);
-        ClosingSubMenu = false;
+        await OpenSubMenuAsync(GD.Load<PackedScene>(path), preventAnimation, data);
     }
 
-    public async Task OpenSubMenuAsync(string path, bool preventAnimation = false, object data = null)
+    public async Task OpenSubMenuAsync(PackedScene packedScene, bool preventAnimation = false, object? data = null)
     {
-        OpeningSubMenu = true;
-        await OpenSubMenuInternalAsync(GD.Load<PackedScene>(path), preventAnimation, data);
-        OpeningSubMenu = false;
+        CurrentSubMenu?.SuspendSubMenu();
+        var subMenu = packedScene.Instantiate<SubMenu>();
+        SubMenuContainer.AddChild(subMenu);
+        SubMenus.Push(subMenu);
+        await subMenu.InitAsync(GUIController, this, data);
     }
 
-    public async Task OpenSubMenuAsync(PackedScene packedScene, bool preventAnimation = false, object data = null)
+    public async Task CloseSubMenuAsync(Type? cascadeTo = null, bool preventAnimation = false, object? data = null)
     {
-        OpeningSubMenu = true;
-        await OpenSubMenuInternalAsync(packedScene, preventAnimation, data);
-        OpeningSubMenu = false;
-    }
-
-    private async Task CloseSubMenuInternalAsync(Type cascadeTo = null, bool preventAnimation = false, object data = null)
-    {
-        CurrentSubMenu.Loading = true;
-        if (!preventAnimation)
-            await CurrentSubMenu.TransitionCloseAsync();
+        await CurrentSubMenu!.TransitionCloseAsync(preventAnimation);
         SubMenuContainer.RemoveChild(CurrentSubMenu);
         CurrentSubMenu.QueueFree();
         SubMenus.Pop();
-        if (SubMenus.Count == 0)
+        if (CurrentSubMenu == null)
         {
             await GUIController.CloseLayerAsync(preventAnimation, data);
             return;
@@ -87,12 +86,13 @@ public partial class Menu : GUILayer, IMenu
             CurrentSubMenu.UpdateData(data);
     }
 
-    private async Task OpenSubMenuInternalAsync(PackedScene packedScene, bool preventAnimation = false, object data = null)
+    public override async Task TransitionCloseAsync(bool preventAnimation = false)
     {
-        CurrentSubMenu?.SuspendSubMenu();
-        var subMenu = packedScene.Instantiate<SubMenu>();
-        SubMenuContainer.AddChild(subMenu);
-        SubMenus.Push(subMenu);
-        await CurrentSubMenu.InitAsync(GUIController, this, data);
+        CurrentState = State.Closing;
+        if (!preventAnimation)
+            await AnimateCloseAsync();
+        CurrentState = State.Closed;
     }
+
+
 }

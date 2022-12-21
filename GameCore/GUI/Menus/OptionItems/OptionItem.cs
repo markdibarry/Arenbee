@@ -54,9 +54,9 @@ public partial class OptionItem : MarginContainer
         HandleDim();
     }
 
-    public T GetData<T>(string key)
+    public T? TryGetData<T>(string key)
     {
-        if (!OptionData.TryGetValue(key, out object result))
+        if (!OptionData.TryGetValue(key, out object? result))
             return default;
         if (result is not T)
             return default;

@@ -103,11 +103,11 @@ public partial class OptionContainer : PanelContainer
     public int LastIndex => OptionGrid.LastIndex;
     public int CurrentIndex => OptionGrid.CurrentIndex;
     public bool AllSelected => OptionGrid.AllSelected;
-    public List<OptionItem> OptionItems => OptionGrid.OptionItems;
-    public event Action<OptionContainer> ContainerUpdated;
-    public event Action<OptionContainer, Direction> FocusOOB;
-    public event Action ItemFocused;
-    public event Action ItemSelected;
+    public IList<OptionItem> OptionItems => OptionGrid.OptionItems;
+    public event Action<OptionContainer>? ContainerUpdated;
+    public event Action<OptionContainer, Direction>? FocusOOB;
+    public event Action? ItemFocused;
+    public event Action? ItemSelected;
 
     public override void _Notification(long what)
     {
@@ -180,7 +180,7 @@ public partial class OptionContainer : PanelContainer
 
     private void Init()
     {
-        var stylebox = GetThemeStylebox("panel", "OptionContainer") as StyleBoxTexture;
+        var stylebox = (StyleBoxTexture)GetThemeStylebox("panel", "OptionContainer");
         float padding = stylebox.ContentMarginLeft * 2;
         _padding = new Vector2(padding, padding);
         SetNodeReferences();

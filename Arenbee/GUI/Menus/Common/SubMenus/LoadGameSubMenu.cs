@@ -17,7 +17,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var loadChoice = CurrentContainer.CurrentItem.GetData<GameSave>(nameof(GameSave));
+        var loadChoice = CurrentContainer.CurrentItem.TryGetData<GameSave>(nameof(GameSave));
         ContinueSavedGame(loadChoice);
     }
 
@@ -35,7 +35,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     private void ContinueSavedGame(GameSave gameSave)
     {
-        Loading = true;
+        CurrentState = State.Busy;
         async Task Callback(Loader loader)
         {
             var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);

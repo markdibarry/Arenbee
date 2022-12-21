@@ -1,63 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GameCore.Exceptions;
 using GameCore.Extensions;
-using GameCore.Input;
 using GameCore.GUI.GameDialog;
+using GameCore.Input;
 using Godot;
 
 namespace GameCore.GUI;
 
 public partial class Dialog : GUILayer
 {
-    public Dialog()
+    public Dialog(IGUIController guiController, DialogBridgeRegister dialogBridgeRegister, DialogScript dialogScript)
     {
+        GUIController = guiController;
+        TextStorage = new TextStorage();
+        _scriptReader = new(this, dialogBridgeRegister, dialogScript);
         _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
-        DialogScriptReader = new(this);
+        AnchorBottom = 1.0f;
+        AnchorRight = 1.0f;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private int _currentLineIndex;
     private readonly PackedScene _dialogBoxScene;
-    private DialogOptionMenu _dialogOptionMenu;
-    public bool Busy => LoadingDialog;
-    public bool CanProceed { get; set; }
-    public bool LoadingDialog { get; set; } = true;
-    public bool LoadingDialogBox { get; set; }
-    public DialogScript DialogScript { get; set; }
-    public Dictionary<string, object> LocalStorage { get; set; }
-    public LineData CurrentLine { get; set; }
-    public DialogBox SecondaryBox { get; set; }
-    public DialogBox FocusedBox { get; set; }
+    private readonly DialogScriptReader _scriptReader;
+    private DialogOptionMenu? _dialogOptionMenu;
+
+    public State CurrentState { get; private set; }
+    public IStorageContext TextStorage { get; set; }
+    public DialogBox? SecondaryBox { get; set; }
+    public DialogBox? FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
-    public DialogScriptReader DialogScriptReader { get; set; }
     public bool SpeechBubbleEnabled { get; set; }
     public bool DualBoxEnabled { get; set; }
+    public enum State
+    {
+        Opening,
+        Available,
+        Busy,
+        Closing,
+        Closed
+    }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        if (LoadingDialog || LoadingDialogBox)
+        if (CurrentState != State.Available || FocusedBox == null)
             return;
-        if (menuInput.Enter.IsActionJustPressed)
-        {
-            if (CanProceed)
-                _ = ProceedAsync();
-            else
-                SpeedUpEnabled = true;
-        }
-        if (menuInput.Enter.IsActionPressed && SpeedUpEnabled)
-            FocusedBox.SpeedUpText();
+        FocusedBox.HandleInput(menuInput, delta);
     }
 
-    public async Task CloseDialogBoxAsync(DialogBox box)
+    public async Task CloseDialogBoxAsync(DialogBox? box)
     {
         if (box == null)
             return;
-        LoadingDialogBox = true;
         await box.TransitionCloseAsync();
         box.TextEventTriggered -= OnTextEventTriggered;
-        box.StoppedWriting -= OnStoppedWriting;
+        box.DialogLineFinished -= OnDialogLineFinished;
         RemoveChild(box);
         box.QueueFree();
     }
@@ -68,37 +66,41 @@ public partial class Dialog : GUILayer
         await CloseDialogBoxAsync(FocusedBox);
     }
 
-    public async Task InitAsync(GUIController guiController, string dialogPath)
+    public static DialogScript LoadScript(string path)
     {
-        GUIController = guiController;
-        await TransitionOpenAsync();
-        await StartDialogAsync(dialogPath);
-        LoadingDialog = false;
+        if (string.IsNullOrEmpty(path))
+            throw new DialogException("No path provided");
+        DialogScript? dialogScript = DialogLoader.Load(path);
+        if (dialogScript == null || !dialogScript.Sections.Any())
+            throw new DialogException($"No dialog found at path: {path}");
+        return dialogScript;
     }
 
     public async Task ProceedAsync()
     {
-        if (!CanProceed)
-            return;
-
-        CanProceed = false;
-        FocusedBox.NextArrow.Hide();
-        if (!FocusedBox.IsAtLastPage())
+        try
         {
-            FocusedBox.NextPage();
-            FocusedBox.WritePage(true);
-            return;
+            await _scriptReader.HandleNextAsync(FocusedBox!.DialogLine);
         }
-        LoadingDialog = true;
-        LineData line = DialogScript.GetNextLine(FocusedBox.DialogLine.Next);
-        await ToDialogPartAsync(line);
+        catch (Exception ex)
+        {
+            GD.PrintErr(ex);
+            await CloseDialogAsync();
+        }
+    }
+
+    public async Task StartDialogAsync()
+    {
+        await TransitionOpenAsync();
+        CurrentState = State.Available;
+        await _scriptReader.ReadScriptAsync();
     }
 
     public override void UpdateData(object data)
     {
         if (data is not DialogOptionSelectionDataModel model)
         {
-            RequestCloseDialog();
+            await CloseDialogAsync();
             return;
         }
         LineData line = null;
@@ -109,93 +111,52 @@ public partial class Dialog : GUILayer
         _ = ToDialogPartAsync(line);
     }
 
+    public override Task TransitionCloseAsync(bool preventAnimation = false)
+    {
+        CurrentState = State.Closing;
+        CurrentState = State.Closed;
+        return Task.CompletedTask;
+    }
+
     private void OnTextEventTriggered(ITextEvent textEvent)
     {
         textEvent.HandleEvent(this);
     }
 
-    private void OnStoppedWriting()
+    private void OnDialogLineFinished()
     {
-        if (!FocusedBox.IsAtPageEnd())
-            return;
-        SpeedUpEnabled = false;
-        if (FocusedBox.DialogLine.Choices?.Length > 0)
-        {
-            OpenOptionBox();
-            return;
-        }
-
-        if (FocusedBox.DialogLine.Auto)
-        {
-            LineData line = DialogScript.GetNextLine();
-            _ = ToDialogPartAsync(line);
-            return;
-        }
-
-        FocusedBox.NextArrow.Show();
-        CanProceed = true;
+        _ = ProceedAsync();
     }
 
-    private async Task<DialogBox> OpenDialogBox(DialogLine line, bool displayRight)
+    private DialogBox CreateDialogBox(bool displayRight)
     {
-        var newBox = _dialogBoxScene.Instantiate<DialogBox>();
+        DialogBox newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
-        newBox.StoppedWriting += OnStoppedWriting;
-        newBox.DialogLine = line;
+        newBox.DialogLineFinished += OnDialogLineFinished;
         newBox.DisplayRight = displayRight;
         AddChild(newBox);
-        await newBox.UpdateDialogLineAsync();
         return newBox;
     }
 
-    private void OpenOptionBox()
+    private async Task OpenOptionBoxAsync()
     {
-        GUIOpenRequest request = new(DialogOptionMenu.GetScenePath())
-        {
-            Data = new DialogOptionDataModel()
-            {
-                DialogChoices = FocusedBox.DialogLine.Choices
-            }
-        };
-        OpenLayerDelegate?.Invoke(request);
+        var choices = FocusedBox.DialogLine.Choices;
+        await GUIController.OpenMenuAsync(scenePath: DialogOptionMenu.GetScenePath(), data: choices);
     }
 
-    private void RequestCloseDialog()
+    private async Task CloseDialogAsync(bool preventAnimation = false, object? data = null)
     {
-        CloseLayerDelegate?.Invoke(new GUICloseRequest() { CloseRequestType = CloseRequestType.Layer });
-    }
-
-    private async Task StartDialogAsync(string path)
-    {
-        if (string.IsNullOrEmpty(path))
-        {
-            RequestCloseDialog();
-            return;
-        }
-        _currentLineIndex = 0;
-        DialogScript = DialogLoader.Load(path);
-        if (DialogScript == null || !DialogScript.Sections.Any())
-        {
-            GD.PrintErr("No dialog found at location provided.");
-            RequestCloseDialog();
-            return;
-        }
-        DialogScriptReader.ReadScript(DialogScript);
+        await GUIController.CloseLayerAsync(preventAnimation, data);
     }
 
     public async Task HandleLineAsync(DialogLine newLine)
     {
         if (SpeechBubbleEnabled)
-        {
-            RequestCloseDialog();
-            return;
-        }
+            throw new DialogException("Speech bubble not implemented.");
         if (DualBoxEnabled)
             await HandleDualBoxLineAsync(newLine);
         else
             await HandleSingleBoxLineAsync(newLine);
-
-        LoadingDialog = false;
     }
 
     public async Task HandleSingleBoxLineAsync(DialogLine newLine)
@@ -209,7 +170,7 @@ public partial class Dialog : GUILayer
         // If no box exists, make one.
         if (FocusedBox == null)
         {
-            await OpenDialogBox(newLine, false);
+            await OpenNewDialogBoxAsync(newLine, false);
             return;
         }
 
@@ -218,8 +179,7 @@ public partial class Dialog : GUILayer
             return;
 
         await CloseDialogBoxAsync(FocusedBox);
-        FocusedBox = null;
-        await OpenDialogBox(newLine, false);
+        await OpenNewDialogBoxAsync(newLine, false);
         return;
     }
 
@@ -228,7 +188,7 @@ public partial class Dialog : GUILayer
         // If no box exists, make one.
         if (FocusedBox == null)
         {
-            await OpenDialogBox(newLine, false);
+            await OpenNewDialogBoxAsync(newLine, false);
             return;
         }
 
@@ -255,7 +215,7 @@ public partial class Dialog : GUILayer
         // If no second box exists, make one
         if (FocusedBox == null)
         {
-            await OpenDialogBox(newLine, !displayRight);
+            await OpenNewDialogBoxAsync(newLine, !displayRight);
             return;
         }
 
@@ -264,18 +224,24 @@ public partial class Dialog : GUILayer
             return;
 
         await CloseDialogBoxAsync(FocusedBox);
-        FocusedBox = null;
-        await OpenDialogBox(newLine, !displayRight);
+        await OpenNewDialogBoxAsync(newLine, !displayRight);
     }
 
-    private async Task<bool> TryUseDialogBoxAsync(DialogLine line, DialogBox box)
+    private async Task OpenNewDialogBoxAsync(DialogLine dialogLine, bool displayRight)
     {
-        if (!line.SameSpeakers(box.DialogLine))
+        FocusedBox = CreateDialogBox(!displayRight);
+        await FocusedBox.UpdateDialogLineAsync(dialogLine);
+        FocusedBox.StartWriting();
+    }
+
+    private static async Task<bool> TryUseDialogBoxAsync(DialogLine dialogLine, DialogBox box)
+    {
+        if (!dialogLine.SameSpeakers(box.DialogLine))
             return false;
         box.MoveToFront();
-        box.DialogLine = line;
-        await box.UpdateDialogLineAsync();
+        await box.UpdateDialogLineAsync(dialogLine);
         box.Dim = false;
+        box.StartWriting();
         return true;
     }
 }

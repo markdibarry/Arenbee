@@ -89,7 +89,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            var actor = option.GetData<ActorBase>("actor");
+            var actor = option.TryGetData<ActorBase>("actor");
             if (actor == null)
                 continue;
             var target = new ActorBase[] { actor };
@@ -119,7 +119,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (OptionItem item in selectedItems)
         {
-            var actor = item.GetData<ActorBase>("actor");
+            var actor = item.TryGetData<ActorBase>("actor");
             if (actor == null)
                 return;
             ActionEffect.Use(request, new ActorBase[] { actor });

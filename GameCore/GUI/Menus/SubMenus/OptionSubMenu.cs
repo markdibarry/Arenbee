@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.Utility;
@@ -18,17 +17,17 @@ public partial class OptionSubMenu : SubMenu
         _currentDirection = Direction.None;
     }
 
-    private PackedScene _cursorScene;
-    private Cursor _cursor;
-    [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; }
-    public OptionContainer CurrentContainer { get; private set; }
+    private PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
+    private Cursor _cursor = null!;
+    [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; } = new();
+    public OptionContainer CurrentContainer { get; private set; } = null!;
     public List<OptionContainer> OptionContainers { get; private set; }
     protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
     protected string FocusedSoundPath { get; set; } = "menu_bip1.wav";
 
     public override async void ResumeSubMenu()
     {
-        await ToSignal(GetTree(), Signals.ProcessFrameSignal);
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         FocusContainer(CurrentContainer);
         base.ResumeSubMenu();
     }
@@ -41,28 +40,26 @@ public partial class OptionSubMenu : SubMenu
 
     protected sealed override void PostWaitFrameSetup()
     {
+        if (OptionContainers.Count == 0)
+            return;
         OptionContainers.ForEach(x => SubscribeToEvents(x));
-        FocusContainer(OptionContainers.FirstOrDefault());
+        FocusContainer(OptionContainers.First());
     }
 
     protected void FocusContainerClosestItem(OptionContainer optionContainer)
     {
-        if (optionContainer == null)
-            return;
-        int index = CurrentContainer.CurrentItem.GetClosestIndex(optionContainer.OptionItems.AsEnumerable());
+        int index = optionContainer.OptionItems.GetClosestIndex(CurrentContainer.CurrentItem);
         FocusContainer(optionContainer, index);
     }
 
     protected void FocusContainer(OptionContainer optionContainer)
     {
-        if (optionContainer == null)
-            return;
         FocusContainer(optionContainer, optionContainer.CurrentIndex);
     }
 
     protected void FocusContainer(OptionContainer optionContainer, int index)
     {
-        if (optionContainer == null || optionContainer.OptionItems.Count == 0)
+        if (optionContainer.OptionItems.Count == 0)
             return;
         CurrentContainer?.LeaveContainerFocus();
         OnFocusContainer(optionContainer);
@@ -92,18 +89,18 @@ public partial class OptionSubMenu : SubMenu
             if (container != null)
                 OptionContainers.Add(container);
         }
-        _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
         AddCursor();
     }
 
     protected void AddCursor()
     {
-        _cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
-        if (_cursor == null)
+        Cursor? cursor = Foreground.GetChildren<Cursor>().FirstOrDefault();
+        if (cursor == null)
         {
-            _cursor = _cursorScene.Instantiate<Cursor>();
-            Foreground.AddChild(_cursor);
+            cursor = _cursorScene.Instantiate<Cursor>();
+            Foreground.AddChild(cursor);
         }
+        _cursor = cursor;
         _cursor.Visible = false;
     }
 

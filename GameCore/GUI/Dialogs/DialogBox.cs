@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.GUI.GameDialog;
+using GameCore.Input;
 using Godot;
 
 namespace GameCore.GUI;
@@ -12,13 +13,13 @@ public partial class DialogBox : Control
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private MarginContainer _dialogMargin;
-    private PanelContainer _dialogPanel;
+    private MarginContainer _dialogMargin = null!;
+    private PanelContainer _dialogPanel = null!;
     private bool _dim;
-    private DynamicTextBox _dynamicTextBox;
-    private Label _nameLabel;
-    private PanelContainer _namePanel;
-    private Control _portraitContainer;
+    private DynamicTextBox _dynamicTextBox = null!;
+    private Label _nameLabel = null!;
+    private PanelContainer _namePanel = null!;
+    private Control _portraitContainer = null!;
     [Export]
     public int CurrentPage
     {
@@ -41,10 +42,16 @@ public partial class DialogBox : Control
         }
     }
     [Export]
-    public bool WriteTextEnabled
+    public bool Writing
     {
-        get => _dynamicTextBox.WriteTextEnabled;
-        set => _dynamicTextBox.WriteTextEnabled = value;
+        get => CurrentState == State.Writing;
+        set
+        {
+            if (value)
+                StartWriting();
+            else
+                StopWriting();
+        }
     }
     [Export]
     public bool ShowToEndCharEnabled
@@ -63,12 +70,20 @@ public partial class DialogBox : Control
         get => _dynamicTextBox.TempLookup;
         set => _dynamicTextBox.TempLookup = value;
     }
-    public DialogLine DialogLine { get; set; }
-    public bool LoadingDialog { get; private set; }
-    public TextureRect NextArrow { get; set; }
+    public State CurrentState { get; private set; }
+    public DialogLine DialogLine { get; private set; } = null!;
+    public TextureRect NextArrow { get; set; } = null!;
     public bool DisplayRight { get; set; }
-    public event Action StoppedWriting;
-    public event Action<ITextEvent> TextEventTriggered;
+    public event Action<ITextEvent>? TextEventTriggered;
+    public event Action? DialogLineFinished;
+
+    public enum State
+    {
+        Opening,
+        Loading,
+        Idle,
+        Writing
+    }
 
     public override void _Notification(long what)
     {
@@ -80,18 +95,24 @@ public partial class DialogBox : Control
     {
         if (this.IsSceneRoot())
         {
-            //DialogLine = Line.GetDefault();
-            _ = UpdateDialogLineAsync();
+        }
+    }
+
+    public void HandleInput(GUIInputHandler menuInput, double delta)
+    {
+        if (CurrentState == State.Idle && menuInput.Enter.IsActionJustPressed)
+        {
+            HandleNext();
+            return;
         }
     }
 
     public void ChangeMood(string newMood)
     {
-        if (_portraitContainer.GetChildCount() == 1)
-        {
-            var portrait = _portraitContainer.GetChild<AnimatedSprite2D>(0);
-            ChangeMood(newMood, portrait);
-        }
+        if (_portraitContainer.GetChildCount() != 1)
+            return;
+        var portrait = _portraitContainer.GetChild<AnimatedSprite2D>(0);
+        ChangeMood(newMood, portrait);
     }
 
     public void ChangeMood(string newMood, AnimatedSprite2D portrait)
@@ -111,54 +132,68 @@ public partial class DialogBox : Control
 
     public bool IsAtPageEnd() => _dynamicTextBox.IsAtPageEnd();
 
-    public void NextPage()
+    public void SpeedUpText() => _dynamicTextBox.SpeedUpText();
+
+    public void StartWriting()
     {
-        if (_dynamicTextBox == null)
+        if (CurrentState != State.Idle)
             return;
-        _dynamicTextBox.CurrentPage++;
+        _dynamicTextBox.StartWriting();
     }
 
-    public void SpeedUpText() => _dynamicTextBox.SpeedUpText();
+    public void StopWriting()
+    {
+        if (CurrentState != State.Writing)
+            return;
+        _dynamicTextBox.StopWriting();
+    }
 
     public virtual Task TransitionOpenAsync() => Task.CompletedTask;
     public virtual Task TransitionCloseAsync() => Task.CompletedTask;
 
-    public async Task UpdateDialogLineAsync()
+    public async Task UpdateDialogLineAsync(DialogLine dialogLine)
     {
-        if (LoadingDialog)
-            return;
-        if (DialogLine == null)
-        {
-            GD.PrintErr("No DialogLine provided");
-            return;
-        }
-        if (DialogLine.Text == null)
-            return;
-        LoadingDialog = true;
+        DialogLine = dialogLine;
         SetPortraits();
         SetDisplayNames();
-        _dynamicTextBox.ResetSpeed();
-        if (DialogLine.Speed != null)
-            _dynamicTextBox.Speed = (double)DialogLine.Speed;
         await _dynamicTextBox.UpdateTextAsync(DialogLine.Text);
-        LoadingDialog = false;
-        WritePage(true);
     }
 
-    public void WritePage(bool shouldWrite)
+    private void HandleNext()
     {
-        _dynamicTextBox.WriteTextEnabled = shouldWrite;
+        NextArrow.Hide();
+        if (IsAtLastPage())
+        {
+            DialogLineFinished?.Invoke();
+            return;
+        }
+
+        CurrentPage++;
+        StartWriting();
     }
 
     private void Init()
     {
         SetNodeReferences();
         SubscribeEvents();
+        CurrentState = State.Idle;
+    }
+
+    private void OnStartedWriting()
+    {
+        CurrentState = State.Writing;
     }
 
     private void OnStoppedWriting()
     {
-        StoppedWriting?.Invoke();
+        // TODO: Wait time
+        CurrentState = State.Idle;
+        if (DialogLine.Auto)
+        {
+            HandleNext();
+            return;
+        }
+        NextArrow.Show();
     }
 
     private void OnTextEventTriggered(ITextEvent textEvent)
@@ -227,6 +262,7 @@ public partial class DialogBox : Control
     private void SubscribeEvents()
     {
         _dynamicTextBox.TextEventTriggered += OnTextEventTriggered;
+        _dynamicTextBox.StartedWriting += OnStartedWriting;
         _dynamicTextBox.StoppedWriting += OnStoppedWriting;
     }
 }

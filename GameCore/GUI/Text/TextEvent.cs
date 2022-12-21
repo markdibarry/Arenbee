@@ -32,7 +32,7 @@ public class TextEvent : ITextEvent
 
 public class InstructionTextEvent : TextEvent
 {
-    public int[] Instructions { get; set; }
+    public ushort[] Instructions { get; set; }
 
     public override bool HandleEvent(object context)
     {

@@ -3,19 +3,67 @@ using System.Collections.Generic;
 
 namespace GameCore.GUI.GameDialog;
 
-public class Evaluator
+public class DialogInterpreter
 {
-    public Evaluator(DialogBridgeRegister register)
+    public DialogInterpreter(DialogBridgeRegister register, DialogScript dialogScript, TextStorage textStorage)
     {
         _register = register;
+        _dialogScript = dialogScript;
+        _textStorage = textStorage;
     }
 
     private readonly DialogBridgeRegister _register;
-    private DialogScript _dialogScript;
-    private int[] _instructions;
+    private readonly DialogScript _dialogScript;
+    private readonly TextStorage _textStorage;
+    private ushort[] _instructions = Array.Empty<ushort>();
     private int _index = -1;
+    public enum InstructionType
+    {
+        Undefined,
+        Float,
+        String,
+        Bool,
+        // name string
+        Var,
+        // name string, number of arguments (float), expressions...
+        Func,
+        // float, float
+        Mult,
+        Div,
+        Add,
+        Sub,
+        LessEquals,
+        GreaterEquals,
+        Less,
+        Greater,
+        // expression, expression
+        Equals,
+        NotEquals,
+        // bool, bool
+        And,
+        Or,
+        Not,
+        // Variable index, expression
+        Assign,
+        MultAssign,
+        DivAssign,
+        AddAssign,
+        SubAssign,
 
-    public VarType GetReturnType(DialogScript dialogScript, int[] instructions, int index)
+        // bool
+        Auto,
+        // string
+        BBCode,
+        // Section Index
+        Goto,
+        NewLine,
+        // float
+        Speed,
+        // SpeakerId (float), Name (expression), Mood (expression), Portrait (expression)
+        SpeakerSet
+    }
+
+    public VarType GetReturnType(ushort[] instructions, int index)
     {
         return (InstructionType)instructions[index + 1] switch
         {
@@ -40,61 +88,61 @@ public class Evaluator
 
         VarType GetVarType()
         {
-            string varName = dialogScript.InstStrings[instructions[index + 2]];
-            if (!_register.Properties.TryGetValue(varName, out VarDef varDef))
+            string varName = _dialogScript.InstStrings[instructions[index + 2]];
+            if (_register.Properties.TryGetValue(varName, out VarDef? varDef))
+                return varDef.VarType;
+            if (_textStorage == null || !_textStorage.TryGetValue(varName, out object? obj))
                 return default;
-            return varDef.VarType;
+            return obj switch
+            {
+                string => VarType.String,
+                bool => VarType.Bool,
+                float => VarType.Float,
+                _ => default
+            };
         }
 
         VarType GetFuncReturnType()
         {
-            string funcName = dialogScript.InstStrings[instructions[index + 2]];
-            if (!_register.Methods.TryGetValue(funcName, out FuncDef funcDef))
+            string funcName = _dialogScript.InstStrings[instructions[index + 2]];
+            if (!_register.Methods.TryGetValue(funcName, out FuncDef? funcDef))
                 return default;
             return funcDef.ReturnType;
         }
     }
 
-    public float GetFloatInstResult(DialogScript dialogScript, int[] instructions)
+    public float GetFloatInstResult(ushort[] instructions)
     {
-        _dialogScript = dialogScript;
         _instructions = instructions;
         float result = EvalFloatExp();
-        _dialogScript = null;
-        _instructions = null;
+        _instructions = Array.Empty<ushort>();
         _index = -1;
         return result;
     }
 
-    public bool GetBoolInstResult(DialogScript dialogScript, int[] instructions)
+    public bool GetBoolInstResult(ushort[] instructions)
     {
-        _dialogScript = dialogScript;
         _instructions = instructions;
         bool result = EvalBoolExp();
-        _dialogScript = null;
-        _instructions = null;
+        _instructions = Array.Empty<ushort>();
         _index = -1;
         return result;
     }
 
-    public string GetStringInstResult(DialogScript dialogScript, int[] instructions)
+    public string GetStringInstResult(ushort[] instructions)
     {
-        _dialogScript = dialogScript;
         _instructions = instructions;
         string result = EvalStringExp();
-        _dialogScript = null;
-        _instructions = null;
+        _instructions = Array.Empty<ushort>();
         _index = -1;
         return result;
     }
 
-    public void EvalAssignInst(DialogScript dialogScript, int[] instructions)
+    public void EvalAssignInst(ushort[] instructions)
     {
-        _dialogScript = dialogScript;
         _instructions = instructions;
         EvalVoidExp();
-        _dialogScript = null;
-        _instructions = null;
+        _instructions = Array.Empty<ushort>();
         _index = -1;
     }
 
@@ -113,7 +161,7 @@ public class Evaluator
             InstructionType.And => EvalAnd(),
             InstructionType.Or => EvalOr(),
             InstructionType.Var => EvalVar<bool>(),
-            InstructionType.Func => (bool)EvalFunc(),
+            InstructionType.Func => (bool?)EvalFunc() ?? default,
             _ => default
         };
     }
@@ -123,9 +171,9 @@ public class Evaluator
         return (InstructionType)_instructions[++_index] switch
         {
             InstructionType.String => EvalString(),
-            InstructionType.Var => EvalVar<string>(),
-            InstructionType.Func => (string)EvalFunc(),
-            _ => default
+            InstructionType.Var => EvalVar<string>() ?? string.Empty,
+            InstructionType.Func => (string?)EvalFunc() ?? string.Empty,
+            _ => string.Empty
         };
     }
 
@@ -139,7 +187,7 @@ public class Evaluator
             InstructionType.Add => EvalAdd(),
             InstructionType.Sub => EvalSub(),
             InstructionType.Var => EvalVar<float>(),
-            InstructionType.Func => (float)EvalFunc(),
+            InstructionType.Func => (float?)EvalFunc() ?? default,
             _ => default
         };
     }
@@ -166,7 +214,7 @@ public class Evaluator
 
     private bool EvalEquals()
     {
-        return GetReturnType(_dialogScript, _instructions, _index) switch
+        return GetReturnType(_instructions, _index) switch
         {
             VarType.Float => EvalFloatExp() == EvalFloatExp(),
             VarType.Bool => EvalBoolExp() == EvalBoolExp(),
@@ -206,7 +254,7 @@ public class Evaluator
     private void EvalAssign()
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Properties.TryGetValue(varName, out VarDef varDef))
+        if (!_register.Properties.TryGetValue(varName, out VarDef? varDef))
             return;
         switch (varDef.VarType)
         {
@@ -225,7 +273,7 @@ public class Evaluator
     private void EvalMathAssign(InstructionType instructionType)
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Properties.TryGetValue(varName, out VarDef varDef))
+        if (!_register.Properties.TryGetValue(varName, out VarDef? varDef))
             return;
         float originalValue = ((Func<float>)varDef.Getter).Invoke();
         float result = instructionType switch
@@ -239,22 +287,24 @@ public class Evaluator
         ((Action<float>)varDef.Setter).Invoke(result);
     }
 
-    private T EvalVar<T>()
+    private T? EvalVar<T>()
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Properties.TryGetValue(varName, out VarDef varDef))
+        if (_register.Properties.TryGetValue(varName, out VarDef? varDef))
+            return ((Func<T>)varDef.Getter).Invoke();
+        if (!_textStorage.TryGetValue(varName, out object? obj) || obj is not T)
             return default;
-        return ((Func<T>)varDef.Getter).Invoke();
+        return (T)obj;
     }
 
-    private object EvalFunc()
+    private object? EvalFunc()
     {
         string funcName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Methods.TryGetValue(funcName, out FuncDef funcDef))
+        if (!_register.Methods.TryGetValue(funcName, out FuncDef? funcDef))
             return default;
         int argNum = _instructions[++_index];
         if (argNum == 0)
-            return default;
+            return funcDef.Method.Invoke(Array.Empty<object>());
         List<object> args = new();
         for (int i = 0; i < argNum; i++)
         {
@@ -273,50 +323,4 @@ public class Evaluator
         }
         return funcDef.Method.Invoke(args.ToArray());
     }
-}
-
-public enum InstructionType
-{
-    Undefined,
-    Float,
-    String,
-    Bool,
-    // name string
-    Var,
-    // name string, number of arguments (float), expressions...
-    Func,
-    // float, float
-    Mult,
-    Div,
-    Add,
-    Sub,
-    LessEquals,
-    GreaterEquals,
-    Less,
-    Greater,
-    // expression, expression
-    Equals,
-    NotEquals,
-    // bool, bool
-    And,
-    Or,
-    Not,
-    // Variable index, expression
-    Assign,
-    MultAssign,
-    DivAssign,
-    AddAssign,
-    SubAssign,
-
-    // bool
-    Auto,
-    // string
-    BBCode,
-    // Section Index
-    Goto,
-    NewLine,
-    // float
-    Speed,
-    // SpeakerId (float), Name (expression), Mood (expression), Portrait (expression)
-    SpeakerSet
 }

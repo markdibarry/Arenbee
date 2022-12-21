@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.Actors.Players;
 using Arenbee.GUI.Menus.Common;
-using Arenbee.Localization;
+using Arenbee.GUI.Localization;
 using GameCore;
 using GameCore.Actors;
 using GameCore.Extensions;
@@ -19,15 +19,20 @@ namespace Arenbee.GUI.Menus.Title;
 public partial class MainSubMenu : OptionSubMenu
 {
     private OptionContainer _startOptions;
+    private readonly List<string> _menuKeys = new()
+    {
+        Localization.Menus.Menus_Title_Continue,
+        Localization.Menus.Menus_Title_NewGame
+    };
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    public override async Task TransitionOpenAsync()
+    public override async Task AnimateOpenAsync()
     {
         Vector2 pos = (Size - _startOptions.Size) * 0.5f;
         _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);
         var tween = _startOptions.CreateTween();
         tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
-        await ToSignal(tween, Signals.FinishedSignal);
+        await ToSignal(tween, Tween.SignalName.Finished);
     }
 
     protected override void CustomSetup()
@@ -38,15 +43,15 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        string titleChoice = CurrentContainer.CurrentItem.GetData<string>("value");
+        string titleChoice = CurrentContainer.CurrentItem.TryGetData<string>("value");
         if (titleChoice == null)
             return;
         switch (titleChoice)
         {
-            case nameof(TitleMenuOptions.KEY01Continue):
+            case nameof(Localization.Menus.Menus_Title_Continue):
                 OpenContiueSaveSubMenu();
                 break;
-            case nameof(TitleMenuOptions.KEY02NewGame):
+            case nameof(Localization.Menus.Menus_Title_NewGame):
                 StartNewGame();
                 break;
         }
@@ -64,19 +69,17 @@ public partial class MainSubMenu : OptionSubMenu
         _startOptions.ReplaceChildren(options);
     }
 
-    private static List<TextOption> GetMenuOptions()
+    private List<TextOption> GetMenuOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
         var gameSaves = SaveService.GetGameSaves();
-        var resourceSet = TitleMenuOptions.ResourceManager.GetEntries()
-            .OrderBy(i => i.Key);
-        foreach (var optionString in resourceSet)
+        foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = optionString.Value.ToString();
-            option.OptionData["value"] = optionString.Key.ToString();
-            if (optionString.Key.ToString() == TitleMenuOptions.KEY01Continue && gameSaves.Count == 0)
+            option.LabelText = Tr(menuKey);
+            option.OptionData["value"] = menuKey;
+            if (menuKey == Localization.Menus.Menus_Title_Continue && gameSaves.Count == 0)
                 option.Disabled = true;
             options.Add(option);
         }
@@ -85,7 +88,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     private void StartNewGame()
     {
-        Loading = true;
+        CurrentState = State.Busy;
         static async Task Callback(Loader loader)
         {
             var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);

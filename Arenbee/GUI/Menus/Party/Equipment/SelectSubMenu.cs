@@ -51,7 +51,7 @@ public partial class SelectSubMenu : OptionSubMenu
             return;
         }
         _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
-        _currentItemId = CurrentContainer.CurrentItem.GetData<string>(nameof(ItemStack.ItemId));
+        _currentItemId = CurrentContainer.CurrentItem.TryGetData<string>(nameof(ItemStack.ItemId));
         var newItem = _itemDB.GetItem(_currentItemId);
         newItem?.AddToStats(_mockStats);
         _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
@@ -60,7 +60,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (TryEquip(CurrentContainer.CurrentItem.GetData<string>(nameof(ItemStack.ItemId)), Slot))
+        if (TryEquip(CurrentContainer.CurrentItem.TryGetData<string>(nameof(ItemStack.ItemId)), Slot))
         {
             CloseSoundPath = string.Empty;
             _ = CloseSubMenuAsync();

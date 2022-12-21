@@ -31,8 +31,8 @@ public partial class DynamicTextContainer : PanelContainer
     [Export]
     public bool WriteTextEnabled
     {
-        get => _dynamicTextBox.WriteTextEnabled;
-        set => _dynamicTextBox.WriteTextEnabled = value;
+        get => _dynamicTextBox.Writing;
+        set => _dynamicTextBox.Writing = value;
     }
     [Export]
     public double Speed
@@ -63,7 +63,7 @@ public partial class DynamicTextContainer : PanelContainer
         if (_loading)
             return;
         _loading = true;
-        await _dynamicTextBox.UpdateTextAsync(text);
+        _dynamicTextBox.UpdateTextAsync(text);
         _loading = false;
     }
 

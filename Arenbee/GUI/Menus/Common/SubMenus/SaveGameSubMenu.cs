@@ -14,7 +14,7 @@ public partial class SaveGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var saveChoice = CurrentContainer.CurrentItem.GetData<GameSave>(nameof(GameSave));
+        var saveChoice = CurrentContainer.CurrentItem.TryGetData<GameSave>(nameof(GameSave));
         OpenSaveGameConfirmSubMenu(saveChoice);
     }
 

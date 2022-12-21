@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Arenbee.Localization;
 using Godot;
 
 namespace GameCore.Extensions;
@@ -44,9 +43,9 @@ public static class GDEx
         return node.GetChildren().OfType<T>();
     }
 
-    public static int GetClosestIndex(this Control control, IEnumerable<Control> controls)
+    public static int GetClosestIndex<T>(this ICollection<T> controls, Control control) where T : Control
     {
-        int controlCount = controls.Count();
+        int controlCount = controls.Count;
         if (controlCount == 0)
             return -1;
         if (controlCount == 1)
@@ -56,27 +55,6 @@ public static class GDEx
         for (int i = 1; i < controlCount; i++)
         {
             float newDistance = control.GlobalPosition.DistanceTo(controls.ElementAt(i).GlobalPosition);
-            if (newDistance < nearestDistance)
-            {
-                nearestIndex = i;
-                nearestDistance = newDistance;
-            }
-        }
-        return nearestIndex;
-    }
-
-    public static int GetClosestIndex(this Node2D control, IEnumerable<Node2D> nodes)
-    {
-        int nodeCount = nodes.Count();
-        if (nodeCount == 0)
-            return -1;
-        if (nodeCount == 1)
-            return 0;
-        int nearestIndex = 0;
-        float nearestDistance = control.GlobalPosition.DistanceTo(nodes.ElementAt(0).GlobalPosition);
-        for (int i = 1; i < nodeCount; i++)
-        {
-            float newDistance = control.GlobalPosition.DistanceTo(nodes.ElementAt(i).GlobalPosition);
             if (newDistance < nearestDistance)
             {
                 nearestIndex = i;
@@ -199,24 +177,17 @@ public static class GDEx
 
     public static void QueueFreeAllChildren<T>(this Node node) where T : Node
     {
-        if (node.GetChildCount() > 0)
+        if (node.GetChildCount() == 0)
+            return;
+        var children = node.GetChildren<T>();
+        foreach (var child in children)
         {
-            var children = node.GetChildren<T>();
-            foreach (var child in children)
-            {
-                node.RemoveChild(child);
-                child.QueueFree();
-            }
+            node.RemoveChild(child);
+            child.QueueFree();
         }
     }
 
-    public static Vector2 SetX(this Vector2 vec, float x)
-    {
-        return new Vector2(x, vec.y);
-    }
+    public static Vector2 SetX(this Vector2 vec, float x) => new(x, vec.y);
 
-    public static Vector2 SetY(this Vector2 vec, float y)
-    {
-        return new Vector2(vec.x, y);
-    }
+    public static Vector2 SetY(this Vector2 vec, float y) => new(vec.x, y);
 }
