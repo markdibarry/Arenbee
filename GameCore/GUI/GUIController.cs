@@ -43,7 +43,9 @@ public partial class GUIController : CanvasLayer, IGUIController
     public async Task CloseLayerAsync(bool preventAnimation = false, object? data = null)
     {
         GUILayer? layer = CurrentLayer;
-        if (layer == null)
+        if (layer == null
+            || layer.CurrentState == GUILayer.State.Closing
+            || layer.CurrentState == GUILayer.State.Closed)
             return;
         await layer.TransitionCloseAsync(preventAnimation);
         RemoveChild(layer);
@@ -94,11 +96,24 @@ public partial class GUIController : CanvasLayer, IGUIController
 
     public async Task OpenMenuAsync(PackedScene packedScene, bool preventAnimation = false, object? data = null)
     {
-        Menu menu = packedScene.Instantiate<Menu>();
-        AddChild(menu);
-        _guiLayers.Add(menu);
-        UpdateCurrentGUI();
-        await menu.InitAsync(this, data);
+        Menu? menu = null;
+        try
+        {
+            menu = packedScene.Instantiate<Menu>();
+            AddChild(menu);
+            _guiLayers.Add(menu);
+            UpdateCurrentGUI();
+            await menu.InitAsync(this, data);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr(ex.Message);
+            if (menu == null)
+                return;
+            if (menu is DialogOptionMenu)
+                await CloseLayerAsync(preventAnimation);
+            await CloseLayerAsync(preventAnimation);
+        }
     }
 
     protected virtual Task TransitionOpenAsync() => Task.CompletedTask;

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GameCore.Extensions;
+using GameCore.GUI.GameDialog;
 using Godot;
 
 namespace GameCore.GUI;
@@ -8,46 +11,44 @@ namespace GameCore.GUI;
 public partial class DialogOptionSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    public Choice[] DialogChoices { get; set; }
-    private PackedScene _textOptionScene;
-    private OptionContainer _options;
+    public Choice[] DialogChoices { get; set; } = Array.Empty<Choice>();
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+    private OptionContainer _options = null!;
 
-    public override void SetupData(object data)
+    public override void SetupData(object? data)
     {
-        if (data is not DialogOptionDataModel dataModel)
+        if (data is not IEnumerable<Choice> choices)
             return;
-        DialogChoices = dataModel.DialogChoices;
+        DialogChoices = choices.ToArray();
     }
 
     protected override void OnItemSelected()
     {
         int selectedIndex = CurrentContainer.CurrentItem.TryGetData<int>("index");
-        var next = DialogChoices[selectedIndex].Next;
-        DialogOptionSelectionDataModel data = new() { Next = next };
+        var data = new List<Choice>(1) { DialogChoices[selectedIndex] };
         _ = CloseSubMenuAsync(data: data);
     }
 
     protected override void SetupOptions()
     {
-        if (DialogChoices == null || DialogChoices.Length == 0)
+        if (DialogChoices.Length == 0)
             return;
-        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        var options = new List<TextOption>();
-        for (int i = 0; i < DialogChoices.Length; i++)
-        {
-            if (!DialogChoices[i].Selectable)
-                continue;
-            var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData["index"] = i;
-            options.Add(textOption);
-        }
+        List<TextOption> options = DialogChoices
+            .Where(x => !x.Disabled)
+            .Select((x, i) =>
+            {
+                var textOption = _textOptionScene.Instantiate<TextOption>();
+                textOption.LabelText = x.Text;
+                textOption.OptionData["index"] = i;
+                return textOption;
+            })
+            .ToList();
         _options.ReplaceChildren(options);
     }
 
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _options = OptionContainers.Find(x => x.Name == "OptionContainer");
-        //_options.FitContainer = true;
+        _options = OptionContainers.First(x => x.Name == "OptionContainer");
     }
 }

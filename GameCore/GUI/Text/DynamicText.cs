@@ -224,7 +224,7 @@ public partial class DynamicText : RichTextLabel
 
     private void HandleTextEvent(ITextEvent textEvent)
     {
-        if (!textEvent.HandleEvent(this))
+        if (!textEvent.TryHandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
     }
 

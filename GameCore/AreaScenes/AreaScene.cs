@@ -92,10 +92,8 @@ public partial class AreaScene : Node2D
     public IEnumerable<ActorBase> GetAllActors()
     {
         var actors = new List<ActorBase>();
-        var players = PlayersContainer.GetChildren<ActorBase>();
-        var enemies = EnemiesContainer.GetChildren<ActorBase>();
-        actors.AddRange(players);
-        actors.AddRange(enemies);
+        actors.AddRange(PlayersContainer.GetChildren<ActorBase>());
+        actors.AddRange(EnemiesContainer.GetChildren<ActorBase>());
         return actors;
     }
 

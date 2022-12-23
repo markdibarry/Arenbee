@@ -21,14 +21,19 @@ public class DialogScriptReader
     private readonly DialogScript _dialogScript;
     public List<Speaker> Speakers { get; set; } = new();
 
-    public async Task ReadScriptAsync()
+    public void Evaluate(ushort[] instructions)
     {
-        await HandleNextAsync(_dialogScript.Sections[0]);
+        EvaluateInstructions(instructions);
     }
 
-    public async Task HandleNextAsync(IStatement stmt)
+    public async Task ReadScriptAsync()
     {
-        switch (stmt.Next.Type)
+        await ReadNextStatementAsync(_dialogScript.Sections[0].Next);
+    }
+
+    public async Task ReadNextStatementAsync(GoTo goTo)
+    {
+        switch (goTo.Type)
         {
             case StatementType.Line:
                 await HandleLineStatement();
@@ -37,20 +42,20 @@ public class DialogScriptReader
                 await HandleSectionStatement();
                 break;
             case StatementType.Instruction:
-                HandleInstructionStatement();
+                await HandleInstructionStatement();
                 break;
             case StatementType.Conditional:
                 await HandleConditionalStatement();
                 break;
             case StatementType.Choice:
-                HandleChoiceStatement();
+                await HandleChoiceStatement();
                 break;
         }
 
         async Task HandleLineStatement()
         {
-            LineData lineData = _dialogScript.Lines[stmt.Next.Index];
-            DialogLine line = BuildLine(_interpreter, _dialogScript, lineData);
+            LineData lineData = _dialogScript.Lines[goTo.Index];
+            DialogLine line = BuildLine(lineData);
             for (int i = 0; i < lineData.SpeakerIndices.Length; i++)
                 line.Speakers.Add(Speakers[lineData.SpeakerIndices[i]]);
             await _dialog.HandleLineAsync(line);
@@ -58,31 +63,70 @@ public class DialogScriptReader
 
         async Task HandleSectionStatement()
         {
-            await HandleNextAsync(_dialogScript.Sections[stmt.Next.Index]);
+            await ReadNextStatementAsync(_dialogScript.Sections[goTo.Index].Next);
         }
 
-        async void HandleInstructionStatement()
+        async Task HandleInstructionStatement()
         {
-            InstructionStatement instruction = _dialogScript.InstructionStmts[stmt.Next.Index];
+            InstructionStatement instructionStmt = _dialogScript.InstructionStmts[goTo.Index];
+            GoTo next = EvaluateInstructions(instructionStmt.Values);
+            if (next.Type == StatementType.Undefined)
+                next = instructionStmt.Next;
+            await ReadNextStatementAsync(next);
         }
 
         async Task HandleConditionalStatement()
         {
-            InstructionStatement[] conditions = _dialogScript.ConditionalSets[stmt.Next.Index];
+            InstructionStatement[] conditions = _dialogScript.ConditionalSets[goTo.Index];
             foreach (var condition in conditions)
             {
-                if (condition.Values == null || _interpreter.GetBoolInstResult(condition.Values))
+                if (condition.Values.Length == 0 || _interpreter.GetBoolInstResult(condition.Values))
                 {
-                    await HandleNextAsync(condition);
-                    break;
+                    await ReadNextStatementAsync(condition.Next);
+                    return;
                 }
             }
             throw new DialogException("No valid condition in if statement.");
         }
 
-        void HandleChoiceStatement()
+        async Task HandleChoiceStatement()
         {
-            ushort[] choiceSet = _dialogScript.ChoiceSets[stmt.Next.Index];
+            List<Choice> choices = new();
+            ushort[] choiceSet = _dialogScript.ChoiceSets[goTo.Index];
+            int validIndex = -1;
+            for (int i = 0; i < choiceSet.Length; i++)
+            {
+                if (i >= validIndex)
+                    validIndex = -1;
+                // If choice, add it!
+                if (choiceSet[i] == (ushort)OpCode.Choice)
+                {
+                    Choice choice = _dialogScript.Choices[choiceSet[++i]];
+                    choice.Disabled = i < validIndex;
+                    choices.Add(choice);
+                }
+                // If GoTo, flag all choices as disabled until index
+                else if (choiceSet[i] == (ushort)OpCode.Goto)
+                {
+                    if (i++ < validIndex)
+                        validIndex = choiceSet[i];
+                }
+                // Otherwise is a condition
+                else
+                {
+                    if (i < validIndex)
+                    {
+                        i++;
+                    }
+                    else
+                    {
+                        ushort[] condition = _dialogScript.Instructions[choiceSet[i++]];
+                        if (!_interpreter.GetBoolInstResult(condition))
+                            validIndex = choiceSet[i];
+                    }
+                }
+            }
+            await _dialog.OpenOptionBoxAsync(choices);
         }
     }
 
@@ -92,7 +136,7 @@ public class DialogScriptReader
             Speakers.Add(new(id));
     }
 
-    private static DialogLine BuildLine(DialogInterpreter evaluator, DialogScript dialogScript, LineData lineData)
+    private DialogLine BuildLine(LineData lineData)
     {
         DialogLine line = new();
         StringBuilder stringBuilder = new();
@@ -116,7 +160,7 @@ public class DialogScriptReader
                     throw new Exception("Bracket length invalid.");
                 if (!int.TryParse(lineData.Text[(textIndex + 1)..(textIndex + bracketLength)], out int intValue))
                     throw new Exception("Bracket contains non-integer");
-                ushort[] instr = dialogScript.Instructions[lineData.InstructionIndices[intValue]];
+                ushort[] instr = _dialogScript.Instructions[lineData.InstructionIndices[intValue]];
                 HandleEventTag(instr);
                 textIndex += bracketLength;
                 appendStart = textIndex;
@@ -129,65 +173,67 @@ public class DialogScriptReader
 
         void HandleEventTag(ushort[] instructions)
         {
-            switch ((InstructionType)instructions[0])
+            switch ((OpCode)instructions[0])
             {
-                case InstructionType.Assign:
-                case InstructionType.MultAssign:
-                case InstructionType.DivAssign:
-                case InstructionType.AddAssign:
-                case InstructionType.SubAssign:
-                    HandleDeferredEvaluate();
+                case OpCode.Assign:
+                case OpCode.MultAssign:
+                case OpCode.DivAssign:
+                case OpCode.AddAssign:
+                case OpCode.SubAssign:
+                    AddAsTextEvent();
                     break;
-                case InstructionType.String:
-                case InstructionType.Float:
-                case InstructionType.Mult:
-                case InstructionType.Div:
-                case InstructionType.Add:
-                case InstructionType.Sub:
-                case InstructionType.Var:
-                case InstructionType.Func:
+                case OpCode.String:
+                case OpCode.Float:
+                case OpCode.Mult:
+                case OpCode.Div:
+                case OpCode.Add:
+                case OpCode.Sub:
+                case OpCode.Var:
+                case OpCode.Func:
                     HandleEvaluate();
                     break;
-                case InstructionType.BBCode:
+                case OpCode.BBCode:
                     HandleBBCode();
                     break;
-                case InstructionType.NewLine:
+                case OpCode.NewLine:
                     HandleNewLine();
                     break;
-                case InstructionType.Speed:
+                case OpCode.Speed:
                     HandleSpeed();
                     break;
-                case InstructionType.Goto:
+                case OpCode.Goto:
                     HandleGoTo();
                     break;
-                case InstructionType.Auto:
+                case OpCode.Auto:
                     HandleAuto();
+                    break;
+                case OpCode.SpeakerSet:
+                    HandleSpeakerSet();
                     break;
             };
 
-            void HandleDeferredEvaluate()
+            void AddAsTextEvent()
             {
-                InstructionTextEvent textEvent = new()
-                {
-                    Index = renderIndex,
-                    Instructions = instructions
-                };
+                InstructionTextEvent textEvent = new(renderIndex, instructions);
                 line.Events.Add(textEvent);
             }
 
             void HandleEvaluate()
             {
                 string result = string.Empty;
-                switch (evaluator.GetReturnType(instructions, 0))
+                switch (_interpreter.GetReturnType(instructions, 0))
                 {
                     case VarType.String:
-                        result = evaluator.GetStringInstResult(instructions);
+                        result = _interpreter.GetStringInstResult(instructions);
                         break;
                     case VarType.Float:
-                        result = evaluator.GetFloatInstResult(instructions).ToString();
+                        result = _interpreter.GetFloatInstResult(instructions).ToString();
+                        break;
+                    case VarType.Bool:
+                        _interpreter.GetBoolInstResult(instructions);
                         break;
                     case VarType.Void:
-                        HandleDeferredEvaluate();
+                        AddAsTextEvent();
                         break;
                 }
                 stringBuilder.Append(result);
@@ -198,7 +244,7 @@ public class DialogScriptReader
 
             void HandleBBCode()
             {
-                stringBuilder.Append($"[{dialogScript.InstStrings[instructions[1]]}]");
+                stringBuilder.Append($"[{_dialogScript.InstStrings[instructions[1]]}]");
             }
 
             void HandleNewLine()
@@ -211,13 +257,18 @@ public class DialogScriptReader
             {
                 SpeedTextEvent textEvent = new()
                 {
-                    TimeMulitplier = dialogScript.InstFloats[instructions[1]],
+                    TimeMulitplier = _dialogScript.InstFloats[instructions[1]],
                     Index = renderIndex
                 };
                 line.Events.Add(textEvent);
             }
 
             void HandleGoTo() => line.Next = new GoTo(StatementType.Section, instructions[1]);
+
+            void HandleSpeakerSet()
+            {
+
+            }
         }
 
         static int GetBracketLength(string text, int i)
@@ -234,6 +285,67 @@ public class DialogScriptReader
                 i++;
             }
             return -1;
+        }
+    }
+
+    private GoTo EvaluateInstructions(ushort[] instructions)
+    {
+        switch ((OpCode)instructions[0])
+        {
+            case OpCode.Assign:
+            case OpCode.MultAssign:
+            case OpCode.DivAssign:
+            case OpCode.AddAssign:
+            case OpCode.SubAssign:
+            case OpCode.Func:
+                HandleEvaluate();
+                break;
+            case OpCode.Speed:
+                HandleSpeed();
+                break;
+            case OpCode.Goto:
+                return HandleGoTo();
+            case OpCode.Auto:
+                HandleAuto();
+                break;
+            case OpCode.SpeakerSet:
+                HandleSpeakerSet();
+                break;
+        };
+        return new GoTo();
+        void HandleEvaluate()
+        {
+            switch (_interpreter.GetReturnType(instructions, 0))
+            {
+                case VarType.String:
+                    _interpreter.GetStringInstResult(instructions);
+                    break;
+                case VarType.Float:
+                    _interpreter.GetFloatInstResult(instructions).ToString();
+                    break;
+                case VarType.Bool:
+                    _interpreter.GetBoolInstResult(instructions);
+                    break;
+                case VarType.Void:
+                    _interpreter.EvalVoidInst(instructions);
+                    break;
+            }
+        }
+
+        void HandleSpeed()
+        {
+        }
+
+        GoTo HandleGoTo() => new(StatementType.Section, instructions[1]);
+
+        void HandleAuto()
+        {
+
+        }
+
+        void HandleSpeakerSet()
+        {
+
         }
     }
 }

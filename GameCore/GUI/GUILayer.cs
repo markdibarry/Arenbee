@@ -6,6 +6,7 @@ namespace GameCore.GUI;
 
 public abstract partial class GUILayer : Control
 {
+    public State CurrentState { get; protected set; }
     public string NameId { get; set; } = string.Empty;
     protected IGUIController GUIController { get; set; } = null!;
     public abstract void HandleInput(GUIInputHandler menuInput, double delta);
@@ -14,4 +15,12 @@ public abstract partial class GUILayer : Control
     public virtual Task AnimateOpenAsync() => Task.CompletedTask;
     public virtual Task AnimateCloseAsync() => Task.CompletedTask;
     public abstract void UpdateData(object? data);
+    public enum State
+    {
+        Opening,
+        Available,
+        Busy,
+        Closing,
+        Closed
+    }
 }

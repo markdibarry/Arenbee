@@ -49,3 +49,50 @@ public enum StatementType
     Choice,
     Section
 }
+
+public enum OpCode : ushort
+{
+    Undefined,
+    Float,
+    String,
+    Bool,
+    // name string
+    Var,
+    // name string, number of arguments (float), expressions...
+    Func,
+    // float, float
+    Mult,
+    Div,
+    Add,
+    Sub,
+    LessEquals,
+    GreaterEquals,
+    Less,
+    Greater,
+    // expression, expression
+    Equals,
+    NotEquals,
+    // bool, bool
+    And,
+    Or,
+    Not,
+    // Variable index, expression
+    Assign,
+    MultAssign,
+    DivAssign,
+    AddAssign,
+    SubAssign,
+
+    // bool
+    Auto,
+    // string
+    BBCode,
+    // Section Index
+    Goto,
+    NewLine,
+    // float
+    Speed,
+    // SpeakerId (float), Name (expression), Mood (expression), Portrait (expression)
+    SpeakerSet,
+    Choice
+}

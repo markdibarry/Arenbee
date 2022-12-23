@@ -198,7 +198,7 @@ public partial class DialogBox : Control
 
     private void OnTextEventTriggered(ITextEvent textEvent)
     {
-        if (!textEvent.HandleEvent(this))
+        if (!textEvent.TryHandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
     }
 

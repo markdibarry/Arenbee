@@ -17,72 +17,27 @@ public class DialogInterpreter
     private readonly TextStorage _textStorage;
     private ushort[] _instructions = Array.Empty<ushort>();
     private int _index = -1;
-    public enum InstructionType
-    {
-        Undefined,
-        Float,
-        String,
-        Bool,
-        // name string
-        Var,
-        // name string, number of arguments (float), expressions...
-        Func,
-        // float, float
-        Mult,
-        Div,
-        Add,
-        Sub,
-        LessEquals,
-        GreaterEquals,
-        Less,
-        Greater,
-        // expression, expression
-        Equals,
-        NotEquals,
-        // bool, bool
-        And,
-        Or,
-        Not,
-        // Variable index, expression
-        Assign,
-        MultAssign,
-        DivAssign,
-        AddAssign,
-        SubAssign,
-
-        // bool
-        Auto,
-        // string
-        BBCode,
-        // Section Index
-        Goto,
-        NewLine,
-        // float
-        Speed,
-        // SpeakerId (float), Name (expression), Mood (expression), Portrait (expression)
-        SpeakerSet
-    }
 
     public VarType GetReturnType(ushort[] instructions, int index)
     {
-        return (InstructionType)instructions[index + 1] switch
+        return (OpCode)instructions[index + 1] switch
         {
-            InstructionType.String => VarType.String,
-            InstructionType.Float or
-            InstructionType.Mult or
-            InstructionType.Div or
-            InstructionType.Add or
-            InstructionType.Sub => VarType.Float,
-            InstructionType.Bool or
-            InstructionType.Less or
-            InstructionType.Greater or
-            InstructionType.LessEquals or
-            InstructionType.GreaterEquals or
-            InstructionType.Equals or
-            InstructionType.NotEquals or
-            InstructionType.Not => VarType.Bool,
-            InstructionType.Func => GetFuncReturnType(),
-            InstructionType.Var => GetVarType(),
+            OpCode.String => VarType.String,
+            OpCode.Float or
+            OpCode.Mult or
+            OpCode.Div or
+            OpCode.Add or
+            OpCode.Sub => VarType.Float,
+            OpCode.Bool or
+            OpCode.Less or
+            OpCode.Greater or
+            OpCode.LessEquals or
+            OpCode.GreaterEquals or
+            OpCode.Equals or
+            OpCode.NotEquals or
+            OpCode.Not => VarType.Bool,
+            OpCode.Func => GetFuncReturnType(),
+            OpCode.Var => GetVarType(),
             _ => default
         };
 
@@ -138,7 +93,7 @@ public class DialogInterpreter
         return result;
     }
 
-    public void EvalAssignInst(ushort[] instructions)
+    public void EvalVoidInst(ushort[] instructions)
     {
         _instructions = instructions;
         EvalVoidExp();
@@ -148,64 +103,64 @@ public class DialogInterpreter
 
     private bool EvalBoolExp()
     {
-        return (InstructionType)_instructions[++_index] switch
+        return (OpCode)_instructions[++_index] switch
         {
-            InstructionType.Bool => EvalBool(),
-            InstructionType.Less => EvalLess(),
-            InstructionType.Greater => EvalGreater(),
-            InstructionType.LessEquals => EvalLessEquals(),
-            InstructionType.GreaterEquals => EvalGreaterEquals(),
-            InstructionType.Equals => EvalEquals(),
-            InstructionType.NotEquals => !EvalEquals(),
-            InstructionType.Not => EvalNot(),
-            InstructionType.And => EvalAnd(),
-            InstructionType.Or => EvalOr(),
-            InstructionType.Var => EvalVar<bool>(),
-            InstructionType.Func => (bool?)EvalFunc() ?? default,
+            OpCode.Bool => EvalBool(),
+            OpCode.Less => EvalLess(),
+            OpCode.Greater => EvalGreater(),
+            OpCode.LessEquals => EvalLessEquals(),
+            OpCode.GreaterEquals => EvalGreaterEquals(),
+            OpCode.Equals => EvalEquals(),
+            OpCode.NotEquals => !EvalEquals(),
+            OpCode.Not => EvalNot(),
+            OpCode.And => EvalAnd(),
+            OpCode.Or => EvalOr(),
+            OpCode.Var => EvalVar<bool>(),
+            OpCode.Func => (bool?)EvalFunc() ?? default,
             _ => default
         };
     }
 
     private string EvalStringExp()
     {
-        return (InstructionType)_instructions[++_index] switch
+        return (OpCode)_instructions[++_index] switch
         {
-            InstructionType.String => EvalString(),
-            InstructionType.Var => EvalVar<string>() ?? string.Empty,
-            InstructionType.Func => (string?)EvalFunc() ?? string.Empty,
+            OpCode.String => EvalString(),
+            OpCode.Var => EvalVar<string>() ?? string.Empty,
+            OpCode.Func => (string?)EvalFunc() ?? string.Empty,
             _ => string.Empty
         };
     }
 
     private float EvalFloatExp()
     {
-        return (InstructionType)_instructions[++_index] switch
+        return (OpCode)_instructions[++_index] switch
         {
-            InstructionType.Float => EvalFloat(),
-            InstructionType.Mult => EvalMult(),
-            InstructionType.Div => EvalDiv(),
-            InstructionType.Add => EvalAdd(),
-            InstructionType.Sub => EvalSub(),
-            InstructionType.Var => EvalVar<float>(),
-            InstructionType.Func => (float?)EvalFunc() ?? default,
+            OpCode.Float => EvalFloat(),
+            OpCode.Mult => EvalMult(),
+            OpCode.Div => EvalDiv(),
+            OpCode.Add => EvalAdd(),
+            OpCode.Sub => EvalSub(),
+            OpCode.Var => EvalVar<float>(),
+            OpCode.Func => (float?)EvalFunc() ?? default,
             _ => default
         };
     }
 
     private void EvalVoidExp()
     {
-        switch ((InstructionType)_instructions[++_index])
+        switch ((OpCode)_instructions[++_index])
         {
-            case InstructionType.Assign:
+            case OpCode.Assign:
                 EvalAssign();
                 break;
-            case InstructionType.MultAssign:
-            case InstructionType.DivAssign:
-            case InstructionType.AddAssign:
-            case InstructionType.SubAssign:
-                EvalMathAssign((InstructionType)_instructions[_index]);
+            case OpCode.MultAssign:
+            case OpCode.DivAssign:
+            case OpCode.AddAssign:
+            case OpCode.SubAssign:
+                EvalMathAssign((OpCode)_instructions[_index]);
                 break;
-            case InstructionType.Func:
+            case OpCode.Func:
                 EvalFunc();
                 break;
         };
@@ -270,7 +225,7 @@ public class DialogInterpreter
         };
     }
 
-    private void EvalMathAssign(InstructionType instructionType)
+    private void EvalMathAssign(OpCode instructionType)
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
         if (!_register.Properties.TryGetValue(varName, out VarDef? varDef))
@@ -278,10 +233,10 @@ public class DialogInterpreter
         float originalValue = ((Func<float>)varDef.Getter).Invoke();
         float result = instructionType switch
         {
-            InstructionType.AddAssign => originalValue + EvalFloatExp(),
-            InstructionType.SubAssign => originalValue - EvalFloatExp(),
-            InstructionType.MultAssign => originalValue * EvalFloatExp(),
-            InstructionType.DivAssign => originalValue / EvalFloatExp(),
+            OpCode.AddAssign => originalValue + EvalFloatExp(),
+            OpCode.SubAssign => originalValue - EvalFloatExp(),
+            OpCode.MultAssign => originalValue * EvalFloatExp(),
+            OpCode.DivAssign => originalValue / EvalFloatExp(),
             _ => default
         };
         ((Action<float>)varDef.Setter).Invoke(result);

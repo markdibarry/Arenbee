@@ -11,19 +11,10 @@ namespace GameCore.GUI;
 public partial class Menu : GUILayer, IMenu
 {
     private SubMenu? CurrentSubMenu => SubMenus.Count > 0 ? SubMenus.Peek() : null;
-    public State CurrentState { get; private set; }
     protected CanvasGroup ContentGroup { get; private set; } = null!;
     protected Control Background { get; private set; } = null!;
     protected Control SubMenuContainer { get; private set; } = null!;
     protected Stack<SubMenu> SubMenus { get; private set; } = new();
-
-    public enum State
-    {
-        Opening,
-        Available,
-        Closing,
-        Closed
-    }
 
     public override void _Ready()
     {

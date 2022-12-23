@@ -6,17 +6,16 @@ namespace GameCore.GUI;
 
 public interface ITextEvent
 {
-    bool HandleEvent(object context);
+    bool TryHandleEvent(object context);
 }
 
 public class TextEvent : ITextEvent
 {
-    public string Name { get; set; }
     public bool Valid { get; set; }
     public bool Seen { get; set; }
     public int Index { get; set; }
 
-    public virtual bool HandleEvent(object context) => true;
+    public virtual bool TryHandleEvent(object context) => true;
 
     public static TextEvent CreateTextEvent(Tag tag)
     {
@@ -32,12 +31,19 @@ public class TextEvent : ITextEvent
 
 public class InstructionTextEvent : TextEvent
 {
+    public InstructionTextEvent(int index, ushort[] instructions)
+    {
+        Index = index;
+        Instructions = instructions;
+    }
+
     public ushort[] Instructions { get; set; }
 
-    public override bool HandleEvent(object context)
+    public override bool TryHandleEvent(object context)
     {
         if (context is not Dialog dialog)
             return false;
+        dialog.EvaluateInstructions(Instructions);
         return true;
     }
 }
@@ -55,7 +61,7 @@ public class SpeedTextEvent : TextEvent
     }
     public double TimeMulitplier { get; set; }
 
-    public override bool HandleEvent(object context)
+    public override bool TryHandleEvent(object context)
     {
         if (context is not DynamicText dynamicText)
             return true;
@@ -77,7 +83,7 @@ public class PauseTextEvent : TextEvent
 
     public double Time { get; set; }
 
-    public override bool HandleEvent(object context)
+    public override bool TryHandleEvent(object context)
     {
         if (context is not DynamicText dynamicText)
             return true;
@@ -102,7 +108,7 @@ public class MoodTextEvent : TextEvent
     public string Mood { get; set; }
     public string Character { get; set; }
 
-    public override bool HandleEvent(object context)
+    public override bool TryHandleEvent(object context)
     {
         if (context is DialogBox dialogBox)
         {
@@ -163,7 +169,7 @@ public class Tag
     public int Length { get; set; }
     public int Index { get; set; }
     public Dictionary<string, string> Attributes { get; set; } = new();
-    public static string[] BBCodeTags = new[]
+    private static readonly string[] _BBCodeTags = new[]
     {
         "b",
         "i",
@@ -201,6 +207,6 @@ public class Tag
 
     public bool IsBBCode()
     {
-        return BBCodeTags.Contains(Name);
+        return _BBCodeTags.Contains(Name);
     }
 }

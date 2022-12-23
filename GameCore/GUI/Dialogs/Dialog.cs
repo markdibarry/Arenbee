@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Exceptions;
@@ -25,22 +26,12 @@ public partial class Dialog : GUILayer
     private readonly PackedScene _dialogBoxScene;
     private readonly DialogScriptReader _scriptReader;
     private DialogOptionMenu? _dialogOptionMenu;
-
-    public State CurrentState { get; private set; }
     public IStorageContext TextStorage { get; set; }
     public DialogBox? SecondaryBox { get; set; }
     public DialogBox? FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
     public bool SpeechBubbleEnabled { get; set; }
     public bool DualBoxEnabled { get; set; }
-    public enum State
-    {
-        Opening,
-        Available,
-        Busy,
-        Closing,
-        Closed
-    }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -66,6 +57,11 @@ public partial class Dialog : GUILayer
         await CloseDialogBoxAsync(FocusedBox);
     }
 
+    public void EvaluateInstructions(ushort[] instructions)
+    {
+        _scriptReader.Evaluate(instructions);
+    }
+
     public static DialogScript LoadScript(string path)
     {
         if (string.IsNullOrEmpty(path))
@@ -76,11 +72,16 @@ public partial class Dialog : GUILayer
         return dialogScript;
     }
 
+    public async Task OpenOptionBoxAsync(List<Choice> choices)
+    {
+        await GUIController.OpenMenuAsync(scenePath: DialogOptionMenu.GetScenePath(), data: choices);
+    }
+
     public async Task ProceedAsync()
     {
         try
         {
-            await _scriptReader.HandleNextAsync(FocusedBox!.DialogLine);
+            await _scriptReader.ReadNextStatementAsync(FocusedBox!.DialogLine);
         }
         catch (Exception ex)
         {
@@ -96,19 +97,11 @@ public partial class Dialog : GUILayer
         await _scriptReader.ReadScriptAsync();
     }
 
-    public override void UpdateData(object data)
+    public override void UpdateData(object? data)
     {
-        if (data is not DialogOptionSelectionDataModel model)
-        {
-            await CloseDialogAsync();
+        if (data is not List<Choice> choices)
             return;
-        }
-        LineData line = null;
-        if (model.Next != null)
-            line = DialogScript.GetNextLine(model.Next);
-        else if (model.Lines != null && model.Lines.Length > 0)
-            line = DialogScript.GetNextLine(model.Lines);
-        _ = ToDialogPartAsync(line);
+        _ = _scriptReader.ReadNextStatementAsync(choices[0]);
     }
 
     public override Task TransitionCloseAsync(bool preventAnimation = false)
@@ -120,7 +113,7 @@ public partial class Dialog : GUILayer
 
     private void OnTextEventTriggered(ITextEvent textEvent)
     {
-        textEvent.HandleEvent(this);
+        textEvent.TryHandleEvent(this);
     }
 
     private void OnDialogLineFinished()
@@ -136,12 +129,6 @@ public partial class Dialog : GUILayer
         newBox.DisplayRight = displayRight;
         AddChild(newBox);
         return newBox;
-    }
-
-    private async Task OpenOptionBoxAsync()
-    {
-        var choices = FocusedBox.DialogLine.Choices;
-        await GUIController.OpenMenuAsync(scenePath: DialogOptionMenu.GetScenePath(), data: choices);
     }
 
     private async Task CloseDialogAsync(bool preventAnimation = false, object? data = null)
