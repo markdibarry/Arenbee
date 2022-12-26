@@ -81,7 +81,7 @@ public partial class Dialog : GUILayer
     {
         try
         {
-            await _scriptReader.ReadNextStatementAsync(FocusedBox!.DialogLine);
+            await _scriptReader.ReadNextStatementAsync(FocusedBox!.DialogLine.Next);
         }
         catch (Exception ex)
         {
@@ -101,7 +101,7 @@ public partial class Dialog : GUILayer
     {
         if (data is not List<Choice> choices)
             return;
-        _ = _scriptReader.ReadNextStatementAsync(choices[0]);
+        _ = _scriptReader.ReadNextStatementAsync(choices[0].Next);
     }
 
     public override Task TransitionCloseAsync(bool preventAnimation = false)

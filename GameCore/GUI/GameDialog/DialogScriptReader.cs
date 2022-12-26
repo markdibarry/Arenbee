@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Exceptions;
 
@@ -12,14 +12,14 @@ public class DialogScriptReader
     {
         _dialog = dialog;
         _dialogScript = dialogScript;
+        _speakers = _dialogScript.SpeakerIds.Select(x => new Speaker(x)).ToArray();
         _interpreter = new(register, dialogScript, new());
-        SetSpeakers();
     }
 
     private readonly DialogInterpreter _interpreter;
     private readonly Dialog _dialog;
     private readonly DialogScript _dialogScript;
-    public List<Speaker> Speakers { get; set; } = new();
+    private readonly Speaker[] _speakers;
 
     public void Evaluate(ushort[] instructions)
     {
@@ -55,9 +55,8 @@ public class DialogScriptReader
         async Task HandleLineStatement()
         {
             LineData lineData = _dialogScript.Lines[goTo.Index];
-            DialogLine line = BuildLine(lineData);
-            for (int i = 0; i < lineData.SpeakerIndices.Length; i++)
-                line.Speakers.Add(Speakers[lineData.SpeakerIndices[i]]);
+            Speaker[] lineSpeakers = GetSpeakers(lineData.SpeakerIndices);
+            DialogLine line = new(_interpreter, _dialogScript, lineData, lineSpeakers);
             await _dialog.HandleLineAsync(line);
         }
 
@@ -130,164 +129,6 @@ public class DialogScriptReader
         }
     }
 
-    private void SetSpeakers()
-    {
-        foreach (string id in _dialogScript.SpeakerIds)
-            Speakers.Add(new(id));
-    }
-
-    private DialogLine BuildLine(LineData lineData)
-    {
-        DialogLine line = new();
-        StringBuilder stringBuilder = new();
-        int appendStart = 0;
-        int textIndex = 0;
-        int renderIndex = 0;
-        while (textIndex < lineData.Text.Length)
-        {
-            if (lineData.Text[textIndex] != '[')
-            {
-                textIndex++;
-                renderIndex++;
-                continue;
-            }
-
-            if (textIndex == 0 || lineData.Text[textIndex - 1] != '\\')
-            {
-                stringBuilder.Append(lineData.Text[appendStart..textIndex]);
-                int bracketLength = GetBracketLength(lineData.Text, textIndex);
-                if (bracketLength == -1)
-                    throw new Exception("Bracket length invalid.");
-                if (!int.TryParse(lineData.Text[(textIndex + 1)..(textIndex + bracketLength)], out int intValue))
-                    throw new Exception("Bracket contains non-integer");
-                ushort[] instr = _dialogScript.Instructions[lineData.InstructionIndices[intValue]];
-                HandleEventTag(instr);
-                textIndex += bracketLength;
-                appendStart = textIndex;
-            }
-        }
-        stringBuilder.Append(lineData.Text[appendStart..textIndex]);
-
-        line.Text = stringBuilder.ToString();
-        return line;
-
-        void HandleEventTag(ushort[] instructions)
-        {
-            switch ((OpCode)instructions[0])
-            {
-                case OpCode.Assign:
-                case OpCode.MultAssign:
-                case OpCode.DivAssign:
-                case OpCode.AddAssign:
-                case OpCode.SubAssign:
-                    AddAsTextEvent();
-                    break;
-                case OpCode.String:
-                case OpCode.Float:
-                case OpCode.Mult:
-                case OpCode.Div:
-                case OpCode.Add:
-                case OpCode.Sub:
-                case OpCode.Var:
-                case OpCode.Func:
-                    HandleEvaluate();
-                    break;
-                case OpCode.BBCode:
-                    HandleBBCode();
-                    break;
-                case OpCode.NewLine:
-                    HandleNewLine();
-                    break;
-                case OpCode.Speed:
-                    HandleSpeed();
-                    break;
-                case OpCode.Goto:
-                    HandleGoTo();
-                    break;
-                case OpCode.Auto:
-                    HandleAuto();
-                    break;
-                case OpCode.SpeakerSet:
-                    HandleSpeakerSet();
-                    break;
-            };
-
-            void AddAsTextEvent()
-            {
-                InstructionTextEvent textEvent = new(renderIndex, instructions);
-                line.Events.Add(textEvent);
-            }
-
-            void HandleEvaluate()
-            {
-                string result = string.Empty;
-                switch (_interpreter.GetReturnType(instructions, 0))
-                {
-                    case VarType.String:
-                        result = _interpreter.GetStringInstResult(instructions);
-                        break;
-                    case VarType.Float:
-                        result = _interpreter.GetFloatInstResult(instructions).ToString();
-                        break;
-                    case VarType.Bool:
-                        _interpreter.GetBoolInstResult(instructions);
-                        break;
-                    case VarType.Void:
-                        AddAsTextEvent();
-                        break;
-                }
-                stringBuilder.Append(result);
-                renderIndex += result.Length;
-            }
-
-            void HandleAuto() => line.Auto = instructions[1] == 1;
-
-            void HandleBBCode()
-            {
-                stringBuilder.Append($"[{_dialogScript.InstStrings[instructions[1]]}]");
-            }
-
-            void HandleNewLine()
-            {
-                stringBuilder.Append('\r');
-                renderIndex++;
-            }
-
-            void HandleSpeed()
-            {
-                SpeedTextEvent textEvent = new()
-                {
-                    TimeMulitplier = _dialogScript.InstFloats[instructions[1]],
-                    Index = renderIndex
-                };
-                line.Events.Add(textEvent);
-            }
-
-            void HandleGoTo() => line.Next = new GoTo(StatementType.Section, instructions[1]);
-
-            void HandleSpeakerSet()
-            {
-
-            }
-        }
-
-        static int GetBracketLength(string text, int i)
-        {
-            int length = 1;
-            i++;
-            while (i < text.Length)
-            {
-                if (text[i] == ']')
-                    return ++length;
-                else if (text[i] == '[')
-                    return length;
-                length++;
-                i++;
-            }
-            return -1;
-        }
-    }
-
     private GoTo EvaluateInstructions(ushort[] instructions)
     {
         switch ((OpCode)instructions[0])
@@ -312,7 +153,9 @@ public class DialogScriptReader
                 HandleSpeakerSet();
                 break;
         };
+
         return new GoTo();
+
         void HandleEvaluate()
         {
             switch (_interpreter.GetReturnType(instructions, 0))
@@ -347,5 +190,15 @@ public class DialogScriptReader
         {
 
         }
+    }
+
+    private Speaker[] GetSpeakers(ushort[] indices)
+    {
+        if (indices.Length == 0)
+            return Array.Empty<Speaker>();
+        var lineSpeakers = new Speaker[indices.Length];
+        for (int i = 0; i < indices.Length; i++)
+            lineSpeakers[i] = _speakers[indices[i]];
+        return lineSpeakers;
     }
 }

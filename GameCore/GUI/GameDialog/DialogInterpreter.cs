@@ -10,13 +10,15 @@ public class DialogInterpreter
         _register = register;
         _dialogScript = dialogScript;
         _textStorage = textStorage;
+        _instructions = Array.Empty<ushort>();
+        _index = -1;
     }
 
     private readonly DialogBridgeRegister _register;
     private readonly DialogScript _dialogScript;
     private readonly TextStorage _textStorage;
-    private ushort[] _instructions = Array.Empty<ushort>();
-    private int _index = -1;
+    private ushort[] _instructions;
+    private int _index;
 
     public VarType GetReturnType(ushort[] instructions, int index)
     {
