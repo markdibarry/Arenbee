@@ -47,7 +47,8 @@ public enum StatementType
     Conditional,
     Instruction,
     Choice,
-    Section
+    Section,
+    End
 }
 
 public enum OpCode : ushort
@@ -92,7 +93,7 @@ public enum OpCode : ushort
     NewLine,
     // float
     Speed,
-    // SpeakerId (float), Name (expression), Mood (expression), Portrait (expression)
+    // SpeakerId (float), Name flag (bool), Name (expression), Portrait flag (bool), Portrait (expression), Mood flag (bool), Mood (expression)
     SpeakerSet,
     Choice
 }

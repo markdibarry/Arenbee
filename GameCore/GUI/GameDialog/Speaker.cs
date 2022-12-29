@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
 namespace GameCore.GUI.GameDialog;
+
 public class Speaker
 {
-    public Speaker(string actorId)
+    public Speaker(string speakerId)
     {
-        ActorId = actorId;
-        Portrait = actorId;
-        DisplayName = actorId;
+        SpeakerId = speakerId;
+        Portrait = speakerId;
+        DisplayName = speakerId;
         Mood = DefaultMood;
     }
 
     private const string DefaultMood = "neutral";
-    public string ActorId { get; set; }
+    public string SpeakerId { get; }
     public string Portrait { get; set; }
     public string DisplayName { get; set; }
     public string Mood { get; set; }
@@ -26,7 +26,7 @@ public class Speaker
             return false;
         foreach (var speaker in speakersA)
         {
-            if (!speakersB.Any(x => x.ActorId == speaker.ActorId))
+            if (!speakersB.Any(x => x.SpeakerId == speaker.SpeakerId))
                 return false;
         }
         return true;
@@ -36,25 +36,21 @@ public class Speaker
     {
         foreach (var speaker in speakersA)
         {
-            if (speakersB.Any(x => x.ActorId == speaker.ActorId))
+            if (speakersB.Any(x => x.SpeakerId == speaker.SpeakerId))
                 return true;
         }
         return false;
     }
 
-    public AnimatedSprite2D GetPortrait(float shiftAmount, bool reverse)
+    public Portrait CreatePortrait(float shiftAmount, bool reverse)
     {
-        string path = $"{Config.PortraitsPath}{Portrait}/portraits.tres";
-        AnimatedSprite2D portrait = new()
+        Portrait portrait = new()
         {
-            Name = ActorId,
+            Name = SpeakerId,
             FlipH = reverse,
-            Frames = GD.Load<SpriteFrames>(path)
         };
+        portrait.SetPortraitFrames(Portrait);
         portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
-        if (!portrait.Frames.HasAnimation(Mood))
-            throw new NotImplementedException($"No portrait found for {Portrait} {Mood}");
-        portrait.Play(Mood);
         return portrait;
     }
 }

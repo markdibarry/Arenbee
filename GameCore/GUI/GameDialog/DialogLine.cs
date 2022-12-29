@@ -6,8 +6,9 @@ namespace GameCore.GUI.GameDialog;
 
 public class DialogLine : IStatement, ITextLine
 {
-    public DialogLine(DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] speakers)
+    public DialogLine(DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] speakers, bool auto)
     {
+        Auto = auto;
         Speakers = speakers;
         StringBuilder stringBuilder = new();
         List<TextEvent> events = new();
@@ -127,9 +128,8 @@ public class DialogLine : IStatement, ITextLine
 
             void HandleSpeed()
             {
-                SpeedTextEvent textEvent = new()
+                SpeedTextEvent textEvent = new(script.InstFloats[instructions[1]])
                 {
-                    TimeMulitplier = script.InstFloats[instructions[1]],
                     Index = renderIndex
                 };
                 events.Add(textEvent);
@@ -139,7 +139,29 @@ public class DialogLine : IStatement, ITextLine
 
             void HandleSpeakerSet()
             {
-
+                int i = 1;
+                string speakerId = script.SpeakerIds[i++];
+                string? displayName = null, portraitId = null, mood = null;
+                if (instructions[i++] == 1)
+                {
+                    ushort[] nameInst = script.Instructions[instructions[i++]];
+                    displayName = interpreter.GetStringInstResult(nameInst);
+                }
+                if (instructions[i++] == 1)
+                {
+                    ushort[] portraitInst = script.Instructions[instructions[i++]];
+                    portraitId = interpreter.GetStringInstResult(portraitInst);
+                }
+                if (instructions[i++] == 1)
+                {
+                    ushort[] moodInst = script.Instructions[instructions[i++]];
+                    mood = interpreter.GetStringInstResult(moodInst);
+                }
+                SpeakerTextEvent textEvent = new(speakerId, displayName, portraitId, mood)
+                {
+                    Index = renderIndex
+                };
+                events.Add(textEvent);
             }
         }
 

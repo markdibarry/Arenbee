@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.GUI.GameDialog;
@@ -59,15 +60,10 @@ public partial class DialogBox : Control
         set => _dynamicTextBox.ShowToEndCharEnabled = value;
     }
     [Export]
-    public double Speed
+    public double SpeedMultiplier
     {
-        get => _dynamicTextBox.Speed;
-        set => _dynamicTextBox.Speed = value;
-    }
-    public ILookupContext TempLookup
-    {
-        get => _dynamicTextBox.TempLookup;
-        set => _dynamicTextBox.TempLookup = value;
+        get => _dynamicTextBox.SpeedMultiplier;
+        set => _dynamicTextBox.SpeedMultiplier = value;
     }
     public State CurrentState { get; private set; }
     public DialogLine DialogLine { get; private set; } = null!;
@@ -106,23 +102,11 @@ public partial class DialogBox : Control
         }
     }
 
-    public void ChangeMood(string newMood)
-    {
-        if (_portraitContainer.GetChildCount() != 1)
-            return;
-        var portrait = _portraitContainer.GetChild<AnimatedSprite2D>(0);
-        ChangeMood(newMood, portrait);
-    }
+    public bool HasSpeaker(string speakerId) => _portraitContainer.HasNode(speakerId);
 
-    public void ChangeMood(string newMood, AnimatedSprite2D portrait)
+    public Portrait? GetPortrait(string speakerId)
     {
-        if (portrait.Frames.HasAnimation(newMood))
-            portrait.Play(newMood);
-    }
-
-    public AnimatedSprite2D GetPortrait(string actorId)
-    {
-        return _portraitContainer.GetNodeOrNull<AnimatedSprite2D>(actorId);
+        return _portraitContainer.GetNodeOrNull<Portrait>(speakerId);
     }
 
     public bool IsAtLastPage() => _dynamicTextBox.IsAtLastPage();
@@ -151,9 +135,52 @@ public partial class DialogBox : Control
     public async Task UpdateDialogLineAsync(DialogLine dialogLine)
     {
         DialogLine = dialogLine;
-        SetPortraits();
-        SetDisplayNames();
+        AddPortraits();
+        UpdateSpeakersNames();
         await _dynamicTextBox.UpdateTextAsync(DialogLine.Text);
+    }
+
+    public void UpdateSpeakersNames()
+    {
+        if (!DialogLine.Speakers.Any())
+        {
+            _nameLabel.Text = string.Empty;
+            _namePanel.Hide();
+            return;
+        }
+
+        _nameLabel.Text = string.Join(" & ", DialogLine.Speakers.Select(x => x.DisplayName));
+
+        if (DisplayRight)
+            _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
+
+        _namePanel.Show();
+    }
+
+    private void AddPortraits()
+    {
+        int shiftBase = 30;
+        _portraitContainer.QueueFreeAllChildren();
+
+        if (DisplayRight)
+        {
+            shiftBase *= -1;
+            _portraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
+            _dialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
+        }
+
+        float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
+
+        foreach (Speaker speaker in DialogLine.Speakers)
+        {
+            Portrait portrait = speaker.CreatePortrait(shiftAmount, DisplayRight);
+
+            _portraitContainer.AddChild(portrait);
+            _portraitContainer.MoveChild(portrait, 0);
+            // TODO: Is this necessary?
+            if (Engine.IsEditorHint())
+                portrait.Owner = GetTree().EditedSceneRoot;
+        }
     }
 
     private void HandleNext()
@@ -195,55 +222,6 @@ public partial class DialogBox : Control
     {
         if (!textEvent.TryHandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
-    }
-
-    private void SetDisplayNames()
-    {
-        _nameLabel.Text = string.Empty;
-
-        if (DialogLine.Speakers.Length == 0)
-        {
-            _namePanel.Hide();
-            return;
-        }
-
-        foreach (Speaker speaker in DialogLine.Speakers)
-        {
-            if (string.IsNullOrEmpty(_nameLabel.Text))
-                _nameLabel.Text = speaker.DisplayName;
-            else
-                _nameLabel.Text += $" & {speaker.DisplayName}";
-        }
-
-        if (DisplayRight)
-            _namePanel.LayoutDirection = LayoutDirectionEnum.Rtl;
-
-        _namePanel.Show();
-    }
-
-    private void SetPortraits()
-    {
-        int shiftBase = 30;
-        _portraitContainer.QueueFreeAllChildren();
-
-        if (DisplayRight)
-        {
-            shiftBase *= -1;
-            _portraitContainer.LayoutDirection = LayoutDirectionEnum.Rtl;
-            _dialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
-        }
-
-        float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
-
-        foreach (Speaker speaker in DialogLine.Speakers)
-        {
-            AnimatedSprite2D portrait = speaker.GetPortrait(shiftAmount, DisplayRight);
-            _portraitContainer.AddChild(portrait);
-            _portraitContainer.MoveChild(portrait, 0);
-            // TODO: Is this necessary?
-            if (Engine.IsEditorHint())
-                portrait.Owner = GetTree().EditedSceneRoot;
-        }
     }
 
     private void SetNodeReferences()

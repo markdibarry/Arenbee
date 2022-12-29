@@ -10,7 +10,6 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicText : RichTextLabel
 {
-    private const double DefaultSpeed = 0.05;
     private double _counter;
     private int _currentLine;
     private string _customText = string.Empty;
@@ -18,7 +17,8 @@ public partial class DynamicText : RichTextLabel
     private List<int> _lineBreakCharIndices = new();
     private bool _showToEndCharEnabled;
     private bool _sizeDirty;
-    private double _speed;
+    private double _speed = 0.05;
+    private double _speedMultiplier;
     private bool _textDirty;
     private List<TextEvent> _textEvents = new();
     private bool _writeTextEnabled;
@@ -73,16 +73,19 @@ public partial class DynamicText : RichTextLabel
         }
     }
     [Export]
-    public double Speed
+    public double SpeedMultiplier
     {
-        get => SpeedOverride != -1 ? SpeedOverride : _speed;
+        get => _speedMultiplier;
         set
         {
-            if (value > Speed)
-                Counter = value - Speed;
-            _speed = value;
+            if (value < 0)
+                value = 0;
+            if (value > _speedMultiplier)
+                Counter = (value * _speed) - (_speedMultiplier * _speed);
+            _speedMultiplier = value;
         }
     }
+    public double Speed => SpeedMultiplier * _speed;
     public State CurrentState { get; private set; }
     public int ContentHeight { get; private set; }
     public int EndChar
@@ -91,7 +94,7 @@ public partial class DynamicText : RichTextLabel
         set => _endChar = value;
     }
     public int LineCount { get; private set; }
-    public double SpeedOverride { get; set; }
+
     public ILookupContext TempLookup { get; set; }
     public int TotalCharacterCount { get; private set; }
     private double Counter
@@ -151,8 +154,7 @@ public partial class DynamicText : RichTextLabel
 
     public void ResetSpeed()
     {
-        SpeedOverride = -1;
-        Speed = DefaultSpeed;
+        SpeedMultiplier = 1;
     }
 
     public void SetPause(double time) => Counter += time;
@@ -235,7 +237,7 @@ public partial class DynamicText : RichTextLabel
         EndChar = -1;
         VisibleCharacters = 0;
         VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
-        SpeedOverride = -1;
+        SpeedMultiplier = -1;
         Counter = Speed;
         UpdateTextData();
         Resized += OnResized;

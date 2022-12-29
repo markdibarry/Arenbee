@@ -13,7 +13,6 @@ public class DialogScript
         ushort[][] choiceSets,
         Section[] sections,
         LineData[] lines,
-        InstructionStatement[][] conditionalSets,
         InstructionStatement[] instructionStmts,
         ushort[][] instructions)
     {
@@ -24,7 +23,6 @@ public class DialogScript
         ChoiceSets = choiceSets;
         Sections = sections;
         Lines = lines;
-        ConditionalSets = conditionalSets;
         InstructionStmts = instructionStmts;
         Instructions = instructions;
     }
@@ -36,7 +34,6 @@ public class DialogScript
     public ushort[][] ChoiceSets { get; set; }
     public Section[] Sections { get; set; }
     public LineData[] Lines { get; set; }
-    public InstructionStatement[][] ConditionalSets { get; set; }
     public InstructionStatement[] InstructionStmts { get; set; }
     public ushort[][] Instructions { get; set; }
 }

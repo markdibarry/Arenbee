@@ -20,16 +20,19 @@ public partial class Dialog : GUILayer
         _dialogBoxScene = GD.Load<PackedScene>(DialogBox.GetScenePath());
         AnchorBottom = 1.0f;
         AnchorRight = 1.0f;
+        SpeedMultiplier = 1;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly PackedScene _dialogBoxScene;
     private readonly DialogScriptReader _scriptReader;
     private DialogOptionMenu? _dialogOptionMenu;
+    public bool Auto { get; set; }
     public IStorageContext TextStorage { get; set; }
     public DialogBox? SecondaryBox { get; set; }
     public DialogBox? FocusedBox { get; set; }
     public bool SpeedUpEnabled { get; set; }
+    public double SpeedMultiplier { get; set; }
     public bool SpeechBubbleEnabled { get; set; }
     public bool DualBoxEnabled { get; set; }
 
@@ -60,6 +63,20 @@ public partial class Dialog : GUILayer
     public void EvaluateInstructions(ushort[] instructions)
     {
         _scriptReader.Evaluate(instructions);
+    }
+
+    public Speaker GetSpeaker(string speakerId)
+    {
+        return _scriptReader.GetSpeaker(speakerId);
+    }
+
+    public DialogBox? GetBoxBySpeakerId(string speakerId)
+    {
+        if (FocusedBox != null && FocusedBox.HasNode(speakerId))
+            return FocusedBox;
+        else if (SecondaryBox != null && SecondaryBox.HasNode(speakerId))
+            return SecondaryBox;
+        return null;
     }
 
     public static DialogScript LoadScript(string path)
@@ -104,6 +121,28 @@ public partial class Dialog : GUILayer
         _ = _scriptReader.ReadNextStatementAsync(choices[0].Next);
     }
 
+    public void UpdateSpeaker(string speakerId, string? displayName, string? portraitId, string? mood)
+    {
+        Speaker speaker = GetSpeaker(speakerId);
+        DialogBox? dialogBox = GetBoxBySpeakerId(speakerId);
+        Portrait? portrait = dialogBox?.GetPortrait(speakerId);
+        if (displayName != null)
+        {
+            speaker.DisplayName = displayName;
+            dialogBox?.UpdateSpeakersNames();
+        }
+        if (portraitId != null)
+        {
+            speaker.Portrait = portraitId;
+            portrait?.SetPortraitFrames(speaker.Portrait);
+        }
+        if (mood != null)
+        {
+            speaker.Mood = mood;
+            portrait?.SetMood(speaker.Mood);
+        }
+    }
+
     public override Task TransitionCloseAsync(bool preventAnimation = false)
     {
         CurrentState = State.Closing;
@@ -126,6 +165,7 @@ public partial class Dialog : GUILayer
         DialogBox newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
         newBox.DialogLineFinished += OnDialogLineFinished;
+        newBox.SpeedMultiplier = SpeedMultiplier;
         newBox.DisplayRight = displayRight;
         AddChild(newBox);
         return newBox;

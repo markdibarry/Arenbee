@@ -49,21 +49,17 @@ public partial class DynamicTextBox : Control
         }
     }
     [Export]
-    public double Speed
+    public double SpeedMultiplier
     {
-        get => _dynamicText.Speed;
-        set => _dynamicText.Speed = value;
+        get => _dynamicText.SpeedMultiplier;
+        set => _dynamicText.SpeedMultiplier = value;
     }
+    public double Speed => _dynamicText.Speed;
     public State CurrentState { get; private set; }
     public ILookupContext TempLookup
     {
         get => _dynamicText.TempLookup;
         set => _dynamicText.TempLookup = value;
-    }
-    public double SpeedOverride
-    {
-        get => _dynamicText.SpeedOverride;
-        set => _dynamicText.SpeedOverride = value;
     }
 
     public event Action<ITextEvent>? TextEventTriggered;

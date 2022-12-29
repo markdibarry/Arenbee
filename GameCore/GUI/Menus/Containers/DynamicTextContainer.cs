@@ -35,10 +35,10 @@ public partial class DynamicTextContainer : PanelContainer
         set => _dynamicTextBox.Writing = value;
     }
     [Export]
-    public double Speed
+    public double SpeedMultiplier
     {
-        get => _dynamicTextBox.Speed;
-        set => _dynamicTextBox.Speed = value;
+        get => _dynamicTextBox.SpeedMultiplier;
+        set => _dynamicTextBox.SpeedMultiplier = value;
     }
     public ILookupContext TempLookup
     {

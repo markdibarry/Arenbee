@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
+
 namespace GameCore.GUI;
 
 public interface ITextEvent
@@ -9,29 +9,23 @@ public interface ITextEvent
     bool TryHandleEvent(object context);
 }
 
-public class TextEvent : ITextEvent
+public abstract class TextEvent : ITextEvent
 {
-    public bool Valid { get; set; }
+    protected TextEvent(int index)
+    {
+        Index = index;
+    }
+
     public bool Seen { get; set; }
     public int Index { get; set; }
 
     public virtual bool TryHandleEvent(object context) => true;
-
-    public static TextEvent CreateTextEvent(Tag tag)
-    {
-        return tag.Name switch
-        {
-            "speed" => new SpeedTextEvent(tag),
-            "pause" => new PauseTextEvent(tag),
-            "mood" => new MoodTextEvent(tag),
-            _ => null
-        };
-    }
 }
 
 public class InstructionTextEvent : TextEvent
 {
     public InstructionTextEvent(int index, ushort[] instructions)
+        : base(index)
     {
         Index = index;
         Instructions = instructions;
@@ -50,35 +44,31 @@ public class InstructionTextEvent : TextEvent
 
 public class SpeedTextEvent : TextEvent
 {
-    public SpeedTextEvent()
-    { }
-
-    public SpeedTextEvent(Tag tag)
+    public SpeedTextEvent(int index, double speedMult)
+        : base(index)
     {
-        TimeMulitplier = -1;
-        if (double.TryParse(tag.Attributes["speed"], out double time))
-            TimeMulitplier = time;
+        SpeedMultiplier = Math.Max(speedMult, 0);
     }
-    public double TimeMulitplier { get; set; }
+
+    public double SpeedMultiplier { get; set; }
 
     public override bool TryHandleEvent(object context)
     {
-        if (context is not DynamicText dynamicText)
+        if (context is DynamicText dynamicText)
+        {
+            dynamicText.SpeedMultiplier = SpeedMultiplier;
             return true;
-        dynamicText.SpeedOverride = TimeMulitplier;
-        return true;
+        }
+        return false;
     }
 }
 
 public class PauseTextEvent : TextEvent
 {
-    public PauseTextEvent(Tag tag)
-        : base(tag)
+    public PauseTextEvent(int index, double time)
+        : base(index)
     {
-        if (double.TryParse(Attributes["pause"], out double time))
-            Time = time;
-        else
-            Valid = false;
+        Time = time;
     }
 
     public double Time { get; set; }
@@ -92,48 +82,28 @@ public class PauseTextEvent : TextEvent
     }
 }
 
-public class MoodTextEvent : TextEvent
+public class SpeakerTextEvent : TextEvent
 {
-    public MoodTextEvent(Tag tag)
-        : base(tag)
+    public SpeakerTextEvent(int index, string speakerId, string? name, string? portrait, string? mood)
+        : base(index)
     {
-        if (Attributes.ContainsKey("mood"))
-            Mood = Attributes["mood"];
-        if (Attributes.ContainsKey("character"))
-            Character = Attributes["character"];
-        if (string.IsNullOrEmpty(Mood))
-            Valid = false;
+        Mood = mood;
+        SpeakerId = speakerId;
+        Portrait = portrait;
+        Name = name;
     }
 
-    public string Mood { get; set; }
-    public string Character { get; set; }
+    public string? Mood { get; set; }
+    public string SpeakerId { get; set; }
+    public string? Portrait { get; set; }
+    public string? Name { get; set; }
 
     public override bool TryHandleEvent(object context)
     {
-        if (context is DialogBox dialogBox)
-        {
-            if (string.IsNullOrWhiteSpace(Character))
-            {
-                dialogBox.ChangeMood(Mood);
-                return true;
-            }
-            AnimatedSprite2D portrait = dialogBox.GetPortrait(Character);
-            if (portrait != null)
-            {
-                dialogBox.ChangeMood(Mood, portrait);
-                return true;
-            }
+        if (context is not Dialog dialog)
             return false;
-        }
-        else if (context is Dialog dialog)
-        {
-            var portrait = dialog.UnfocusedBox.GetPortrait(Character);
-            if (portrait != null)
-                dialog.UnfocusedBox.ChangeMood(Mood, portrait);
-            return true;
-        }
-
-        return false;
+        dialog.UpdateSpeaker(SpeakerId, Name, Portrait, Mood);
+        return true;
     }
 }
 

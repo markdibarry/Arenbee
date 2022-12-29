@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameCore.Exceptions;
 
 namespace GameCore.GUI.GameDialog;
 
@@ -12,7 +11,7 @@ public class DialogScriptReader
     {
         _dialog = dialog;
         _dialogScript = dialogScript;
-        _speakers = _dialogScript.SpeakerIds.Select(x => new Speaker(x)).ToArray();
+        _speakers = _dialogScript.SpeakerIds.Select(id => new Speaker(id)).ToArray();
         _interpreter = new(register, dialogScript, new());
     }
 
@@ -20,10 +19,16 @@ public class DialogScriptReader
     private readonly Dialog _dialog;
     private readonly DialogScript _dialogScript;
     private readonly Speaker[] _speakers;
+    private bool _autoGlobal = false;
 
     public void Evaluate(ushort[] instructions)
     {
         EvaluateInstructions(instructions);
+    }
+
+    public Speaker GetSpeaker(string speakerId)
+    {
+        return _speakers.First(x => x.SpeakerId == speakerId);
     }
 
     public async Task ReadScriptAsync()
@@ -50,13 +55,16 @@ public class DialogScriptReader
             case StatementType.Choice:
                 await HandleChoiceStatement();
                 break;
+            case StatementType.End:
+                await HandleEnd();
+                break;
         }
 
         async Task HandleLineStatement()
         {
             LineData lineData = _dialogScript.Lines[goTo.Index];
-            Speaker[] lineSpeakers = GetSpeakers(lineData.SpeakerIndices);
-            DialogLine line = new(_interpreter, _dialogScript, lineData, lineSpeakers);
+            Speaker[] lineSpeakers = CreateSpeakers(lineData.SpeakerIndices);
+            DialogLine line = new(_interpreter, _dialogScript, lineData, lineSpeakers, _autoGlobal);
             await _dialog.HandleLineAsync(line);
         }
 
@@ -76,16 +84,17 @@ public class DialogScriptReader
 
         async Task HandleConditionalStatement()
         {
-            InstructionStatement[] conditions = _dialogScript.ConditionalSets[goTo.Index];
-            foreach (var condition in conditions)
+            InstructionStatement conditions = _dialogScript.InstructionStmts[goTo.Index];
+            for (int i = 0; i < conditions.Values.Length; i++)
             {
-                if (condition.Values.Length == 0 || _interpreter.GetBoolInstResult(condition.Values))
+                InstructionStatement condition = _dialogScript.InstructionStmts[conditions.Values[i]];
+                if (_interpreter.GetBoolInstResult(condition.Values))
                 {
                     await ReadNextStatementAsync(condition.Next);
                     return;
                 }
             }
-            throw new DialogException("No valid condition in if statement.");
+            await ReadNextStatementAsync(conditions.Next);
         }
 
         async Task HandleChoiceStatement()
@@ -127,6 +136,8 @@ public class DialogScriptReader
             }
             await _dialog.OpenOptionBoxAsync(choices);
         }
+
+        async Task HandleEnd() => await _dialog.CloseDialogAsync();
     }
 
     private GoTo EvaluateInstructions(ushort[] instructions)
@@ -177,22 +188,38 @@ public class DialogScriptReader
 
         void HandleSpeed()
         {
+            _dialog.SpeedMultiplier = _dialogScript.InstFloats[instructions[1]];
         }
 
         GoTo HandleGoTo() => new(StatementType.Section, instructions[1]);
 
-        void HandleAuto()
-        {
-
-        }
+        void HandleAuto() => _autoGlobal = instructions[1] == 1;
 
         void HandleSpeakerSet()
         {
-
+            int i = 1;
+            string speakerId = _dialogScript.SpeakerIds[i++];
+            string? displayName = null, portraitId = null, mood = null;
+            if (instructions[i++] == 1)
+            {
+                ushort[] nameInst = _dialogScript.Instructions[instructions[i++]];
+                displayName = _interpreter.GetStringInstResult(nameInst);
+            }
+            if (instructions[i++] == 1)
+            {
+                ushort[] portraitInst = _dialogScript.Instructions[instructions[i++]];
+                portraitId = _interpreter.GetStringInstResult(portraitInst);
+            }
+            if (instructions[i++] == 1)
+            {
+                ushort[] moodInst = _dialogScript.Instructions[instructions[i++]];
+                mood = _interpreter.GetStringInstResult(moodInst);
+            }
+            _dialog.UpdateSpeaker(speakerId, displayName, portraitId, mood);
         }
     }
 
-    private Speaker[] GetSpeakers(ushort[] indices)
+    private Speaker[] CreateSpeakers(ushort[] indices)
     {
         if (indices.Length == 0)
             return Array.Empty<Speaker>();
