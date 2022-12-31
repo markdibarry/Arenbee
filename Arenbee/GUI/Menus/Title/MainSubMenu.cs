@@ -26,7 +26,7 @@ public partial class MainSubMenu : OptionSubMenu
     };
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    public override async Task AnimateOpenAsync()
+    protected override async Task AnimateOpenAsync()
     {
         Vector2 pos = (Size - _startOptions.Size) * 0.5f;
         _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);

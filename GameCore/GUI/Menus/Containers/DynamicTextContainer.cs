@@ -8,7 +8,7 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicTextContainer : PanelContainer
 {
-    private DynamicTextBox _dynamicTextBox;
+    private DynamicTextBox _dynamicTextBox = null!;
     private bool _loading;
     [Export]
     public int CurrentPage
@@ -40,12 +40,8 @@ public partial class DynamicTextContainer : PanelContainer
         get => _dynamicTextBox.SpeedMultiplier;
         set => _dynamicTextBox.SpeedMultiplier = value;
     }
-    public ILookupContext TempLookup
-    {
-        get => _dynamicTextBox.TempLookup;
-        set => _dynamicTextBox.TempLookup = value;
-    }
-    public event Action StoppedWriting;
+
+    public event Action? StoppedWriting;
 
     public override void _Notification(long what)
     {
@@ -58,13 +54,10 @@ public partial class DynamicTextContainer : PanelContainer
         SetDefault();
     }
 
-    public async Task UpdateTextAsync(string text)
+    public Task UpdateTextAsync(string text)
     {
-        if (_loading)
-            return;
-        _loading = true;
-        _dynamicTextBox.UpdateTextAsync(text);
-        _loading = false;
+        CustomText = text;
+        return Task.CompletedTask;
     }
 
     private void Init()

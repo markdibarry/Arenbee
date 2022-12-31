@@ -2,5 +2,5 @@
 
 public interface IStatement
 {
-    GoTo Next { get; set; }
+    GoTo Next { get; }
 }

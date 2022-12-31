@@ -43,6 +43,11 @@ public partial class Dialog : GUILayer
         FocusedBox.HandleInput(menuInput, delta);
     }
 
+    public async Task CloseDialogAsync(bool preventAnimation = false, object? data = null)
+    {
+        await GUIController.CloseLayerAsync(preventAnimation, data);
+    }
+
     public async Task CloseDialogBoxAsync(DialogBox? box)
     {
         if (box == null)
@@ -171,11 +176,6 @@ public partial class Dialog : GUILayer
         return newBox;
     }
 
-    private async Task CloseDialogAsync(bool preventAnimation = false, object? data = null)
-    {
-        await GUIController.CloseLayerAsync(preventAnimation, data);
-    }
-
     public async Task HandleLineAsync(DialogLine newLine)
     {
         if (SpeechBubbleEnabled)
@@ -257,7 +257,7 @@ public partial class Dialog : GUILayer
     private async Task OpenNewDialogBoxAsync(DialogLine dialogLine, bool displayRight)
     {
         FocusedBox = CreateDialogBox(!displayRight);
-        await FocusedBox.UpdateDialogLineAsync(dialogLine);
+        await FocusedBox.UpdateDialogLine(dialogLine);
         FocusedBox.StartWriting();
     }
 
@@ -266,7 +266,7 @@ public partial class Dialog : GUILayer
         if (!dialogLine.SameSpeakers(box.DialogLine))
             return false;
         box.MoveToFront();
-        await box.UpdateDialogLineAsync(dialogLine);
+        await box.UpdateDialogLine(dialogLine);
         box.Dim = false;
         box.StartWriting();
         return true;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using GameCore.Extensions;
+using GameCore.GUI.GameDialog;
 using Godot;
 
 namespace GameCore.GUI;
@@ -28,7 +28,12 @@ public partial class DynamicTextBox : Control
     public string CustomText
     {
         get => _dynamicText.CustomText;
-        set => _dynamicText.CustomText = value;
+        set
+        {
+            if (CustomTextExportDisabled)
+                return;
+            _dynamicText.CustomText = value;
+        }
     }
     [Export]
     public bool ShowToEndCharEnabled
@@ -56,10 +61,10 @@ public partial class DynamicTextBox : Control
     }
     public double Speed => _dynamicText.Speed;
     public State CurrentState { get; private set; }
-    public ILookupContext TempLookup
+    public bool CustomTextExportDisabled
     {
-        get => _dynamicText.TempLookup;
-        set => _dynamicText.TempLookup = value;
+        get => _dynamicText.CustomTextExportDisabled;
+        set => _dynamicText.CustomTextExportDisabled = value;
     }
 
     public event Action<ITextEvent>? TextEventTriggered;
@@ -88,6 +93,8 @@ public partial class DynamicTextBox : Control
 
     public bool IsAtPageEnd() => _dynamicText.IsAtTextEnd();
 
+    public void RefreshText() => _dynamicText.RefreshText();
+
     public void ResetSpeed() => _dynamicText.ResetSpeed();
 
     public void SpeedUpText() => _dynamicText.SpeedUpText();
@@ -106,9 +113,9 @@ public partial class DynamicTextBox : Control
         _dynamicText.StopWriting();
     }
 
-    public async Task UpdateTextAsync(string text)
+    public void UpdateText(DialogLine dialogLine)
     {
-        await _dynamicText.UpdateTextAsync(text);
+        _dynamicText.UpdateText(dialogLine);
     }
 
     private int GetEndChar(int page)

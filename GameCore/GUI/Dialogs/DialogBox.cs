@@ -26,12 +26,6 @@ public partial class DialogBox : Control
         get => _dynamicTextBox.CurrentPage;
         set => _dynamicTextBox.CurrentPage = value;
     }
-    [Export(PropertyHint.MultilineText)]
-    public string CustomText
-    {
-        get => _dynamicTextBox.CustomText;
-        set => _dynamicTextBox.CustomText = value;
-    }
     public bool Dim
     {
         get => _dim;
@@ -132,12 +126,13 @@ public partial class DialogBox : Control
     public virtual Task TransitionOpenAsync() => Task.CompletedTask;
     public virtual Task TransitionCloseAsync() => Task.CompletedTask;
 
-    public async Task UpdateDialogLineAsync(DialogLine dialogLine)
+    public Task UpdateDialogLine(DialogLine dialogLine)
     {
         DialogLine = dialogLine;
         AddPortraits();
         UpdateSpeakersNames();
-        await _dynamicTextBox.UpdateTextAsync(DialogLine.Text);
+        _dynamicTextBox.UpdateText(dialogLine);
+        return Task.CompletedTask;
     }
 
     public void UpdateSpeakersNames()
@@ -200,6 +195,7 @@ public partial class DialogBox : Control
     {
         SetNodeReferences();
         SubscribeEvents();
+        _dynamicTextBox.CustomTextExportDisabled = true;
         CurrentState = State.Idle;
     }
 

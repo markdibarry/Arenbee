@@ -63,8 +63,7 @@ public class DialogScriptReader
         async Task HandleLineStatement()
         {
             LineData lineData = _dialogScript.Lines[goTo.Index];
-            Speaker[] lineSpeakers = CreateSpeakers(lineData.SpeakerIndices);
-            DialogLine line = new(_interpreter, _dialogScript, lineData, lineSpeakers, _autoGlobal);
+            DialogLine line = new(_interpreter, _dialogScript, lineData, _speakers, _autoGlobal);
             await _dialog.HandleLineAsync(line);
         }
 
@@ -219,13 +218,5 @@ public class DialogScriptReader
         }
     }
 
-    private Speaker[] CreateSpeakers(ushort[] indices)
-    {
-        if (indices.Length == 0)
-            return Array.Empty<Speaker>();
-        var lineSpeakers = new Speaker[indices.Length];
-        for (int i = 0; i < indices.Length; i++)
-            lineSpeakers[i] = _speakers[indices[i]];
-        return lineSpeakers;
-    }
+
 }

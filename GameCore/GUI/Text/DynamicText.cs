@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Extensions;
+using GameCore.GUI.GameDialog;
 using Godot;
 
 namespace GameCore.GUI;
@@ -42,6 +43,8 @@ public partial class DynamicText : RichTextLabel
         get => _customText;
         set
         {
+            if (CustomTextExportDisabled)
+                return;
             _customText = value;
             _textDirty = true;
         }
@@ -85,8 +88,9 @@ public partial class DynamicText : RichTextLabel
             _speedMultiplier = value;
         }
     }
-    public double Speed => SpeedMultiplier * _speed;
+
     public State CurrentState { get; private set; }
+    public bool CustomTextExportDisabled { get; set; }
     public int ContentHeight { get; private set; }
     public int EndChar
     {
@@ -94,8 +98,7 @@ public partial class DynamicText : RichTextLabel
         set => _endChar = value;
     }
     public int LineCount { get; private set; }
-
-    public ILookupContext TempLookup { get; set; }
+    public double Speed => SpeedMultiplier * _speed;
     public int TotalCharacterCount { get; private set; }
     private double Counter
     {
@@ -122,7 +125,7 @@ public partial class DynamicText : RichTextLabel
         if (CurrentState == State.Loading)
             return;
         if (_textDirty)
-            _ = HandleTextDirtyAsync();
+            HandleTextDirty();
         else if (_sizeDirty)
             HandleSizeDirty();
         else if (CurrentState == State.Writing)
@@ -152,6 +155,8 @@ public partial class DynamicText : RichTextLabel
 
     public void OnResized() => _sizeDirty = true;
 
+    public void RefreshText() => HandleTextDirty();
+
     public void ResetSpeed()
     {
         SpeedMultiplier = 1;
@@ -178,10 +183,16 @@ public partial class DynamicText : RichTextLabel
         StoppedWriting?.Invoke();
     }
 
-    public async Task UpdateTextAsync(string text)
+    public void UpdateText(DialogLine dialogLine)
     {
-        _customText = text;
-        await UpdateTextAsync();
+        CurrentState = State.Loading;
+        LoadingStarted?.Invoke();
+        VisibleCharacters = 0;
+        Text = dialogLine.Text;
+        Text = dialogLine.GetEventParsedText(Text, _textEvents);
+        UpdateTextData();
+        CurrentState = State.Idle;
+        TextUpdated?.Invoke();
     }
 
     private int GetValidLine(int line) => Math.Clamp(line, 0, LineCount - 1);
@@ -207,20 +218,24 @@ public partial class DynamicText : RichTextLabel
         return line < LineCount ? GetLineOffset(line) : ContentHeight;
     }
 
-    private ILookupContext GetTemporaryLookup()
-    {
-        return TempLookup ?? new TextStorage();
-    }
-
     private void HandleSizeDirty()
     {
         UpdateTextData();
         _sizeDirty = false;
     }
 
-    private async Task HandleTextDirtyAsync()
+    private void HandleTextDirty()
     {
-        await UpdateTextAsync();
+        CurrentState = State.Loading;
+        LoadingStarted?.Invoke();
+        _textEvents = new();
+        VisibleCharacters = 0;
+        // Assign to parse BBCode (stupid. I know.)
+        Text = _customText;
+        Text = GetEventParsedText(_customText, Text, _textEvents);
+        UpdateTextData();
+        CurrentState = State.Idle;
+        TextUpdated?.Invoke();
         _textDirty = false;
     }
 
@@ -279,19 +294,6 @@ public partial class DynamicText : RichTextLabel
         if (!this.IsSceneRoot())
             return;
         CustomText = "Once[speed=0.3]... [speed]there was a toad that ate the [wave]moon[/wave][pause=3].";
-    }
-
-    private async Task UpdateTextAsync()
-    {
-        CurrentState = State.Loading;
-        LoadingStarted?.Invoke();
-        // TODO: This could take awhile, run some tests
-        Text = await Task.Run(() => TextEventExtractor.Extract(_customText, _textEvents, GetTemporaryLookup()));
-        VisibleCharacters = 0;
-        UpdateTextData();
-
-        CurrentState = State.Idle;
-        TextUpdated?.Invoke();
     }
 
     private void UpdateTextData()

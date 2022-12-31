@@ -1,8 +1,7 @@
-﻿using GameCore;
+﻿using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
-using System.Threading.Tasks;
 
 namespace Arenbee.GUI.Menus;
 
@@ -11,7 +10,7 @@ public partial class TitleMenu : Menu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    public override async Task TransitionOpenAsync()
+    public override async Task AnimateOpenAsync()
     {
         ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
         var tween = CreateTween();
@@ -19,7 +18,7 @@ public partial class TitleMenu : Menu
         await ToSignal(tween, Tween.SignalName.Finished);
     }
 
-    public override async Task TransitionCloseAsync()
+    public override async Task AnimateCloseAsync()
     {
         var tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 0, 1);

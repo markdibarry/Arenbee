@@ -1,51 +1,95 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace GameCore.GUI.GameDialog;
 
-public class DialogLine : IStatement, ITextLine
+public class DialogLine : IStatement
 {
-    public DialogLine(DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] speakers, bool auto)
+    public DialogLine(DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] globalSpeakers, bool auto)
     {
         Auto = auto;
-        Speakers = speakers;
-        StringBuilder stringBuilder = new();
-        List<TextEvent> events = new();
-        int appendStart = 0;
-        int textIndex = 0;
-        int renderIndex = 0;
+        Speakers = globalSpeakers;
+        _interpreter = interpreter;
+        _script = script;
+        _lineData = lineData;
 
-        while (textIndex < lineData.Text.Length)
+        var lineSpeakers = new Speaker[_lineData.SpeakerIndices.Length];
+        for (int i = 0; i < _lineData.SpeakerIndices.Length; i++)
+            lineSpeakers[i] = globalSpeakers[_lineData.SpeakerIndices[i]];
+        Speakers = lineSpeakers;
+    }
+
+    private readonly DialogInterpreter _interpreter;
+    private readonly DialogScript _script;
+    private readonly LineData _lineData;
+    public bool Auto { get; private set; }
+    public GoTo Next { get; private set; }
+    public Speaker[] Speakers { get; }
+    public string Text => _lineData.Text;
+
+    public bool SameSpeakers(DialogLine secondLine) => Speaker.SameSpeakers(Speakers, secondLine.Speakers);
+
+    public bool AnySpeakers(DialogLine secondLine) => Speaker.AnySpeakers(Speakers, secondLine.Speakers);
+
+    public string GetEventParsedText(string bbCodeParsedText, List<TextEvent> events)
+    {
+        StringBuilder sb = new();
+        int appendStart = 0;
+        int renderedIndex = 0;
+        int parsedIndex = 0;
+        int i = 0;
+
+        while (i < Text.Length)
         {
-            if (lineData.Text[textIndex] != '[')
+            if (Text[i] != '[' || (i != 0 && Text[i - 1] == '\\'))
             {
-                textIndex++;
-                renderIndex++;
+                i++;
+                renderedIndex++;
+                parsedIndex++;
                 continue;
             }
 
-            if (textIndex != 0 && lineData.Text[textIndex - 1] == '\\')
-                continue;
+            int bracketLength = GetBracketLength(Text, i);
 
-            stringBuilder.Append(lineData.Text[appendStart..textIndex]);
-            int bracketLength = GetBracketLength(lineData.Text, textIndex);
-            if (bracketLength == -1)
-                throw new Exception("Bracket length invalid.");
-            if (!int.TryParse(lineData.Text[(textIndex + 1)..(textIndex + bracketLength)], out int intValue))
-                throw new Exception("Bracket contains non-integer");
-            ushort[] instr = script.Instructions[lineData.InstructionIndices[intValue]];
-            HandleEventTag(instr);
-            textIndex += bracketLength;
-            appendStart = textIndex;
+            // If doesn't close, ignore
+            if (Text[i + bracketLength - 1] != ']')
+            {
+                i += bracketLength;
+                renderedIndex += bracketLength;
+                parsedIndex += bracketLength;
+                continue;
+            }
+
+            // is bbCode, so only increase Text index
+            if (bbCodeParsedText[parsedIndex] != '[')
+            {
+                i += bracketLength;
+                continue;
+            }
+
+            if (!TryAddTextEvent(Text[(i + 1)..(i + bracketLength)]))
+            {
+                i += bracketLength;
+                renderedIndex += bracketLength;
+                parsedIndex += bracketLength;
+                continue;
+            }
+
+            sb.Append(Text[appendStart..i]);
+            i += bracketLength;
+            parsedIndex += bracketLength;
+            appendStart = i;
         }
 
-        stringBuilder.Append(lineData.Text[appendStart..textIndex]);
-        Events = events.ToArray();
-        Text = stringBuilder.ToString();
+        sb.Append(Text[appendStart..i]);
+        return sb.ToString();
 
-        void HandleEventTag(ushort[] instructions)
+        bool TryAddTextEvent(string tagContent)
         {
+            if (!int.TryParse(tagContent, out int intValue))
+                return false;
+            ushort[] instructions = _script.Instructions[_lineData.InstructionIndices[intValue]];
+
             switch ((OpCode)instructions[0])
             {
                 case OpCode.Assign:
@@ -65,9 +109,6 @@ public class DialogLine : IStatement, ITextLine
                 case OpCode.Func:
                     HandleEvaluate();
                     break;
-                case OpCode.BBCode:
-                    HandleBBCode();
-                    break;
                 case OpCode.NewLine:
                     HandleNewLine();
                     break;
@@ -84,54 +125,47 @@ public class DialogLine : IStatement, ITextLine
                     HandleSpeakerSet();
                     break;
             };
+            return true;
 
             void AddAsTextEvent()
             {
-                InstructionTextEvent textEvent = new(renderIndex, instructions);
+                InstructionTextEvent textEvent = new(renderedIndex, instructions);
                 events.Add(textEvent);
             }
 
             void HandleEvaluate()
             {
                 string result = string.Empty;
-                switch (interpreter.GetReturnType(instructions, 0))
+                switch (_interpreter.GetReturnType(instructions, 0))
                 {
                     case VarType.String:
-                        result = interpreter.GetStringInstResult(instructions);
+                        result = _interpreter.GetStringInstResult(instructions);
                         break;
                     case VarType.Float:
-                        result = interpreter.GetFloatInstResult(instructions).ToString();
+                        result = _interpreter.GetFloatInstResult(instructions).ToString();
                         break;
                     case VarType.Bool:
-                        interpreter.GetBoolInstResult(instructions);
+                        _interpreter.GetBoolInstResult(instructions);
                         break;
                     case VarType.Void:
                         AddAsTextEvent();
                         break;
                 }
-                stringBuilder.Append(result);
-                renderIndex += result.Length;
+                sb.Append(result);
+                renderedIndex += result.Length;
             }
 
             void HandleAuto() => Auto = instructions[1] == 1;
 
-            void HandleBBCode()
-            {
-                stringBuilder.Append($"[{script.InstStrings[instructions[1]]}]");
-            }
-
             void HandleNewLine()
             {
-                stringBuilder.Append('\r');
-                renderIndex++;
+                sb.Append('\r');
+                renderedIndex++;
             }
 
             void HandleSpeed()
             {
-                SpeedTextEvent textEvent = new(script.InstFloats[instructions[1]])
-                {
-                    Index = renderIndex
-                };
+                SpeedTextEvent textEvent = new(renderedIndex, _script.InstFloats[instructions[1]]);
                 events.Add(textEvent);
             }
 
@@ -140,27 +174,24 @@ public class DialogLine : IStatement, ITextLine
             void HandleSpeakerSet()
             {
                 int i = 1;
-                string speakerId = script.SpeakerIds[i++];
+                string speakerId = _script.SpeakerIds[i++];
                 string? displayName = null, portraitId = null, mood = null;
                 if (instructions[i++] == 1)
                 {
-                    ushort[] nameInst = script.Instructions[instructions[i++]];
-                    displayName = interpreter.GetStringInstResult(nameInst);
+                    ushort[] nameInst = _script.Instructions[instructions[i++]];
+                    displayName = _interpreter.GetStringInstResult(nameInst);
                 }
                 if (instructions[i++] == 1)
                 {
-                    ushort[] portraitInst = script.Instructions[instructions[i++]];
-                    portraitId = interpreter.GetStringInstResult(portraitInst);
+                    ushort[] portraitInst = _script.Instructions[instructions[i++]];
+                    portraitId = _interpreter.GetStringInstResult(portraitInst);
                 }
                 if (instructions[i++] == 1)
                 {
-                    ushort[] moodInst = script.Instructions[instructions[i++]];
-                    mood = interpreter.GetStringInstResult(moodInst);
+                    ushort[] moodInst = _script.Instructions[instructions[i++]];
+                    mood = _interpreter.GetStringInstResult(moodInst);
                 }
-                SpeakerTextEvent textEvent = new(speakerId, displayName, portraitId, mood)
-                {
-                    Index = renderIndex
-                };
+                SpeakerTextEvent textEvent = new(renderedIndex, speakerId, displayName, portraitId, mood);
                 events.Add(textEvent);
             }
         }
@@ -171,24 +202,14 @@ public class DialogLine : IStatement, ITextLine
             i++;
             while (i < text.Length)
             {
-                if (text[i] == ']')
+                if (text[i] == ']' && text[i - 1] != '\\')
                     return ++length;
-                else if (text[i] == '[')
+                else if (text[i] == '[' && text[i - 1] != '\\')
                     return length;
                 length++;
                 i++;
             }
-            return -1;
+            return length;
         }
     }
-
-    public bool Auto { get; set; }
-    public TextEvent[] Events { get; }
-    public GoTo Next { get; set; }
-    public Speaker[] Speakers { get; }
-    public string Text { get; set; }
-
-    public bool SameSpeakers(DialogLine secondLine) => Speaker.SameSpeakers(Speakers, secondLine.Speakers);
-
-    public bool AnySpeakers(DialogLine secondLine) => Speaker.AnySpeakers(Speakers, secondLine.Speakers);
 }
