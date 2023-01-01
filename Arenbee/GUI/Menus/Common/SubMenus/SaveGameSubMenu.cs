@@ -9,20 +9,26 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class SaveGameSubMenu : OptionSubMenu
 {
-    private OptionContainer _saveOptions;
     public static string GetScenePath() => GDEx.GetScenePath();
 
     protected override void OnItemSelected()
     {
-        var saveChoice = CurrentContainer.CurrentItem.TryGetData<GameSave>(nameof(GameSave));
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(GameSave), out GameSave? saveChoice))
+            return;
         OpenSaveGameConfirmSubMenu(saveChoice);
+    }
+
+    protected override void CustomSetup()
+    {
+        var header = GetNode<Label>("%Header");
+        header.Text = Tr(Localization.Menus.Menus_Save_SavedGames);
     }
 
     protected override void SetupOptions()
     {
-        _saveOptions = OptionContainers.Find(x => x.Name == "SaveOptions");
+        var saveOptions = OptionContainers.Find(x => x.Name == "SaveOptions");
         var options = GetSaveGameOptions();
-        _saveOptions.ReplaceChildren(options);
+        saveOptions.ReplaceChildren(options);
     }
 
     private void OpenSaveGameConfirmSubMenu(GameSave gameSave)

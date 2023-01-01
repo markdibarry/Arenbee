@@ -67,7 +67,7 @@ public partial class OptionContainer : PanelContainer
         get => OptionGrid.SingleRow;
         set => OptionGrid.SingleRow = value;
     }
-    public OptionItem CurrentItem => OptionGrid.CurrentItem;
+    public OptionItem? FocusedItem => OptionGrid.FocusedItem;
     public OptionGrid OptionGrid { get; set; }
     public GridContainer ContentGrid { get; set; }
     public PackedScene CursorScene
@@ -100,8 +100,8 @@ public partial class OptionContainer : PanelContainer
         get => OptionGrid.SingleOptionsEnabled;
         set => OptionGrid.SingleOptionsEnabled = value;
     }
-    public int LastIndex => OptionGrid.LastIndex;
-    public int CurrentIndex => OptionGrid.CurrentIndex;
+    public int PreviousIndex => OptionGrid.PreviousIndex;
+    public int FocusedIndex => OptionGrid.FocusedIndex;
     public bool AllSelected => OptionGrid.AllSelected;
     public IList<OptionItem> OptionItems => OptionGrid.OptionItems;
     public event Action<OptionContainer>? ContainerUpdated;
@@ -119,7 +119,7 @@ public partial class OptionContainer : PanelContainer
 
     public void AddGridChild(OptionItem optionItem) => OptionGrid.AddChild(optionItem);
 
-    public void Clear() => OptionGrid.Clear();
+    public void Clear() => OptionGrid.ClearOptionItems();
 
     public void FocusContainer(int index) => OptionGrid.FocusContainer(index);
 

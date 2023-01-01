@@ -46,9 +46,9 @@ public partial class InventorySubMenu : OptionSubMenu
     protected override void OnItemFocused()
     {
         if (CurrentContainer == _typeList)
-            UpdateItemList(CurrentContainer.CurrentItem, resetFocus: true);
+            UpdateItemList(CurrentContainer.FocusedItem, resetFocus: true);
         else
-            _ = UpdateItemDescription(CurrentContainer.CurrentItem);
+            _ = UpdateItemDescription(CurrentContainer.FocusedItem);
     }
 
     protected override void OnItemSelected()
@@ -56,12 +56,12 @@ public partial class InventorySubMenu : OptionSubMenu
         if (CurrentContainer == _typeList)
             FocusContainer(_inventoryList);
         else if (CurrentContainer == _inventoryList)
-            OpenUseSubMenu(CurrentContainer.CurrentItem);
+            OpenUseSubMenu(CurrentContainer.FocusedItem);
     }
 
     public override void ResumeSubMenu()
     {
-        UpdateItemList(_typeList.CurrentItem, resetFocus: false);
+        UpdateItemList(_typeList.FocusedItem, resetFocus: false);
         base.ResumeSubMenu();
     }
 
@@ -118,7 +118,8 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void OpenUseSubMenu(OptionItem optionItem)
     {
-        string itemId = optionItem.TryGetData<string>(nameof(ItemStack.ItemId));
+        if (!optionItem.TryGetData(nameof(ItemStack.ItemId), out string? itemId))
+            return;
         ItemStack itemStack = _inventory.GetItemStack(itemId);
         if (itemStack == null)
             return;
@@ -127,7 +128,8 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private async Task UpdateItemDescription(OptionItem optionItem)
     {
-        string itemId = optionItem?.TryGetData<string>(nameof(ItemStack.ItemId));
+        if (!optionItem.TryGetData(nameof(ItemStack.ItemId), out string? itemId))
+            return;
         ItemBase item = Locator.ItemDB.GetItem(itemId);
         _itemStatsDisplay.UpdateStatsDisplay(item);
         await _itemInfo.UpdateTextAsync(item?.Description);
@@ -140,7 +142,8 @@ public partial class InventorySubMenu : OptionSubMenu
             return;
         if (resetFocus)
             _inventoryList.ResetContainerFocus();
-        string? itemCategoryId = optionItem.TryGetData<string>(nameof(Item.ItemCategoryId));
+        if (!optionItem.TryGetData(nameof(Item.ItemCategoryId), out string? itemCategoryId))
+            return;
         List<KeyValueOption> options = GetItemOptions(itemCategoryId);
         _inventoryList.ReplaceChildren(options);
     }

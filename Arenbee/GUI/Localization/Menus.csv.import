@@ -2,14 +2,14 @@
 
 importer="csv_translation"
 type="Translation"
-uid="uid://b4w61od6u6rj4"
+uid="uid://c6i83g6o4b86v"
 
 [deps]
 
-files=["res://Arenbee/GUI/Localization/Menus.en.translation"]
+files=["res://Arenbee/GUI/Localization/Menus.en.translation", "res://Arenbee/GUI/Localization/Menus.es.translation"]
 
 source_file="res://Arenbee/GUI/Localization/Menus.csv"
-dest_files=["res://Arenbee/GUI/Localization/Menus.en.translation"]
+dest_files=["res://Arenbee/GUI/Localization/Menus.en.translation", "res://Arenbee/GUI/Localization/Menus.es.translation"]
 
 [params]
 

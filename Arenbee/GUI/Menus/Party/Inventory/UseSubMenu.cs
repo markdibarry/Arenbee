@@ -30,10 +30,9 @@ public partial class UseSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var optionValue = CurrentContainer.CurrentItem.TryGetData<string>("value");
-        if (optionValue == null)
+        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? optionValue))
             return;
-        if (!CurrentContainer.CurrentItem.Disabled)
+        if (!CurrentContainer.FocusedItem.Disabled)
         {
             if (optionValue == UseOptions.Use)
                 HandleUse();

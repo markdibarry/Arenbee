@@ -1,9 +1,10 @@
-keys,en
-Menus_Party_Stats,Stats
-Menus_Party_Inventory,Inventory
-Menus_Party_Equipment,Equipment
-Menus_Party_Options,Options
-Menus_Party_Save,Save
-Menus_Party_Quit,Quit
-Menus_Title_Continue,Continue
-Menus_Title_NewGame,New Game
+keys,en,es
+Menus_Party_Stats,Stats,a
+Menus_Party_Inventory,Inventory,a
+Menus_Party_Equipment,Equipment,a
+Menus_Party_Options,Options,a
+Menus_Party_Save,Save,a
+Menus_Party_Quit,Quit,a
+Menus_Title_Continue,Continue,a
+Menus_Title_NewGame,New Game,Butts
+Menus_Save_SavedGames,Saved Games:,Butts

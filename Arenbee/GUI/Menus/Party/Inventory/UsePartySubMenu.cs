@@ -40,7 +40,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        HandleUse(CurrentContainer.CurrentItem);
+        HandleUse(CurrentContainer.FocusedItem);
     }
 
     protected override void SetNodeReferences()
@@ -89,8 +89,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            var actor = option.TryGetData<ActorBase>("actor");
-            if (actor == null)
+            if (!option.TryGetData("actor", out ActorBase? actor))
                 continue;
             var target = new ActorBase[] { actor };
             bool canUse = ActionEffect.CanUse(request, target);
@@ -119,8 +118,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (OptionItem item in selectedItems)
         {
-            var actor = item.TryGetData<ActorBase>("actor");
-            if (actor == null)
+            if (!item.TryGetData("actor", out ActorBase? actor))
                 return;
             ActionEffect.Use(request, new ActorBase[] { actor });
         }

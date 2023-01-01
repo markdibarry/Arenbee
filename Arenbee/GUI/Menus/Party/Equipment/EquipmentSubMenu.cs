@@ -30,7 +30,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     public override void ResumeSubMenu()
     {
-        UpdateEquipmentDisplay(_partyOptions.CurrentItem);
+        UpdateEquipmentDisplay(_partyOptions.FocusedItem);
         base.ResumeSubMenu();
     }
 
@@ -42,7 +42,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     protected override void OnItemFocused()
     {
         if (CurrentContainer == _partyOptions)
-            UpdateEquipmentDisplay(CurrentContainer.CurrentItem);
+            UpdateEquipmentDisplay(CurrentContainer.FocusedItem);
     }
 
     protected override void OnItemSelected()
@@ -50,7 +50,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         if (CurrentContainer == _partyOptions)
             FocusContainer(_equipmentOptions);
         else
-            OpenEquipSelectMenu(CurrentContainer.CurrentItem);
+            OpenEquipSelectMenu(CurrentContainer.FocusedItem);
     }
 
     protected override void SetNodeReferences()
@@ -68,8 +68,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         var options = new List<EquipSelectOption>();
         if (optionItem == null)
             return options;
-        var actor = optionItem.TryGetData<ActorBase>(nameof(ActorBase));
-        if (actor == null)
+        if (!optionItem.TryGetData(nameof(ActorBase), out ActorBase? actor))
             return options;
         foreach (var slot in actor.Equipment.Slots)
         {
@@ -100,11 +99,9 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private void OpenEquipSelectMenu(OptionItem optionItem)
     {
-        ActorBase actor = _partyOptions.CurrentItem.TryGetData<ActorBase>(nameof(ActorBase));
-        if (actor == null)
+        if (!_partyOptions.FocusedItem.TryGetData(nameof(ActorBase), out ActorBase? actor))
             return;
-        EquipmentSlotBase slot = optionItem.TryGetData<EquipmentSlotBase>(nameof(EquipmentSlotBase));
-        if (slot == null)
+        if (!optionItem.TryGetData(nameof(EquipmentSlotBase), out EquipmentSlotBase? slot))
             return;
 
         var data = new SelectSubMenuDataModel()

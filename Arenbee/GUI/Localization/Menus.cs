@@ -9,4 +9,5 @@ public static class Menus
     public const string Menus_Party_Quit = "Menus_Party_Quit";
     public const string Menus_Title_Continue = "Menus_Title_Continue";
     public const string Menus_Title_NewGame = "Menus_Title_NewGame";
+    public const string Menus_Save_SavedGames = "Menus_Save_SavedGames";
 }

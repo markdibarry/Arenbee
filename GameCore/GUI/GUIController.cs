@@ -20,24 +20,14 @@ public partial class GUIController : CanvasLayer, IGUIController
     private readonly DialogBridgeRegister _dialogBridgeRegister;
     private readonly List<GUILayer> _guiLayers;
     private GUILayer? CurrentLayer => _guiLayers.Count > 0 ? _guiLayers[^1] : null;
-    public State CurrentState { get; private set; }
     public bool MenuActive { get; private set; }
     public bool DialogActive { get; private set; }
     public bool GUIActive => MenuActive || DialogActive;
     public event Action<GUIController>? GUIStatusChanged;
-    public enum State
-    {
-        Opening,
-        Available,
-        Closing,
-        Closed
-    }
 
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        if (CurrentState != State.Available || CurrentLayer == null)
-            return;
-        CurrentLayer.HandleInput(menuInput, delta);
+        CurrentLayer?.HandleInput(menuInput, delta);
     }
 
     public async Task CloseLayerAsync(bool preventAnimation = false, object? data = null)

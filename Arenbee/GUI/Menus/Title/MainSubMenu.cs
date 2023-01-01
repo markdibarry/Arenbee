@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.Actors.Players;
 using Arenbee.GUI.Menus.Common;
-using Arenbee.GUI.Localization;
 using GameCore;
 using GameCore.Actors;
 using GameCore.Extensions;
@@ -43,8 +41,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        string titleChoice = CurrentContainer.CurrentItem.TryGetData<string>("value");
-        if (titleChoice == null)
+        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? titleChoice))
             return;
         switch (titleChoice)
         {

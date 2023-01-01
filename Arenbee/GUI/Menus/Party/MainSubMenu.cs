@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.Party.Equipment;
@@ -29,8 +27,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var subMenuName = CurrentContainer.CurrentItem.TryGetData<string>("value");
-        if (subMenuName == null)
+        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? subMenuName))
             return;
 
         switch (subMenuName)

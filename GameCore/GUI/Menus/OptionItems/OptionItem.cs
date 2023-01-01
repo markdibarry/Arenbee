@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Godot;
 
 namespace GameCore.GUI;
@@ -7,22 +8,23 @@ public partial class OptionItem : MarginContainer
 {
     public OptionItem()
     {
-        DimUnfocused = true;
+        DimWhenUnfocused = true;
         OptionData = new Dictionary<string, object>();
     }
 
-    private bool _dimUnfocused;
+    private bool _dimWhenUnfocused;
     private bool _disabled;
     private bool _focused;
-    public Cursor Cursor { get; set; }
+    private bool _selected;
+    public OptionCursor? SelectionCursor { get; set; }
     [Export]
-    public bool DimUnfocused
+    public bool DimWhenUnfocused
     {
-        get => _dimUnfocused;
+        get => _dimWhenUnfocused;
         set
         {
-            _dimUnfocused = value;
-            HandleDim();
+            _dimWhenUnfocused = value;
+            HandleStateChange();
         }
     }
     [Export]
@@ -32,7 +34,7 @@ public partial class OptionItem : MarginContainer
         set
         {
             _disabled = value;
-            HandleDim();
+            HandleStateChange();
         }
     }
     [Export]
@@ -42,33 +44,45 @@ public partial class OptionItem : MarginContainer
         set
         {
             _focused = value;
-            HandleDim();
+            HandleStateChange();
         }
     }
 
     public Dictionary<string, object> OptionData { get; set; }
-    public bool Selected { get; set; }
+    public bool Selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            HandleStateChange();
+        }
+    }
 
     public override void _Ready()
     {
-        HandleDim();
+        HandleStateChange();
     }
 
-    public T? TryGetData<T>(string key)
+    public bool TryGetData<T>(string key, [NotNullWhen(returnValue: true)] out T? value)
     {
-        if (!OptionData.TryGetValue(key, out object? result))
-            return default;
-        if (result is not T)
-            return default;
-        return (T)result;
+        if (!OptionData.TryGetValue(key, out object? result) || result is not T)
+        {
+            value = default;
+            return false;
+        }
+        value = (T)result;
+        return true;
     }
 
-    public void HandleDim()
+    public void HandleStateChange()
     {
-        Color color = Godot.Colors.White;
+        Color color;
         if (Disabled)
             color = Colors.DisabledGrey;
-        else if (DimUnfocused && !Focused)
+        else if (Selected || Focused || !DimWhenUnfocused)
+            color = Godot.Colors.White;
+        else
             color = Colors.DimGrey;
         Modulate = color;
     }

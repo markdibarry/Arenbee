@@ -17,13 +17,16 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        var loadChoice = CurrentContainer.CurrentItem.TryGetData<GameSave>(nameof(GameSave));
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(GameSave), out GameSave? loadChoice))
+            return;
         ContinueSavedGame(loadChoice);
     }
 
     protected override void CustomSetup()
     {
         PreventCloseAll = true;
+        var header = GetNode<Label>("%Header");
+        header.Text = Tr(Localization.Menus.Menus_Save_SavedGames);
     }
 
     protected override void SetupOptions()
