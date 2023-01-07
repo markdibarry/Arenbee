@@ -89,8 +89,8 @@ public partial class MainSubMenu : OptionSubMenu
         static async Task Callback(Loader loader)
         {
             var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
-            var adyScene = loader.GetObject<PackedScene>(Ady.GetScenePath());
-            List<ActorBase> actors = new() { adyScene.Instantiate<Ady>() };
+            var twosenScene = loader.GetObject<PackedScene>(Twosen.GetScenePath());
+            List<ActorBase> actors = new() { twosenScene.Instantiate<Twosen>() };
             List<ItemStack> items = new() { new ItemStack("HockeyStick", 1) };
             GameSave gameSave = new(actors, items);
             var session = sessionScene.Instantiate<GameSessionBase>();
@@ -106,7 +106,7 @@ public partial class MainSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { Locator.Root?.GameSessionScenePath, Ady.GetScenePath() },
+            new string[] { Locator.Root?.GameSessionScenePath, Twosen.GetScenePath() },
             Callback);
         tController.RequestTransition(request);
     }

@@ -2,14 +2,14 @@
 
 namespace GameCore.Actors;
 
-public abstract class HealthState : ActorState<HealthState, HealthStateMachineBase>
+public abstract class HealthState : ActorState
 {
-    protected override void PlayAnimation(string animationName)
+    protected HealthState(ActorBase actor) : base(actor)
     {
-        StateController.PlayAnimation(animationName, "Health");
     }
 
-    public virtual void HandleDamage(DamageData damageData) { }
-
-    public virtual void HandleHPDepleted() { }
+    protected override void PlayAnimation(string animationName)
+    {
+        StateController.TryPlayAnimation(animationName, "Health");
+    }
 }

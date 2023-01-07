@@ -34,7 +34,7 @@ public class Attributes : StatDict<Attribute>
         }
     }
 
-    public Attribute GetStat(AttributeType type)
+    public Attribute? GetStat(AttributeType type)
     {
         return GetStat((int)type);
     }

@@ -21,7 +21,7 @@ public class StatusEffectDefs : StatDict<StatusEffectDef>
         return new StatusEffectDef(type);
     }
 
-    public StatusEffectDef GetStat(StatusEffectType type)
+    public StatusEffectDef? GetStat(StatusEffectType type)
     {
         return GetStat((int)type);
     }

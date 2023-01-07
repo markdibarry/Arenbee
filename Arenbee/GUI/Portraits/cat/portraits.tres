@@ -1,0 +1,11 @@
+[gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://okq3jbfnqxnl"]
+
+[ext_resource type="Texture2D" uid="uid://cnuspx7fj1pjk" path="res://Arenbee/GUI/Portraits/cat/cat_neutral.png" id="1_uredm"]
+
+[resource]
+animations = [{
+"frames": [ExtResource("1_uredm")],
+"loop": true,
+"name": &"neutral",
+"speed": 5.0
+}]

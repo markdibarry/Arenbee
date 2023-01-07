@@ -1,4 +1,5 @@
-﻿using GameCore.Input;
+﻿using System.Linq;
+using GameCore.Input;
 using GameCore.Items;
 using GameCore.Statistics;
 using Godot;
@@ -12,6 +13,15 @@ public abstract partial class ActorBase : CharacterBody2D, IDamageable
 {
     protected ActorBase()
     {
+        ActorName = string.Empty;
+        ActorId = string.Empty;
+        AnimationPlayer = null!;
+        BodySprite = null!;
+        BodyShader = null!;
+        CollisionShape2D = null!;
+        HoldItemController = null!;
+        HurtBoxes = null!;
+        HitBoxes = null!;
         UpDirection = Vector2.Up;
         Acceleration = 600;
         Friction = 600;
@@ -24,9 +34,10 @@ public abstract partial class ActorBase : CharacterBody2D, IDamageable
         Equipment = new EquipmentBase(this);
         IFrameController = new IFrameController(this);
         InputHandler = new DummyInputHandler();
+        ContextAreas = new();
     }
 
-    private Node2D _body;
+    private Node2D _body = null!;
     private EquipmentBase _equipment;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; } = ActorType.NPC;
@@ -81,8 +92,11 @@ public abstract partial class ActorBase : CharacterBody2D, IDamageable
         GlobalPosition = _floatPosition;
         _move = Vector2.Zero;
         Stats.Process(delta);
+        foreach (var context in ContextAreas)
+            context.TriggerContext(this);
         StateController.UpdateStates(delta);
         IFrameController.Process(delta);
+        Stats.DamageToProcess.Clear();
         HandleMove(delta);
     }
 

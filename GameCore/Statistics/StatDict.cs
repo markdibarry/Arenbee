@@ -31,16 +31,16 @@ public abstract class StatDict<TStat> : IStatSet
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>
-    public TStat GetStat(int key)
+    public TStat? GetStat(int key)
     {
-        if (StatsDict.TryGetValue(key, out var stat))
-            return stat;
-        return null;
+        if (!StatsDict.TryGetValue(key, out TStat? stat))
+            return null;
+        return stat;
     }
 
     public virtual void RemoveMod(Modifier mod)
     {
-        if (!StatsDict.TryGetValue(mod.SubType, out var stat))
+        if (!StatsDict.TryGetValue(mod.SubType, out TStat? stat))
             return;
         stat.Modifiers.Remove(mod);
         if (stat.Modifiers.Count == 0)
@@ -56,7 +56,7 @@ public abstract class StatDict<TStat> : IStatSet
 
     protected TStat GetOrNewStat(int type)
     {
-        if (!StatsDict.TryGetValue(type, out TStat stat))
+        if (!StatsDict.TryGetValue(type, out TStat? stat))
         {
             stat = GetNewStat(type);
             StatsDict.Add(type, stat);

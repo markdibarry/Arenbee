@@ -1,30 +1,33 @@
 ﻿using GameCore.Actors;
+using GameCore.Items;
 
 namespace Arenbee.Actors.Enemies.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
     public ActionStateMachine(ActorBase actor)
-        : base(actor)
+        : base(
+            new ActionState[]
+            {
+                new NotAttacking(actor, null)
+            },
+            actor, null)
     {
-        AddState<NotAttacking>();
-        InitStates(this);
     }
 
     public class NotAttacking : ActionState
     {
+        public NotAttacking(ActorBase actor, HoldItem? holdItem)
+            : base(actor, holdItem)
+        {
+        }
+
         public override void Enter() { }
 
-        public override ActionState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
-
-        public override ActionState CheckForTransitions()
-        {
-            return null;
-        }
     }
 }

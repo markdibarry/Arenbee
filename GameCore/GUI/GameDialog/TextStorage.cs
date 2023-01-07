@@ -4,11 +4,6 @@ namespace GameCore.GUI;
 
 public class TextStorage : IStorageContext
 {
-    public TextStorage()
-    {
-        SetValue("greeting", "Salutations!");
-        SetValue("coolTitle", "the G.O.A.T.");
-    }
     private readonly Dictionary<string, object> _tempStorage = new();
 
     public void Clear() => _tempStorage.Clear();

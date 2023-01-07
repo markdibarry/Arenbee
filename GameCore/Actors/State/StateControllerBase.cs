@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GameCore.Input;
 using GameCore.Items;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Actors;
@@ -15,13 +16,13 @@ public class StateControllerBase
         AirStateMachineBase airStateMachine,
         HealthStateMachineBase healthStateMachine,
         ActionStateMachineBase actionStateMachine,
-        Func<ActorBase, BehaviorTree> behaviorTreeDelegate = null)
+        Func<ActorBase, BehaviorTree>? behaviorTreeDelegate = null)
     {
         _actor = actor;
         HealthStateMachine = healthStateMachine;
         AirStateMachine = airStateMachine;
         MoveStateMachine = moveStateMachine;
-        ActionStateMachine = actionStateMachine;
+        BaseActionStateMachine = actionStateMachine;
         _stateDisplayController = new();
         _behaviorTreeDelegate = behaviorTreeDelegate;
     }
@@ -29,12 +30,12 @@ public class StateControllerBase
     private readonly ActorBase _actor;
     private bool _baseActionDisabled;
     private readonly StateDisplayController _stateDisplayController;
-    private readonly Func<ActorBase, BehaviorTree> _behaviorTreeDelegate;
-    public BehaviorTree BehaviorTree { get; set; }
-    public AirStateMachineBase AirStateMachine { get; }
-    public MoveStateMachineBase MoveStateMachine { get; }
-    public HealthStateMachineBase HealthStateMachine { get; }
-    public ActionStateMachineBase ActionStateMachine { get; }
+    private readonly Func<ActorBase, BehaviorTree>? _behaviorTreeDelegate;
+    public BehaviorTree? BehaviorTree { get; set; }
+    public ActorStateMachine AirStateMachine { get; }
+    public ActorStateMachine MoveStateMachine { get; }
+    public ActorStateMachine HealthStateMachine { get; }
+    public ActorStateMachine BaseActionStateMachine { get; }
     public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
     public List<HoldItem> HoldItems => _actor.HoldItemController.HoldItems;
     public bool BaseActionDisabled
@@ -46,39 +47,39 @@ public class StateControllerBase
                 return;
             _baseActionDisabled = value;
             if (_baseActionDisabled)
-                ActionStateMachine?.ExitState();
+                BaseActionStateMachine.ExitState();
             else
-                ActionStateMachine?.Init();
+                BaseActionStateMachine.Reset();
         }
     }
 
     public void Init()
     {
-        HealthStateMachine.Init();
-        AirStateMachine.Init();
-        MoveStateMachine.Init();
-        ActionStateMachine.Init();
+        HealthStateMachine.Reset();
+        AirStateMachine.Reset();
+        MoveStateMachine.Reset();
+        BaseActionStateMachine.Reset();
         BehaviorTree = _behaviorTreeDelegate?.Invoke(_actor);
         _stateDisplayController.CreateStateDisplay(_actor);
     }
 
     public bool IsBlocked(BlockedState stateType)
     {
-        bool stateBlocked =
-            HealthStateMachine.State.BlockedStates.HasFlag(stateType) ||
-            MoveStateMachine.State.BlockedStates.HasFlag(stateType) ||
-            AirStateMachine.State.BlockedStates.HasFlag(stateType);
+        bool stateBlocked = HealthStateMachine.IsBlocked(stateType)
+            || MoveStateMachine.IsBlocked(stateType)
+            || AirStateMachine.IsBlocked(stateType);
         if (!BaseActionDisabled)
-            stateBlocked |= ActionStateMachine.State.BlockedStates.HasFlag(stateType);
-        foreach (var holdItem in HoldItems)
-            stateBlocked |= holdItem.StateMachine.State.BlockedStates.HasFlag(stateType);
+            stateBlocked |= BaseActionStateMachine.IsBlocked(stateType);
+        foreach (HoldItem holdItem in HoldItems)
+            stateBlocked |= holdItem.StateMachine.IsBlocked(stateType);
         return stateBlocked;
     }
 
-    public bool PlayAnimation(string animationName, string stateMachineName, HoldItem holdItem = null)
+    public bool TryPlayAnimation(string animationName, string stateMachineName, HoldItem? holdItem = null)
     {
         if (!ValidateAnimation(stateMachineName))
             return false;
+
         string holdItemAnimationName = animationName;
         if (holdItem != null)
         {
@@ -86,13 +87,16 @@ public class StateControllerBase
                 return false;
             animationName = $"{holdItem.HoldItemType}/{animationName}";
         }
+
         if (!ActorAnimationPlayer.HasAnimation(animationName))
             return false;
+
         foreach (var item in HoldItems)
         {
             if (item != holdItem && item.AnimationPlayer.CurrentAnimation != "RESET")
                 item.AnimationPlayer.Play("RESET");
         }
+
         ActorAnimationPlayer.Play(animationName);
         holdItem?.AnimationPlayer.Play(holdItemAnimationName);
         return true;
@@ -100,20 +104,19 @@ public class StateControllerBase
 
     public bool ValidateAnimation(string stateMachineName)
     {
-        if (HealthStateMachine.State.AnimationName == null)
+        if (HealthStateMachine.State.AnimationName != string.Empty)
+            return false;
+        if (stateMachineName == "Action")
+            return true;
+        if ((BaseActionDisabled || BaseActionStateMachine.State.AnimationName == string.Empty) &&
+            HoldItems.All(x => x.StateMachine.State.AnimationName == string.Empty))
         {
-            if (stateMachineName == "Action")
+            if (stateMachineName == "Air")
                 return true;
-            if ((BaseActionDisabled || ActionStateMachine.State.AnimationName == null) &&
-                HoldItems.All(x => x.StateMachine.State.AnimationName == null))
+            if (AirStateMachine.State.AnimationName == string.Empty)
             {
-                if (stateMachineName == "Air")
+                if (stateMachineName == "Move")
                     return true;
-                if (AirStateMachine.State.AnimationName == null)
-                {
-                    if (stateMachineName == "Move")
-                        return true;
-                }
             }
         }
         return false;
@@ -122,18 +125,18 @@ public class StateControllerBase
     public bool PlayFallbackAnimation()
     {
         if (HealthStateMachine.State.AnimationName != null)
-            return PlayAnimation(HealthStateMachine.State.AnimationName, "Health");
+            return TryPlayAnimation(HealthStateMachine.State.AnimationName, "Health");
         foreach (var holdItem in HoldItems)
         {
             if (holdItem.StateMachine.State.AnimationName != null)
-                return PlayAnimation(holdItem.StateMachine.State.AnimationName, "Action", holdItem);
+                return TryPlayAnimation(holdItem.StateMachine.State.AnimationName, "Action", holdItem);
         }
-        if (!BaseActionDisabled && ActionStateMachine.State.AnimationName != null)
-            return PlayAnimation(ActionStateMachine.State.AnimationName, "Action", null);
+        if (!BaseActionDisabled && BaseActionStateMachine.State.AnimationName != null)
+            return TryPlayAnimation(BaseActionStateMachine.State.AnimationName, "Action", null);
         else if (AirStateMachine.State.AnimationName != null)
-            return PlayAnimation(AirStateMachine.State.AnimationName, "Air");
+            return TryPlayAnimation(AirStateMachine.State.AnimationName, "Air");
         else if (MoveStateMachine.State.AnimationName != null)
-            return PlayAnimation(MoveStateMachine.State.AnimationName, "Move");
+            return TryPlayAnimation(MoveStateMachine.State.AnimationName, "Move");
         return false;
     }
 
@@ -143,7 +146,7 @@ public class StateControllerBase
         AirStateMachine.Update(delta);
         HealthStateMachine.Update(delta);
         if (!BaseActionDisabled)
-            ActionStateMachine.Update(delta);
+            BaseActionStateMachine.Update(delta);
         foreach (var holdItem in HoldItems)
             holdItem.StateMachine.Update(delta);
         _stateDisplayController.Update(this);

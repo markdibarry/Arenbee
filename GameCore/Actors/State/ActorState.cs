@@ -4,21 +4,18 @@ using GameCore.Utility;
 
 namespace GameCore.Actors;
 
-public abstract class ActorState<TState, TStateMachine> : State<TState, TStateMachine>
-    where TState : ActorState<TState, TStateMachine>
-    where TStateMachine : ActorStateMachine<TState, TStateMachine>
+public abstract class ActorState : State
 {
-    public string AnimationName { get; protected set; }
+    protected ActorState(ActorBase actor)
+    {
+        Actor = actor;
+    }
+
+    public string AnimationName { get; protected set; } = string.Empty;
     public BlockedState BlockedStates { get; set; }
     public ActorInputHandler InputHandler => Actor.InputHandler;
     public StateControllerBase StateController => Actor.StateController;
     protected ActorBase Actor { get; private set; }
-
-    public override void Init(TStateMachine stateMachine)
-    {
-        base.Init(stateMachine);
-        Actor = stateMachine.Actor;
-    }
 
     protected abstract void PlayAnimation(string animationName);
 }

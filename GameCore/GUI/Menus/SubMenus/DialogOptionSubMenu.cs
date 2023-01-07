@@ -34,16 +34,16 @@ public partial class DialogOptionSubMenu : OptionSubMenu
     {
         if (DialogChoices.Length == 0)
             return;
-        List<TextOption> options = DialogChoices
-            .Where(x => !x.Disabled)
-            .Select((x, i) =>
-            {
-                var textOption = _textOptionScene.Instantiate<TextOption>();
-                textOption.LabelText = x.Text;
-                textOption.OptionData["index"] = i;
-                return textOption;
-            })
-            .ToList();
+        List<TextOption> options = new();
+        for (int i = 0; i < DialogChoices.Length; i++)
+        {
+            if (DialogChoices[i].Disabled)
+                continue;
+            var textOption = _textOptionScene.Instantiate<TextOption>();
+            textOption.LabelText = DialogChoices[i].Text;
+            textOption.OptionData["index"] = i;
+            options.Add(textOption);
+        }
         _options.ReplaceChildren(options);
     }
 

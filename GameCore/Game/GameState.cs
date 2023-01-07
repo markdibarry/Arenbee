@@ -10,7 +10,7 @@ public class GameState
     public bool MenuActive { get; private set; }
     public bool DialogActive { get; private set; }
     public bool GUIActive => MenuActive || DialogActive;
-    public event Action<GameState> GameStateChanged;
+    public event Action<GameState>? GameStateChanged;
 
     public void Init(GUIController guiController)
     {

@@ -2,12 +2,18 @@
 
 namespace GameCore.Actors;
 
-public abstract class ActionState : ActorState<ActionState, ActionStateMachineBase>
+public abstract class ActionState : ActorState
 {
-    public HoldItem HoldItem => StateMachine.HoldItem;
+    protected ActionState(ActorBase actor, HoldItem? holdItem)
+        : base(actor)
+    {
+        HoldItem = holdItem;
+    }
+
+    public HoldItem? HoldItem { get; set; }
 
     protected override void PlayAnimation(string animationName)
     {
-        StateController.PlayAnimation(animationName, "Action", HoldItem);
+        StateController.TryPlayAnimation(animationName, "Action", HoldItem);
     }
 }

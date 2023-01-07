@@ -56,6 +56,7 @@ public class DialogScriptReader
                 await HandleChoiceStatement();
                 break;
             case StatementType.End:
+            default:
                 await HandleEnd();
                 break;
         }
@@ -63,7 +64,7 @@ public class DialogScriptReader
         async Task HandleLineStatement()
         {
             LineData lineData = _dialogScript.Lines[goTo.Index];
-            DialogLine line = new(_interpreter, _dialogScript, lineData, _speakers, _autoGlobal);
+            DialogLine line = new(_dialog, _interpreter, _dialogScript, lineData, _speakers, _autoGlobal);
             await _dialog.HandleLineAsync(line);
         }
 
@@ -75,9 +76,13 @@ public class DialogScriptReader
         async Task HandleInstructionStatement()
         {
             InstructionStatement instructionStmt = _dialogScript.InstructionStmts[goTo.Index];
-            GoTo next = EvaluateInstructions(instructionStmt.Values);
-            if (next.Type == StatementType.Undefined)
-                next = instructionStmt.Next;
+            GoTo next = instructionStmt.Next;
+            if (instructionStmt.Values.Length != 0)
+            {
+                next = EvaluateInstructions(instructionStmt.Values);
+                if (next.Type == StatementType.Undefined)
+                    next = instructionStmt.Next;
+            }
             await ReadNextStatementAsync(next);
         }
 
@@ -115,8 +120,10 @@ public class DialogScriptReader
                 // If GoTo, flag all choices as disabled until index
                 else if (choiceSet[i] == (ushort)OpCode.Goto)
                 {
-                    if (i++ < validIndex)
-                        validIndex = choiceSet[i];
+                    if (validIndex == -1)
+                        validIndex = choiceSet[++i];
+                    else
+                        i++;
                 }
                 // Otherwise is a condition
                 else
@@ -164,7 +171,7 @@ public class DialogScriptReader
                 break;
         };
 
-        return new GoTo();
+        return GoTo.Default;
 
         void HandleEvaluate()
         {
@@ -197,26 +204,31 @@ public class DialogScriptReader
         void HandleSpeakerSet()
         {
             int i = 1;
-            string speakerId = _dialogScript.SpeakerIds[i++];
+            string speakerId = _dialogScript.SpeakerIds[instructions[i++]];
             string? displayName = null, portraitId = null, mood = null;
-            if (instructions[i++] == 1)
+            while (i < instructions.Length)
             {
-                ushort[] nameInst = _dialogScript.Instructions[instructions[i++]];
-                displayName = _interpreter.GetStringInstResult(nameInst);
+                switch ((OpCode)instructions[i++])
+                {
+                    case OpCode.SpeakerSetMood:
+                        mood = GetUpdateValue();
+                        break;
+                    case OpCode.SpeakerSetName:
+                        displayName = GetUpdateValue();
+                        break;
+                    case OpCode.SpeakerSetPortrait:
+                        portraitId = GetUpdateValue();
+                        break;
+                }
             }
-            if (instructions[i++] == 1)
+
+            _dialog.UpdateSpeaker(true, speakerId, displayName, portraitId, mood);
+
+            string GetUpdateValue()
             {
-                ushort[] portraitInst = _dialogScript.Instructions[instructions[i++]];
-                portraitId = _interpreter.GetStringInstResult(portraitInst);
+                ushort[] updateInst = _dialogScript.Instructions[instructions[i++]];
+                return _interpreter.GetStringInstResult(updateInst);
             }
-            if (instructions[i++] == 1)
-            {
-                ushort[] moodInst = _dialogScript.Instructions[instructions[i++]];
-                mood = _interpreter.GetStringInstResult(moodInst);
-            }
-            _dialog.UpdateSpeaker(speakerId, displayName, portraitId, mood);
         }
     }
-
-
 }

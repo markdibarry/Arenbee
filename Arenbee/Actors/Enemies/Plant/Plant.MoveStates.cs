@@ -7,48 +7,31 @@ public partial class Plant : Actor
     public class MoveStateMachine : MoveStateMachineBase
     {
         public MoveStateMachine(ActorBase actor)
-            : base(actor)
+            : base(
+                new MoveState[]
+                {
+                    new Standing(actor)
+                },
+                actor)
         {
-            AddState<Standing>();
-            InitStates(this);
-        }
-
-        public class NotAttacking : ActionState
-        {
-            public override void Enter() { }
-
-            public override ActionState Update(double delta)
-            {
-                return CheckForTransitions();
-            }
-
-            public override void Exit() { }
-
-            public override ActionState CheckForTransitions()
-            {
-                return null;
-            }
         }
 
         private class Standing : MoveState
         {
-            public Standing() { AnimationName = "Standing"; }
+            public Standing(ActorBase actor) : base(actor)
+            {
+                AnimationName = "Standing";
+            }
             public override void Enter()
             {
                 PlayAnimation(AnimationName);
             }
 
-            public override MoveState Update(double delta)
+            public override void Update(double delta)
             {
-                return CheckForTransitions();
             }
 
             public override void Exit() { }
-
-            public override MoveState CheckForTransitions()
-            {
-                return null;
-            }
         }
     }
 }

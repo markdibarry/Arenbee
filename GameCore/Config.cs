@@ -6,7 +6,7 @@ public static class Config
 {
     public const string ProjectDirName = "Arenbee";
     public const string ProjectPrefix = $"res://{ProjectDirName}";
-    public const string PortraitsPath = $"{ProjectPrefix}/GUI/Portraits/";
+    public const string PortraitsPath = $"{ProjectPrefix}/GUI/Portraits";
     public const string DialogPath = $"{ProjectPrefix}/GUI/Dialog/";
     public const string AudioPath = $"{ProjectPrefix}/Audio/";
     public const string ItemPath = $"{ProjectPrefix}/Items/";

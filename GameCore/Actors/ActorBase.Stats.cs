@@ -28,8 +28,8 @@ public partial class ActorBase
             }
         }
     }
-    public event Action<ActorBase, ModChangeData> ModChanged;
-    public event Action<ActorBase> StatsChanged;
+    public event Action<ActorBase, ModChangeData>? ModChanged;
+    public event Action<ActorBase>? StatsChanged;
 
     protected virtual void ApplyDefaultStats() { }
 

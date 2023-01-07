@@ -34,7 +34,7 @@ public partial class Dialog : GUILayer
     public bool SpeedUpEnabled { get; set; }
     public double SpeedMultiplier { get; set; }
     public bool SpeechBubbleEnabled { get; set; }
-    public bool DualBoxEnabled { get; set; }
+    public bool DualBoxEnabled { get; set; } = false;
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -77,9 +77,9 @@ public partial class Dialog : GUILayer
 
     public DialogBox? GetBoxBySpeakerId(string speakerId)
     {
-        if (FocusedBox != null && FocusedBox.HasNode(speakerId))
+        if (FocusedBox != null && FocusedBox.HasSpeaker(speakerId))
             return FocusedBox;
-        else if (SecondaryBox != null && SecondaryBox.HasNode(speakerId))
+        else if (SecondaryBox != null && SecondaryBox.HasSpeaker(speakerId))
             return SecondaryBox;
         return null;
     }
@@ -126,7 +126,7 @@ public partial class Dialog : GUILayer
         _ = _scriptReader.ReadNextStatementAsync(choices[0].Next);
     }
 
-    public void UpdateSpeaker(string speakerId, string? displayName, string? portraitId, string? mood)
+    public void UpdateSpeaker(bool global, string speakerId, string? displayName, string? portraitId, string? mood)
     {
         Speaker speaker = GetSpeaker(speakerId);
         DialogBox? dialogBox = GetBoxBySpeakerId(speakerId);
@@ -143,8 +143,15 @@ public partial class Dialog : GUILayer
         }
         if (mood != null)
         {
-            speaker.Mood = mood;
-            portrait?.SetMood(speaker.Mood);
+            if (global)
+            {
+                speaker.GlobalMood = mood;
+            }
+            else
+            {
+                speaker.Mood = mood;
+                portrait?.SetMood(speaker.Mood);
+            }
         }
     }
 
@@ -170,9 +177,9 @@ public partial class Dialog : GUILayer
         DialogBox newBox = _dialogBoxScene.Instantiate<DialogBox>();
         newBox.TextEventTriggered += OnTextEventTriggered;
         newBox.DialogLineFinished += OnDialogLineFinished;
-        newBox.SpeedMultiplier = SpeedMultiplier;
         newBox.DisplayRight = displayRight;
         AddChild(newBox);
+        newBox.SpeedMultiplier = SpeedMultiplier;
         return newBox;
     }
 
@@ -256,17 +263,18 @@ public partial class Dialog : GUILayer
 
     private async Task OpenNewDialogBoxAsync(DialogLine dialogLine, bool displayRight)
     {
-        FocusedBox = CreateDialogBox(!displayRight);
+        FocusedBox = CreateDialogBox(displayRight);
         await FocusedBox.UpdateDialogLine(dialogLine);
         FocusedBox.StartWriting();
     }
 
-    private static async Task<bool> TryUseDialogBoxAsync(DialogLine dialogLine, DialogBox box)
+    private async Task<bool> TryUseDialogBoxAsync(DialogLine dialogLine, DialogBox box)
     {
         if (!dialogLine.SameSpeakers(box.DialogLine))
             return false;
         box.MoveToFront();
         await box.UpdateDialogLine(dialogLine);
+        box.SpeedMultiplier = SpeedMultiplier;
         box.Dim = false;
         box.StartWriting();
         return true;

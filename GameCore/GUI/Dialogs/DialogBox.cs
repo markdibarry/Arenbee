@@ -164,12 +164,9 @@ public partial class DialogBox : Control
             _dialogPanel.LayoutDirection = LayoutDirectionEnum.Rtl;
         }
 
-        float shiftAmount = shiftBase * _portraitContainer.GetChildCount();
-
-        foreach (Speaker speaker in DialogLine.Speakers)
+        for (int i = 0; i < DialogLine.Speakers.Length; i++)
         {
-            Portrait portrait = speaker.CreatePortrait(shiftAmount, DisplayRight);
-
+            Portrait portrait = DialogLine.Speakers[i].CreatePortrait(shiftBase * i, DisplayRight);
             _portraitContainer.AddChild(portrait);
             _portraitContainer.MoveChild(portrait, 0);
             // TODO: Is this necessary?

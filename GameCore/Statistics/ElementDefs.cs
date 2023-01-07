@@ -21,7 +21,7 @@ public class ElementDefs : StatDict<ElementDef>
         return new ElementDef(type);
     }
 
-    public ElementDef GetStat(ElementType type)
+    public ElementDef? GetStat(ElementType type)
     {
         return GetStat((int)type);
     }

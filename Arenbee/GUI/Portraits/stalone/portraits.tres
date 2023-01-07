@@ -1,0 +1,23 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://dyxgg6bt3c7mf"]
+
+[ext_resource type="Texture2D" uid="uid://m2j5jvfm4obx" path="res://Arenbee/GUI/Portraits/stalone/stalone_neutral.png" id="1_35cwe"]
+[ext_resource type="Texture2D" uid="uid://ct3ih40xb4502" path="res://Arenbee/GUI/Portraits/stalone/stalone_annoyed.png" id="1_fh517"]
+[ext_resource type="Texture2D" uid="uid://cwoykm1n3np25" path="res://Arenbee/GUI/Portraits/stalone/stalone_happy.png" id="2_epscm"]
+
+[resource]
+animations = [{
+"frames": [ExtResource("1_fh517")],
+"loop": true,
+"name": &"annoyed",
+"speed": 5.0
+}, {
+"frames": [ExtResource("2_epscm")],
+"loop": true,
+"name": &"happy",
+"speed": 5.0
+}, {
+"frames": [ExtResource("1_35cwe")],
+"loop": true,
+"name": &"neutral",
+"speed": 5.0
+}]

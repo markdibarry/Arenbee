@@ -1,106 +1,118 @@
 ﻿using GameCore.Actors;
 using GameCore.Statistics;
+using GameCore.Utility;
 
 namespace Arenbee.Actors.Enemies.Default.State;
 
 public class MoveStateMachine : MoveStateMachineBase
 {
     public MoveStateMachine(ActorBase actor)
-        : base(actor)
+        : base(
+            new MoveState[]
+            {
+                new Standing(actor),
+                new Walking(actor),
+                new Running(actor)
+            },
+            actor)
     {
-        AddState<Standing>();
-        AddState<Walking>();
-        AddState<Running>();
-        InitStates(this);
     }
 
     public class Standing : MoveState
     {
-        public Standing() { AnimationName = "Standing"; }
+        public Standing(ActorBase actor) : base(actor)
+        {
+            AnimationName = "Standing";
+        }
 
         public override void Enter()
         {
             PlayAnimation(AnimationName);
         }
 
-        public override MoveState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override MoveState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))
-                return null;
+                return false;
             if (Actor.Stats.HasEffect(StatusEffectType.Burn))
-                return GetState<Running>();
+                return stateMachine.TrySwitchTo<Running>();
             if (Actor.InputHandler.GetLeftAxis().x != 0)
-                return GetState<Walking>();
-            return null;
+                return stateMachine.TrySwitchTo<Walking>();
+            return false;
         }
     }
 
     public class Walking : MoveState
     {
-        public Walking() { AnimationName = "Walk"; }
+        public Walking(ActorBase actor) : base(actor)
+        {
+            AnimationName = "Walk";
+        }
+
         public override void Enter()
         {
             PlayAnimation(AnimationName);
             Actor.MaxSpeed = Actor.WalkSpeed;
         }
 
-        public override MoveState Update(double delta)
+        public override void Update(double delta)
         {
             Actor.UpdateDirection();
             Actor.Move();
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override MoveState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))
-                return GetState<Standing>();
+                return stateMachine.TrySwitchTo<Standing>();
             if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
-                return GetState<Running>();
+                return stateMachine.TrySwitchTo<Running>();
             if (InputHandler.GetLeftAxis().x == 0)
-                return GetState<Standing>();
+                return stateMachine.TrySwitchTo<Standing>();
             if (InputHandler.Run.IsActionPressed)
-                return GetState<Running>();
-            return null;
+                return stateMachine.TrySwitchTo<Running>();
+            return false;
         }
     }
 
     public class Running : MoveState
     {
+        public Running(ActorBase actor) : base(actor)
+        {
+        }
+
         public override void Enter()
         {
             Actor.MaxSpeed = Actor.RunSpeed;
         }
 
-        public override MoveState Update(double delta)
+        public override void Update(double delta)
         {
             Actor.UpdateDirection();
             Actor.Move();
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override MoveState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))
-                return GetState<Standing>();
+                return stateMachine.TrySwitchTo<Standing>();
             if (Actor.Stats.HasEffect(StatusEffectType.Burn))
-                return null;
+                return false;
             if (InputHandler.GetLeftAxis().x == 0)
-                return GetState<Standing>();
+                return stateMachine.TrySwitchTo<Standing>();
             if (!InputHandler.Run.IsActionPressed)
-                return GetState<Walking>();
-            return null;
+                return stateMachine.TrySwitchTo<Walking>();
+            return false;
         }
     }
 }

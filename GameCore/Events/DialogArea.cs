@@ -1,19 +1,26 @@
 ﻿using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Events;
 
-public partial class DialogArea : Area2D
+public partial class DialogArea : Area2D, IContextArea
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private ActorBase _actor;
-    private bool _canTrigger;
-    private ColorRect _colorRect;
-    [Export]
-    public string DialogPath { get; set; }
+    private ColorRect _colorRect = null!;
+    private string _dialogPath = string.Empty;
+    [Export(PropertyHint.File, "*.json")]
+    public string DialogPath
+    {
+        get => _dialogPath;
+        set
+        {
+            _dialogPath = value;
+            if (!FileAccess.FileExists(value))
+                IsActive = false;
+        }
+    }
     [Export]
     public bool IsActive { get; set; } = true;
     [Export]
@@ -36,35 +43,22 @@ public partial class DialogArea : Area2D
 
     public void OnBodyEntered(Node body)
     {
-        if (_actor != null
-            || body is not ActorBase actor
-            || actor.ActorType != ActorType.Player)
+        if (body is not ActorBase actor || actor.ActorType != ActorType.Player)
             return;
-        _actor = actor;
-        _actor.ContextAreasActive++;
-        _canTrigger = true;
+        actor.ContextAreas.Add(this);
     }
 
     public void OnBodyExited(Node body)
     {
-        if (body != _actor)
+        if (body is not ActorBase actor || actor.ActorType != ActorType.Player)
             return;
-        _actor.ContextAreasActive--;
-        _actor = null;
-        _canTrigger = false;
+        actor.ContextAreas.Remove(this);
     }
 
-    public override void _Process(double delta)
+    public void TriggerContext(ActorBase actor)
     {
-        if (this.IsToolDebugMode() || !_canTrigger)
+        if (this.IsToolDebugMode() || !IsActive || !actor.InputHandler.Attack.IsActionJustPressed)
             return;
-        if (!IsInstanceValid(_actor))
-        {
-            _actor = null;
-            _canTrigger = false;
-            return;
-        }
-        if (_actor.InputHandler.Attack.IsActionJustPressed)
-            _ = Locator.Root?.GUIController.OpenDialogAsync(DialogPath);
+        _ = Locator.Root?.GUIController.OpenDialogAsync(DialogPath);
     }
 }

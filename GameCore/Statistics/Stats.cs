@@ -1,6 +1,7 @@
 ﻿using System;
 using Godot;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace GameCore.Statistics;
 
@@ -57,12 +58,13 @@ public class Stats
     [JsonIgnore] public StatusEffectDefs StatusEffectDefs { get; }
     [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
     public StatusEffects StatusEffects { get; }
+    [JsonIgnore] public List<DamageData> DamageToProcess { get; } = new();
     [JsonIgnore] public Func<int> MinHP { get; set; } = () => 0;
-    public event Action<DamageData> DamageReceived;
-    public event Action HPDepleted;
-    public event Action<ModChangeData> ModChanged;
-    public event Action<double> Processed;
-    public event Action StatsChanged;
+    public event Action<DamageData>? DamageReceived;
+    public event Action? HPDepleted;
+    public event Action<ModChangeData>? ModChanged;
+    public event Action<double>? Processed;
+    public event Action? StatsChanged;
 
     public void AddKOStatus()
     {
@@ -84,18 +86,17 @@ public class Stats
 
     public void ApplyStats(Stats stats)
     {
-        if (stats == null) return;
         Attributes.ApplyStats(stats.Attributes.StatsDict);
         StatusEffects.ApplyStats(stats.StatusEffects.TempModifiers);
     }
 
-    public int GetHP() => Attributes.GetStat((int)AttributeType.HP).BaseValue;
+    public int GetHP() => Attributes.GetStat((int)AttributeType.HP)?.BaseValue ?? default;
 
-    public int GetMP() => Attributes.GetStat((int)AttributeType.MP).BaseValue;
+    public int GetMP() => Attributes.GetStat((int)AttributeType.MP)?.BaseValue ?? default;
 
-    public int GetMaxHP() => Attributes.GetStat((int)AttributeType.MaxHP).ModifiedValue;
+    public int GetMaxHP() => Attributes.GetStat((int)AttributeType.MaxHP)?.ModifiedValue ?? default;
 
-    public int GetMaxMP() => Attributes.GetStat((int)AttributeType.MaxMP).ModifiedValue;
+    public int GetMaxMP() => Attributes.GetStat((int)AttributeType.MaxMP)?.ModifiedValue ?? default;
 
     public bool HasEffect(StatusEffectType type) => StatusEffects.HasEffect(type);
 
@@ -118,32 +119,32 @@ public class Stats
     public void Process(double delta)
     {
         Processed?.Invoke(delta);
+
+        foreach (DamageData damageData in DamageToProcess)
+        {
+            ModifyHP(damageData.TotalDamage);
+            DamageReceived?.Invoke(damageData);
+            if (HasNoHP())
+                HPDepleted?.Invoke();
+            else
+                StatusEffects.AddStatusMods(damageData.StatusEffects);
+            StatsChanged?.Invoke();
+        }
     }
 
     public void RaiseModChanged(ModChangeData modChangeData)
     {
         ModChanged?.Invoke(modChangeData);
-        RaiseStatsChanged();
+        StatsChanged?.Invoke();
         var statType = modChangeData.Modifier.StatType;
         if (statType == StatType.StatusEffect || statType == StatType.StatusEffectDef)
             StatusEffects.UpdateEffect((StatusEffectType)modChangeData.Modifier.SubType);
     }
 
-    public void RaiseStatsChanged()
-    {
-        StatsChanged?.Invoke();
-    }
-
     public void ReceiveAction(ActionData actionData)
     {
-        var damageData = new DamageData(this, actionData);
-        ModifyHP(damageData.TotalDamage);
-        DamageReceived?.Invoke(damageData);
-        if (HasNoHP())
-            HPDepleted?.Invoke();
-        else
-            StatusEffects.AddStatusMods(damageData.StatusEffects);
-        RaiseStatsChanged();
+        DamageToProcess.Add(new(this, actionData));
+
     }
 
     public void RemoveKOStatus()
@@ -182,8 +183,8 @@ public class Stats
 
     private void ModifyHP(int amount)
     {
-        var oldHP = GetHP();
-        var newHP = Math.Clamp(oldHP - amount, MinHP(), GetMaxHP());
+        int oldHP = GetHP();
+        int newHP = Math.Clamp(oldHP - amount, MinHP(), GetMaxHP());
         if (oldHP == newHP)
             return;
         Attributes.GetStat(AttributeType.HP).BaseValue = newHP;
@@ -191,8 +192,8 @@ public class Stats
 
     private void ModifyMP(int amount)
     {
-        var oldMP = GetMP();
-        var newMP = Math.Clamp(oldMP - amount, 0, GetMaxMP());
+        int oldMP = GetMP();
+        int newMP = Math.Clamp(oldMP - amount, 0, GetMaxMP());
         if (oldMP == newMP)
             return;
         Attributes.GetStat(AttributeType.MP).BaseValue = newMP;

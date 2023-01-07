@@ -1,57 +1,68 @@
 ﻿using GameCore.Actors;
+using GameCore.Utility;
 
 namespace Arenbee.Actors.Enemies.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
     public AirStateMachine(ActorBase actor)
-        : base(actor)
+        : base(
+            new AirState[]
+            {
+                new Grounded(actor),
+                new Falling(actor)
+            },
+            actor)
     {
-        AddState<Grounded>();
-        AddState<Falling>();
-        InitStates(this);
     }
 
     public class Grounded : AirState
     {
+        public Grounded(ActorBase actor) : base(actor)
+        {
+        }
+
         public override void Enter()
         {
             Actor.VelocityY = (float)Actor.GroundedGravity;
             StateController.PlayFallbackAnimation();
         }
 
-        public override AirState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override AirState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (!Actor.IsOnFloor())
-                return GetState<Falling>();
-            return null;
+                return stateMachine.TrySwitchTo<Falling>();
+            return false;
         }
     }
 
     public class Falling : AirState
     {
+        public Falling(ActorBase actor) : base(actor)
+        {
+        }
+
         public override void Enter() { }
 
-        public override AirState Update(double delta)
+        public override void Update(double delta)
         {
             Actor.ApplyFallGravity(delta);
-            return CheckForTransitions();
+
         }
 
         public override void Exit() { }
 
-        public override AirState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Actor.IsOnFloor())
-                return GetState<Grounded>();
-            return null;
+                return stateMachine.TrySwitchTo<Grounded>();
+            return false;
         }
     }
 }

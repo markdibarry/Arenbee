@@ -7,7 +7,6 @@ namespace GameCore.Actors;
 public partial class ActorBase
 {
     private Vector2 _floatPosition;
-    private ActorInputHandler _inputHandler;
     private Vector2 _move;
     private readonly double _fallMultiplier = 2;
     [Export]
@@ -37,11 +36,7 @@ public partial class ActorBase
     public double JumpGravity { get; protected set; }
     public int RunSpeed { get; protected set; }
     public CollisionShape2D CollisionShape2D { get; private set; }
-    public ActorInputHandler InputHandler
-    {
-        get => _inputHandler;
-        set => _inputHandler = value ?? new DummyInputHandler();
-    }
+    public ActorInputHandler InputHandler { get; set; }
 
     public void ApplyFallGravity(double delta)
     {

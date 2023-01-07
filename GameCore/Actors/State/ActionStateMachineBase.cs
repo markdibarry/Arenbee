@@ -2,13 +2,13 @@
 
 namespace GameCore.Actors;
 
-public abstract class ActionStateMachineBase : ActorStateMachine<ActionState, ActionStateMachineBase>
+public abstract class ActionStateMachineBase : ActorStateMachine
 {
-    protected ActionStateMachineBase(ActorBase actor, HoldItem holdItem = null)
-        : base(actor)
+    protected ActionStateMachineBase(ActorState[] states, ActorBase actor, HoldItem? holdItem = null)
+        : base(states, actor)
     {
         HoldItem = holdItem;
     }
 
-    public HoldItem HoldItem { get; set; }
+    public HoldItem? HoldItem { get; set; }
 }

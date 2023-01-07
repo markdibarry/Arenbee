@@ -22,7 +22,7 @@ public class DialogInterpreter
 
     public VarType GetReturnType(ushort[] instructions, int index)
     {
-        return (OpCode)instructions[index + 1] switch
+        return (OpCode)instructions[index] switch
         {
             OpCode.String => VarType.String,
             OpCode.Float or
@@ -40,12 +40,17 @@ public class DialogInterpreter
             OpCode.Not => VarType.Bool,
             OpCode.Func => GetFuncReturnType(),
             OpCode.Var => GetVarType(),
+            OpCode.Assign or
+            OpCode.MultAssign or
+            OpCode.DivAssign or
+            OpCode.AddAssign or
+            OpCode.SubAssign => VarType.Void,
             _ => default
         };
 
         VarType GetVarType()
         {
-            string varName = _dialogScript.InstStrings[instructions[index + 2]];
+            string varName = _dialogScript.InstStrings[instructions[index + 1]];
             if (_register.Properties.TryGetValue(varName, out VarDef? varDef))
                 return varDef.VarType;
             if (_textStorage == null || !_textStorage.TryGetValue(varName, out object? obj))
@@ -61,7 +66,7 @@ public class DialogInterpreter
 
         VarType GetFuncReturnType()
         {
-            string funcName = _dialogScript.InstStrings[instructions[index + 2]];
+            string funcName = _dialogScript.InstStrings[instructions[index + 1]];
             if (!_register.Methods.TryGetValue(funcName, out FuncDef? funcDef))
                 return default;
             return funcDef.ReturnType;
@@ -171,7 +176,7 @@ public class DialogInterpreter
 
     private bool EvalEquals()
     {
-        return GetReturnType(_instructions, _index) switch
+        return GetReturnType(_instructions, _index + 1) switch
         {
             VarType.Float => EvalFloatExp() == EvalFloatExp(),
             VarType.Bool => EvalBoolExp() == EvalBoolExp(),
@@ -211,37 +216,68 @@ public class DialogInterpreter
     private void EvalAssign()
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Properties.TryGetValue(varName, out VarDef? varDef))
-            return;
-        switch (varDef.VarType)
+        if (_register.Properties.TryGetValue(varName, out VarDef? varDef))
         {
-            case VarType.Float:
-                ((Action<float>)varDef.Setter).Invoke(EvalFloatExp());
-                break;
-            case VarType.Bool:
-                ((Action<bool>)varDef.Setter).Invoke(EvalBoolExp());
-                break;
-            case VarType.String:
-                ((Action<string>)varDef.Setter).Invoke(EvalStringExp());
-                break;
-        };
+            switch (varDef.VarType)
+            {
+                case VarType.Float:
+                    ((Action<float>)varDef.Setter).Invoke(EvalFloatExp());
+                    break;
+                case VarType.Bool:
+                    ((Action<bool>)varDef.Setter).Invoke(EvalBoolExp());
+                    break;
+                case VarType.String:
+                    ((Action<string>)varDef.Setter).Invoke(EvalStringExp());
+                    break;
+            }
+        }
+        else if (_textStorage != null)
+        {
+            switch (GetReturnType(_instructions, _index + 1))
+            {
+                case VarType.Float:
+                    _textStorage.SetValue(varName, EvalFloatExp());
+                    break;
+                case VarType.Bool:
+                    _textStorage.SetValue(varName, EvalBoolExp());
+                    break;
+                case VarType.String:
+                    _textStorage.SetValue(varName, EvalStringExp());
+                    break;
+            }
+        }
     }
 
     private void EvalMathAssign(OpCode instructionType)
     {
         string varName = _dialogScript.InstStrings[_instructions[++_index]];
-        if (!_register.Properties.TryGetValue(varName, out VarDef? varDef))
-            return;
-        float originalValue = ((Func<float>)varDef.Getter).Invoke();
-        float result = instructionType switch
+        if (_register.Properties.TryGetValue(varName, out VarDef? varDef))
         {
-            OpCode.AddAssign => originalValue + EvalFloatExp(),
-            OpCode.SubAssign => originalValue - EvalFloatExp(),
-            OpCode.MultAssign => originalValue * EvalFloatExp(),
-            OpCode.DivAssign => originalValue / EvalFloatExp(),
-            _ => default
-        };
-        ((Action<float>)varDef.Setter).Invoke(result);
+            float originalValue = ((Func<float>)varDef.Getter).Invoke();
+            float result = instructionType switch
+            {
+                OpCode.AddAssign => originalValue + EvalFloatExp(),
+                OpCode.SubAssign => originalValue - EvalFloatExp(),
+                OpCode.MultAssign => originalValue * EvalFloatExp(),
+                OpCode.DivAssign => originalValue / EvalFloatExp(),
+                _ => default
+            };
+            ((Action<float>)varDef.Setter).Invoke(result);
+        }
+        else if (_textStorage != null)
+        {
+            if (!_textStorage.TryGetValue(varName, out float originalValue))
+                return;
+            _textStorage.SetValue(varName, instructionType switch
+            {
+                OpCode.AddAssign => originalValue + EvalFloatExp(),
+                OpCode.SubAssign => originalValue - EvalFloatExp(),
+                OpCode.MultAssign => originalValue * EvalFloatExp(),
+                OpCode.DivAssign => originalValue / EvalFloatExp(),
+                _ => default
+            });
+        }
+
     }
 
     private T? EvalVar<T>()

@@ -17,7 +17,7 @@ public class PlayerParty
     {
         _actors = new List<ActorBase>();
         Inventory = new Inventory(items);
-        // var actor = GDEx.Instantiate<Actor>(Arenbee.Actors.Players.Ady.GetScenePath());
+        // var actor = GDEx.Instantiate<Actor>(Arenbee.Actors.Players.Twosen.GetScenePath());
         // actor.Inventory = Inventory;
         // actor.Equipment = new Equipment();
         // _actors.Add(actor);

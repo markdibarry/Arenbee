@@ -212,7 +212,7 @@ color = Color(0.188235, 0.188235, 0.188235, 1)
 
 [node name="DialogArea" parent="Events" index="1" instance=ExtResource("11_ll7qf")]
 position = Vector2(96, 80)
-DialogPath = "example"
+DialogPath = "res://Arenbee/GUI/Dialog/test.json"
 Hint = true
 
 [node name="Ball" parent="Enemies" index="0" instance=ExtResource("15_5maqv")]

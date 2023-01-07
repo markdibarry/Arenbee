@@ -5,13 +5,15 @@ namespace GameCore.GUI.GameDialog;
 
 public class DialogLine : IStatement
 {
-    public DialogLine(DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] globalSpeakers, bool auto)
+    public DialogLine(Dialog dialog, DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] globalSpeakers, bool auto)
     {
         Auto = auto;
+        Next = lineData.Next;
         Speakers = globalSpeakers;
         _interpreter = interpreter;
         _script = script;
         _lineData = lineData;
+        Text = dialog.Tr(lineData.Text);
 
         var lineSpeakers = new Speaker[_lineData.SpeakerIndices.Length];
         for (int i = 0; i < _lineData.SpeakerIndices.Length; i++)
@@ -25,7 +27,7 @@ public class DialogLine : IStatement
     public bool Auto { get; private set; }
     public GoTo Next { get; private set; }
     public Speaker[] Speakers { get; }
-    public string Text => _lineData.Text;
+    public string Text { get; }
 
     public bool SameSpeakers(DialogLine secondLine) => Speaker.SameSpeakers(Speakers, secondLine.Speakers);
 
@@ -67,7 +69,7 @@ public class DialogLine : IStatement
                 continue;
             }
 
-            if (!TryAddTextEvent(Text[(i + 1)..(i + bracketLength)]))
+            if (!TryAddTextEvent(Text[(i + 1)..(i + bracketLength - 1)]))
             {
                 i += bracketLength;
                 renderedIndex += bracketLength;
@@ -75,7 +77,6 @@ public class DialogLine : IStatement
                 continue;
             }
 
-            sb.Append(Text[appendStart..i]);
             i += bracketLength;
             parsedIndex += bracketLength;
             appendStart = i;
@@ -88,6 +89,7 @@ public class DialogLine : IStatement
         {
             if (!int.TryParse(tagContent, out int intValue))
                 return false;
+            sb.Append(Text[appendStart..i]);
             ushort[] instructions = _script.Instructions[_lineData.InstructionIndices[intValue]];
 
             switch ((OpCode)instructions[0])
@@ -173,26 +175,33 @@ public class DialogLine : IStatement
 
             void HandleSpeakerSet()
             {
-                int i = 1;
-                string speakerId = _script.SpeakerIds[i++];
+                int j = 1;
+                string speakerId = _script.SpeakerIds[instructions[j++]];
                 string? displayName = null, portraitId = null, mood = null;
-                if (instructions[i++] == 1)
+                while (j < instructions.Length)
                 {
-                    ushort[] nameInst = _script.Instructions[instructions[i++]];
-                    displayName = _interpreter.GetStringInstResult(nameInst);
+                    switch ((OpCode)instructions[j++])
+                    {
+                        case OpCode.SpeakerSetMood:
+                            mood = GetUpdateValue();
+                            break;
+                        case OpCode.SpeakerSetName:
+                            displayName = GetUpdateValue();
+                            break;
+                        case OpCode.SpeakerSetPortrait:
+                            portraitId = GetUpdateValue();
+                            break;
+                    }
                 }
-                if (instructions[i++] == 1)
-                {
-                    ushort[] portraitInst = _script.Instructions[instructions[i++]];
-                    portraitId = _interpreter.GetStringInstResult(portraitInst);
-                }
-                if (instructions[i++] == 1)
-                {
-                    ushort[] moodInst = _script.Instructions[instructions[i++]];
-                    mood = _interpreter.GetStringInstResult(moodInst);
-                }
+
                 SpeakerTextEvent textEvent = new(renderedIndex, speakerId, displayName, portraitId, mood);
                 events.Add(textEvent);
+
+                string GetUpdateValue()
+                {
+                    ushort[] updateInst = _script.Instructions[instructions[j++]];
+                    return _interpreter.GetStringInstResult(updateInst);
+                }
             }
         }
 

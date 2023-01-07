@@ -2,11 +2,9 @@
 
 namespace GameCore.Actors;
 
-public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TState, TStateMachine>
-    where TState : ActorState<TState, TStateMachine>
-    where TStateMachine : ActorStateMachine<TState, TStateMachine>
+public abstract class ActorStateMachine : StateMachine<ActorState>
 {
-    protected ActorStateMachine(ActorBase actor)
+    protected ActorStateMachine(ActorState[] states, ActorBase actor) : base(states)
     {
         Actor = actor;
     }
@@ -17,4 +15,9 @@ public abstract class ActorStateMachine<TState, TStateMachine> : StateMachine<TS
     /// <value></value>
     public ActorBase Actor { get; set; }
     public StateControllerBase StateController => Actor.StateController;
+
+    public bool IsBlocked(BlockedState blockedState)
+    {
+        return State.BlockedStates.HasFlag(blockedState);
+    }
 }

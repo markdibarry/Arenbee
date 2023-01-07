@@ -111,7 +111,7 @@
   ],
   "ActorData": [
     {
-      "ActorPath": "res://Arenbee/Actors/Players/Ady/Ady.tscn",
+      "ActorPath": "res://Arenbee/Actors/Players/Twosen/Twosen.tscn",
       "EquipmentSlots": [
         {
           "ItemId": "HockeyStick",

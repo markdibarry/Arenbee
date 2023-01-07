@@ -1,24 +1,9 @@
 ﻿namespace GameCore.Utility;
 
-public abstract class State<TState, TStateMachine>
-    where TState : State<TState, TStateMachine>
-    where TStateMachine : StateMachine<TState, TStateMachine>
+public abstract class State : IState
 {
-    public TStateMachine StateMachine { get; private set; }
-
-    public virtual void Init(TStateMachine stateMachine)
-    {
-        StateMachine = stateMachine;
-    }
-
     public virtual void Enter() { }
-    public virtual void Enter(object[] args = null) { Enter(); }
-    public abstract TState Update(double delta);
+    public abstract void Update(double delta);
     public virtual void Exit() { }
-    public abstract TState CheckForTransitions();
-
-    protected TState GetState<T>() where T : TState, new()
-    {
-        return StateMachine.GetState<T>();
-    }
+    public virtual bool TrySwitch(IStateMachine stateMachine) => false;
 }

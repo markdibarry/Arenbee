@@ -11,14 +11,14 @@ public class Speaker
         SpeakerId = speakerId;
         Portrait = speakerId;
         DisplayName = speakerId;
-        Mood = DefaultMood;
+        Mood = GlobalMood;
     }
 
-    private const string DefaultMood = "neutral";
     public string SpeakerId { get; }
     public string Portrait { get; set; }
     public string DisplayName { get; set; }
     public string Mood { get; set; }
+    public string GlobalMood { get; set; } = "neutral";
 
     public static bool SameSpeakers(ICollection<Speaker> speakersA, ICollection<Speaker> speakersB)
     {
@@ -50,6 +50,7 @@ public class Speaker
             FlipH = reverse,
         };
         portrait.SetPortraitFrames(Portrait);
+        portrait.Play(GlobalMood);
         portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
         return portrait;
     }

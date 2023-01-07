@@ -17,7 +17,7 @@ public partial class DynamicText : RichTextLabel
     private List<int> _lineBreakCharIndices = new();
     private bool _showToEndCharEnabled;
     private bool _sizeDirty;
-    private double _speed = 0.05;
+    private double _speed = 0.02;
     private double _speedMultiplier;
     private bool _textDirty;
     private List<TextEvent> _textEvents = new();
@@ -188,7 +188,7 @@ public partial class DynamicText : RichTextLabel
         LoadingStarted?.Invoke();
         VisibleCharacters = 0;
         Text = dialogLine.Text;
-        Text = dialogLine.GetEventParsedText(Text, _textEvents);
+        Text = dialogLine.GetEventParsedText(GetParsedText(), _textEvents);
         UpdateTextData();
         CurrentState = State.Idle;
         TextUpdated?.Invoke();
@@ -251,7 +251,7 @@ public partial class DynamicText : RichTextLabel
         EndChar = -1;
         VisibleCharacters = 0;
         VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
-        SpeedMultiplier = -1;
+        ResetSpeed();
         Counter = Speed;
         UpdateTextData();
         Resized += OnResized;

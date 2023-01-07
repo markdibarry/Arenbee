@@ -1,6 +1,7 @@
 ﻿using GameCore.Actors;
 using GameCore.Items;
 using GameCore.Statistics;
+using GameCore.Utility;
 
 namespace Arenbee.Items;
 
@@ -31,50 +32,58 @@ public partial class HockeyStick : HoldItem
 public class ActionStateMachine : ActionStateMachineBase
 {
     public ActionStateMachine(ActorBase actor, HoldItem holdItem)
-        : base(actor, holdItem)
+        : base(
+            new ActionState[]
+            {
+                new NotAttacking(actor, holdItem),
+                new WeakAttack1(actor, holdItem),
+                new WeakAttack2(actor, holdItem)
+            },
+            actor, holdItem)
     {
-        AddState<NotAttacking>();
-        AddState<WeakAttack1>();
-        AddState<WeakAttack2>();
-        InitStates(this);
     }
 
     protected class NotAttacking : ActionState
     {
+        public NotAttacking(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        {
+        }
+
         public override void Enter()
         {
             StateController.PlayFallbackAnimation();
         }
 
-        public override ActionState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override ActionState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
-                return null;
+            if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreas.Count > 0)
+                return false;
             if (InputHandler.Attack.IsActionJustPressed)
-                return GetState<WeakAttack1>();
-            return null;
+                return stateMachine.TrySwitchTo<WeakAttack1>();
+            return false;
         }
     }
 
     protected class WeakAttack1 : ActionState
     {
-        public WeakAttack1() { AnimationName = "WeakAttack1"; }
+        public WeakAttack1(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        {
+            AnimationName = "WeakAttack1";
+        }
 
         public override void Enter()
         {
             PlayAnimation(AnimationName);
         }
 
-        public override ActionState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit()
@@ -84,29 +93,31 @@ public class ActionStateMachine : ActionStateMachineBase
             hockeyStick.WeakAttack1HitBox.Visible = false;
         }
 
-        public override ActionState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Attack)
                 || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
-                return GetState<NotAttacking>();
+                return stateMachine.TrySwitchTo<NotAttacking>();
             if (InputHandler.Attack.IsActionJustPressed)
-                return GetState<WeakAttack2>();
-            return null;
+                return stateMachine.TrySwitchTo<WeakAttack2>();
+            return false;
         }
     }
 
     protected class WeakAttack2 : ActionState
     {
-        public WeakAttack2() { AnimationName = "WeakAttack2"; }
+        public WeakAttack2(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        {
+            AnimationName = "WeakAttack2";
+        }
 
         public override void Enter()
         {
             PlayAnimation(AnimationName);
         }
 
-        public override ActionState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit()
@@ -116,12 +127,12 @@ public class ActionStateMachine : ActionStateMachineBase
             hockeyStick.WeakAttack2HitBox.Visible = false;
         }
 
-        public override ActionState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Attack)
                 || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
-                return GetState<NotAttacking>();
-            return null;
+                return stateMachine.TrySwitchTo<NotAttacking>();
+            return false;
         }
     }
 }

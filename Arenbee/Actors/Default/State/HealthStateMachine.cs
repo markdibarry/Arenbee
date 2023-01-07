@@ -1,6 +1,7 @@
 ﻿using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Statistics;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Actors.Default.State;
@@ -8,55 +9,55 @@ namespace Arenbee.Actors.Default.State;
 public class HealthStateMachine : HealthStateMachineBase
 {
     public HealthStateMachine(ActorBase actor)
-        : base(actor)
+        : base(
+            new HealthState[]
+            {
+                new Normal(actor),
+                new Stagger(actor),
+                new Dead(actor)
+            },
+            actor)
     {
-        AddState<Normal>();
-        AddState<Stagger>();
-        AddState<Dead>();
-        InitStates(this);
     }
 
     public class Normal : HealthState
     {
+        public Normal(ActorBase actor) : base(actor)
+        {
+        }
+
         public override void Enter()
         {
             StateController.PlayFallbackAnimation();
         }
 
-        public override HealthState Update(double delta)
-        {
-            return CheckForTransitions();
-        }
+        public override void Update(double delta) { }
 
-        public override HealthState CheckForTransitions()
-        {
-            return null;
-        }
-
-        public override void HandleDamage(DamageData damageData)
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Actor.Stats.HasNoHP())
-                return;
-            bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
-            Actor.IFrameController.Start(damageData, overDamageThreshold);
-            if (overDamageThreshold)
+                return stateMachine.TrySwitchTo<Dead>();
+            if (Actor.Stats.DamageToProcess.Count > 0)
             {
-                // Knockback
-                Vector2 direction = damageData.SourcePosition.DirectionTo(Actor.GlobalPosition);
-                Actor.Velocity = direction * 200;
-                StateMachine.TransitionTo<Stagger>(new[] { damageData });
+                DamageData damageData = Actor.Stats.DamageToProcess[0];
+                bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
+                Actor.IFrameController.Start(damageData, overDamageThreshold);
+                if (overDamageThreshold)
+                {
+                    // Knockback
+                    Vector2 direction = damageData.SourcePosition.DirectionTo(Actor.GlobalPosition);
+                    Actor.Velocity = direction * 200;
+                    stateMachine.TrySwitchTo<Stagger>();
+                }
             }
-        }
-
-        public override void HandleHPDepleted()
-        {
-            StateMachine.TransitionTo<Dead>();
+            return false;
         }
     }
 
     public class Stagger : HealthState
     {
-        public Stagger()
+        public Stagger(ActorBase actor)
+            : base(actor)
         {
             AnimationName = "Stagger";
             BlockedStates =
@@ -68,7 +69,7 @@ public class HealthStateMachine : HealthStateMachineBase
         double _staggerTimer;
         bool _isStaggered;
 
-        public override void Enter(object[] args)
+        public override void Enter()
         {
             _staggerTimer = 0.5;
             _isStaggered = true;
@@ -76,33 +77,29 @@ public class HealthStateMachine : HealthStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override HealthState Update(double delta)
+        public override void Update(double delta)
         {
             if (_staggerTimer > 0)
                 _staggerTimer -= delta;
             else
                 _isStaggered = false;
-            return CheckForTransitions();
         }
 
         public override void Exit() { }
 
-        public override HealthState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
+            if (Actor.Stats.HasNoHP())
+                return stateMachine.TrySwitchTo<Dead>();
             if (!_isStaggered)
-                return GetState<Normal>();
-            return null;
-        }
-
-        public override void HandleHPDepleted()
-        {
-            StateMachine.TransitionTo<Dead>();
+                return stateMachine.TrySwitchTo<Normal>();
+            return false;
         }
     }
 
     public class Dead : HealthState
     {
-        public Dead()
+        public Dead(ActorBase actor) : base(actor)
         {
             AnimationName = "Dead";
             BlockedStates =
@@ -120,9 +117,8 @@ public class HealthStateMachine : HealthStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override HealthState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
         public override void Exit()
@@ -130,11 +126,11 @@ public class HealthStateMachine : HealthStateMachineBase
             Actor.HurtBoxes.SetMonitoringDeferred(true);
         }
 
-        public override HealthState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (!Actor.Stats.HasNoHP())
-                return GetState<Normal>();
-            return null;
+                return stateMachine.TrySwitchTo<Normal>();
+            return false;
         }
     }
 }

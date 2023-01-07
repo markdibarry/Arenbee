@@ -31,7 +31,7 @@ public class StateDisplayController
     {
         _moveStateDisplay.Text = stateController.MoveStateMachine.State.GetType().Name;
         _airStateDisplay.Text = stateController.AirStateMachine.State.GetType().Name;
-        _actionStateDisplay.Text = stateController.ActionStateMachine.State.GetType().Name;
+        _actionStateDisplay.Text = stateController.BaseActionStateMachine.State.GetType().Name;
         _healthStateDisplay.Text = stateController.HealthStateMachine.State.GetType().Name;
     }
 }

@@ -22,7 +22,6 @@ public abstract partial class HoldItem : Node2D
     {
         SetNodeReferences();
         SetHitBoxes();
-        StateMachine.Init();
     }
 
     public abstract void Init(ActorBase actor);

@@ -1,0 +1,63 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="PackedScene" uid="uid://2o12g702kcr6" path="res://Arenbee/Actors/Actor.tscn" id="1_mabku"]
+[ext_resource type="Script" path="res://Arenbee/Actors/Players/Twosen/Twosen.cs" id="2_0vmt5"]
+[ext_resource type="AnimationLibrary" uid="uid://0t0ca6phh7jd" path="res://Arenbee/Actors/Players/Twosen/Animation/TwosenLibrary.res" id="3_1pauw"]
+[ext_resource type="AnimationLibrary" uid="uid://bsb3k1lmvuc0m" path="res://Arenbee/Actors/Players/Twosen/Animation/LongStick/LongStickLibrary.res" id="4_cmo6m"]
+[ext_resource type="AnimationLibrary" uid="uid://dwjs6o1viuudp" path="res://Arenbee/Actors/Players/Twosen/Animation/Wand/Wand.res" id="5_kayxj"]
+[ext_resource type="Texture2D" uid="uid://2scw3nw6a42u" path="res://Arenbee/Actors/Players/Twosen/Animation/Twosen.png" id="7_28ga8"]
+[ext_resource type="PackedScene" path="res://GameCore/Statistics/HurtBox.tscn" id="8_tc2pg"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="12_3qfsg"]
+[ext_resource type="Texture2D" uid="uid://bculi1gmgh7pl" path="res://Arenbee/Actors/Players/Twosen/Animation/TwosenPalette.png" id="13_txydx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hllhm"]
+resource_local_to_scene = true
+shader = ExtResource("12_3qfsg")
+cycle_direction = null
+cycle_end = 0.0
+cycle_start = 0.0
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+palette1 = ExtResource("13_txydx")
+speed = 0.0
+use_palette1 = true
+use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tqfgq"]
+size = Vector2(14, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1jx5"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Twosen" instance=ExtResource("1_mabku")]
+collision_mask = 276
+script = ExtResource("2_0vmt5")
+ActorType = 0
+
+[node name="AnimationPlayer" parent="." index="0"]
+libraries = {
+"": ExtResource("3_1pauw"),
+"LongStick": ExtResource("4_cmo6m"),
+"Wand": ExtResource("5_kayxj")
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_hllhm")
+texture = ExtResource("7_28ga8")
+hframes = 6
+vframes = 10
+
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("8_tc2pg")]
+modulate = Color(0, 1, 0, 1)
+collision_layer = 0
+collision_mask = 160
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_tqfgq")
+
+[node name="CollisionShape2D" parent="." index="2"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_h1jx5")

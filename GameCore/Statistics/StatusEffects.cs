@@ -30,7 +30,7 @@ public class StatusEffects : StatDict<StatusEffect>
 
     private readonly Stats _stats;
     public List<TempModifier> TempModifiers { get; set; }
-    public event Action<ModChangeData> ModChanged;
+    public event Action<ModChangeData>? ModChanged;
 
     public void AddStatusMods(List<Modifier> mods)
     {
@@ -72,7 +72,7 @@ public class StatusEffects : StatDict<StatusEffect>
             AddTempMod(tempMod);
     }
 
-    public StatusEffect GetStat(StatusEffectType type)
+    public StatusEffect? GetStat(StatusEffectType type)
     {
         return GetStat((int)type);
     }
@@ -95,7 +95,7 @@ public class StatusEffects : StatDict<StatusEffect>
 
     public void RemoveTempMod(TempModifier tempMod)
     {
-        if (!StatsDict.TryGetValue(tempMod.Modifier.SubType, out var stat))
+        if (!StatsDict.TryGetValue(tempMod.Modifier.SubType, out StatusEffect? stat))
             return;
         tempMod.Expired -= OnModExpired;
         TempModifiers.Remove(tempMod);
@@ -156,9 +156,9 @@ public class StatusEffect : Stat
     public List<Modifier> EffectModifiers { get; set; }
     public bool IsEffectActive { get; set; }
     public StatsNotifier TickNotifier { get; set; }
-    public TempModifier TempModifier { get; set; }
+    public TempModifier? TempModifier { get; set; }
     public Stats Stats { get; }
-    public event Action<TempModifier> TempModExpired;
+    public event Action<TempModifier>? TempModExpired;
 
     public void ApplyEffect()
     {
@@ -195,7 +195,7 @@ public class StatusEffect : Stat
 
         if (StatusEffectType != StatusEffectType.KO && Stats.HasNoHP())
             result = 0;
-        var statDef = Stats.StatusEffectDefs.GetStat(SubType);
+        StatusEffectDef? statDef = Stats.StatusEffectDefs.GetStat(SubType);
         if (statDef?.ModifiedValue >= 100)
             result = 0;
 

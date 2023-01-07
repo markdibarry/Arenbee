@@ -8,6 +8,7 @@ public class ActionData
 {
     public ActionData()
     {
+        SourceName = string.Empty;
         StatusEffects = new List<Modifier>();
         Value = 1;
     }

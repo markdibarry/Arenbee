@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://GameCore/GUI/Dialogs/DialogBox.cs" id="2_c18hx"]
-[ext_resource type="SpriteFrames" path="res://Arenbee/GUI/Portraits/dani/portraits.tres" id="3_uipmn"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
-[ext_resource type="Texture2D" path="res://GameCore/GUI/Cursors/arrowDownSmall.png" id="5_x5jni"]
+[ext_resource type="SpriteFrames" path="res://Arenbee/GUI/Portraits/threena/portraits.tres" id="3_uipmn"]
+[ext_resource type="PackedScene" uid="uid://csbncf5x8i8pd" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="4_unl7n"]
+[ext_resource type="Texture2D" uid="uid://bwi15twbwdses" path="res://GameCore/GUI/Cursors/arrowDownSmall.png" id="5_x5jni"]
 
 [node name="DialogBox" type="Control"]
 layout_direction = 2

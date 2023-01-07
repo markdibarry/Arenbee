@@ -100,7 +100,7 @@ public class SpeakerTextEvent : TextEvent
     {
         if (context is not Dialog dialog)
             return false;
-        dialog.UpdateSpeaker(SpeakerId, Name, Portrait, Mood);
+        dialog.UpdateSpeaker(false, SpeakerId, Name, Portrait, Mood);
         return true;
     }
 }

@@ -30,12 +30,9 @@ public sealed class InputAction
                 return 0;
             return Godot.Input.GetActionStrength(Alias);
         }
-        set
-        {
-            _simulatedStrength = value;
-        }
+        set => _simulatedStrength = value;
     }
-    public string Alias { get; set; }
+    public string Alias { get; set; } = string.Empty;
     public bool IsActionPressed
     {
         get
@@ -70,10 +67,7 @@ public sealed class InputAction
                 return false;
             return Godot.Input.IsActionJustPressed(Alias);
         }
-        set
-        {
-            _simulatedJustPressed = value;
-        }
+        set => _simulatedJustPressed = value;
     }
     public bool IsActionJustReleased
     {

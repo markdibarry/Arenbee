@@ -1,43 +1,53 @@
 ﻿using GameCore.Actors;
+using GameCore.Utility;
 
 namespace Arenbee.Actors.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
     public AirStateMachine(ActorBase actor)
-        : base(actor)
+        : base(
+            new AirState[]
+            {
+                new Grounded(actor),
+                new Jumping(actor),
+                new Falling(actor)
+            },
+            actor)
     {
-        AddState<Grounded>();
-        AddState<Jumping>();
-        AddState<Falling>();
-        InitStates(this);
     }
 
     public class Grounded : AirState
     {
+        public Grounded(ActorBase actor) : base(actor)
+        {
+        }
+
         public override void Enter()
         {
             StateController.PlayFallbackAnimation();
         }
 
-        public override AirState Update(double delta)
+        public override void Update(double delta)
         {
-            return CheckForTransitions();
         }
 
-        public override AirState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (!Actor.IsOnFloor())
-                return GetState<Falling>();
+                return stateMachine.TrySwitchTo<Falling>();
             if (InputHandler.Jump.IsActionJustPressed && !StateController.IsBlocked(BlockedState.Jumping))
-                return GetState<Jumping>();
-            return null;
+                return stateMachine.TrySwitchTo<Jumping>();
+            return false;
         }
     }
 
     public class Jumping : AirState
     {
-        public Jumping() { AnimationName = "Jump"; }
+        public Jumping(ActorBase actor) : base(actor)
+        {
+            AnimationName = "Jump";
+        }
 
         private bool _isJumpReleased;
 
@@ -49,7 +59,7 @@ public class AirStateMachine : AirStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override AirState Update(double delta)
+        public override void Update(double delta)
         {
             if (!_isJumpReleased && !InputHandler.Jump.IsActionPressed)
             {
@@ -58,16 +68,15 @@ public class AirStateMachine : AirStateMachineBase
             }
 
             Actor.ApplyJumpGravity(delta);
-            return CheckForTransitions();
         }
 
-        public override AirState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Actor.IsMovingDown() || StateController.IsBlocked(BlockedState.Jumping))
-                return GetState<Falling>();
+                return stateMachine.TrySwitchTo<Falling>();
             if (Actor.IsOnFloor())
-                return GetState<Grounded>();
-            return null;
+                return stateMachine.TrySwitchTo<Grounded>();
+            return false;
         }
     }
 
@@ -76,7 +85,10 @@ public class AirStateMachine : AirStateMachineBase
         double _jumpGraceTimer;
         readonly double _jumpGraceTime = 0.1;
 
-        public Falling() { AnimationName = "Jump"; }
+        public Falling(ActorBase actor) : base(actor)
+        {
+            AnimationName = "Jump";
+        }
 
         public override void Enter()
         {
@@ -84,25 +96,24 @@ public class AirStateMachine : AirStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override AirState Update(double delta)
+        public override void Update(double delta)
         {
             Actor.ApplyFallGravity(delta);
             if (_jumpGraceTimer > 0)
                 _jumpGraceTimer -= delta;
             if (InputHandler.Jump.IsActionJustPressed)
                 _jumpGraceTimer = _jumpGraceTime;
-            return CheckForTransitions();
         }
 
-        public override AirState CheckForTransitions()
+        public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Actor.IsOnFloor())
             {
                 if (_jumpGraceTimer > 0 && !StateController.IsBlocked(BlockedState.Jumping))
-                    return GetState<Jumping>();
-                return GetState<Grounded>();
+                    return stateMachine.TrySwitchTo<Jumping>();
+                return stateMachine.TrySwitchTo<Grounded>();
             }
-            return null;
+            return false;
         }
     }
 }

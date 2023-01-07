@@ -2,6 +2,7 @@
 using GameCore;
 using GameCore.Actors;
 using GameCore.Items;
+using GameCore.Utility;
 
 namespace Arenbee.Items;
 
@@ -24,42 +25,49 @@ public partial class Wand : HoldItem
     public class ActionStateMachine : ActionStateMachineBase
     {
         public ActionStateMachine(ActorBase actor, HoldItem holdItem)
-            : base(actor, holdItem)
+            : base(
+                new ActionState[]
+                {
+                    new NotAttacking(actor, holdItem),
+                    new WeakAttack1(actor, holdItem),
+                    new Charge(actor, holdItem),
+                    new BigAttack1(actor, holdItem)
+                },
+                actor, holdItem)
         {
-            AddState<NotAttacking>();
-            AddState<WeakAttack1>();
-            AddState<Charge>();
-            AddState<BigAttack1>();
-            InitStates(this);
         }
 
         protected class NotAttacking : ActionState
         {
+            public NotAttacking(ActorBase actor, HoldItem holdItem)
+                : base(actor, holdItem)
+            { }
+
             public override void Enter()
             {
                 StateController.PlayFallbackAnimation();
             }
 
-            public override ActionState Update(double delta)
+            public override void Update(double delta)
             {
-                return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override ActionState CheckForTransitions()
+            public override bool TrySwitch(IStateMachine stateMachine)
             {
-                if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreasActive > 0)
-                    return null;
+                if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreas.Count > 0)
+                    return false;
                 if (InputHandler.SubAction.IsActionJustPressed)
-                    return GetState<WeakAttack1>();
-                return null;
+                    return stateMachine.TrySwitchTo<WeakAttack1>();
+                return false;
             }
         }
 
         protected class WeakAttack1 : ActionState
         {
-            public WeakAttack1()
+            public WeakAttack1(ActorBase actor, HoldItem holdItem)
+                : base(actor, holdItem)
             {
                 AnimationName = "WeakAttack1";
                 BlockedStates = BlockedState.Jumping | BlockedState.Move;
@@ -73,34 +81,35 @@ public partial class Wand : HoldItem
                 Fireball.CreateFireball(Actor);
             }
 
-            public override ActionState Update(double delta)
+            public override void Update(double delta)
             {
                 if (_counter > 0)
                     _counter -= delta;
-                return CheckForTransitions();
             }
 
             public override void Exit() { }
 
-            public override ActionState CheckForTransitions()
+            public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.SubAction.IsActionPressed)
-                    return GetState<NotAttacking>();
+                    return stateMachine.TrySwitchTo<NotAttacking>();
                 if (_counter <= 0)
-                    return GetState<Charge>();
-                return null;
+                    return stateMachine.TrySwitchTo<Charge>();
+                return false;
             }
         }
 
         protected class Charge : ActionState
         {
-            public Charge()
+            public Charge(ActorBase actor, HoldItem holdItem)
+                : base(actor, holdItem)
             {
                 AnimationName = "Charge";
                 BlockedStates = BlockedState.Jumping | BlockedState.Move;
             }
+
             private double _counter;
             private readonly double _countTime = 1.2;
             public override void Enter()
@@ -112,7 +121,7 @@ public partial class Wand : HoldItem
                 PlayAnimation(AnimationName);
             }
 
-            public override ActionState Update(double delta)
+            public override void Update(double delta)
             {
                 if (_counter > 0)
                 {
@@ -123,8 +132,6 @@ public partial class Wand : HoldItem
                         Actor.ShaderCycleStart = 1;
                     }
                 }
-
-                return CheckForTransitions();
             }
 
             public override void Exit()
@@ -134,48 +141,52 @@ public partial class Wand : HoldItem
                 Actor.ShaderSpeed = 0;
             }
 
-            public override ActionState CheckForTransitions()
+            public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
-                    return GetState<NotAttacking>();
+                    return stateMachine.TrySwitchTo<NotAttacking>();
                 if (!InputHandler.SubAction.IsActionPressed)
                 {
                     if (_counter <= 0)
-                        return GetState<BigAttack1>();
+                        return stateMachine.TrySwitchTo<BigAttack1>();
                     else
-                        return GetState<WeakAttack1>();
+                        return stateMachine.TrySwitchTo<WeakAttack1>();
                 }
 
-                return null;
+                return false;
             }
         }
 
         protected class BigAttack1 : ActionState
         {
-            public BigAttack1() { AnimationName = "BigAttack1"; }
+            public BigAttack1(ActorBase actor, HoldItem holdItem)
+                : base(actor, holdItem)
+            {
+                AnimationName = "BigAttack1";
+            }
+
             public override void Enter()
             {
                 PlayAnimation(AnimationName);
                 FireballBig.CreateFireball(Actor);
             }
 
-            public override ActionState Update(double delta)
+            public override void Update(double delta)
             {
-                return CheckForTransitions();
             }
 
             public override void Exit()
             {
             }
 
-            public override ActionState CheckForTransitions()
+            public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
                     || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.SubAction.IsActionPressed)
-                    return GetState<NotAttacking>();
-                return null;
+                    return stateMachine.TrySwitchTo<NotAttacking>();
+                return false;
             }
         }
     }

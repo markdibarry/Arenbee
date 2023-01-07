@@ -36,11 +36,11 @@ public abstract class Stat
     }
 
     public int BaseValue { get; set; }
-    [JsonIgnore]
-    public int DisplayValue { get { return CalculateStat(true); } }
     public int MaxValue { get; set; }
     [JsonIgnore]
-    public int ModifiedValue { get { return CalculateStat(); } }
+    public int DisplayValue => CalculateStat(true);
+    [JsonIgnore]
+    public int ModifiedValue => CalculateStat();
     [JsonIgnore]
     public List<Modifier> Modifiers { get; set; }
     [JsonIgnore]

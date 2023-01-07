@@ -1,9 +1,12 @@
 ﻿namespace GameCore.Actors;
 
-public abstract class AirState : ActorState<AirState, AirStateMachineBase>
+public abstract class AirState : ActorState
 {
+    public AirState(ActorBase actor)
+        : base(actor) { }
+
     protected override void PlayAnimation(string animationName)
     {
-        StateController.PlayAnimation(animationName, "Air");
+        StateController.TryPlayAnimation(animationName, "Air");
     }
 }
