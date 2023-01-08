@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bgi8gw6xe75kn"
+
+[deps]
+
+files=["res://Arenbee/GUI/Localization/DialogTranslation.en.translation", "res://Arenbee/GUI/Localization/DialogTranslation.es.translation"]
+
+source_file="res://Arenbee/GUI/Localization/DialogTranslation.csv"
+dest_files=["res://Arenbee/GUI/Localization/DialogTranslation.en.translation", "res://Arenbee/GUI/Localization/DialogTranslation.es.translation"]
+
+[params]
+
+compress=true
+delimiter=0

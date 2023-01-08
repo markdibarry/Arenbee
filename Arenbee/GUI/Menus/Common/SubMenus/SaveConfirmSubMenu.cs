@@ -1,9 +1,10 @@
-﻿using GameCore.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.SaveData;
-using Godot;
 using GameCore.Utility;
-using System.Collections.Generic;
+using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
 
@@ -11,10 +12,14 @@ namespace Arenbee.GUI.Menus.Common;
 public partial class SaveConfirmSubMenu : OptionSubMenu
 {
     private int _gameSaveId;
-    private OptionContainer _saveOptions;
+    private readonly List<string> _menuKeys = new()
+    {
+        Localization.Menus.Menus_SaveConfirm_Yes,
+        Localization.Menus.Menus_SaveConfirm_No
+    };
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    public override void SetupData(object data)
+    public override void SetupData(object? data)
     {
         if (data is not int gameSaveId)
             return;
@@ -23,9 +28,8 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     protected override void SetupOptions()
     {
-        _saveOptions = OptionContainers.Find(x => x.Name == "SaveOptions");
-        var options = GetMenuOptions();
-        _saveOptions.ReplaceChildren(options);
+        OptionContainer? saveOptions = OptionContainers.First(x => x.Name == "SaveOptions");
+        saveOptions.ReplaceChildren(GetMenuOptions());
     }
 
     protected override void OnItemSelected()
@@ -34,10 +38,10 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
             return;
         switch (saveChoice)
         {
-            case SaveConfirmOptions.Yes:
+            case Localization.Menus.Menus_SaveConfirm_Yes:
                 SaveGame();
                 break;
-            case SaveConfirmOptions.No:
+            case Localization.Menus.Menus_SaveConfirm_No:
                 _ = CloseSubMenuAsync();
                 break;
         }
@@ -49,31 +53,17 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         _ = OpenSubMenuAsync(SaveSuccessSubMenu.GetScenePath());
     }
 
-    private static List<TextOption> GetMenuOptions()
+    private List<TextOption> GetMenuOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         var options = new List<TextOption>();
-        foreach (var optionString in SaveConfirmOptions.GetAll())
+        foreach (var menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = optionString;
-            option.OptionData["value"] = optionString;
+            option.LabelText = Tr(menuKey);
+            option.OptionData["value"] = menuKey;
             options.Add(option);
         }
         return options;
-    }
-
-    private static class SaveConfirmOptions
-    {
-        public static List<string> GetAll()
-        {
-            return new List<string>()
-            {
-                Yes,
-                No
-            };
-        }
-        public const string Yes = "Yes";
-        public const string No = "No";
     }
 }

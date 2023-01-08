@@ -146,7 +146,7 @@ p1_subAction={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://Arenbee/GUI/Localization/Menus.en.translation", "res://Arenbee/GUI/Localization/Menus.es.translation")
+locale/translations=PackedStringArray("res://Arenbee/GUI/Localization/Menus.en.translation", "res://Arenbee/GUI/Localization/Menus.es.translation", "res://Arenbee/GUI/Localization/DialogTranslation.en.translation", "res://Arenbee/GUI/Localization/DialogTranslation.es.translation")
 
 [layer_names]
 

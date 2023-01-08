@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameCore.Exceptions;
 using GameCore.GUI.GameDialog;
 using GameCore.Input;
 using Godot;
@@ -25,11 +24,22 @@ public partial class GUIController : CanvasLayer, IGUIController
     public bool GUIActive => MenuActive || DialogActive;
     public event Action<GUIController>? GUIStatusChanged;
 
+    /// <summary>
+    /// Passes input to current layer for handling.
+    /// </summary>
+    /// <param name="menuInput"></param>
+    /// <param name="delta"></param>
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
         CurrentLayer?.HandleInput(menuInput, delta);
     }
 
+    /// <summary>
+    /// Closes current layer.
+    /// </summary>
+    /// <param name="preventAnimation"></param>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public async Task CloseLayerAsync(bool preventAnimation = false, object? data = null)
     {
         GUILayer? layer = CurrentLayer;
@@ -37,7 +47,7 @@ public partial class GUIController : CanvasLayer, IGUIController
             || layer.CurrentState == GUILayer.State.Closing
             || layer.CurrentState == GUILayer.State.Closed)
             return;
-        await layer.TransitionCloseAsync(preventAnimation);
+        await layer.CloseAsync(preventAnimation);
         RemoveChild(layer);
         layer.QueueFree();
         _guiLayers.Remove(layer);
@@ -45,12 +55,17 @@ public partial class GUIController : CanvasLayer, IGUIController
         CurrentLayer?.UpdateData(data);
     }
 
+    /// <summary>
+    /// Closes all GUI layers
+    /// </summary>
+    /// <param name="preventAnimation"></param>
+    /// <returns></returns>
     public async Task CloseAllLayersAsync(bool preventAnimation = false)
     {
         foreach (var layer in _guiLayers)
         {
             if (!preventAnimation)
-                await layer.TransitionCloseAsync();
+                await layer.CloseAsync();
             RemoveChild(layer);
             layer.QueueFree();
         }
@@ -58,6 +73,12 @@ public partial class GUIController : CanvasLayer, IGUIController
         UpdateCurrentGUI();
     }
 
+    /// <summary>
+    /// Opens a dialog session
+    /// </summary>
+    /// <param name="dialogPath"></param>
+    /// <param name="preventAnimation"></param>
+    /// <returns></returns>
     public async Task OpenDialogAsync(string dialogPath, bool preventAnimation = false)
     {
         Dialog? dialog = null;
@@ -79,11 +100,25 @@ public partial class GUIController : CanvasLayer, IGUIController
         }
     }
 
+    /// <summary>
+    /// Opens a menu layer
+    /// </summary>
+    /// <param name="scenePath"></param>
+    /// <param name="preventAnimation"></param>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public async Task OpenMenuAsync(string scenePath, bool preventAnimation = false, object? data = null)
     {
         await OpenMenuAsync(GD.Load<PackedScene>(scenePath), preventAnimation, data);
     }
 
+    /// <summary>
+    /// Opens a menu layer
+    /// </summary>
+    /// <param name="packedScene"></param>
+    /// <param name="preventAnimation"></param>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public async Task OpenMenuAsync(PackedScene packedScene, bool preventAnimation = false, object? data = null)
     {
         Menu? menu = null;
@@ -106,10 +141,9 @@ public partial class GUIController : CanvasLayer, IGUIController
         }
     }
 
-    protected virtual Task TransitionOpenAsync() => Task.CompletedTask;
-
-    protected virtual Task TransitionCloseAsync() => Task.CompletedTask;
-
+    /// <summary>
+    /// Updates current state of GUI
+    /// </summary>
     private void UpdateCurrentGUI()
     {
         MenuActive = _guiLayers.Any(x => x is Menu);

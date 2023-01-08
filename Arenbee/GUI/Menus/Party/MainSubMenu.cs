@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.Party.Equipment;
@@ -14,7 +15,7 @@ public partial class MainSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private OptionContainer _optionList;
+    private OptionContainer _optionList = null!;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_Party_Stats,
@@ -58,7 +59,7 @@ public partial class MainSubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _optionList = OptionContainers.Find(x => x.Name == "OptionContainer");
+        _optionList = OptionContainers.First(x => x.Name == "OptionContainer");
     }
 
     private IEnumerable<TextOption> GetMenuOptions()

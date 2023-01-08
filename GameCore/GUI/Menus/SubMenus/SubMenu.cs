@@ -53,8 +53,16 @@ public partial class SubMenu : Control
             _ = InitAsync(null!, null!);
     }
 
+    /// <summary>
+    /// Receives custom data from previous layer upon opening.
+    /// </summary>
+    /// <param name="data"></param>
     public virtual void SetupData(object? data) { }
 
+    /// <summary>
+    /// Receives custom data from previous layer upon closing.
+    /// </summary>
+    /// <param name="data"></param>
     public virtual void UpdateData(object? data) { }
 
     public virtual void HandleInput(GUIInputHandler menuInput, double delta)
@@ -141,7 +149,7 @@ public partial class SubMenu : Control
     protected virtual void PreWaitFrameSetup() { }
 
     /// <summary>
-    /// Logic used for setup after the controls have adjusted.
+    /// Logic used for setup after the Controls have adjusted.
     /// </summary>
     /// <returns></returns>
     protected virtual void PostWaitFrameSetup() { }

@@ -77,9 +77,9 @@ public class DialogScriptReader
         {
             InstructionStatement instructionStmt = _dialogScript.InstructionStmts[goTo.Index];
             GoTo next = instructionStmt.Next;
-            if (instructionStmt.Values.Length != 0)
+            if (instructionStmt.Index != -1)
             {
-                next = EvaluateInstructions(instructionStmt.Values);
+                next = EvaluateInstructions(_dialogScript.Instructions[instructionStmt.Index]);
                 if (next.Type == StatementType.Undefined)
                     next = instructionStmt.Next;
             }
@@ -89,10 +89,11 @@ public class DialogScriptReader
         async Task HandleConditionalStatement()
         {
             InstructionStatement conditions = _dialogScript.InstructionStmts[goTo.Index];
-            for (int i = 0; i < conditions.Values.Length; i++)
+            ushort[] values = _dialogScript.Instructions[conditions.Index];
+            for (int i = 0; i < values.Length; i++)
             {
-                InstructionStatement condition = _dialogScript.InstructionStmts[conditions.Values[i]];
-                if (_interpreter.GetBoolInstResult(condition.Values))
+                InstructionStatement condition = _dialogScript.InstructionStmts[values[i]];
+                if (_interpreter.GetBoolInstResult(_dialogScript.Instructions[condition.Index]))
                 {
                     await ReadNextStatementAsync(condition.Next);
                     return;

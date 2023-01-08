@@ -38,7 +38,6 @@ public partial class Menu : GUILayer, IMenu
     public async Task InitAsync(IGUIController guiController, object? data = null)
     {
         GUIController = guiController;
-        await TransitionOpenAsync();
         await CurrentSubMenu!.InitAsync(guiController, this, data);
         CurrentState = State.Available;
     }
@@ -52,11 +51,22 @@ public partial class Menu : GUILayer, IMenu
 
     public async Task OpenSubMenuAsync(PackedScene packedScene, bool preventAnimation = false, object? data = null)
     {
-        CurrentSubMenu?.SuspendSubMenu();
-        var subMenu = packedScene.Instantiate<SubMenu>();
-        SubMenuContainer.AddChild(subMenu);
-        SubMenus.Push(subMenu);
-        await subMenu.InitAsync(GUIController, this, data);
+        SubMenu? subMenu = null;
+        try
+        {
+            CurrentSubMenu?.SuspendSubMenu();
+            subMenu = packedScene.Instantiate<SubMenu>();
+            SubMenuContainer.AddChild(subMenu);
+            SubMenus.Push(subMenu);
+            await subMenu.InitAsync(GUIController, this, data);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr(ex.Message);
+            if (subMenu == null)
+                return;
+            await CloseSubMenuAsync(null, preventAnimation);
+        }
     }
 
     public async Task CloseSubMenuAsync(Type? cascadeTo = null, bool preventAnimation = false, object? data = null)
@@ -77,13 +87,11 @@ public partial class Menu : GUILayer, IMenu
             CurrentSubMenu.UpdateData(data);
     }
 
-    public override async Task TransitionCloseAsync(bool preventAnimation = false)
+    public override async Task CloseAsync(bool preventAnimation = false)
     {
         CurrentState = State.Closing;
         if (!preventAnimation)
             await AnimateCloseAsync();
         CurrentState = State.Closed;
     }
-
-
 }

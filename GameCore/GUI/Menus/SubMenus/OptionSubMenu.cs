@@ -20,8 +20,8 @@ public partial class OptionSubMenu : SubMenu
     private PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
     private OptionCursor _cursor = null!;
     [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; } = new();
-    public OptionContainer CurrentContainer { get; private set; } = null!;
-    public List<OptionContainer> OptionContainers { get; private set; }
+    public OptionContainer? CurrentContainer { get; private set; }
+    public List<OptionContainer> OptionContainers { get; }
     protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
     protected string FocusedSoundPath { get; set; } = "menu_bip1.wav";
 

@@ -5,12 +5,12 @@ namespace GameCore.GUI.GameDialog;
 public class InstructionStatement : IStatement
 {
     [JsonConstructor]
-    public InstructionStatement(ushort[] values, GoTo next)
+    public InstructionStatement(int index, GoTo next)
     {
-        Values = values;
+        Index = index;
         Next = next;
     }
 
-    public ushort[] Values { get; }
+    public int Index { get; }
     public GoTo Next { get; set; }
 }

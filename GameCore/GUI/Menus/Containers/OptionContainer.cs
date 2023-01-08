@@ -68,8 +68,8 @@ public partial class OptionContainer : PanelContainer
         set => OptionGrid.SingleRow = value;
     }
     public OptionItem? FocusedItem => OptionGrid.FocusedItem;
-    public OptionGrid OptionGrid { get; set; }
-    public GridContainer ContentGrid { get; set; }
+    public OptionGrid OptionGrid { get; set; } = null!;
+    public GridContainer ContentGrid { get; set; } = null!;
     public PackedScene CursorScene
     {
         get => OptionGrid.CursorScene;

@@ -26,7 +26,6 @@ public partial class Dialog : GUILayer
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly PackedScene _dialogBoxScene;
     private readonly DialogScriptReader _scriptReader;
-    private DialogOptionMenu? _dialogOptionMenu;
     public bool Auto { get; set; }
     public IStorageContext TextStorage { get; set; }
     public DialogBox? SecondaryBox { get; set; }
@@ -114,7 +113,6 @@ public partial class Dialog : GUILayer
 
     public async Task StartDialogAsync()
     {
-        await TransitionOpenAsync();
         CurrentState = State.Available;
         await _scriptReader.ReadScriptAsync();
     }
@@ -155,7 +153,7 @@ public partial class Dialog : GUILayer
         }
     }
 
-    public override Task TransitionCloseAsync(bool preventAnimation = false)
+    public override Task CloseAsync(bool preventAnimation = false)
     {
         CurrentState = State.Closing;
         CurrentState = State.Closed;
