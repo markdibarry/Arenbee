@@ -51,7 +51,7 @@ public class Speaker
         };
         portrait.SetPortraitFrames(Portrait);
         portrait.Play(GlobalMood);
-        portrait.Position = new Vector2(shiftAmount, portrait.Position.y);
+        portrait.Position = new Vector2(shiftAmount, portrait.Position.Y);
         return portrait;
     }
 }

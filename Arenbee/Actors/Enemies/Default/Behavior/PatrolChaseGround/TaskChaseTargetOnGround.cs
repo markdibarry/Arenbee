@@ -1,5 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Input;
+﻿using GameCore.Input;
 using Godot;
 
 namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
@@ -23,7 +22,7 @@ public class TaskChaseTargetOnGround : BTNode
                 return State;
             }
             Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
-            direction = new Vector2(Mathf.Sign(direction.x), 0);
+            direction = new Vector2(Mathf.Sign(direction.X), 0);
             Actor.InputHandler.SetLeftAxis(direction);
             Actor.InputHandler.Run.IsActionPressed = true;
         }

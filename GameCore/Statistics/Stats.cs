@@ -1,22 +1,27 @@
 ﻿using System;
-using Godot;
-using System.Text.Json.Serialization;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Godot;
 
 namespace GameCore.Statistics;
 
 public class Stats
 {
+    public Stats()
+    {
+        Attributes = new();
+        ElementDefs = new();
+        ElementOffs = new();
+        StatusEffectDefs = new();
+        StatusEffectOffs = new();
+        StatusEffects = new(this);
+        SubscribeEvents();
+    }
+
     public Stats(IDamageable damageable)
+        : this()
     {
         StatsOwner = damageable;
-        Attributes = new Attributes();
-        ElementDefs = new ElementDefs();
-        ElementOffs = new ElementOffs();
-        StatusEffectDefs = new StatusEffectDefs();
-        StatusEffectOffs = new StatusEffectOffs();
-        StatusEffects = new StatusEffects(this);
-        SubscribeEvents();
     }
 
     /// <summary>
@@ -25,12 +30,12 @@ public class Stats
     /// <param name="stats"></param>
     public Stats(Stats stats)
     {
-        Attributes = new Attributes(stats.Attributes);
-        ElementDefs = new ElementDefs(stats.ElementDefs);
-        ElementOffs = new ElementOffs(stats.ElementOffs);
-        StatusEffectOffs = new StatusEffectOffs(stats.StatusEffectOffs);
-        StatusEffectDefs = new StatusEffectDefs(stats.StatusEffectDefs);
-        StatusEffects = new StatusEffects(this, stats.StatusEffects);
+        Attributes = new(stats.Attributes);
+        ElementDefs = new(stats.ElementDefs);
+        ElementOffs = new(stats.ElementOffs);
+        StatusEffectOffs = new(stats.StatusEffectOffs);
+        StatusEffectDefs = new(stats.StatusEffectDefs);
+        StatusEffects = new(this, stats.StatusEffects);
         SubscribeEvents();
     }
 
@@ -42,19 +47,19 @@ public class Stats
     [JsonConstructor]
     public Stats(Attributes attributes, StatusEffects statusEffects)
     {
-        Attributes = new Attributes(attributes);
-        ElementDefs = new ElementDefs();
-        ElementOffs = new ElementOffs();
-        StatusEffectDefs = new StatusEffectDefs();
-        StatusEffectOffs = new StatusEffectOffs();
-        StatusEffects = new StatusEffects(this, statusEffects);
+        Attributes = new(attributes);
+        ElementDefs = new();
+        ElementOffs = new();
+        StatusEffectDefs = new();
+        StatusEffectOffs = new();
+        StatusEffects = new(this, statusEffects);
         SubscribeEvents();
     }
 
     public Attributes Attributes { get; }
     [JsonIgnore] public ElementDefs ElementDefs { get; }
     [JsonIgnore] public ElementOffs ElementOffs { get; }
-    [JsonIgnore] public IDamageable StatsOwner { get; }
+    [JsonIgnore] public IDamageable? StatsOwner { get; set; }
     [JsonIgnore] public StatusEffectDefs StatusEffectDefs { get; }
     [JsonIgnore] public StatusEffectOffs StatusEffectOffs { get; }
     public StatusEffects StatusEffects { get; }
@@ -73,8 +78,7 @@ public class Stats
             return;
         StatusEffects.AddTempMod(
             new TempModifier(
-                new Modifier(StatType.StatusEffect, (int)StatusEffectType.KO),
-                null));
+                new Modifier(StatType.StatusEffect, (int)StatusEffectType.KO), null));
     }
 
     public void AddMod(Modifier mod)
@@ -144,7 +148,6 @@ public class Stats
     public void ReceiveAction(ActionData actionData)
     {
         DamageToProcess.Add(new(this, actionData));
-
     }
 
     public void RemoveKOStatus()

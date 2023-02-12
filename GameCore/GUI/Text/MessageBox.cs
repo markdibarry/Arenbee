@@ -8,14 +8,14 @@ public partial class MessageBox : MarginContainer
 {
     public MessageBox()
     {
-        BoxAlign = Enums.BoxAlign.Left;
+        BoxAlign = SizeFlags.ShrinkBegin;
         _messageText = string.Empty;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private string _messageText;
     private HorizontalAlignment _messageAlign;
-    private Enums.BoxAlign _boxAlign;
+    private SizeFlags _boxAlign;
     private MarginContainer _boxWrapper;
     private MarginContainer _messageMargin;
     private Label _message;
@@ -46,14 +46,14 @@ public partial class MessageBox : MarginContainer
     /// </summary>
     /// <value></value>
     [Export(PropertyHint.Enum)]
-    public Enums.BoxAlign BoxAlign
+    public SizeFlags BoxAlign
     {
         get => _boxAlign;
         set
         {
             _boxAlign = value;
             if (_message?.AutowrapMode == TextServer.AutowrapMode.Off)
-                _boxWrapper.SizeFlagsHorizontal = (int)_boxAlign;
+                _boxWrapper.SizeFlagsHorizontal = _boxAlign;
         }
     }
     public float MaxWidth { get; set; }
@@ -75,7 +75,7 @@ public partial class MessageBox : MarginContainer
 
     public void SetMessage(Vector2 maxSize)
     {
-        MaxWidth = maxSize.x;
+        MaxWidth = maxSize.X;
     }
 
     private void OnResized()
@@ -95,7 +95,7 @@ public partial class MessageBox : MarginContainer
 
     private bool ShouldEnableAutoWrap()
     {
-        return _boxWrapper.Size.x > MaxWidth || _messageMargin.Size.x > MaxWidth;
+        return _boxWrapper.Size.X > MaxWidth || _messageMargin.Size.X > MaxWidth;
     }
 
     private bool ShouldDisableAutoWrap()
@@ -108,7 +108,7 @@ public partial class MessageBox : MarginContainer
         if (_message.AutowrapMode != TextServer.AutowrapMode.Off)
             return;
         _message.AutowrapMode = TextServer.AutowrapMode.Word;
-        _boxWrapper.SizeFlagsHorizontal = (int)SizeFlags.Fill;
+        _boxWrapper.SizeFlagsHorizontal = SizeFlags.Fill;
     }
 
     private void DisableAutoWrap()
@@ -116,6 +116,6 @@ public partial class MessageBox : MarginContainer
         if (_message.AutowrapMode == TextServer.AutowrapMode.Off)
             return;
         _message.AutowrapMode = TextServer.AutowrapMode.Off;
-        _boxWrapper.SizeFlagsHorizontal = (int)BoxAlign;
+        _boxWrapper.SizeFlagsHorizontal = BoxAlign;
     }
 }

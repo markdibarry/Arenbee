@@ -5,7 +5,7 @@ namespace GameCore.GUI;
 [Tool]
 public partial class Sprite2DContainer : Container
 {
-    public Sprite2D Sprite2D { get; set; }
+    public Sprite2D? Sprite2D { get; set; }
 
     public override void _Ready()
     {
@@ -19,8 +19,7 @@ public partial class Sprite2DContainer : Container
         var childCount = GetChildCount();
         if (childCount > 0)
         {
-            if (Sprite2D == null)
-                Sprite2D = GetChildOrNull<Sprite2D>(0);
+            Sprite2D ??= GetChildOrNull<Sprite2D>(0);
             if (Sprite2D == null || childCount > 1)
                 GD.PrintErr("Sprite2DContainer should have one child and it must be of type Sprite2D.");
             else
@@ -29,19 +28,19 @@ public partial class Sprite2DContainer : Container
         UpdateSize();
     }
 
-    private Vector2i GetNewSize()
+    private Vector2I GetNewSize()
     {
         if (Sprite2D?.Visible != true)
-            return Vector2i.Zero;
+            return Vector2I.Zero;
         float v = 0;
         float h = 0;
         Rect2 rect = Sprite2D.GetRect();
         var spritePos = Sprite2D.Position + rect.Size;
-        if (spritePos.x > h)
-            h = spritePos.x;
-        if (spritePos.y > v)
-            v = spritePos.y;
-        return new Vector2i((int)h, (int)v);
+        if (spritePos.X > h)
+            h = spritePos.X;
+        if (spritePos.Y > v)
+            v = spritePos.Y;
+        return new Vector2I((int)h, (int)v);
     }
 
     private void OnChildEntered(Node node)

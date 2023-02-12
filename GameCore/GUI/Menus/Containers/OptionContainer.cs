@@ -13,8 +13,7 @@ public partial class OptionContainer : PanelContainer
     private Vector2 _maxSize = new(-1, -1);
     private Vector2 _padding;
     private bool _parentIsContainer;
-    [ExportGroup("Sizing")]
-    [Export(PropertyHint.Range, "1,20")]
+    [Export(PropertyHint.Range, "1,20"), ExportGroup("Sizing")]
     public int Columns
     {
         get => OptionGrid.Columns;
@@ -109,7 +108,7 @@ public partial class OptionContainer : PanelContainer
     public event Action? ItemFocused;
     public event Action? ItemSelected;
 
-    public override void _Notification(long what)
+    public override void _Notification(int what)
     {
         if (what == NotificationParented)
             _parentIsContainer = GetParent() is Container;
@@ -143,8 +142,8 @@ public partial class OptionContainer : PanelContainer
     {
         Vector2 margin = GetSizeWithoutOptions();
         Vector2 gridMaxSize;
-        gridMaxSize.x = MaxSize.x == -1 ? -1 : Math.Max(MaxSize.x - margin.x, 0);
-        gridMaxSize.y = MaxSize.y == -1 ? -1 : Math.Max(MaxSize.y - margin.y, 0);
+        gridMaxSize.X = MaxSize.X == -1 ? -1 : Math.Max(MaxSize.X - margin.X, 0);
+        gridMaxSize.Y = MaxSize.Y == -1 ? -1 : Math.Max(MaxSize.Y - margin.Y, 0);
         OptionGrid.GridWindow.MaxSize = gridMaxSize;
         OptionGrid.GridWindow.UpdateMinimumSize();
     }
@@ -155,8 +154,8 @@ public partial class OptionContainer : PanelContainer
         OptionGrid.GridWindow.ClipY = !_fitYToContent;
         if (_parentIsContainer)
         {
-            SizeFlagsHorizontal = _fitXToContent ? (int)SizeFlags.ShrinkBegin : (int)SizeFlags.Fill;
-            SizeFlagsVertical = _fitYToContent ? (int)SizeFlags.ShrinkBegin : (int)SizeFlags.Fill;
+            SizeFlagsHorizontal = _fitXToContent ? SizeFlags.ShrinkBegin : SizeFlags.Fill;
+            SizeFlagsVertical = _fitYToContent ? SizeFlags.ShrinkBegin : SizeFlags.Fill;
         }
         RefreshMaxSize();
     }
@@ -169,10 +168,10 @@ public partial class OptionContainer : PanelContainer
             if (child == OptionGrid)
                 continue;
             Vector2 size = child.GetCombinedMinimumSize();
-            if (size.x > margin.x)
-                margin.x = size.x;
-            if (size.y > margin.y)
-                margin.y = size.y;
+            if (size.X > margin.X)
+                margin.X = size.X;
+            if (size.Y > margin.Y)
+                margin.Y = size.Y;
         }
         margin += _padding + OptionGrid.Padding;
         return margin;
@@ -218,9 +217,9 @@ public partial class OptionContainer : PanelContainer
         Vector2 margin = Size;
         Vector2 max = GetCombinedMinimumSize();
         if (_fitXToContent)
-            margin.x = max.x;
+            margin.X = max.X;
         if (_fitYToContent)
-            margin.y = max.y;
+            margin.Y = max.Y;
         Size = margin;
     }
 

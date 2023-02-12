@@ -2,10 +2,8 @@
 
 namespace GameCore;
 
-public partial class GameRootNull : GameRootBase
+public partial class GameRootNull : AGameRoot
 {
-    public override void _Ready() { }
-
     protected override void SetNodeReferences() { }
 
     protected override Task Init() => Task.CompletedTask;

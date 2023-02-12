@@ -2,6 +2,7 @@
 
 public class ActorInputHandler : InputHandler
 {
+    public static readonly ActorInputHandler DummyInputHandler = new();
     protected ActorInputHandler()
     {
         Jump = new InputAction(this);

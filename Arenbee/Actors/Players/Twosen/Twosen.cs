@@ -1,17 +1,15 @@
 ﻿using Arenbee.Actors.Default.State;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.Statistics;
 
 namespace Arenbee.Actors.Players;
 
-public partial class Twosen : Actor
+public partial class Twosen : ActorBody
 {
     public Twosen()
     {
-        ActorId = "Twosen";
         WalkSpeed = 100;
-        StateController = new StateControllerBase(
+        StateController = new AStateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),
@@ -20,12 +18,4 @@ public partial class Twosen : Actor
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-
-    protected override void ApplyDefaultStats()
-    {
-        Stats.SetAttribute(AttributeType.MaxHP, 12);
-        Stats.SetAttribute(AttributeType.HP, 12);
-        Stats.SetAttribute(AttributeType.Attack, 0);
-        Stats.SetAttribute(AttributeType.Defense, 0);
-    }
 }

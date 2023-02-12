@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -13,12 +14,19 @@ namespace Arenbee.GUI.Menus.Party.Equipment;
 [Tool]
 public partial class EquipmentSubMenu : OptionSubMenu
 {
+    public EquipmentSubMenu()
+    {
+        GameSession? gameSession = Locator.Session as GameSession;
+        _partyActors = gameSession?.Party?.Actors ?? Array.Empty<AActor>();
+        _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
+    }
+
     public static string GetScenePath() => GDEx.GetScenePath();
-    private OptionContainer _partyOptions;
-    private OptionContainer _equipmentOptions;
-    private PlayerParty _playerParty;
+    private OptionContainer _partyOptions = null!;
+    private OptionContainer _equipmentOptions = null!;
     private PackedScene _equipSelectOptionScene;
-    private PackedScene _textOptionScene;
+    private readonly IReadOnlyCollection<AActor> _partyActors;
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -47,6 +55,8 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
+        if (CurrentContainer == null)
+            return;
         if (CurrentContainer == _partyOptions)
             FocusContainer(_equipmentOptions);
         else
@@ -56,11 +66,8 @@ public partial class EquipmentSubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
-        _equipmentOptions = OptionContainers.Find(x => x.Name == "EquipmentOptions");
-        _playerParty = Locator.GetParty() ?? new PlayerParty();
-        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
+        _partyOptions = OptionContainers.First(x => x.Name == "PartyOptions");
+        _equipmentOptions = OptionContainers.First(x => x.Name == "EquipmentOptions");
     }
 
     private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
@@ -68,14 +75,14 @@ public partial class EquipmentSubMenu : OptionSubMenu
         var options = new List<EquipSelectOption>();
         if (optionItem == null)
             return options;
-        if (!optionItem.TryGetData(nameof(ActorBase), out ActorBase? actor))
+        if (!optionItem.TryGetData(nameof(AActor), out AActor? actorData))
             return options;
-        foreach (var slot in actor.Equipment.Slots)
+        foreach (var slot in actorData.Equipment.Slots)
         {
             var option = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
-            option.KeyText = slot.SlotCategory.Name + ":";
-            option.ValueText = slot.Item?.DisplayName ?? "<None>";
-            option.OptionData[nameof(EquipmentSlotBase)] = slot;
+            option.KeyText = slot.SlotCategory.DisplayName + ":";
+            option.ValueText = slot.ItemStack?.Item.DisplayName ?? "<None>";
+            option.OptionData[nameof(EquipmentSlot)] = slot;
             options.Add(option);
         }
         return options;
@@ -83,28 +90,30 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private List<TextOption> GetPartyMemberOptions()
     {
-        var options = new List<TextOption>();
-        if (_playerParty.Actors.Count == 0)
+        List<TextOption> options = new();
+        if (_partyActors.Count == 0)
             return options;
-        _partyOptions.OptionGrid.Columns = _playerParty.Actors.Count;
-        foreach (var actor in _playerParty.Actors)
+        _partyOptions.OptionGrid.Columns = _partyActors.Count;
+        foreach (AActor actorData in _partyActors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData[nameof(ActorBase)] = actor;
-            textOption.LabelText = actor.Name;
+            textOption.OptionData[nameof(AActor)] = actorData;
+            textOption.LabelText = actorData.Name;
             options.Add(textOption);
         }
         return options;
     }
 
-    private void OpenEquipSelectMenu(OptionItem optionItem)
+    private void OpenEquipSelectMenu(OptionItem? optionItem)
     {
-        if (!_partyOptions.FocusedItem.TryGetData(nameof(ActorBase), out ActorBase? actor))
+        if (_partyOptions.FocusedItem == null || optionItem == null)
             return;
-        if (!optionItem.TryGetData(nameof(EquipmentSlotBase), out EquipmentSlotBase? slot))
+        if (!_partyOptions.FocusedItem.TryGetData(nameof(AActorBody), out AActorBody? actor))
+            return;
+        if (!optionItem.TryGetData(nameof(EquipmentSlot), out EquipmentSlot? slot))
             return;
 
-        var data = new SelectSubMenuDataModel()
+        SelectSubMenuDataModel data = new()
         {
             Slot = slot,
             Actor = actor
@@ -112,8 +121,10 @@ public partial class EquipmentSubMenu : OptionSubMenu
         _ = OpenSubMenuAsync(path: SelectSubMenu.GetScenePath(), data: data);
     }
 
-    private void UpdateEquipmentDisplay(OptionItem optionItem)
+    private void UpdateEquipmentDisplay(OptionItem? optionItem)
     {
+        if (optionItem == null)
+            return;
         List<EquipSelectOption> options = GetEquipmentOptions(optionItem);
         _equipmentOptions.ReplaceChildren(options);
     }

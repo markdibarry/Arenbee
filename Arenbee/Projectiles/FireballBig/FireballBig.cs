@@ -32,23 +32,23 @@ public partial class FireballBig : Node2D
         if (_expiration <= 0)
             QueueFree();
         _expiration -= delta;
-        float x = GlobalPosition.x + (float)(_speed * delta);
-        GlobalPosition = new Vector2(x, GlobalPosition.y);
+        float x = GlobalPosition.X + (float)(_speed * delta);
+        GlobalPosition = new Vector2(x, GlobalPosition.Y);
     }
 
-    public static void CreateFireball(ActorBase actor)
+    public static void CreateFireball(AActorBody actorBody)
     {
         var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<FireballBig>();
         var fireballOffset = 10;
-        if (actor.Direction.x < 0)
+        if (actorBody.Direction.X < 0)
         {
             fireball.Direction = Direction.Left;
             fireballOffset *= -1;
         }
-        fireball.GlobalPosition = new Vector2(actor.GlobalPosition.x + fireballOffset, actor.GlobalPosition.y);
-        actor.GetParent().AddChild(fireball);
+        fireball.GlobalPosition = new Vector2(actorBody.GlobalPosition.X + fireballOffset, actorBody.GlobalPosition.Y);
+        actorBody.GetParent().AddChild(fireball);
         var actionData = fireball.HitBox.ActionData;
-        actionData.SourceName = actor.Name;
+        actionData.SourceName = actorBody.Actor.Name;
         actionData.ActionType = ActionType.Magic;
         actionData.ElementDamage = ElementType.Fire;
         actionData.StatusEffects.Add(new Modifier(
@@ -57,7 +57,7 @@ public partial class FireballBig : Node2D
             modOperator: ModOperator.Add,
             value: 1,
             chance: 50));
-        actionData.Value = actor.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue + 1;
+        actionData.Value = actorBody.Actor.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue + 1;
         fireball.HitBox.GetActionData = () =>
         {
             fireball.QueueFree();

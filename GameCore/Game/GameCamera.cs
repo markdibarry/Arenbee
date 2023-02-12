@@ -72,16 +72,16 @@ public partial class GameCamera : Camera2D
         _goalLimitBottom = bottom;
         _goalLimitLeft = left;
 
-        if (cameraPosition.y < _goalLimitTop)
-            LimitTop = (int)cameraPosition.y;
+        if (cameraPosition.Y < _goalLimitTop)
+            LimitTop = (int)cameraPosition.Y;
 
-        if (cameraPosition.x + _viewSize.x > _goalLimitRight)
-            LimitRight = (int)(cameraPosition.x + _viewSize.x);
+        if (cameraPosition.X + _viewSize.X > _goalLimitRight)
+            LimitRight = (int)(cameraPosition.X + _viewSize.X);
 
-        if (cameraPosition.y + _viewSize.y > _goalLimitBottom)
-            LimitBottom = (int)(cameraPosition.y + _viewSize.y);
+        if (cameraPosition.Y + _viewSize.Y > _goalLimitBottom)
+            LimitBottom = (int)(cameraPosition.Y + _viewSize.Y);
 
-        if (cameraPosition.x < _goalLimitLeft)
-            LimitLeft = (int)cameraPosition.x;
+        if (cameraPosition.X < _goalLimitLeft)
+            LimitLeft = (int)cameraPosition.X;
     }
 }

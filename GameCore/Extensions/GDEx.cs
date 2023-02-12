@@ -13,19 +13,19 @@ public static class GDEx
 {
     public static Vector2 GDExSign(this Vector2 vec)
     {
-        var x = vec.x > 0 ? 1 : vec.x < 0 ? -1 : 0;
-        var y = vec.y > 0 ? 1 : vec.y < 0 ? -1 : 0;
+        var x = vec.X > 0 ? 1 : vec.X < 0 ? -1 : 0;
+        var y = vec.Y > 0 ? 1 : vec.Y < 0 ? -1 : 0;
         return new Vector2(x, y);
     }
 
     public static void FlipScaleX(this Node2D node2D)
     {
-        node2D.Scale = new Vector2(-node2D.Scale.x, node2D.Scale.y);
+        node2D.Scale = new Vector2(-node2D.Scale.X, node2D.Scale.Y);
     }
 
     public static void FlipScaleY(this Node2D node2D)
     {
-        node2D.Scale = new Vector2(node2D.Scale.x, -node2D.Scale.y);
+        node2D.Scale = new Vector2(node2D.Scale.X, -node2D.Scale.Y);
     }
 
     public static Vector2 GetFrameSize(this Sprite2D sprite2D)
@@ -35,7 +35,7 @@ public static class GDEx
         Vector2 textureSize = sprite2D.Texture.GetSize();
         if (textureSize == default)
             return textureSize;
-        return new Vector2(textureSize.x / sprite2D.Hframes, textureSize.y / sprite2D.Vframes);
+        return new Vector2(textureSize.X / sprite2D.Hframes, textureSize.Y / sprite2D.Vframes);
     }
 
     public static IEnumerable<T> GetChildren<T>(this Node node) where T : Node
@@ -85,12 +85,6 @@ public static class GDEx
         }
     }
 
-    public static IEnumerable<DictionaryEntry> GetEntries(this System.Resources.ResourceManager rm)
-    {
-        return rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true)
-            .OfType<DictionaryEntry>();
-    }
-
     public static string GetScenePath([CallerFilePath] string csPath = "")
     {
         string godotRoot = Config.GodotRoot;
@@ -105,7 +99,7 @@ public static class GDEx
         return $"res://{resPath}";
     }
 
-    public static T Instantiate<T>(string path) where T : Godot.Object
+    public static T Instantiate<T>(string path) where T : GodotObject
     {
         return GD.Load<PackedScene>(path).Instantiate<T>();
     }
@@ -165,9 +159,7 @@ public static class GDEx
 
     public static void QueueFreeAllChildren(this Node node)
     {
-        Godot.Collections.Array<Node> children = node.GetChildren();
-        if (children.Count <= 0)
-            return;
+        var children = node.GetChildren();
         foreach (Node child in children)
         {
             node.RemoveChild(child);
@@ -177,8 +169,6 @@ public static class GDEx
 
     public static void QueueFreeAllChildren<T>(this Node node) where T : Node
     {
-        if (node.GetChildCount() == 0)
-            return;
         var children = node.GetChildren<T>();
         foreach (var child in children)
         {
@@ -187,7 +177,7 @@ public static class GDEx
         }
     }
 
-    public static Vector2 SetX(this Vector2 vec, float x) => new(x, vec.y);
+    public static Vector2 SetX(this Vector2 vec, float x) => new(x, vec.Y);
 
-    public static Vector2 SetY(this Vector2 vec, float y) => new(vec.x, y);
+    public static Vector2 SetY(this Vector2 vec, float y) => new(vec.X, y);
 }

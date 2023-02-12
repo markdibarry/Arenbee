@@ -11,23 +11,19 @@ namespace GameCore.GUI;
 [Tool]
 public partial class OptionSubMenu : SubMenu
 {
-    public OptionSubMenu()
-    {
-        OptionContainers = new List<OptionContainer>();
-        _currentDirection = Direction.None;
-    }
-
     private PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
     private OptionCursor _cursor = null!;
     [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; } = new();
     public OptionContainer? CurrentContainer { get; private set; }
-    public List<OptionContainer> OptionContainers { get; }
+    public List<OptionContainer> OptionContainers { get; } = new();
     protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
     protected string FocusedSoundPath { get; set; } = "menu_bip1.wav";
 
     public override async void ResumeSubMenu()
     {
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        if (CurrentContainer == null)
+            throw new Exception("Current container is null!");
         FocusContainer(CurrentContainer);
         base.ResumeSubMenu();
     }
@@ -48,6 +44,8 @@ public partial class OptionSubMenu : SubMenu
 
     protected void FocusContainerClosestItem(OptionContainer optionContainer)
     {
+        if (CurrentContainer?.FocusedItem == null)
+            return;
         int index = optionContainer.OptionItems.GetClosestIndex(CurrentContainer.FocusedItem);
         FocusContainer(optionContainer, index);
     }
@@ -118,7 +116,7 @@ public partial class OptionSubMenu : SubMenu
 
     private void MoveCursorToItem(OptionItem optionItem)
     {
-        if (CurrentContainer.AllSelected)
+        if (CurrentContainer == null || CurrentContainer.AllSelected)
             return;
         _cursor.MoveToTarget(optionItem);
     }

@@ -5,11 +5,11 @@ using Arenbee.Actors.Enemies.Default.State;
 
 namespace Arenbee.Actors.Enemies;
 
-public partial class Plant : Actor
+public partial class Plant : ActorBody
 {
     public Plant()
     {
-        StateController = new StateControllerBase(
+        StateController = new AStateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),
@@ -18,16 +18,6 @@ public partial class Plant : Actor
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-
-    protected override void ApplyDefaultStats()
-    {
-        Stats.AddMod(new Modifier(StatType.ElementOff, (int)ElementType.Earth, ModOperator.Add, 1));
-        Stats.AddMod(new Modifier(StatType.ElementDef, (int)ElementType.Fire, ModOperator.Add, ElementDef.Weak));
-        Stats.SetAttribute(AttributeType.MaxHP, 4);
-        Stats.SetAttribute(AttributeType.HP, 4);
-        Stats.SetAttribute(AttributeType.Attack, 4);
-        Stats.SetAttribute(AttributeType.Defense, 0);
-    }
 
     protected override void SetHitBoxes()
     {

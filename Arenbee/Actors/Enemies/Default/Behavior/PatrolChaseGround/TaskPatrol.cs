@@ -1,5 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Input;
+﻿using GameCore.Input;
 
 namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
 
@@ -26,7 +25,7 @@ public class TaskPatrol : BTNode
             if (Actor.IsOnWall())
             {
                 int direction = GetWallDirection();
-                if (direction == Actor.Direction.x)
+                if (direction == Actor.Direction.X)
                 {
                     _waitCounter = _waitTime;
                     _waiting = true;
@@ -47,9 +46,9 @@ public class TaskPatrol : BTNode
         for (int i = 0; i < count; i++)
         {
             var collision = Actor.GetSlideCollision(i);
-            if (collision.GetNormal().x > 0)
+            if (collision.GetNormal().X > 0)
                 result = -1;
-            else if (collision.GetNormal().x < 0)
+            else if (collision.GetNormal().X < 0)
                 result = 1;
         }
         return result;

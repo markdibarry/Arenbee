@@ -12,8 +12,8 @@ public partial class UseSubMenu : OptionSubMenu
     public static string GetScenePath() => GDEx.GetScenePath();
     private PackedScene _textOptionScene;
     private OptionContainer _optionContainer;
-    public ItemStack ItemStack { get; set; }
-    public ItemBase Item { get; set; }
+    public AItemStack ItemStack { get; set; }
+    public AItem Item { get; set; }
 
     protected override void SetupOptions()
     {
@@ -23,7 +23,7 @@ public partial class UseSubMenu : OptionSubMenu
 
     public override void SetupData(object data)
     {
-        if (data is not ItemStack itemStack)
+        if (data is not AItemStack itemStack)
             return;
         ItemStack = itemStack;
     }
@@ -57,7 +57,7 @@ public partial class UseSubMenu : OptionSubMenu
         if (ItemStack.Item.UseData != null)
         {
             option.Disabled = false;
-            if (ItemStack.Amount <= 0)
+            if (ItemStack.Count <= 0)
                 option.Disabled = true;
         }
         options.Add(option);
@@ -65,7 +65,7 @@ public partial class UseSubMenu : OptionSubMenu
         option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Drop;
         option.OptionData["value"] = UseOptions.Drop;
-        option.Disabled = !ItemStack.Item.IsDroppable || ItemStack.Amount <= 0;
+        option.Disabled = !ItemStack.Item.IsDroppable || ItemStack.Count <= 0;
         options.Add(option);
         _optionContainer.ReplaceChildren(options);
     }

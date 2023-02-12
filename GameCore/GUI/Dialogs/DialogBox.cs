@@ -59,6 +59,11 @@ public partial class DialogBox : Control
         get => _dynamicTextBox.SpeedMultiplier;
         set => _dynamicTextBox.SpeedMultiplier = value;
     }
+    public bool SpeedUpEnabled
+    {
+        get => _dynamicTextBox.SpeedUpEnabled;
+        set => _dynamicTextBox.SpeedUpEnabled = value;
+    }
     public State CurrentState { get; private set; }
     public DialogLine DialogLine { get; private set; } = null!;
     public TextureRect NextArrow { get; set; } = null!;
@@ -74,7 +79,7 @@ public partial class DialogBox : Control
         Writing
     }
 
-    public override void _Notification(long what)
+    public override void _Notification(int what)
     {
         if (what == NotificationSceneInstantiated)
             Init();
@@ -89,10 +94,15 @@ public partial class DialogBox : Control
 
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
+        SpeedUpEnabled = false;
         if (CurrentState == State.Idle && menuInput.Enter.IsActionJustPressed)
         {
             HandleNext();
             return;
+        }
+        else if (CurrentState == State.Writing && menuInput.Enter.IsActionPressed)
+        {
+            SpeedUpEnabled = true;
         }
     }
 

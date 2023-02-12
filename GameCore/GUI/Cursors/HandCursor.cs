@@ -32,8 +32,8 @@ public partial class HandCursor : OptionCursor
 
     public override void MoveToTarget(Control target)
     {
-        float cursorX = target.GlobalPosition.x - 4;
-        float cursorY = (float)(target.GlobalPosition.y + Math.Round(target.Size.y * 0.5));
+        float cursorX = target.GlobalPosition.X - 4;
+        float cursorY = (float)(target.GlobalPosition.Y + Math.Round(target.Size.Y * 0.5));
         GlobalPosition = new Vector2(cursorX, cursorY);
     }
 
@@ -42,7 +42,7 @@ public partial class HandCursor : OptionCursor
         _cursorTimer += delta;
         if (_cursorTimer < _cursorTimerOut)
             return;
-        Offset = Offset.x < 0 ? Vector2.Zero : new Vector2(-1, 0);
+        Offset = Offset.X < 0 ? Vector2.Zero : new Vector2(-1, 0);
         _cursorTimer = 0;
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Arenbee.Actors.Enemies;
 
-public partial class Whisp : Actor
+public partial class Whisp : ActorBody
 {
     public class AirStateMachine : AirStateMachineBase
     {
 
-        public AirStateMachine(ActorBase actor)
+        public AirStateMachine(AActorBody actor)
             : base(
                 new AirState[]
                 {
@@ -19,7 +19,7 @@ public partial class Whisp : Actor
 
         private class Floating : AirState
         {
-            public Floating(ActorBase actor) : base(actor)
+            public Floating(AActorBody actor) : base(actor)
             {
             }
 

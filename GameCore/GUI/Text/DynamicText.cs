@@ -97,7 +97,8 @@ public partial class DynamicText : RichTextLabel
         set => _endChar = value;
     }
     public int LineCount { get; private set; }
-    public double Speed => SpeedMultiplier * _speed;
+    public double Speed => SpeedUpEnabled ? 0 : SpeedMultiplier * _speed;
+    public bool SpeedUpEnabled { get; set; }
     public int TotalCharacterCount { get; private set; }
     private double Counter
     {

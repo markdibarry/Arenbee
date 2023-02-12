@@ -5,7 +5,7 @@ namespace Arenbee.Actors.Enemies.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(ActorBase actor)
+    public ActionStateMachine(AActorBody actor)
         : base(
             new ActionState[]
             {
@@ -17,7 +17,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     public class NotAttacking : ActionState
     {
-        public NotAttacking(ActorBase actor, HoldItem? holdItem)
+        public NotAttacking(AActorBody actor, HoldItem? holdItem)
             : base(actor, holdItem)
         {
         }

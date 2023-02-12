@@ -5,7 +5,7 @@ namespace Arenbee.Actors.Enemies.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
-    public AirStateMachine(ActorBase actor)
+    public AirStateMachine(AActorBody actor)
         : base(
             new AirState[]
             {
@@ -18,13 +18,13 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Grounded : AirState
     {
-        public Grounded(ActorBase actor) : base(actor)
+        public Grounded(AActorBody actor) : base(actor)
         {
         }
 
         public override void Enter()
         {
-            Actor.VelocityY = (float)Actor.GroundedGravity;
+            ActorBody.VelocityY = (float)ActorBody.GroundedGravity;
             StateController.PlayFallbackAnimation();
         }
 
@@ -36,7 +36,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (!Actor.IsOnFloor())
+            if (!ActorBody.IsOnFloor())
                 return stateMachine.TrySwitchTo<Falling>();
             return false;
         }
@@ -44,7 +44,7 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Falling : AirState
     {
-        public Falling(ActorBase actor) : base(actor)
+        public Falling(AActorBody actor) : base(actor)
         {
         }
 
@@ -52,7 +52,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override void Update(double delta)
         {
-            Actor.ApplyFallGravity(delta);
+            ActorBody.ApplyFallGravity(delta);
 
         }
 
@@ -60,7 +60,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Actor.IsOnFloor())
+            if (ActorBody.IsOnFloor())
                 return stateMachine.TrySwitchTo<Grounded>();
             return false;
         }

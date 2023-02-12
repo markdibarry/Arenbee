@@ -66,7 +66,11 @@ public partial class DynamicTextBox : Control
         get => _dynamicText.CustomTextExportDisabled;
         set => _dynamicText.CustomTextExportDisabled = value;
     }
-
+    public bool SpeedUpEnabled
+    {
+        get => _dynamicText.SpeedUpEnabled;
+        set => _dynamicText.SpeedUpEnabled = value;
+    }
     public event Action<ITextEvent>? TextEventTriggered;
     public event Action? StartedWriting;
     public event Action? StoppedWriting;
@@ -78,7 +82,7 @@ public partial class DynamicTextBox : Control
         Writing
     }
 
-    public override void _Notification(long what)
+    public override void _Notification(int what)
     {
         if (what == NotificationSceneInstantiated)
             Init();
@@ -173,9 +177,10 @@ public partial class DynamicTextBox : Control
 
     private void OnResized()
     {
-        _dynamicText.Size = new Vector2(_textWindow.Size.x, _dynamicText.Size.y);
+        _dynamicText.SetDeferred(nameof(Size), new Vector2(_textWindow.Size.X, _dynamicText.Size.Y));
         _dynamicText.OnResized();
     }
+
     private void OnStartedWriting()
     {
         CurrentState = State.Writing;
@@ -243,7 +248,7 @@ public partial class DynamicTextBox : Control
 
     private void UpdateTextData()
     {
-        _displayHeight = _textWindow.Size.y;
+        _displayHeight = _textWindow.Size.Y;
         _pageBreakLineIndices = GetPageBreakLineIndices();
         _currentPage = 0;
         MoveToPage(0);

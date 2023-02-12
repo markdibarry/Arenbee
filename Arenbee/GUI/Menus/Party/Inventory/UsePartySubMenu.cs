@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
-using GameCore;
 using GameCore.ActionEffects;
 using GameCore.Actors;
 using GameCore.Enums;
@@ -19,15 +19,15 @@ public partial class UsePartySubMenu : OptionSubMenu
     public static string GetScenePath() => GDEx.GetScenePath();
     private PackedScene _partyMemberOptionScene;
     private OptionContainer _partyContainer;
-    public ItemStack ItemStack { get; set; }
-    public ItemBase Item { get; set; }
+    public AItemStack ItemStack { get; set; }
+    public AItem Item { get; set; }
     public PlayerParty Party { get; set; }
     public ActionEffectDBBase ActionEffectDB { get; set; }
     public IActionEffect ActionEffect { get; set; }
 
     public override void SetupData(object data)
     {
-        if (data is not ItemStack itemStack)
+        if (data is not AItemStack itemStack)
             return;
         ItemStack = itemStack;
     }
@@ -46,7 +46,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        Party = Locator.GetParty();
+        Party = Locator.Session?.Party;
         ActionEffectDB = Locator.ActionEffectDB;
         _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions");
         _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
@@ -89,11 +89,11 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            if (!option.TryGetData("actor", out ActorBase? actor))
+            if (!option.TryGetData("actor", out AActor? actor))
                 continue;
-            var target = new ActorBase[] { actor };
+            var target = new AActor[] { actor };
             bool canUse = ActionEffect.CanUse(request, target);
-            option.Disabled = !canUse || ItemStack.Amount <= 0;
+            option.Disabled = !canUse || ItemStack.Count <= 0;
             option.HPContainer.StatCurrentValueText = actor.Stats.GetHP().ToString();
             option.HPContainer.StatMaxValueText = actor.Stats.GetMaxHP().ToString();
             option.MPContainer.StatCurrentValueText = actor.Stats.GetMP().ToString();
@@ -118,11 +118,11 @@ public partial class UsePartySubMenu : OptionSubMenu
         };
         foreach (OptionItem item in selectedItems)
         {
-            if (!item.TryGetData("actor", out ActorBase? actor))
+            if (!item.TryGetData("actor", out AActorBody? actor))
                 return;
-            ActionEffect.Use(request, new ActorBase[] { actor });
+            ActionEffect.Use(request, new AActorBody[] { actor });
         }
-        ItemStack.RemoveAmount(1);
+        _inventory.RemoveItem(ItemStack);
 
         UpdatePartyDisplay();
     }

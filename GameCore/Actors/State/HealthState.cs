@@ -1,10 +1,8 @@
-﻿using GameCore.Statistics;
+﻿namespace GameCore.Actors;
 
-namespace GameCore.Actors;
-
-public abstract class HealthState : ActorState
+public abstract class HealthState : ActorBodyState
 {
-    protected HealthState(ActorBase actor) : base(actor)
+    protected HealthState(AActorBody actorBody) : base(actorBody)
     {
     }
 

@@ -20,7 +20,7 @@ public class BTNode
             Attach(child);
     }
 
-    public void SetDependencies(ActorBase actor, BlackBoard blackBoard)
+    public void SetDependencies(AActorBody actor, BlackBoard blackBoard)
     {
         Actor = actor;
         _blackBoard = blackBoard;
@@ -32,7 +32,7 @@ public class BTNode
     private BlackBoard _blackBoard;
     public BTNode Parent { get; set; }
     protected List<BTNode> Children { get; }
-    protected ActorBase Actor { get; private set; }
+    protected AActorBody Actor { get; private set; }
     protected NodeState State { get; set; }
 
     public virtual void Init() { }

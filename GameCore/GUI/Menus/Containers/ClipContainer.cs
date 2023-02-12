@@ -13,10 +13,10 @@ public partial class ClipContainer : Container
     public override Vector2 _GetMinimumSize()
     {
         Vector2 max = GetBaseMinimumSize();
-        if (!ClipX && MaxSize.x != -1)
-            max.x = Math.Min(max.x, MaxSize.x);
-        if (!ClipY && MaxSize.y != -1)
-            max.y = Math.Min(max.y, MaxSize.y);
+        if (!ClipX && MaxSize.X != -1)
+            max.X = Math.Min(max.X, MaxSize.X);
+        if (!ClipY && MaxSize.Y != -1)
+            max.Y = Math.Min(max.Y, MaxSize.Y);
         return max;
     }
 
@@ -26,15 +26,15 @@ public partial class ClipContainer : Container
         foreach (Control control in GetChildren())
         {
             Vector2 size = control.GetCombinedMinimumSize();
-            if (!ClipX && size.x > max.x)
-                max.x = size.x;
-            if (!ClipY && size.y > max.y)
-                max.y = size.y;
+            if (!ClipX && size.X > max.X)
+                max.X = size.X;
+            if (!ClipY && size.Y > max.Y)
+                max.Y = size.Y;
         }
         return max;
     }
 
-    public override void _Notification(long what)
+    public override void _Notification(int what)
     {
         if (what == NotificationSortChildren)
             RepositionChildren();
@@ -43,7 +43,7 @@ public partial class ClipContainer : Container
     public void RepositionChildren()
     {
         UpdateMinimumSize();
-        var rect = new Rect2(Vector2.Zero, Size.x, Size.y);
+        var rect = new Rect2(Vector2.Zero, Size.X, Size.Y);
         foreach (Control child in GetChildren())
             FitChildInRect(child, rect);
     }

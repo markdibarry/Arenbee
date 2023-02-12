@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Arenbee.GUI;
 
 namespace GameCore.GUI;
 
@@ -23,7 +24,7 @@ public class Loader
         }
     }
 
-    private readonly List<ObjectLoader> _objects;
+    private readonly List<IObjectLoader> _objects;
     public event Action<int> ProgressUpdate;
 
     public T GetObject<T>(string path)

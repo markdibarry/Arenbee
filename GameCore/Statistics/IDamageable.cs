@@ -5,5 +5,5 @@ namespace GameCore.Statistics;
 public interface IDamageable
 {
     Stats Stats { get; }
-    StringName Name { get; }
+    string Name { get; }
 }

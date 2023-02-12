@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace GameCore.Statistics;
 
-public class Modifier
+public struct Modifier
 {
     [JsonConstructor]
     public Modifier(
@@ -91,7 +91,7 @@ public class Modifier
     }
 }
 
-public enum ModOperator
+public enum ModOperator : byte
 {
     None,
     Add,

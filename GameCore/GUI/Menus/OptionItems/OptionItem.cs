@@ -48,7 +48,7 @@ public partial class OptionItem : MarginContainer
         }
     }
 
-    public Dictionary<string, object> OptionData { get; set; }
+    public Dictionary<string, object?> OptionData { get; set; }
     public bool Selected
     {
         get => _selected;

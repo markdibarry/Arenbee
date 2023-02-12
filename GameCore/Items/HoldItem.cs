@@ -7,7 +7,7 @@ namespace GameCore.Items;
 public abstract partial class HoldItem : Node2D
 {
     public AnimationPlayer AnimationPlayer { get; set; }
-    public ItemBase Item
+    public AItem Item
     {
         get => Locator.ItemDB.GetItem(ItemId);
         private set => ItemId = value?.Id;
@@ -15,7 +15,7 @@ public abstract partial class HoldItem : Node2D
     public string ItemId { get; private set; }
     public Sprite2D Sprite { get; set; }
     public string HoldItemType { get; set; }
-    protected ActorBase Actor { get; set; }
+    protected AActorBody ActorBody { get; set; }
     public ActionStateMachineBase StateMachine { get; protected set; }
 
     public override void _Ready()
@@ -24,16 +24,16 @@ public abstract partial class HoldItem : Node2D
         SetHitBoxes();
     }
 
-    public abstract void Init(ActorBase actor);
+    public abstract void Init(AActorBody actor);
 
     public void PlaySoundFX(string soundPath)
     {
-        Actor.PlaySoundFX(soundPath);
+        ActorBody.PlaySoundFX(soundPath);
     }
 
     public void PlaySoundFX(AudioStream sound)
     {
-        Actor.PlaySoundFX(sound);
+        ActorBody.PlaySoundFX(sound);
     }
 
     protected virtual void SetHitBoxes() { }
@@ -47,12 +47,12 @@ public abstract partial class HoldItem : Node2D
     protected void Setup(
         string itemId,
         string holdItemType,
-        ActorBase actor,
+        AActorBody actorBody,
         ActionStateMachineBase stateMachine)
     {
         Item = Locator.ItemDB.GetItem(itemId);
         HoldItemType = holdItemType;
-        Actor = actor;
+        ActorBody = actorBody;
         StateMachine = stateMachine;
     }
 }

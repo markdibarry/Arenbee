@@ -8,9 +8,9 @@ namespace Arenbee.Items;
 
 public partial class Wand : HoldItem
 {
-    public override void Init(ActorBase actor)
+    public override void Init(AActorBody actorBody)
     {
-        Setup("Wand", WeaponTypes.Wand, actor, new ActionStateMachine(actor, this));
+        Setup("Wand", WeaponTypes.Wand, actorBody, new ActionStateMachine(actorBody, this));
     }
 
     protected override void SetHitBoxes()
@@ -24,23 +24,23 @@ public partial class Wand : HoldItem
 
     public class ActionStateMachine : ActionStateMachineBase
     {
-        public ActionStateMachine(ActorBase actor, HoldItem holdItem)
+        public ActionStateMachine(AActorBody actorBody, HoldItem holdItem)
             : base(
                 new ActionState[]
                 {
-                    new NotAttacking(actor, holdItem),
-                    new WeakAttack1(actor, holdItem),
-                    new Charge(actor, holdItem),
-                    new BigAttack1(actor, holdItem)
+                    new NotAttacking(actorBody, holdItem),
+                    new WeakAttack1(actorBody, holdItem),
+                    new Charge(actorBody, holdItem),
+                    new BigAttack1(actorBody, holdItem)
                 },
-                actor, holdItem)
+                actorBody, holdItem)
         {
         }
 
         protected class NotAttacking : ActionState
         {
-            public NotAttacking(ActorBase actor, HoldItem holdItem)
-                : base(actor, holdItem)
+            public NotAttacking(AActorBody actorBody, HoldItem holdItem)
+                : base(actorBody, holdItem)
             { }
 
             public override void Enter()
@@ -56,7 +56,7 @@ public partial class Wand : HoldItem
 
             public override bool TrySwitch(IStateMachine stateMachine)
             {
-                if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreas.Count > 0)
+                if (StateController.IsBlocked(BlockedState.Attack) || ActorBody.ContextAreas.Count > 0)
                     return false;
                 if (InputHandler.SubAction.IsActionJustPressed)
                     return stateMachine.TrySwitchTo<WeakAttack1>();
@@ -66,8 +66,8 @@ public partial class Wand : HoldItem
 
         protected class WeakAttack1 : ActionState
         {
-            public WeakAttack1(ActorBase actor, HoldItem holdItem)
-                : base(actor, holdItem)
+            public WeakAttack1(AActorBody actorBody, HoldItem holdItem)
+                : base(actorBody, holdItem)
             {
                 AnimationName = "WeakAttack1";
                 BlockedStates = BlockedState.Jumping | BlockedState.Move;
@@ -78,7 +78,7 @@ public partial class Wand : HoldItem
             {
                 _counter = _countTime;
                 PlayAnimation(AnimationName);
-                Fireball.CreateFireball(Actor);
+                Fireball.CreateFireball(ActorBody);
             }
 
             public override void Update(double delta)
@@ -103,8 +103,8 @@ public partial class Wand : HoldItem
 
         protected class Charge : ActionState
         {
-            public Charge(ActorBase actor, HoldItem holdItem)
-                : base(actor, holdItem)
+            public Charge(AActorBody actorBody, HoldItem holdItem)
+                : base(actorBody, holdItem)
             {
                 AnimationName = "Charge";
                 BlockedStates = BlockedState.Jumping | BlockedState.Move;
@@ -115,9 +115,9 @@ public partial class Wand : HoldItem
             public override void Enter()
             {
                 _counter = _countTime;
-                Actor.ShaderCycleStart = 2;
-                Actor.ShaderCycleEnd = 4;
-                Actor.ShaderSpeed = 1;
+                ActorBody.ShaderCycleStart = 2;
+                ActorBody.ShaderCycleEnd = 4;
+                ActorBody.ShaderSpeed = 1;
                 PlayAnimation(AnimationName);
             }
 
@@ -128,17 +128,17 @@ public partial class Wand : HoldItem
                     _counter -= delta;
                     if (_counter <= 0)
                     {
-                        Actor.ShaderSpeed = 1.5f;
-                        Actor.ShaderCycleStart = 1;
+                        ActorBody.ShaderSpeed = 1.5f;
+                        ActorBody.ShaderCycleStart = 1;
                     }
                 }
             }
 
             public override void Exit()
             {
-                Actor.ShaderCycleStart = 0;
-                Actor.ShaderCycleEnd = 0;
-                Actor.ShaderSpeed = 0;
+                ActorBody.ShaderCycleStart = 0;
+                ActorBody.ShaderCycleEnd = 0;
+                ActorBody.ShaderSpeed = 0;
             }
 
             public override bool TrySwitch(IStateMachine stateMachine)
@@ -160,8 +160,8 @@ public partial class Wand : HoldItem
 
         protected class BigAttack1 : ActionState
         {
-            public BigAttack1(ActorBase actor, HoldItem holdItem)
-                : base(actor, holdItem)
+            public BigAttack1(AActorBody actorBody, HoldItem holdItem)
+                : base(actorBody, holdItem)
             {
                 AnimationName = "BigAttack1";
             }
@@ -169,7 +169,7 @@ public partial class Wand : HoldItem
             public override void Enter()
             {
                 PlayAnimation(AnimationName);
-                FireballBig.CreateFireball(Actor);
+                FireballBig.CreateFireball(ActorBody);
             }
 
             public override void Update(double delta)

@@ -3,6 +3,7 @@ render_mode blend_mix,unshaded;
 
 #include "res://GameCore/Shaders/ColorAdjustment.gdshaderinc"
 
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 uniform float _brightness : hint_range(-1, 1) = 0;
 uniform float _contrast : hint_range(-1, 1) = 0;
 uniform float _saturation : hint_range(-1, 2) = 0;

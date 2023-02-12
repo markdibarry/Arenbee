@@ -11,8 +11,8 @@ public partial class StatContainer : EqualContainer
 {
     public static new string GetScenePath() => GDEx.GetScenePath();
     private bool _dim;
-    private string _statNameText;
-    private string _statValueText;
+    private string _statNameText = string.Empty;
+    private string _statValueText = string.Empty;
     [Export]
     public string StatNameText
     {
@@ -35,8 +35,8 @@ public partial class StatContainer : EqualContainer
                 StatValueLabel.Text = _statValueText;
         }
     }
-    public Label StatNameLabel { get; set; }
-    public Label StatValueLabel { get; set; }
+    public Label StatNameLabel { get; private set; } = null!;
+    public Label StatValueLabel { get; private set; } = null!;
     [Export]
     public bool Dim
     {
@@ -77,10 +77,10 @@ public partial class StatContainer : EqualContainer
         DisplayValueColor(0, value);
     }
 
-    public void UpdateDisplay(Stats oldStats, Stats newStats, AttributeType attributeType)
+    public void UpdateDisplay(Stats? oldStats, Stats newStats, AttributeType attributeType)
     {
-        int? oldValue = oldStats?.Attributes.GetStat(attributeType).DisplayValue;
-        int newValue = newStats.Attributes.GetStat(attributeType).DisplayValue;
+        int? oldValue = oldStats?.Attributes.GetStat(attributeType)?.DisplayValue;
+        int newValue = newStats.Attributes.GetStat(attributeType)?.DisplayValue ?? default;
         StatNameText = attributeType.Get().Abbreviation + ":";
         StatValueText = newValue.ToString();
         Dim = oldStats != null && oldValue == newValue;

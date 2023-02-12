@@ -8,7 +8,7 @@ using GameCore.Utility;
 
 namespace Arenbee.GUI;
 
-public partial class HUD : HUDBase
+public partial class HUD : AHUD
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
@@ -22,13 +22,13 @@ public partial class HUD : HUDBase
         _statusEffectDB = Locator.StatusEffectDB;
     }
 
-    public override void OnActorAdded(ActorBase actor)
+    public override void OnActorAdded(AActor actor)
     {
         if (actor.ActorType == ActorType.Player && ProcessMode != ProcessModeEnum.Disabled)
-            _playerStatsDisplay.Update(actor);
+            _playerStatsDisplay.Update(actor.Stats);
     }
 
-    public override void OnActorDamaged(ActorBase actor, DamageData data)
+    public override void OnActorDamaged(AActor actor, DamageData data)
     {
         switch (data.ActionType)
         {
@@ -43,29 +43,29 @@ public partial class HUD : HUDBase
         }
     }
 
-    public override void OnActorDefeated(ActorBase actor)
+    public override void OnActorDefeated(AActor actor)
     {
         string defeatedMessage = $"{actor.Name} was defeated!";
         MessageQueue.Enqueue(defeatedMessage);
     }
 
-    public override void OnPlayerModChanged(ActorBase actor, ModChangeData data)
+    public override void OnActorModChanged(AActor actor, ModChangeData data)
     {
         if (data.Modifier.StatType == StatType.StatusEffect)
         {
             string message;
             if (data.Change == ModChange.Add)
-                message = $"{data.Actor.Name} was {_statusEffectDB.GetEffectData(data.Modifier.SubType).PastTenseName}!";
+                message = $"{actor.Name} was {_statusEffectDB.GetEffectData(data.Modifier.SubType).PastTenseName}!";
             else
-                message = $"{data.Actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
+                message = $"{actor.Name} recovered from {_statusEffectDB.GetEffectData(data.Modifier.SubType).Name}!";
 
             MessageQueue.Enqueue(message);
         }
     }
 
-    public override void OnPlayerStatsChanged(ActorBase actor)
+    public override void OnActorStatsChanged(AActor actor)
     {
-        _playerStatsDisplay.Update(actor);
+        _playerStatsDisplay.Update(actor.Stats);
     }
 
     private void DisplayMeleeMessage(DamageData data)

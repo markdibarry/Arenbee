@@ -1,8 +1,8 @@
 ﻿namespace GameCore.Actors;
 
-public abstract class MoveState : ActorState
+public abstract class MoveState : ActorBodyState
 {
-    protected MoveState(ActorBase actor) : base(actor)
+    protected MoveState(AActorBody actor) : base(actor)
     {
     }
 

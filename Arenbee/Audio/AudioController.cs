@@ -2,6 +2,6 @@
 
 namespace Arenbee.Audio;
 
-public partial class AudioController : AudioControllerBase
+public partial class AudioController : AAudioController
 {
 }

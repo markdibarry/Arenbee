@@ -36,7 +36,7 @@ public class CheckTargetInArea : BTNode
 
     public void OnBodyEntered(Node body)
     {
-        if (body is not GameCore.Actors.ActorBase)
+        if (body is not GameCore.Actors.AActorBody)
             return;
         object target = GetData("Target");
         if (target == null)

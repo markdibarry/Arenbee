@@ -3,11 +3,11 @@ using GameCore.Utility;
 
 namespace Arenbee.Actors.Enemies;
 
-public partial class Whisp : Actor
+public partial class Whisp : ActorBody
 {
     public class MoveStateMachine : MoveStateMachineBase
     {
-        public MoveStateMachine(ActorBase actor)
+        public MoveStateMachine(AActorBody actor)
             : base(
                 new MoveState[]
                 {
@@ -21,7 +21,7 @@ public partial class Whisp : Actor
 
         private class Standing : MoveState
         {
-            public Standing(ActorBase actor) : base(actor)
+            public Standing(AActorBody actor) : base(actor)
             {
                 AnimationName = "Standing";
             }
@@ -49,19 +49,19 @@ public partial class Whisp : Actor
 
         private class Running : MoveState
         {
-            public Running(ActorBase actor) : base(actor)
+            public Running(AActorBody actor) : base(actor)
             {
             }
 
             public override void Enter()
             {
-                Actor.MaxSpeed = Actor.RunSpeed;
+                ActorBody.MaxSpeed = ActorBody.RunSpeed;
             }
 
             public override void Update(double delta)
             {
-                Actor.UpdateDirection();
-                Actor.Move();
+                ActorBody.UpdateDirection();
+                ActorBody.Move();
             }
 
             public override void Exit() { }
@@ -78,19 +78,19 @@ public partial class Whisp : Actor
 
         private class Walking : MoveState
         {
-            public Walking(ActorBase actor) : base(actor)
+            public Walking(AActorBody actor) : base(actor)
             {
             }
 
             public override void Enter()
             {
-                Actor.MaxSpeed = Actor.WalkSpeed;
+                ActorBody.MaxSpeed = ActorBody.WalkSpeed;
             }
 
             public override void Update(double delta)
             {
-                Actor.UpdateDirection();
-                Actor.Move();
+                ActorBody.UpdateDirection();
+                ActorBody.Move();
             }
 
             public override void Exit() { }

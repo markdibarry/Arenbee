@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Arenbee.Actors.Players;
 using Arenbee.GUI.Menus.Common;
+using Arenbee.SaveData;
 using GameCore;
 using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
-using GameCore.SaveData;
 using GameCore.Utility;
 using Godot;
 
@@ -17,6 +17,7 @@ namespace Arenbee.GUI.Menus.Title;
 public partial class MainSubMenu : OptionSubMenu
 {
     private OptionContainer _startOptions;
+    private GameRoot _gameRoot = (GameRoot)Locator.Root;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_Title_Continue,
@@ -27,9 +28,9 @@ public partial class MainSubMenu : OptionSubMenu
     protected override async Task AnimateOpenAsync()
     {
         Vector2 pos = (Size - _startOptions.Size) * 0.5f;
-        _startOptions.Position = new Vector2(pos.x, -_startOptions.Size.y);
+        _startOptions.Position = new Vector2(pos.X, -_startOptions.Size.Y);
         var tween = _startOptions.CreateTween();
-        tween.TweenProperty(_startOptions, "position:y", pos.y, 0.4f);
+        tween.TweenProperty(_startOptions, "position:y", pos.Y, 0.4f);
         await ToSignal(tween, Tween.SignalName.Finished);
     }
 
@@ -86,18 +87,16 @@ public partial class MainSubMenu : OptionSubMenu
     private void StartNewGame()
     {
         CurrentState = State.Busy;
-        static async Task Callback(Loader loader)
+        async Task Callback(Loader loader)
         {
-            var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
+            var sessionScene = loader.GetObject<PackedScene>(_gameRoot.GameSessionScenePath);
             var twosenScene = loader.GetObject<PackedScene>(Twosen.GetScenePath());
-            List<ActorBase> actors = new() { twosenScene.Instantiate<Twosen>() };
-            List<ItemStack> items = new() { new ItemStack("HockeyStick", 1) };
+            List<AActorBody> actors = new() { twosenScene.Instantiate<Twosen>() };
+            List<AItemStack> items = new() { new ItemStack("HockeyStick", 1) };
             GameSave gameSave = new(actors, items);
-            var session = sessionScene.Instantiate<GameSessionBase>();
-            Locator.ProvideGameSession(session);
-            Locator.Root?.GameSessionContainer.AddChild(session);
-            session.Init(gameSave);
-            await Locator.Root?.GUIController.CloseAllLayersAsync(true);
+            var session = sessionScene.Instantiate<AGameSession>();
+            await _gameRoot.RemoveSession();
+            await _gameRoot.StartNewSession(session, gameSave);
         }
 
         var tController = Locator.TransitionController;
@@ -106,7 +105,7 @@ public partial class MainSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { Locator.Root?.GameSessionScenePath, Twosen.GetScenePath() },
+            new string[] { _gameRoot.GameSessionScenePath, Twosen.GetScenePath() },
             Callback);
         tController.RequestTransition(request);
     }

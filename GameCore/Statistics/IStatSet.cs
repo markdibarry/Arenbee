@@ -2,7 +2,7 @@
 
 namespace GameCore.Statistics;
 
-public enum StatType
+public enum StatType : byte
 {
     None,
     Attribute,
@@ -12,6 +12,7 @@ public enum StatType
     StatusEffectDef,
     StatusEffectOff
 }
+
 public interface IStatSet
 {
     [JsonIgnore]

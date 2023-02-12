@@ -1,4 +1,4 @@
-﻿using GameCore.Actors;
+﻿using GameCore.Statistics;
 using Godot;
 
 namespace Arenbee.GUI;
@@ -11,10 +11,10 @@ public partial class PlayerStatsDisplay : PanelContainer
         HeartDisplay = GetNode<HeartDisplay>("%HeartDisplay");
     }
 
-    public void Update(ActorBase actor)
+    public void Update(Stats stats)
     {
-        int hp = actor.Stats.GetHP();
-        int maxHP = actor.Stats.GetMaxHP();
+        int hp = stats.GetHP();
+        int maxHP = stats.GetMaxHP();
         HeartDisplay.UpdateMaxHearts(maxHP);
         HeartDisplay.UpdateCurrentHearts(hp);
     }

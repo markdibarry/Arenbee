@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Arenbee.SaveData;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.SaveData;
 using GameCore.Statistics;
 using Godot;
 
@@ -65,7 +67,8 @@ public partial class SaveGameOption : OptionItem
     public void UpdateDisplay(GameSave gameSave)
     {
         GameNameText = "File" + gameSave.Id;
-        int level = gameSave.ActorData[0].Stats.Attributes.GetStat(AttributeType.Level).DisplayValue;
+        IEnumerable<AttributeData> attributes = gameSave.ActorData.ElementAt(0).Attributes;
+        int level = attributes.First(x => x.AttributeType == AttributeType.Level).BaseValue;
         LevelText = "Lv. " + level;
         var timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);
         GameTimeText = timeSpan.ToString(@"hh\:mm\:ss");

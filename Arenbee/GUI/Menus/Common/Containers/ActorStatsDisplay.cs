@@ -36,14 +36,7 @@ public partial class ActorStatsDisplay : PanelContainer
         _elementDefContainer = GetNode<ElementContainer>("%EDef");
     }
 
-    public void UpdateStatsDisplay(ActorBase actor)
-    {
-        if (actor == null)
-            return;
-        UpdateStatsDisplay(null, actor.Stats);
-    }
-
-    public void UpdateStatsDisplay(Stats oldStats, Stats newStats)
+    public void UpdateStatsDisplay(Stats? oldStats, Stats newStats)
     {
         if (newStats == null)
             return;
@@ -58,7 +51,7 @@ public partial class ActorStatsDisplay : PanelContainer
         UpdateEDef(oldStats, newStats);
     }
 
-    private void UpdateEAtk(Stats oldStats, Stats newStats)
+    private void UpdateEAtk(Stats? oldStats, Stats newStats)
     {
         _elementAtkContainer.Elements.QueueFreeAllChildren();
         var newElement = newStats.ElementOffs.CurrentElement;
@@ -71,7 +64,7 @@ public partial class ActorStatsDisplay : PanelContainer
         }
     }
 
-    private void UpdateEDef(Stats oldStats, Stats newStats)
+    private void UpdateEDef(Stats? oldStats, Stats newStats)
     {
         _elementDefContainer.Elements.QueueFreeAllChildren();
         _elementDefContainer.Dim = true;

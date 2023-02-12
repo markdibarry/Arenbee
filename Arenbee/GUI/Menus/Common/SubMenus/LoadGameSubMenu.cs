@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Arenbee.SaveData;
 using GameCore;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.SaveData;
 using GameCore.Utility;
 using Godot;
 
@@ -12,7 +12,8 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class LoadGameSubMenu : OptionSubMenu
 {
-    private OptionContainer _loadOptions;
+    private OptionContainer _loadOptions = null!;
+    private GameRoot _gameRoot = (GameRoot)Locator.Root;
     public static string GetScenePath() => GDEx.GetScenePath();
 
     protected override void OnItemSelected()
@@ -41,12 +42,10 @@ public partial class LoadGameSubMenu : OptionSubMenu
         CurrentState = State.Busy;
         async Task Callback(Loader loader)
         {
-            var sessionScene = loader.GetObject<PackedScene>(Locator.Root?.GameSessionScenePath);
-            var session = sessionScene.Instantiate<GameSessionBase>();
-            await GUIController.CloseAllLayersAsync(true);
-            Locator.ProvideGameSession(session);
-            Locator.Root?.GameSessionContainer.AddChild(session);
-            session.Init(gameSave);
+            var sessionScene = loader.GetObject<PackedScene>(_gameRoot.GameSessionScenePath);
+            var session = sessionScene.Instantiate<AGameSession>();
+            await _gameRoot.RemoveSession();
+            await _gameRoot.StartNewSession(session, gameSave);
         };
 
         var tController = Locator.TransitionController;
@@ -55,7 +54,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { Locator.Root?.GameSessionScenePath },
+            new string[] { _gameRoot.GameSessionScenePath },
             Callback);
         tController.RequestTransition(request);
     }
@@ -63,9 +62,8 @@ public partial class LoadGameSubMenu : OptionSubMenu
     private static List<SaveGameOption> GetSaveGameOptions()
     {
         var saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
-        var gameSaves = SaveService.GetGameSaves();
         List<SaveGameOption> options = new();
-        foreach (var gameSave in gameSaves)
+        foreach (var gameSave in SaveService.GetGameSaves())
         {
             var option = saveGameOptionScene.Instantiate<SaveGameOption>();
             option.UpdateDisplay(gameSave);

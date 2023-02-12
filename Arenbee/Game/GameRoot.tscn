@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dlfeo74016d0"]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="1_jas0l"]
-[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/GameRootBase.tscn" id="1_luofh"]
+[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/AGameRoot.tscn" id="1_luofh"]
 [ext_resource type="Script" path="res://Arenbee/Audio/AudioController.cs" id="5_ognf4"]
 [ext_resource type="Script" path="res://GameCore/Game/GameCamera.cs" id="5_qvtd4"]
 

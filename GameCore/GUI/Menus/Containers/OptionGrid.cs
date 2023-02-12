@@ -84,7 +84,7 @@ public partial class OptionGrid : MarginContainer
     public event Action? ItemFocused;
     public event Action? ItemSelected;
 
-    public override void _Notification(long what)
+    public override void _Notification(int what)
     {
         if (what == NotificationSceneInstantiated)
             Init();
@@ -399,8 +399,8 @@ public partial class OptionGrid : MarginContainer
 
     private void OnScrollChanged(double value)
     {
-        var x = -GridContainer.Size.x * (float)(_hScrollBar.Value * 0.01);
-        var y = -GridContainer.Size.y * (float)(_vScrollBar.Value * 0.01);
+        var x = -GridContainer.Size.X * (float)(_hScrollBar.Value * 0.01);
+        var y = -GridContainer.Size.Y * (float)(_vScrollBar.Value * 0.01);
         GridContainer.Position = new Vector2(x, y);
     }
 
@@ -410,17 +410,17 @@ public partial class OptionGrid : MarginContainer
             return Vector2.Zero;
         Vector2 position = GridContainer.Position;
         // Adjust Right
-        if (GridWindow.GlobalPosition.x + GridWindow.Size.x < optionItem.GlobalPosition.x + optionItem.Size.x)
-            position.x = (optionItem.Position.x + optionItem.Size.x - GridWindow.Size.x) * -1;
+        if (GridWindow.GlobalPosition.X + GridWindow.Size.X < optionItem.GlobalPosition.X + optionItem.Size.X)
+            position.X = (optionItem.Position.X + optionItem.Size.X - GridWindow.Size.X) * -1;
         // Adjust Down
-        if (GridWindow.GlobalPosition.y + GridWindow.Size.y < optionItem.GlobalPosition.y + optionItem.Size.y)
-            position.y = (optionItem.Position.y + optionItem.Size.y - GridWindow.Size.y) * -1;
+        if (GridWindow.GlobalPosition.Y + GridWindow.Size.Y < optionItem.GlobalPosition.Y + optionItem.Size.Y)
+            position.Y = (optionItem.Position.Y + optionItem.Size.Y - GridWindow.Size.Y) * -1;
         // Adjust Left
-        if (GridWindow.GlobalPosition.x > optionItem.GlobalPosition.x)
-            position.x = -optionItem.Position.x;
+        if (GridWindow.GlobalPosition.X > optionItem.GlobalPosition.X)
+            position.X = -optionItem.Position.X;
         // Adjust Up
-        if (GridWindow.GlobalPosition.y > optionItem.GlobalPosition.y)
-            position.y = -optionItem.Position.y;
+        if (GridWindow.GlobalPosition.Y > optionItem.GlobalPosition.Y)
+            position.Y = -optionItem.Position.Y;
         return position;
     }
 
@@ -459,16 +459,16 @@ public partial class OptionGrid : MarginContainer
         _arrowUp.Visible = false;
         _arrowDown.Visible = false;
         // H arrows
-        if (GridContainer.Size.x > GridWindow.Size.x)
+        if (GridContainer.Size.X > GridWindow.Size.X)
         {
-            _arrowLeft.Visible = GridContainer.Position.x < 0;
-            _arrowRight.Visible = GridContainer.Size.x + GridContainer.Position.x > GridWindow.Size.x;
+            _arrowLeft.Visible = GridContainer.Position.X < 0;
+            _arrowRight.Visible = GridContainer.Size.X + GridContainer.Position.X > GridWindow.Size.X;
         }
         // V arrows
-        if (GridContainer.Size.y > GridWindow.Size.y)
+        if (GridContainer.Size.Y > GridWindow.Size.Y)
         {
-            _arrowUp.Visible = GridContainer.Position.y < 0;
-            _arrowDown.Visible = GridContainer.Size.y + GridContainer.Position.y > GridWindow.Size.y;
+            _arrowUp.Visible = GridContainer.Position.Y < 0;
+            _arrowDown.Visible = GridContainer.Size.Y + GridContainer.Position.Y > GridWindow.Size.Y;
         }
     }
 
@@ -485,18 +485,18 @@ public partial class OptionGrid : MarginContainer
         _hScrollBar.Visible = false;
         _vScrollBar.Visible = false;
         // HScrollBar
-        if (GridContainer.Size.x > GridWindow.Size.x)
+        if (GridContainer.Size.X > GridWindow.Size.X)
         {
             _hScrollBar.Visible = true;
-            _hScrollBar.Page = (GridWindow.Size.x / GridContainer.Size.x) * 100;
-            _hScrollBar.Value = (-GridContainer.Position.x / GridContainer.Size.x) * 100;
+            _hScrollBar.Page = (GridWindow.Size.X / GridContainer.Size.X) * 100;
+            _hScrollBar.Value = (-GridContainer.Position.X / GridContainer.Size.X) * 100;
         }
         // VScrollBar
-        if (GridContainer.Size.y > GridWindow.Size.y)
+        if (GridContainer.Size.Y > GridWindow.Size.Y)
         {
             _vScrollBar.Visible = true;
-            _vScrollBar.Page = (GridWindow.Size.y / GridContainer.Size.y) * 100;
-            _vScrollBar.Value = (-GridContainer.Position.y / GridContainer.Size.y) * 100;
+            _vScrollBar.Page = (GridWindow.Size.Y / GridContainer.Size.Y) * 100;
+            _vScrollBar.Value = (-GridContainer.Position.Y / GridContainer.Size.Y) * 100;
         }
     }
 

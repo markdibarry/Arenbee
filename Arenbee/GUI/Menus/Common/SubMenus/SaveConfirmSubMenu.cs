@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.SaveData;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.SaveData;
@@ -12,6 +13,7 @@ namespace Arenbee.GUI.Menus.Common;
 public partial class SaveConfirmSubMenu : OptionSubMenu
 {
     private int _gameSaveId;
+    private GameSession? _gameSession = Locator.Session as GameSession;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_SaveConfirm_Yes,
@@ -49,7 +51,9 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     private void SaveGame()
     {
-        SaveService.SaveGame(_gameSaveId, Locator.Session);
+        if (_gameSession == null)
+            return;
+        ASaveService<GameSave>.SaveGame(new GameSave(_gameSaveId, _gameSession));
         _ = OpenSubMenuAsync(SaveSuccessSubMenu.GetScenePath());
     }
 

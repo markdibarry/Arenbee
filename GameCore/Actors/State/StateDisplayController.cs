@@ -6,12 +6,12 @@ namespace GameCore.Actors;
 
 public class StateDisplayController
 {
-    private Label _airStateDisplay;
-    private Label _moveStateDisplay;
-    private Label _actionStateDisplay;
-    private Label _healthStateDisplay;
+    private Label _airStateDisplay = null!;
+    private Label _moveStateDisplay = null!;
+    private Label _actionStateDisplay = null!;
+    private Label _healthStateDisplay = null!;
 
-    public void CreateStateDisplay(ActorBase actor)
+    public void CreateStateDisplay(AActorBody actor)
     {
         var stateDisplay = GDEx.Instantiate<Control>(StateDisplay.GetScenePath());
         _airStateDisplay = stateDisplay.GetNode<Label>("AirState");
@@ -24,10 +24,10 @@ public class StateDisplayController
         _healthStateDisplay.Text = string.Empty;
         actor.AddChild(stateDisplay);
         Vector2 frameSize = actor.BodySprite.GetFrameSize();
-        stateDisplay.Position = new Vector2(actor.BodySprite.Position.x, (frameSize.y / 2 * -1) - 10 + actor.BodySprite.Position.y);
+        stateDisplay.Position = new Vector2(actor.BodySprite.Position.X, (frameSize.Y / 2 * -1) - 10 + actor.BodySprite.Position.Y);
     }
 
-    public void Update(StateControllerBase stateController)
+    public void Update(AStateController stateController)
     {
         _moveStateDisplay.Text = stateController.MoveStateMachine.State.GetType().Name;
         _airStateDisplay.Text = stateController.AirStateMachine.State.GetType().Name;

@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3]
 
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Actor.tscn" id="1_sddne"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBody.tscn" id="1_sddne"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Plant/Plant.cs" id="2_ulj8y"]
 [ext_resource type="AnimationLibrary" uid="uid://bhrmwra8ak20u" path="res://Arenbee/Actors/Enemies/Plant/Animation/PlantLibrary.res" id="3_t10r8"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="4_dfcpf"]

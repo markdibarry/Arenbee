@@ -7,7 +7,7 @@ namespace Arenbee.Items;
 
 public partial class HockeyStick : HoldItem
 {
-    public override void Init(ActorBase actor)
+    public override void Init(AActorBody actor)
     {
         Setup("HockeyStick", GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
     }
@@ -17,8 +17,8 @@ public partial class HockeyStick : HoldItem
 
     protected override void SetHitBoxes()
     {
-        WeakAttack1HitBox.SetBasicMeleeBox(Actor);
-        WeakAttack2HitBox.SetBasicMeleeBox(Actor);
+        WeakAttack1HitBox.SetBasicMeleeBox(ActorBody);
+        WeakAttack2HitBox.SetBasicMeleeBox(ActorBody);
     }
 
     protected override void SetNodeReferences()
@@ -31,7 +31,7 @@ public partial class HockeyStick : HoldItem
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(ActorBase actor, HoldItem holdItem)
+    public ActionStateMachine(AActorBody actor, HoldItem holdItem)
         : base(
             new ActionState[]
             {
@@ -45,7 +45,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class NotAttacking : ActionState
     {
-        public NotAttacking(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        public NotAttacking(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
         }
 
@@ -62,7 +62,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreas.Count > 0)
+            if (StateController.IsBlocked(BlockedState.Attack) || ActorBody.ContextAreas.Count > 0)
                 return false;
             if (InputHandler.Attack.IsActionJustPressed)
                 return stateMachine.TrySwitchTo<WeakAttack1>();
@@ -72,7 +72,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class WeakAttack1 : ActionState
     {
-        public WeakAttack1(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        public WeakAttack1(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
             AnimationName = "WeakAttack1";
         }
@@ -106,7 +106,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class WeakAttack2 : ActionState
     {
-        public WeakAttack2(ActorBase actor, HoldItem? holdItem) : base(actor, holdItem)
+        public WeakAttack2(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
             AnimationName = "WeakAttack2";
         }

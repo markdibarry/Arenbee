@@ -2,9 +2,9 @@
 
 namespace GameCore.Actors;
 
-public abstract class ActionState : ActorState
+public abstract class ActionState : ActorBodyState
 {
-    protected ActionState(ActorBase actor, HoldItem? holdItem)
+    protected ActionState(AActorBody actor, HoldItem? holdItem)
         : base(actor)
     {
         HoldItem = holdItem;

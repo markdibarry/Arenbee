@@ -13,7 +13,7 @@ public abstract class Stat
         SubType = type;
         BaseValue = 0;
         MaxValue = 999;
-        Modifiers = new List<Modifier>();
+        Modifiers = new();
     }
 
     protected Stat(int type, int baseValue, int maxValue)
@@ -32,7 +32,7 @@ public abstract class Stat
         SubType = type;
         BaseValue = valueStat.BaseValue;
         MaxValue = valueStat.MaxValue;
-        Modifiers = new List<Modifier>(valueStat.Modifiers);
+        Modifiers = new(valueStat.Modifiers);
     }
 
     public int BaseValue { get; set; }

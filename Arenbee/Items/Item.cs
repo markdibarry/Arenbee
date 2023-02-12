@@ -2,7 +2,7 @@
 
 namespace Arenbee.Items;
 
-public class Item : ItemBase
+public class Item : AItem
 {
 }
 

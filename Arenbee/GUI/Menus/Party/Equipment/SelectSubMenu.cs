@@ -2,12 +2,13 @@
 using Arenbee.GUI.Menus.Common;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
+using Arenbee.Items;
+using Arenbee.Game;
 
 namespace Arenbee.GUI.Menus.Party.Equipment;
 
@@ -15,16 +16,16 @@ namespace Arenbee.GUI.Menus.Party.Equipment;
 public partial class SelectSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private string _currentItemId;
+    private AItemStack? _currentItemStack;
     private OptionContainer _equipOptions;
-    private ItemDBBase _itemDB;
+    private AItemDB _itemDB;
     private PackedScene _keyValueOptionScene;
     private Stats _mockStats;
     private PlayerParty _playerParty;
     private ActorStatsDisplay _actorStatsDisplay;
     private ItemStatsDisplay _itemStatsDisplay;
-    public ActorBase Actor { get; set; }
-    public EquipmentSlotBase Slot { get; set; }
+    public AActor Actor { get; set; }
+    public EquipmentSlot Slot { get; set; }
 
     public override void SetupData(object data)
     {
@@ -50,20 +51,19 @@ public partial class SelectSubMenu : OptionSubMenu
             _itemStatsDisplay.UpdateStatsDisplay(null);
             return;
         }
-        _itemDB.GetItem(_currentItemId)?.RemoveFromStats(_mockStats);
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack.ItemId), out _currentItemId))
+        _currentItemStack.Item.RemoveFromStats(_mockStats);
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out _currentItemStack))
             return;
-        var newItem = _itemDB.GetItem(_currentItemId);
-        newItem?.AddToStats(_mockStats);
+        _currentItemStack.Item.AddToStats(_mockStats);
         _actorStatsDisplay.UpdateStatsDisplay(Actor?.Stats, _mockStats);
-        _itemStatsDisplay.UpdateStatsDisplay(newItem);
+        _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack.Item);
     }
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack.ItemId), out string? itemId))
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out AItemStack? itemStack))
             return;
-        if (TryEquip(itemId, Slot))
+        if (TryEquip(itemStack, Slot))
         {
             CloseSoundPath = string.Empty;
             _ = CloseSubMenuAsync();
@@ -75,17 +75,18 @@ public partial class SelectSubMenu : OptionSubMenu
         base.SetNodeReferences();
         _itemDB = Locator.ItemDB;
         _mockStats = Actor?.Stats == null ? null : new Stats(Actor.Stats);
-        _currentItemId = Slot?.ItemId;
+        _currentItemStack = Slot?.ItemStack;
         _equipOptions = OptionContainers.Find(x => x.Name == "EquipOptions");
         _actorStatsDisplay = Foreground.GetNode<ActorStatsDisplay>("ActorStatsDisplay");
         _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
-        _playerParty = Locator.GetParty() ?? new PlayerParty();
+        GameSession? gameSession = Locator.Session as GameSession;
+        _playerParty = gameSession?.Party ?? new PlayerParty();
         _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
     }
 
-    private bool TryEquip(string itemId, EquipmentSlotBase slot)
+    private bool TryEquip(AItemStack itemStack, EquipmentSlot slot)
     {
-        return Actor.Equipment.TrySetItemById(slot, itemId);
+        return Actor.Equipment.TrySetItem(Actor, slot, itemStack);
     }
 
     private List<KeyValueOption> GetEquippableOptions()
@@ -94,22 +95,28 @@ public partial class SelectSubMenu : OptionSubMenu
         var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
         unequipOption.KeyText = "<Unequip>";
         unequipOption.ValueText = string.Empty;
-        unequipOption.OptionData[nameof(ItemStack.ItemId)] = "";
+        unequipOption.OptionData[nameof(ItemStack)] = null;
         options.Add(unequipOption);
         if (Slot == null)
             return options;
-        foreach (var itemStack in _playerParty.Inventory?.GetItemsByType(Slot.SlotCategory.ItemCategoryId))
+        if (_playerParty.Inventory == null)
+            return options;
+        foreach (string itemCategoryId in Slot.SlotCategory.ItemCategoryIds)
         {
-            var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
-            option.KeyText = itemStack.Item.DisplayName;
-            option.ValueText = "x" + itemStack.Amount.ToString();
-            option.OptionData[nameof(ItemStack.ItemId)] = itemStack.ItemId;
-            if (!itemStack.CanReserve())
-                option.Disabled = true;
-            if (itemStack.ItemId == Slot.ItemId)
-                _equipOptions.FocusItem(options.Count);
-            options.Add(option);
+            foreach (AItemStack itemStack in _playerParty.Inventory.GetItemsByType(itemCategoryId))
+            {
+                var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
+                option.KeyText = itemStack.Item.DisplayName;
+                option.ValueText = "x" + itemStack.Count.ToString();
+                option.OptionData[nameof(ItemStack)] = itemStack;
+                if (!itemStack.CanReserve())
+                    option.Disabled = true;
+                if (itemStack.Item == Slot.Item)
+                    _equipOptions.FocusItem(options.Count);
+                options.Add(option);
+            }
         }
+
         return options;
     }
 }

@@ -32,9 +32,9 @@ public class StatusEffectDB : StatusEffectDBBase
             TickNotifier = new TimedNotifier(3f, false),
             TickEffect = (statusEffect) =>
             {
-                var statsOwner = statusEffect.Stats.StatsOwner;
-                if (statsOwner is ActorBase actor)
-                    actor.InputHandler.Jump.IsActionJustPressed = true;
+                IDamageable statsOwner = statusEffect.Stats.StatsOwner;
+                if (statsOwner is AActor actor && actor.ActorBody != null)
+                    actor.ActorBody.InputHandler.Jump.IsActionJustPressed = true;
                 var actionData = new ActionData()
                 {
                     Value = (int)(statsOwner.Stats.GetMaxHP() * 0.05),
@@ -74,15 +74,15 @@ public class StatusEffectDB : StatusEffectDBBase
             TickNotifier = new TimedNotifier(3f),
             TickEffect = (statusEffect) =>
             {
-                var statsOwner = statusEffect.Stats.StatsOwner;
+                var stats = statusEffect.Stats;
                 var actionData = new ActionData()
                 {
-                    Value = (int)(statsOwner.Stats.GetMaxHP() * 0.05),
+                    Value = (int)(stats.GetMaxHP() * 0.05),
                     SourceName = statusEffect.EffectData.Name,
                     ActionType = ActionType.Status,
                     StatusEffectDamage = statusEffect.StatusEffectType
                 };
-                statsOwner.Stats.ReceiveAction(actionData);
+                stats.ReceiveAction(actionData);
             }
         };
         Effects[StatusEffectType.Zombie] = new StatusEffectData()

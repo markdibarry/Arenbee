@@ -9,21 +9,20 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ItemStatsDisplay : PanelContainer
 {
-    private PackedScene _elementScene;
-    private GridContainer _gridContainer;
-    private ElementContainer _elementAtkContainer;
-    private ElementContainer _elementDefContainer;
-    private StatContainer _hpContainer;
-    private StatContainer _mpContainer;
-    private StatContainer _attackContainer;
-    private StatContainer _defenseContainer;
-    private StatContainer _mAttackContainer;
-    private StatContainer _mDefenseContainer;
+    private PackedScene _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
+    private GridContainer _gridContainer = null!;
+    private ElementContainer _elementAtkContainer = null!;
+    private ElementContainer _elementDefContainer = null!;
+    private StatContainer _hpContainer = null!;
+    private StatContainer _mpContainer = null!;
+    private StatContainer _attackContainer = null!;
+    private StatContainer _defenseContainer = null!;
+    private StatContainer _mAttackContainer = null!;
+    private StatContainer _mDefenseContainer = null!;
 
     public override void _Ready()
     {
         base._Ready();
-        _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
         _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
         _hpContainer = _gridContainer.GetNode<StatContainer>("HP");
         _mpContainer = _gridContainer.GetNode<StatContainer>("MP");
@@ -35,14 +34,14 @@ public partial class ItemStatsDisplay : PanelContainer
         _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
     }
 
-    public void UpdateStatsDisplay(ItemBase item)
+    public void UpdateStatsDisplay(AItem? item)
     {
         UpdateAttributes(item);
         UpdateEAtk(item);
         UpdateEDef(item);
     }
 
-    private void UpdateAttributes(ItemBase item)
+    private void UpdateAttributes(AItem? item)
     {
         var attMods = item?.Modifiers?.Where(x => !x.IsHidden && x.StatType == StatType.Attribute);
         _hpContainer.UpdateDisplay(attMods, AttributeType.MaxHP);
@@ -53,7 +52,7 @@ public partial class ItemStatsDisplay : PanelContainer
         _mDefenseContainer.UpdateDisplay(attMods, AttributeType.MagicDefense);
     }
 
-    private void UpdateEAtk(ItemBase item)
+    private void UpdateEAtk(AItem? item)
     {
         _elementAtkContainer.Elements.QueueFreeAllChildren();
         _elementAtkContainer.Dim = true;
@@ -66,7 +65,7 @@ public partial class ItemStatsDisplay : PanelContainer
         _elementAtkContainer.Dim = false;
     }
 
-    private void UpdateEDef(ItemBase item)
+    private void UpdateEDef(AItem? item)
     {
         _elementDefContainer.Elements.QueueFreeAllChildren();
         _elementDefContainer.Dim = true;

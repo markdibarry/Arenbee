@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace GameCore.Utility;
 
-public abstract class StateMachine<TState> : IStateMachine where TState : IState
+public abstract class StateMachine<TState> : IStateMachine
+    where TState : IState
 {
     public StateMachine(TState[] states)
     {
-        _states = StateMachine<TState>.ToStatesDictionary(states);
+        _states = ToStatesDictionary(states);
         FallbackState = states.First();
         State = FallbackState;
     }
@@ -29,10 +30,21 @@ public abstract class StateMachine<TState> : IStateMachine where TState : IState
     /// <value></value>
     public TState FallbackState { get; set; }
 
+    /// <summary>
+    /// Switches to the FallbackState
+    /// </summary>
     public void Reset() => SwitchTo(FallbackState);
 
+    /// <summary>
+    /// Exits the State
+    /// </summary>
     public void ExitState() => State.Exit();
 
+    /// <summary>
+    /// Attempts to switch to a provided state
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public bool TrySwitchTo<T>() where T : IState
     {
         if (!_states.TryGetValue(typeof(T), out TState? state))
@@ -62,6 +74,12 @@ public abstract class StateMachine<TState> : IStateMachine where TState : IState
         State.Enter();
     }
 
+    /// <summary>
+    /// Converts state Array to Dictionary
+    /// </summary>
+    /// <param name="states"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     private static Dictionary<Type, TState> ToStatesDictionary(TState[] states)
     {
         if (states.Length == 0)

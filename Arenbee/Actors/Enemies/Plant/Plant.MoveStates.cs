@@ -2,11 +2,11 @@
 
 namespace Arenbee.Actors.Enemies;
 
-public partial class Plant : Actor
+public partial class Plant : ActorBody
 {
     public class MoveStateMachine : MoveStateMachineBase
     {
-        public MoveStateMachine(ActorBase actor)
+        public MoveStateMachine(AActorBody actor)
             : base(
                 new MoveState[]
                 {
@@ -18,7 +18,7 @@ public partial class Plant : Actor
 
         private class Standing : MoveState
         {
-            public Standing(ActorBase actor) : base(actor)
+            public Standing(AActorBody actor) : base(actor)
             {
                 AnimationName = "Standing";
             }

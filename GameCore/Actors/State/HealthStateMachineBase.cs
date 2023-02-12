@@ -1,8 +1,8 @@
 ﻿namespace GameCore.Actors;
 
-public abstract class HealthStateMachineBase : ActorStateMachine
+public abstract class HealthStateMachineBase : ActorBodyStateMachine
 {
-    protected HealthStateMachineBase(ActorState[] states, ActorBase actor) : base(states, actor)
+    protected HealthStateMachineBase(ActorBodyState[] states, AActorBody actor) : base(states, actor)
     {
     }
 }

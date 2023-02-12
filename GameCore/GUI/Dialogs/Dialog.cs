@@ -33,7 +33,7 @@ public partial class Dialog : GUILayer
     public bool SpeedUpEnabled { get; set; }
     public double SpeedMultiplier { get; set; }
     public bool SpeechBubbleEnabled { get; set; }
-    public bool DualBoxEnabled { get; set; } = false;
+    public bool DualBoxEnabled { get; set; } = true;
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -124,6 +124,14 @@ public partial class Dialog : GUILayer
         _ = _scriptReader.ReadNextStatementAsync(choices[0].Next);
     }
 
+    /// <summary>
+    /// Updates the Speaker's name, portrait, and mood
+    /// </summary>
+    /// <param name="global"></param>
+    /// <param name="speakerId"></param>
+    /// <param name="displayName"></param>
+    /// <param name="portraitId"></param>
+    /// <param name="mood"></param>
     public void UpdateSpeaker(bool global, string speakerId, string? displayName, string? portraitId, string? mood)
     {
         Speaker speaker = GetSpeaker(speakerId);

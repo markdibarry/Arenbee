@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GameCore.SaveData;
 using Godot;
 
 namespace GameCore.GUI;
 
-public abstract class ObjectLoader
+public interface IObjectLoader
+{
+    object? LoadedObject { get; set; }
+    int Progress { get; set; }
+    string Path { get; set; }
+    Action ReportProgress { get; set; }
+    Task<object?> LoadAsync();
+}
+
+public abstract class ObjectLoader : IObjectLoader
 {
     protected ObjectLoader(string path, Action reportProgress)
     {
@@ -13,11 +21,11 @@ public abstract class ObjectLoader
         ReportProgress = reportProgress;
     }
 
-    public object LoadedObject { get; set; }
+    public object? LoadedObject { get; set; }
     public int Progress { get; set; }
     public string Path { get; set; }
     public Action ReportProgress { get; set; }
-    public abstract Task<object> LoadAsync();
+    public abstract Task<object?> LoadAsync();
 }
 
 public class ObjectLoaderResource : ObjectLoader
@@ -25,7 +33,7 @@ public class ObjectLoaderResource : ObjectLoader
     public ObjectLoaderResource(string path, Action reportProgress)
         : base(path, reportProgress) { }
 
-    public override async Task<object> LoadAsync()
+    public override async Task<object?> LoadAsync()
     {
         ResourceLoader.ThreadLoadStatus loadStatus;
         Godot.Collections.Array loadProgress = new();
@@ -45,19 +53,5 @@ public class ObjectLoaderResource : ObjectLoader
         if (loadStatus == ResourceLoader.ThreadLoadStatus.Loaded)
             LoadedObject = ResourceLoader.LoadThreadedGet(Path);
         return LoadedObject;
-    }
-}
-
-public class ObjectLoaderGameSave : ObjectLoader
-{
-    public ObjectLoaderGameSave(string path, Action reportProgress)
-        : base(path, reportProgress) { }
-
-    public override Task<object> LoadAsync()
-    {
-        LoadedObject = SaveService.LoadGame(Path);
-        Progress = 100;
-        ReportProgress();
-        return Task.FromResult(LoadedObject);
     }
 }

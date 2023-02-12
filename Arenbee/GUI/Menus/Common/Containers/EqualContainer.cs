@@ -24,9 +24,9 @@ public partial class EqualContainer : MarginContainer
 
     protected void ResizeItems(Control itemA, Control itemB)
     {
-        if (itemA.Size.x > itemB.Size.x)
-            CustomMinimumSize = new Vector2i((int)itemA.Size.x * 2, 0);
-        else if (itemB.Size.x > itemA.Size.x)
-            CustomMinimumSize = new Vector2i((int)itemB.Size.x * 2, 0);
+        if (itemA.Size.X > itemB.Size.X)
+            CustomMinimumSize = new Vector2I((int)itemA.Size.X * 2, 0);
+        else if (itemB.Size.X > itemA.Size.X)
+            CustomMinimumSize = new Vector2I((int)itemB.Size.X * 2, 0);
     }
 }

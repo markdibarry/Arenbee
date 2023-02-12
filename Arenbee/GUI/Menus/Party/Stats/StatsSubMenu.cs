@@ -2,10 +2,10 @@
 using Arenbee.GUI.Menus.Common;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
+using Arenbee.Game;
 
 namespace Arenbee.GUI.Menus.Party;
 
@@ -24,7 +24,8 @@ public partial class StatsSubMenu : OptionSubMenu
         _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
         _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
-        _playerParty = Locator.GetParty() ?? new PlayerParty();
+        GameSession? gameSession = Locator.Session as GameSession;
+        _playerParty = gameSession?.Party ?? new PlayerParty();
     }
 
     protected override void SetupOptions()
@@ -34,9 +35,9 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void OnItemFocused()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ActorBase), out ActorBase? actor))
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(AActor), out AActor? actor))
             return;
-        _statsDisplay.UpdateStatsDisplay(actor);
+        _statsDisplay.UpdateStatsDisplay(null, actor.Stats);
     }
 
     private List<TextOption> GetPartyMemberOptions()
@@ -45,7 +46,7 @@ public partial class StatsSubMenu : OptionSubMenu
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData[nameof(ActorBase)] = actor;
+            textOption.OptionData[nameof(AActor)] = actor;
             textOption.LabelText = actor.Name;
             options.Add(textOption);
         }

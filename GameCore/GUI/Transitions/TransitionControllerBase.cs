@@ -7,10 +7,10 @@ namespace GameCore.GUI;
 
 public abstract class TransitionControllerBase
 {
-    private LoadingScreen _loadingScreen;
-    private TransitionRequest _pendingTransition;
-    private Transition _transitionA;
-    private Transition _transitionB;
+    private LoadingScreen? _loadingScreen;
+    private TransitionRequest? _pendingTransition;
+    private Transition? _transitionA;
+    private Transition? _transitionB;
 
     public virtual void Update()
     {
@@ -26,7 +26,7 @@ public abstract class TransitionControllerBase
     public async Task TransitionAsync(TransitionRequest request)
     {
         _pendingTransition = null;
-        var loader = new Loader(request.Paths);
+        Loader loader = new(request.Paths);
         await TransitionInAsync(request);
         await LoadAsync(loader);
         await request.Callback?.Invoke(loader);
@@ -114,7 +114,7 @@ public abstract class TransitionControllerBase
     {
         return transitionType switch
         {
-            TransitionType.Game => Locator.Root?.Transition,
+            TransitionType.Game => Locator.Root.Transition,
             TransitionType.Session => Locator.Session?.Transition,
             _ => null
         };

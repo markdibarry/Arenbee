@@ -5,20 +5,20 @@ namespace Arenbee.Actors.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(ActorBase actor)
+    public ActionStateMachine(AActorBody actorBody)
         : base(
             new ActionState[]
             {
-                new NotAttacking(actor),
-                new UnarmedAttack(actor)
+                new NotAttacking(actorBody),
+                new UnarmedAttack(actorBody)
             },
-            actor)
+            actorBody)
     {
     }
 
     public class NotAttacking : ActionState
     {
-        public NotAttacking(ActorBase actor)
+        public NotAttacking(AActorBody actor)
             : base(actor, null)
         { }
 
@@ -33,7 +33,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (StateController.IsBlocked(BlockedState.Attack) || Actor.ContextAreas.Count > 0)
+            if (StateController.IsBlocked(BlockedState.Attack) || ActorBody.ContextAreas.Count > 0)
                 return false;
             if (InputHandler.Attack.IsActionJustPressed)
                 return stateMachine.TrySwitchTo<UnarmedAttack>();
@@ -43,8 +43,8 @@ public class ActionStateMachine : ActionStateMachineBase
 
     public class UnarmedAttack : ActionState
     {
-        public UnarmedAttack(ActorBase actor)
-            : base(actor, null)
+        public UnarmedAttack(AActorBody actorBody)
+            : base(actorBody, null)
         {
             AnimationName = "UnarmedAttack";
             BlockedStates = BlockedState.Jumping | BlockedState.Move;
@@ -62,7 +62,7 @@ public class ActionStateMachine : ActionStateMachineBase
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Attack)
-                || Actor.AnimationPlayer.CurrentAnimation != AnimationName)
+                || ActorBody.AnimationPlayer.CurrentAnimation != AnimationName)
                 return stateMachine.TrySwitchTo<NotAttacking>();
             if (InputHandler.Attack.IsActionJustPressed)
                 return stateMachine.TrySwitchTo<UnarmedAttack>();

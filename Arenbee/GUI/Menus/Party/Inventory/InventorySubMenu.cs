@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using GameCore.Extensions;
@@ -15,18 +15,20 @@ namespace Arenbee.GUI.Menus.Party;
 public partial class InventorySubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private Inventory _inventory;
+    private AInventory _inventory = Locator.Session?.Party?.Inventory;
+    private AItemCategoryDB _itemCategoryDB = Locator.ItemCategoryDB;
     private OptionContainer _inventoryList;
     private DynamicTextContainer _itemInfo;
     private ItemStatsDisplay _itemStatsDisplay;
     private OptionContainer _typeList;
-    private PackedScene _keyValueOptionScene;
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+    private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
         {
-            _ = UpdateItemDescription(null);
+            UpdateItemDescription(null);
             Locator.Audio.PlaySoundFX("menu_close1.wav");
             FocusContainer(_typeList);
             return;
@@ -40,22 +42,24 @@ public partial class InventorySubMenu : OptionSubMenu
         _typeList.ReplaceChildren(typeOptions);
         _typeList.FocusItem(1);
         _inventoryList.Clear();
-        _ = UpdateItemDescription(null);
+        UpdateItemDescription(null);
     }
 
     protected override void OnItemFocused()
     {
+        if (CurrentContainer == null)
+            return;
         if (CurrentContainer == _typeList)
             UpdateItemList(CurrentContainer.FocusedItem, resetFocus: true);
         else
-            _ = UpdateItemDescription(CurrentContainer.FocusedItem);
+            UpdateItemDescription(CurrentContainer.FocusedItem);
     }
 
     protected override void OnItemSelected()
     {
         if (CurrentContainer == _typeList)
             FocusContainer(_inventoryList);
-        else if (CurrentContainer == _inventoryList)
+        else if (CurrentContainer == _inventoryList && CurrentContainer.FocusedItem != null)
             OpenUseSubMenu(CurrentContainer.FocusedItem);
     }
 
@@ -68,49 +72,45 @@ public partial class InventorySubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _typeList = OptionContainers.Find(x => x.Name == "ItemTypeOptions");
-        _inventoryList = OptionContainers.Find(x => x.Name == "InventoryOptions");
+        _typeList = OptionContainers.First(x => x.Name == "ItemTypeOptions");
+        _inventoryList = OptionContainers.First(x => x.Name == "InventoryOptions");
         _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
         _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
-        _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
-        _inventory = Locator.GetParty()?.Inventory;
     }
 
-    private static List<TextOption> GetItemTypeOptions()
+    private List<TextOption> GetItemTypeOptions()
     {
-        var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        var options = new List<TextOption>();
-        var itemCategories = Locator.ItemCategoryDB.Categories;
-        var allOption = textOptionScene.Instantiate<TextOption>();
+        List<TextOption> options = new(_itemCategoryDB.Categories.Count + 1);
+        var allOption = _textOptionScene.Instantiate<TextOption>();
         allOption.LabelText = "All";
-        allOption.OptionData[nameof(Item.ItemCategoryId)] = "all";
+        allOption.OptionData[nameof(Item.ItemCategory.Id)] = "all";
         options.Add(allOption);
-        foreach (var category in itemCategories)
+        foreach (ItemCategory category in _itemCategoryDB.Categories)
         {
-            var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = category.Name;
-            option.OptionData[nameof(Item.ItemCategoryId)] = category.Id;
+            var option = _textOptionScene.Instantiate<TextOption>();
+            option.LabelText = category.DisplayName;
+            option.OptionData[nameof(Item.ItemCategory.Id)] = category.Id;
             options.Add(option);
         }
         return options;
     }
 
-    private List<KeyValueOption> GetItemOptions(string itemCategoryId)
+    private IEnumerable<KeyValueOption> GetItemOptions(string itemCategoryId)
     {
-        var options = new List<KeyValueOption>();
-        ICollection<ItemStack> itemStacks;
+        IReadOnlyCollection<AItemStack> itemStacks;
         if (itemCategoryId == "all")
-            itemStacks = _inventory?.Items;
+            itemStacks = _inventory.Items;
         else
-            itemStacks = _inventory?.GetItemsByType(itemCategoryId);
-        if (itemStacks == null)
-            return options;
+            itemStacks = _inventory.GetItemsByType(itemCategoryId);
+        if (!itemStacks.Any())
+            return Enumerable.Empty<KeyValueOption>();
+        List<KeyValueOption> options = new(itemStacks.Count);
         foreach (var itemStack in itemStacks)
         {
             var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
             option.KeyText = itemStack.Item.DisplayName;
-            option.ValueText = "x" + itemStack.Amount.ToString();
-            option.OptionData[nameof(ItemStack.ItemId)] = itemStack.ItemId;
+            option.ValueText = "x" + itemStack.Count.ToString();
+            option.OptionData[nameof(AItemStack.Item)] = itemStack.Item;
             options.Add(option);
         }
         return options;
@@ -118,22 +118,27 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void OpenUseSubMenu(OptionItem optionItem)
     {
-        if (!optionItem.TryGetData(nameof(ItemStack.ItemId), out string? itemId))
-            return;
-        ItemStack itemStack = _inventory.GetItemStack(itemId);
-        if (itemStack == null)
+        if (!optionItem.TryGetData(nameof(AItemStack), out AItemStack? itemStack))
             return;
         _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: itemStack);
     }
 
-    private async Task UpdateItemDescription(OptionItem optionItem)
+    private void UpdateItemDescription(OptionItem? optionItem)
     {
-        if (!optionItem.TryGetData(nameof(ItemStack.ItemId), out string? itemId))
-            return;
-        ItemBase item = Locator.ItemDB.GetItem(itemId);
-        _itemStatsDisplay.UpdateStatsDisplay(item);
-        await _itemInfo.UpdateTextAsync(item?.Description);
-        _itemInfo.WriteTextEnabled = true;
+        if (optionItem == null)
+        {
+            _itemStatsDisplay.UpdateStatsDisplay(null);
+            _ = _itemInfo.UpdateTextAsync(string.Empty);
+            _itemInfo.WriteTextEnabled = true;
+        }
+        else
+        {
+            if (!optionItem.TryGetData(nameof(AItemStack), out AItemStack? itemStack))
+                return;
+            _itemStatsDisplay.UpdateStatsDisplay(itemStack.Item);
+            _ = _itemInfo.UpdateTextAsync(itemStack.Item.Description);
+            _itemInfo.WriteTextEnabled = true;
+        }
     }
 
     private void UpdateItemList(OptionItem optionItem, bool resetFocus)
@@ -142,9 +147,9 @@ public partial class InventorySubMenu : OptionSubMenu
             return;
         if (resetFocus)
             _inventoryList.ResetContainerFocus();
-        if (!optionItem.TryGetData(nameof(Item.ItemCategoryId), out string? itemCategoryId))
+        if (!optionItem.TryGetData(nameof(Item.ItemCategory.Id), out string? itemCategoryId))
             return;
-        List<KeyValueOption> options = GetItemOptions(itemCategoryId);
+        IEnumerable<KeyValueOption> options = GetItemOptions(itemCategoryId);
         _inventoryList.ReplaceChildren(options);
     }
 }

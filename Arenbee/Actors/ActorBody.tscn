@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/AActorBody.tscn" id="1_06abq"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_05g6h"]
+[ext_resource type="Script" path="res://Arenbee/Items/HoldItemController.cs" id="3_jnf8j"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_swkjy"]
+resource_local_to_scene = true
+shader = ExtResource("2_05g6h")
+cycle_direction = null
+cycle_end = 0.0
+cycle_start = 0.0
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+speed = 0.0
+use_palette1 = false
+use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ala13"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Actor" instance=ExtResource("1_06abq")]
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_swkjy")
+
+[node name="HoldItems" parent="Body" index="1"]
+script = ExtResource("3_jnf8j")
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_ala13")

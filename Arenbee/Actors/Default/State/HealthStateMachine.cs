@@ -8,21 +8,21 @@ namespace Arenbee.Actors.Default.State;
 
 public class HealthStateMachine : HealthStateMachineBase
 {
-    public HealthStateMachine(ActorBase actor)
+    public HealthStateMachine(AActorBody actorBody)
         : base(
             new HealthState[]
             {
-                new Normal(actor),
-                new Stagger(actor),
-                new Dead(actor)
+                new Normal(actorBody),
+                new Stagger(actorBody),
+                new Dead(actorBody)
             },
-            actor)
+            actorBody)
     {
     }
 
     public class Normal : HealthState
     {
-        public Normal(ActorBase actor) : base(actor)
+        public Normal(AActorBody actorBody) : base(actorBody)
         {
         }
 
@@ -35,18 +35,20 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Actor.Stats.HasNoHP())
+            if (Stats == null)
+                return false;
+            if (Stats.HasNoHP())
                 return stateMachine.TrySwitchTo<Dead>();
-            if (Actor.Stats.DamageToProcess.Count > 0)
+            if (Stats.DamageToProcess.Count > 0)
             {
-                DamageData damageData = Actor.Stats.DamageToProcess[0];
+                DamageData damageData = Stats.DamageToProcess[0];
                 bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
-                Actor.IFrameController.Start(damageData, overDamageThreshold);
+                ActorBody.IFrameController.Start(damageData, overDamageThreshold);
                 if (overDamageThreshold)
                 {
                     // Knockback
-                    Vector2 direction = damageData.SourcePosition.DirectionTo(Actor.GlobalPosition);
-                    Actor.Velocity = direction * 200;
+                    Vector2 direction = damageData.SourcePosition.DirectionTo(ActorBody.GlobalPosition);
+                    ActorBody.Velocity = direction * 200;
                     stateMachine.TrySwitchTo<Stagger>();
                 }
             }
@@ -56,8 +58,8 @@ public class HealthStateMachine : HealthStateMachineBase
 
     public class Stagger : HealthState
     {
-        public Stagger(ActorBase actor)
-            : base(actor)
+        public Stagger(AActorBody actorBody)
+            : base(actorBody)
         {
             AnimationName = "Stagger";
             BlockedStates =
@@ -73,7 +75,7 @@ public class HealthStateMachine : HealthStateMachineBase
         {
             _staggerTimer = 0.5;
             _isStaggered = true;
-            Actor.PlaySoundFX("agh1.wav");
+            ActorBody.PlaySoundFX("agh1.wav");
             PlayAnimation(AnimationName);
         }
 
@@ -89,7 +91,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Actor.Stats.HasNoHP())
+            if (Stats != null && Stats.HasNoHP())
                 return stateMachine.TrySwitchTo<Dead>();
             if (!_isStaggered)
                 return stateMachine.TrySwitchTo<Normal>();
@@ -99,7 +101,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
     public class Dead : HealthState
     {
-        public Dead(ActorBase actor) : base(actor)
+        public Dead(AActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Dead";
             BlockedStates =
@@ -110,10 +112,10 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override void Enter()
         {
-            Actor.Stats.AddKOStatus();
-            Actor.IFrameController.Stop();
-            Actor.HurtBoxes.SetMonitoringDeferred(false);
-            Actor.Velocity = new Vector2(0, 0);
+            Stats?.AddKOStatus();
+            ActorBody.IFrameController.Stop();
+            ActorBody.HurtBoxes.SetMonitoringDeferred(false);
+            ActorBody.Velocity = new Vector2(0, 0);
             PlayAnimation(AnimationName);
         }
 
@@ -123,12 +125,12 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override void Exit()
         {
-            Actor.HurtBoxes.SetMonitoringDeferred(true);
+            ActorBody.HurtBoxes.SetMonitoringDeferred(true);
         }
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (!Actor.Stats.HasNoHP())
+            if (Stats != null && Stats.HasNoHP())
                 return stateMachine.TrySwitchTo<Normal>();
             return false;
         }

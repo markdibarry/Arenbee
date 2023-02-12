@@ -79,7 +79,7 @@ public partial class PointContainer : EqualContainer
         ResizeItems(StatNameLabel, ValueHBox);
     }
 
-    public void UpdateDisplay(Stats oldStats, Stats newStats, AttributeType attributeType)
+    public void UpdateDisplay(Stats? oldStats, Stats newStats, AttributeType attributeType)
     {
         AttributeType maxType;
         if (attributeType == AttributeType.HP)
@@ -88,10 +88,10 @@ public partial class PointContainer : EqualContainer
             maxType = AttributeType.MaxMP;
         else
             return;
-        int? oldValue = oldStats?.Attributes.GetStat(maxType).DisplayValue;
-        int newValue = newStats.Attributes.GetStat(maxType).DisplayValue;
+        int? oldValue = oldStats?.Attributes.GetStat(maxType)?.DisplayValue;
+        int newValue = newStats.Attributes.GetStat(maxType)?.DisplayValue ?? default;
         StatNameText = attributeType.Get().Abbreviation + ":";
-        StatCurrentValueText = newStats.Attributes.GetStat(attributeType).DisplayValue.ToString();
+        StatCurrentValueText = newStats.Attributes.GetStat(attributeType)?.DisplayValue.ToString();
         StatMaxValueText = newValue.ToString();
         Dim = oldStats != null && oldValue == newValue;
         DisplayValueColor(oldValue, newValue);

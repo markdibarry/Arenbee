@@ -12,7 +12,7 @@ public class ModChangeData
         Change = change;
     }
 
-    public ActorBase Actor { get; set; }
+    public AActor Actor { get; set; }
     public ModChange Change { get; set; }
     public Modifier Modifier { get; set; }
 }

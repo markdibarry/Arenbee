@@ -1,6 +1,6 @@
-[gd_scene load_steps=12 format=3 uid="uid://bgefk1ceps2oa"]
+[gd_scene load_steps=12 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AreaScene.tscn" id="1_d3aeo"]
+[ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
 [ext_resource type="Texture2D" uid="uid://ba4b7pjwnhbf" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
 [ext_resource type="Texture2D" uid="uid://chj220l1bt2wy" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
 [ext_resource type="Texture2D" uid="uid://gnrvt0dyrg15" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]

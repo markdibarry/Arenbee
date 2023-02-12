@@ -6,21 +6,21 @@ namespace Arenbee.Actors.Enemies.Default.State;
 
 public class MoveStateMachine : MoveStateMachineBase
 {
-    public MoveStateMachine(ActorBase actor)
+    public MoveStateMachine(AActorBody actorBody)
         : base(
             new MoveState[]
             {
-                new Standing(actor),
-                new Walking(actor),
-                new Running(actor)
+                new Standing(actorBody),
+                new Walking(actorBody),
+                new Running(actorBody)
             },
-            actor)
+            actorBody)
     {
     }
 
     public class Standing : MoveState
     {
-        public Standing(ActorBase actor) : base(actor)
+        public Standing(AActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Standing";
         }
@@ -40,9 +40,9 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return false;
-            if (Actor.Stats.HasEffect(StatusEffectType.Burn))
+            if (Stats.HasEffect(StatusEffectType.Burn))
                 return stateMachine.TrySwitchTo<Running>();
-            if (Actor.InputHandler.GetLeftAxis().x != 0)
+            if (InputHandler.GetLeftAxis().X != 0)
                 return stateMachine.TrySwitchTo<Walking>();
             return false;
         }
@@ -50,7 +50,7 @@ public class MoveStateMachine : MoveStateMachineBase
 
     public class Walking : MoveState
     {
-        public Walking(ActorBase actor) : base(actor)
+        public Walking(AActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Walk";
         }
@@ -58,13 +58,13 @@ public class MoveStateMachine : MoveStateMachineBase
         public override void Enter()
         {
             PlayAnimation(AnimationName);
-            Actor.MaxSpeed = Actor.WalkSpeed;
+            ActorBody.MaxSpeed = ActorBody.WalkSpeed;
         }
 
         public override void Update(double delta)
         {
-            Actor.UpdateDirection();
-            Actor.Move();
+            ActorBody.UpdateDirection();
+            ActorBody.Move();
         }
 
         public override void Exit() { }
@@ -73,9 +73,9 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return stateMachine.TrySwitchTo<Standing>();
-            if (Actor.Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
+            if (Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
                 return stateMachine.TrySwitchTo<Running>();
-            if (InputHandler.GetLeftAxis().x == 0)
+            if (InputHandler.GetLeftAxis().X == 0)
                 return stateMachine.TrySwitchTo<Standing>();
             if (InputHandler.Run.IsActionPressed)
                 return stateMachine.TrySwitchTo<Running>();
@@ -85,19 +85,19 @@ public class MoveStateMachine : MoveStateMachineBase
 
     public class Running : MoveState
     {
-        public Running(ActorBase actor) : base(actor)
+        public Running(AActorBody actorBody) : base(actorBody)
         {
         }
 
         public override void Enter()
         {
-            Actor.MaxSpeed = Actor.RunSpeed;
+            ActorBody.MaxSpeed = ActorBody.RunSpeed;
         }
 
         public override void Update(double delta)
         {
-            Actor.UpdateDirection();
-            Actor.Move();
+            ActorBody.UpdateDirection();
+            ActorBody.Move();
         }
 
         public override void Exit() { }
@@ -106,9 +106,9 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return stateMachine.TrySwitchTo<Standing>();
-            if (Actor.Stats.HasEffect(StatusEffectType.Burn))
+            if (Stats.HasEffect(StatusEffectType.Burn))
                 return false;
-            if (InputHandler.GetLeftAxis().x == 0)
+            if (InputHandler.GetLeftAxis().X == 0)
                 return stateMachine.TrySwitchTo<Standing>();
             if (!InputHandler.Run.IsActionPressed)
                 return stateMachine.TrySwitchTo<Walking>();

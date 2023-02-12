@@ -5,7 +5,7 @@ namespace Arenbee.Actors.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
-    public AirStateMachine(ActorBase actor)
+    public AirStateMachine(AActorBody actor)
         : base(
             new AirState[]
             {
@@ -19,7 +19,7 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Grounded : AirState
     {
-        public Grounded(ActorBase actor) : base(actor)
+        public Grounded(AActorBody actor) : base(actor)
         {
         }
 
@@ -34,7 +34,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (!Actor.IsOnFloor())
+            if (!ActorBody.IsOnFloor())
                 return stateMachine.TrySwitchTo<Falling>();
             if (InputHandler.Jump.IsActionJustPressed && !StateController.IsBlocked(BlockedState.Jumping))
                 return stateMachine.TrySwitchTo<Jumping>();
@@ -44,7 +44,7 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Jumping : AirState
     {
-        public Jumping(ActorBase actor) : base(actor)
+        public Jumping(AActorBody actor) : base(actor)
         {
             AnimationName = "Jump";
         }
@@ -55,7 +55,7 @@ public class AirStateMachine : AirStateMachineBase
         {
             _isJumpReleased = false;
             //Actor.PlaySoundFX("no1.wav");
-            Actor.Jump();
+            ActorBody.Jump();
             PlayAnimation(AnimationName);
         }
 
@@ -63,18 +63,18 @@ public class AirStateMachine : AirStateMachineBase
         {
             if (!_isJumpReleased && !InputHandler.Jump.IsActionPressed)
             {
-                Actor.VelocityY = Actor.Velocity.y * 0.5f;
+                ActorBody.VelocityY = ActorBody.Velocity.Y * 0.5f;
                 _isJumpReleased = true;
             }
 
-            Actor.ApplyJumpGravity(delta);
+            ActorBody.ApplyJumpGravity(delta);
         }
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Actor.IsMovingDown() || StateController.IsBlocked(BlockedState.Jumping))
+            if (ActorBody.IsMovingDown() || StateController.IsBlocked(BlockedState.Jumping))
                 return stateMachine.TrySwitchTo<Falling>();
-            if (Actor.IsOnFloor())
+            if (ActorBody.IsOnFloor())
                 return stateMachine.TrySwitchTo<Grounded>();
             return false;
         }
@@ -85,7 +85,7 @@ public class AirStateMachine : AirStateMachineBase
         double _jumpGraceTimer;
         readonly double _jumpGraceTime = 0.1;
 
-        public Falling(ActorBase actor) : base(actor)
+        public Falling(AActorBody actor) : base(actor)
         {
             AnimationName = "Jump";
         }
@@ -98,7 +98,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override void Update(double delta)
         {
-            Actor.ApplyFallGravity(delta);
+            ActorBody.ApplyFallGravity(delta);
             if (_jumpGraceTimer > 0)
                 _jumpGraceTimer -= delta;
             if (InputHandler.Jump.IsActionJustPressed)
@@ -107,7 +107,7 @@ public class AirStateMachine : AirStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Actor.IsOnFloor())
+            if (ActorBody.IsOnFloor())
             {
                 if (_jumpGraceTimer > 0 && !StateController.IsBlocked(BlockedState.Jumping))
                     return stateMachine.TrySwitchTo<Jumping>();

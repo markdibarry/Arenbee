@@ -1,5 +1,6 @@
 ﻿using GameCore.Actors;
 using GameCore.Extensions;
+using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
 
@@ -10,6 +11,7 @@ public partial class DialogArea : Area2D, IContextArea
     public static string GetScenePath() => GDEx.GetScenePath();
     private ColorRect _colorRect = null!;
     private string _dialogPath = string.Empty;
+    private GUIController? _guiController = Locator.Root?.GUIController;
     [Export(PropertyHint.File, "*.json")]
     public string DialogPath
     {
@@ -43,22 +45,22 @@ public partial class DialogArea : Area2D, IContextArea
 
     public void OnBodyEntered(Node body)
     {
-        if (body is not ActorBase actor || actor.ActorType != ActorType.Player)
+        if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
             return;
         actor.ContextAreas.Add(this);
     }
 
     public void OnBodyExited(Node body)
     {
-        if (body is not ActorBase actor || actor.ActorType != ActorType.Player)
+        if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
             return;
         actor.ContextAreas.Remove(this);
     }
 
-    public void TriggerContext(ActorBase actor)
+    public void TriggerContext(AActorBody actor)
     {
         if (this.IsToolDebugMode() || !IsActive || !actor.InputHandler.Attack.IsActionJustPressed)
             return;
-        _ = Locator.Root?.GUIController.OpenDialogAsync(DialogPath);
+        _ = _guiController?.OpenDialogAsync(DialogPath);
     }
 }

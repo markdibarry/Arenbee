@@ -6,14 +6,14 @@ namespace GameCore.Actors;
 
 public class IFrameController
 {
-    public IFrameController(ActorBase actor)
+    public IFrameController(AActorBody actor)
     {
         _actor = actor;
         IFrameDuration = 1;
         FlashDuration = 0.1;
     }
 
-    private readonly ActorBase _actor;
+    private readonly AActorBody _actor;
     private ShaderMaterial _spriteShader;
     private double _iframeTimer;
     private bool _iframeTimerEnabled;

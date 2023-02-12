@@ -86,8 +86,8 @@ public class Attribute : Stat
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public AttributeType AttributeType
     {
-        get { return (AttributeType)SubType; }
-        set { SubType = (int)value; }
+        get => (AttributeType)SubType;
+        set => SubType = (int)value;
     }
 
     public void SetAttribute(int baseValue, int maxValue)
@@ -100,7 +100,7 @@ public class Attribute : Stat
     {
         int result = BaseValue;
 
-        foreach (var mod in Modifiers)
+        foreach (Modifier mod in Modifiers)
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;

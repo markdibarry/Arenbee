@@ -7,38 +7,25 @@ using GameCore.Items;
 
 namespace Arenbee.Items;
 
-public partial class HoldItemController : HoldItemControllerBase
+public partial class HoldItemController : AHoldItemController
 {
     private readonly string[] _holdItemIds = { ItemCategoryIds.Weapon, ItemCategoryIds.SubWeapon };
 
-    public override void Init(ActorBase actor)
+    public override void Init(AActorBody actorBody)
     {
-        base.Init(actor);
-        var slot = Actor.Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon);
-        SetHoldItem(null, slot.Item);
+        base.Init(actorBody);
     }
 
-    public override void SetHoldItem(ItemBase oldItem, ItemBase newItem)
+    public override void SetHoldItem(AItem? oldItem, AItem? newItem)
     {
-        if (!_holdItemIds.Contains(oldItem?.ItemCategoryId) && !_holdItemIds.Contains(newItem?.ItemCategoryId))
+        if (!_holdItemIds.Contains(oldItem?.ItemCategory.Id) && !_holdItemIds.Contains(newItem?.ItemCategory.Id))
             return;
         if (oldItem != null)
-            DetachHoldItem(oldItem.Id);
-        if (oldItem?.ItemCategoryId == ItemCategoryIds.Weapon || newItem?.ItemCategoryId == ItemCategoryIds.Weapon)
-        {
-            if (oldItem == null && newItem != null)
-                Actor.StateController.BaseActionDisabled = true;
-            else if (oldItem != null && newItem == null)
-                Actor.StateController.BaseActionDisabled = false;
-        }
-        if (newItem != null)
-        {
-            var holdItem = GDEx.Instantiate<HoldItem>($"{Config.ItemPath}{newItem.Id}/{newItem.Id}.tscn");
-            AttachHoldItem(holdItem);
-        }
-        else
-        {
-            Actor.StateController.PlayFallbackAnimation();
-        }
+            DetachHoldItemByItem(oldItem);
+        ActorBody.StateController.BaseActionDisabled = newItem?.ItemCategory.Id == ItemCategoryIds.Weapon;
+        if (newItem == null)
+            return;
+        var holdItem = GDEx.Instantiate<HoldItem>($"{Config.ItemPath}{newItem.Id}/{newItem.Id}.tscn");
+        AttachHoldItem(holdItem);
     }
 }
