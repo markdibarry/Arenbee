@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvd6dm7uke0x2"]
+
+[ext_resource type="Script" path="res://Arenbee/Actors/Spawner.cs" id="1_vmry5"]
+
+[node name="Spawner" type="Node2D"]
+script = ExtResource("1_vmry5")

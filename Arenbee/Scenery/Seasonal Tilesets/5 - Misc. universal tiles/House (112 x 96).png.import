@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/House (112 x 96).png-4c857a3d3e991c1345a20897
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

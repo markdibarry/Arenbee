@@ -13,7 +13,7 @@ public partial class BasicLoadingScreen : LoadingScreen
     {
         base._Ready();
         var sprite2d = GetNode<Sprite2D>("Sprite2d");
-        var tween = sprite2d.CreateTween().SetLoops();
+        Tween tween = sprite2d.CreateTween().SetLoops();
         tween.TweenProperty(sprite2d, "rotation", Mathf.Tau, 1f)
             .AsRelative();
     }

@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/4 - Cloud_cover_2.png-a53254ef86b8845a28d903d
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

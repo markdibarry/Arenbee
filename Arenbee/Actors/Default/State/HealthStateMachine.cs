@@ -1,6 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Enums;
-using GameCore.Statistics;
+﻿using Arenbee.Statistics;
 using GameCore.Utility;
 using Godot;
 
@@ -8,7 +6,7 @@ namespace Arenbee.Actors.Default.State;
 
 public class HealthStateMachine : HealthStateMachineBase
 {
-    public HealthStateMachine(AActorBody actorBody)
+    public HealthStateMachine(ActorBody actorBody)
         : base(
             new HealthState[]
             {
@@ -22,7 +20,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
     public class Normal : HealthState
     {
-        public Normal(AActorBody actorBody) : base(actorBody)
+        public Normal(ActorBody actorBody) : base(actorBody)
         {
         }
 
@@ -37,17 +35,17 @@ public class HealthStateMachine : HealthStateMachineBase
         {
             if (Stats == null)
                 return false;
-            if (Stats.HasNoHP())
+            if (Stats.HasNoHP)
                 return stateMachine.TrySwitchTo<Dead>();
-            if (Stats.DamageToProcess.Count > 0)
+            if (Stats.CurrentDamageResult != null)
             {
-                DamageData damageData = Stats.DamageToProcess[0];
-                bool overDamageThreshold = damageData.TotalDamage > 0 && damageData.ActionType != ActionType.Status;
-                ActorBody.IFrameController.Start(damageData, overDamageThreshold);
+                DamageResult damageResult = (DamageResult)Stats.CurrentDamageResult;
+                bool overDamageThreshold = damageResult.TotalDamage > 0 && damageResult.ActionType != ActionType.Status;
+                ActorBody.IFrameController.Start(damageResult, overDamageThreshold);
                 if (overDamageThreshold)
                 {
                     // Knockback
-                    Vector2 direction = damageData.SourcePosition.DirectionTo(ActorBody.GlobalPosition);
+                    Vector2 direction = damageResult.SourcePosition.DirectionTo(ActorBody.GlobalPosition);
                     ActorBody.Velocity = direction * 200;
                     stateMachine.TrySwitchTo<Stagger>();
                 }
@@ -58,7 +56,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
     public class Stagger : HealthState
     {
-        public Stagger(AActorBody actorBody)
+        public Stagger(ActorBody actorBody)
             : base(actorBody)
         {
             AnimationName = "Stagger";
@@ -91,7 +89,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Stats != null && Stats.HasNoHP())
+            if (Stats != null && Stats.HasNoHP)
                 return stateMachine.TrySwitchTo<Dead>();
             if (!_isStaggered)
                 return stateMachine.TrySwitchTo<Normal>();
@@ -101,7 +99,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
     public class Dead : HealthState
     {
-        public Dead(AActorBody actorBody) : base(actorBody)
+        public Dead(ActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Dead";
             BlockedStates =
@@ -130,7 +128,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Stats != null && Stats.HasNoHP())
+            if (Stats != null && Stats.HasNoHP)
                 return stateMachine.TrySwitchTo<Normal>();
             return false;
         }

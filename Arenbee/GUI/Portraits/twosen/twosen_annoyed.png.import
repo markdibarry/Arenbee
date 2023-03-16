@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/twosen_annoyed.png-05b74fe441b89d53c864d71b33
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

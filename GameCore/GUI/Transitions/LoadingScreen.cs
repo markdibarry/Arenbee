@@ -5,7 +5,7 @@ namespace GameCore.GUI;
 
 public abstract partial class LoadingScreen : Control
 {
-    public ProgressBar ProgressBar { get; set; }
+    public ProgressBar ProgressBar { get; set; } = null!;
 
     public override void _Ready()
     {

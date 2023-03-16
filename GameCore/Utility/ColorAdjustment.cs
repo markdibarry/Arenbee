@@ -1,11 +1,11 @@
-﻿using Godot;
+using Godot;
 
 namespace GameCore.Utility;
 
 [Tool]
 public partial class ColorAdjustment : CanvasLayer
 {
-    private ShaderMaterial _colorShader;
+    private ShaderMaterial _colorShader = null!;
     [Export(PropertyHint.Range, "-1,1")]
     public float Brightness
     {
@@ -65,6 +65,6 @@ public partial class ColorAdjustment : CanvasLayer
     public override void _Ready()
     {
         var rect = GetNodeOrNull<ColorRect>("ColorRect");
-        _colorShader = rect.Material as ShaderMaterial;
+        _colorShader = (ShaderMaterial)rect.Material;
     }
 }

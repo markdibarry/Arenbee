@@ -35,26 +35,10 @@ public class AItem : IEquatable<AItem>
     public int Price { get; init; }
     public ItemUseData UseData { get; init; }
 
-    public void AddToStats(Stats stats)
-    {
-        if (Modifiers.Count == 0)
-            return;
-        foreach (Modifier mod in Modifiers)
-            stats.AddMod(mod);
-    }
-
     public bool Equals(AItem? other)
     {
         if (other == null)
             return false;
         return other.Id == Id;
-    }
-
-    public void RemoveFromStats(Stats stats)
-    {
-        if (Modifiers.Count == 0)
-            return;
-        foreach (Modifier mod in Modifiers)
-            stats.RemoveMod(mod);
     }
 }

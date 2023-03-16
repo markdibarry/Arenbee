@@ -1,11 +1,10 @@
-﻿using GameCore.Actors;
-using GameCore.Utility;
+﻿using GameCore.Utility;
 
 namespace Arenbee.Actors.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(AActorBody actorBody)
+    public ActionStateMachine(ActorBody actorBody)
         : base(
             new ActionState[]
             {
@@ -18,7 +17,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     public class NotAttacking : ActionState
     {
-        public NotAttacking(AActorBody actor)
+        public NotAttacking(ActorBody actor)
             : base(actor, null)
         { }
 
@@ -43,7 +42,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     public class UnarmedAttack : ActionState
     {
-        public UnarmedAttack(AActorBody actorBody)
+        public UnarmedAttack(ActorBody actorBody)
             : base(actorBody, null)
         {
             AnimationName = "UnarmedAttack";

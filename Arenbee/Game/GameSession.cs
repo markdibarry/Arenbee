@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Actors.Players;
 using Arenbee.Game;
-using Arenbee.GUI.Menus;
+using Arenbee.GUI.Menus.PartyMenus;
 using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
@@ -10,15 +11,16 @@ using GameCore.AreaScenes;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
-using GameCore.Items;
 using GameCore.SaveData;
+using GameCore.Utility;
 
 namespace Arenbee;
 
 public partial class GameSession : AGameSession
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    public PlayerParty Party { get; private set; }
+    public Party? MainParty { get; set; }
+    public List<Party> Parties { get; private set; } = new();
     public SessionState SessionState { get; private set; } = new();
 
     public override void _Ready()
@@ -31,6 +33,8 @@ public partial class GameSession : AGameSession
         SessionState.Update(delta, CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled);
     }
 
+    public Party? GetParty(string id) => Parties.FirstOrDefault(x => x.Id == id);
+
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
         if (menuInput.Start.IsActionJustPressed && !GUIController.GUIActive)
@@ -42,7 +46,7 @@ public partial class GameSession : AGameSession
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel2);
             AddAreaScene(demoAreaScene);
         }
     }
@@ -56,16 +60,17 @@ public partial class GameSession : AGameSession
     {
         GUIController = guiController;
         GameSave save = (GameSave)gameSave;
-        IEnumerable<AActor> actors = save.ActorData.Select(x => x.CreateActor());
-        List<AItemStack> itemStacks = new();
-        foreach (ItemStackData itemStackData in save.Items)
-        {
-            AItemStack? itemStack = itemStackData.CreateItemStack();
-            if (itemStack != null)
-                itemStacks.Add(itemStack);
-        }
-        Party = new(actors, new Inventory(itemStacks));
+        IEnumerable<Inventory> inventories = save.Inventories.Select(x => x.CreateInventory());
+        Parties = save.Parties.Select(x => x.CreateParty(inventories)).ToList();
+        MainParty = GetParty(save.MainPartyId);
         SessionState = save.SessionState;
         InitAreaScene();
+        Twosen actorBody = GDEx.Instantiate<Twosen>(Twosen.GetScenePath());
+        AActor actor = MainParty.Actors.First();
+        actorBody.Actor = actor;
+        actor.ActorBody = actorBody;
+        Locator.Root.GameCamera.CurrentTarget = actorBody;
+        actorBody.InputHandler = Locator.Root.PlayerOneInput;
+        CurrentAreaScene.AddActor(actorBody, CurrentAreaScene.GetSpawnPoint(0));
     }
 }

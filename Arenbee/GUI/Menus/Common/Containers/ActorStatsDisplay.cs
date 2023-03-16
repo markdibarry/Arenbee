@@ -1,7 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Extensions;
-using GameCore.Statistics;
-using GameCore.Utility;
+﻿using Arenbee.Statistics;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -9,22 +6,19 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ActorStatsDisplay : PanelContainer
 {
-    private PackedScene _elementScene;
-    private GridContainer _gridContainer;
-    private ElementContainer _elementAtkContainer;
-    private ElementContainer _elementDefContainer;
-    private StatContainer _levelContainer;
-    private PointContainer _hpContainer;
-    private PointContainer _mpContainer;
-    private StatContainer _attackContainer;
-    private StatContainer _defenseContainer;
-    private StatContainer _mAttackContainer;
-    private StatContainer _mDefenseContainer;
+    private StatContainer _levelContainer = null!;
+    private PointContainer _hpContainer = null!;
+    private PointContainer _mpContainer = null!;
+    private StatContainer _attackContainer = null!;
+    private StatContainer _defenseContainer = null!;
+    private StatContainer _mAttackContainer = null!;
+    private StatContainer _mDefenseContainer = null!;
+    private ElementContainer _elAttackContainer = null!;
+    private ElementContainer _elResistContainer = null!;
 
     public override void _Ready()
     {
         base._Ready();
-        _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
         _levelContainer = GetNode<StatContainer>("%Level");
         _hpContainer = GetNode<PointContainer>("%HP");
         _mpContainer = GetNode<PointContainer>("%MP");
@@ -32,57 +26,47 @@ public partial class ActorStatsDisplay : PanelContainer
         _defenseContainer = GetNode<StatContainer>("%Defense");
         _mAttackContainer = GetNode<StatContainer>("%M Attack");
         _mDefenseContainer = GetNode<StatContainer>("%M Defense");
-        _elementAtkContainer = GetNode<ElementContainer>("%EAtk");
-        _elementDefContainer = GetNode<ElementContainer>("%EDef");
+        _elAttackContainer = GetNode<ElementContainer>("%EAtk");
+        _elResistContainer = GetNode<ElementContainer>("%EDef");
+        UpdateTypes();
     }
 
-    public void UpdateStatsDisplay(Stats? oldStats, Stats newStats)
+    public void UpdateTypes()
     {
-        if (newStats == null)
-            return;
-        _levelContainer.UpdateDisplay(oldStats, newStats, AttributeType.Level);
-        _hpContainer.UpdateDisplay(oldStats, newStats, AttributeType.HP);
-        _mpContainer.UpdateDisplay(oldStats, newStats, AttributeType.MP);
-        _attackContainer.UpdateDisplay(oldStats, newStats, AttributeType.Attack);
-        _defenseContainer.UpdateDisplay(oldStats, newStats, AttributeType.Defense);
-        _mAttackContainer.UpdateDisplay(oldStats, newStats, AttributeType.MagicAttack);
-        _mDefenseContainer.UpdateDisplay(oldStats, newStats, AttributeType.MagicDefense);
-        UpdateEAtk(oldStats, newStats);
-        UpdateEDef(oldStats, newStats);
+        _levelContainer.UpdateType(AttributeType.Level);
+        _hpContainer.UpdateType(AttributeType.MaxHP);
+        _mpContainer.UpdateType(AttributeType.MaxMP);
+        _attackContainer.UpdateType(AttributeType.Attack);
+        _defenseContainer.UpdateType(AttributeType.Defense);
+        _mAttackContainer.UpdateType(AttributeType.MagicAttack);
+        _mDefenseContainer.UpdateType(AttributeType.MagicDefense);
+        _elAttackContainer.UpdateType(StatCategory.AttackElement);
+        _elResistContainer.UpdateType(StatCategory.ElementResist);
     }
 
-    private void UpdateEAtk(Stats? oldStats, Stats newStats)
+    public void UpdateBaseValues(Stats stats)
     {
-        _elementAtkContainer.Elements.QueueFreeAllChildren();
-        var newElement = newStats.ElementOffs.CurrentElement;
-        _elementAtkContainer.Dim = oldStats != null && oldStats.ElementOffs.CurrentElement == newElement;
-        if (newElement != ElementType.None)
-        {
-            var elementLg = _elementScene.Instantiate<ElementLarge>();
-            elementLg.Element = newElement;
-            _elementAtkContainer.Elements.AddChild(elementLg);
-        }
+        _levelContainer.UpdateBaseValue(stats);
+        _hpContainer.UpdateBaseValue(stats);
+        _mpContainer.UpdateBaseValue(stats);
+        _attackContainer.UpdateBaseValue(stats);
+        _defenseContainer.UpdateBaseValue(stats);
+        _mAttackContainer.UpdateBaseValue(stats);
+        _mDefenseContainer.UpdateBaseValue(stats);
+        _elAttackContainer.UpdateBaseValue(stats);
+        _elResistContainer.UpdateBaseValue(stats);
     }
 
-    private void UpdateEDef(Stats? oldStats, Stats newStats)
+    public void UpdateStatsDisplay(Stats stats)
     {
-        _elementDefContainer.Elements.QueueFreeAllChildren();
-        _elementDefContainer.Dim = true;
-        bool changed = false;
-        foreach (var element in Enum<ElementType>.Values())
-        {
-            var oldDef = oldStats?.ElementDefs.GetStat(element);
-            var newDef = newStats.ElementDefs.GetStat(element);
-            if (!ElementDef.Equals(oldDef, newDef))
-                changed = true;
-            if (newDef == null || newDef.ModifiedValue == ElementDef.None)
-                continue;
-            var elementLg = _elementScene.Instantiate<ElementLarge>();
-            elementLg.Element = element;
-            elementLg.Effectiveness = newDef.ModifiedValue;
-            _elementDefContainer.Elements.AddChild(elementLg);
-        }
-        if (changed)
-            _elementDefContainer.Dim = false;
+        _levelContainer.UpdateValue(stats);
+        _hpContainer.UpdateDisplay(stats);
+        _mpContainer.UpdateDisplay(stats);
+        _attackContainer.UpdateValue(stats);
+        _defenseContainer.UpdateValue(stats);
+        _mAttackContainer.UpdateValue(stats);
+        _mDefenseContainer.UpdateValue(stats);
+        _elAttackContainer.UpdateValue(stats);
+        _elResistContainer.UpdateValue(stats);
     }
 }

@@ -20,14 +20,14 @@ public partial class AreaBox : Area2D
             if (_monitoringLocal || force)
             {
                 _monitoringLocal = true;
-                SetDeferred("monitoring", true);
+                SetDeferred(Area2D.PropertyName.Monitoring, true);
             }
         }
         else
         {
             if (force)
                 _monitoringLocal = false;
-            SetDeferred("monitoring", false);
+            SetDeferred(Area2D.PropertyName.Monitoring, false);
         }
     }
 
@@ -38,14 +38,14 @@ public partial class AreaBox : Area2D
             if (_monitorableLocal || force)
             {
                 _monitorableLocal = true;
-                SetDeferred("monitorable", true);
+                SetDeferred(Area2D.PropertyName.Monitorable, true);
             }
         }
         else
         {
             if (force)
                 _monitorableLocal = false;
-            SetDeferred("monitorable", false);
+            SetDeferred(Area2D.PropertyName.Monitorable, false);
         }
     }
 }

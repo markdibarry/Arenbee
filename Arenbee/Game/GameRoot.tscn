@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://ievhf5ls7psh"]
 
 [ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="1_jas0l"]
 [ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/AGameRoot.tscn" id="1_luofh"]
@@ -17,7 +17,6 @@ mouse_filter = 2
 script = ExtResource("5_ognf4")
 
 [node name="GameCamera" type="Camera2D" parent="GameDisplay" index="4"]
-current = true
 limit_left = 0
 limit_bottom = 270
 limit_smoothed = true

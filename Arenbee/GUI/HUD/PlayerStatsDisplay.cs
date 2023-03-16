@@ -1,21 +1,20 @@
-﻿using GameCore.Statistics;
+﻿using Arenbee.Statistics;
 using Godot;
 
 namespace Arenbee.GUI;
 
 public partial class PlayerStatsDisplay : PanelContainer
 {
-    public HeartDisplay HeartDisplay { get; set; }
+    private HeartDisplay _heartDisplay = null!;
+
     public override void _Ready()
     {
-        HeartDisplay = GetNode<HeartDisplay>("%HeartDisplay");
+        _heartDisplay = GetNode<HeartDisplay>("%HeartDisplay");
     }
 
     public void Update(Stats stats)
     {
-        int hp = stats.GetHP();
-        int maxHP = stats.GetMaxHP();
-        HeartDisplay.UpdateMaxHearts(maxHP);
-        HeartDisplay.UpdateCurrentHearts(hp);
+        _heartDisplay.UpdateMaxHearts(stats.MaxHP);
+        _heartDisplay.UpdateCurrentHearts(stats.CurrentHP);
     }
 }

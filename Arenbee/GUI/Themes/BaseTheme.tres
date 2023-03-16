@@ -57,17 +57,25 @@ content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
 texture = ExtResource("2_wie4d")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
 region_rect = Rect2(0, 0, 16, 16)
 modulate_color = Color(1, 0.988235, 0.694118, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_og6dl"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_exrfm"]
 content_margin_left = 7.0
 content_margin_top = 7.0
 content_margin_right = 7.0
 content_margin_bottom = 7.0
 texture = ExtResource("2_wie4d")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
 region_rect = Rect2(0, 0, 16, 16)
-modulate_color = Color(1, 0.988235, 0.694118, 1)
+modulate_color = Color(1, 1, 0.701961, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r3alj"]
 bg_color = Color(0.290196, 0.164706, 0.105882, 1)
@@ -141,7 +149,7 @@ Label/fonts/font = ExtResource("1_xdew6")
 Label/styles/normal = null
 OptionContainer/base_type = &"PanelContainer"
 OptionContainer/styles/panel = SubResource("StyleBoxTexture_hjfji")
-PanelContainer/styles/panel = SubResource("StyleBoxTexture_og6dl")
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_exrfm")
 ProgressBar/colors/font_outline_color = Color(0, 0, 0, 1)
 ProgressBar/constants/outline_size = 2
 ProgressBar/fonts/font = ExtResource("1_xdew6")

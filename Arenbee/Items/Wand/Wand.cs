@@ -1,14 +1,13 @@
-﻿using Arenbee.Projectiles;
+﻿using Arenbee.Actors;
+using Arenbee.Projectiles;
 using GameCore;
-using GameCore.Actors;
-using GameCore.Items;
 using GameCore.Utility;
 
 namespace Arenbee.Items;
 
 public partial class Wand : HoldItem
 {
-    public override void Init(AActorBody actorBody)
+    public override void Init(ActorBody actorBody)
     {
         Setup("Wand", WeaponTypes.Wand, actorBody, new ActionStateMachine(actorBody, this));
     }
@@ -24,7 +23,7 @@ public partial class Wand : HoldItem
 
     public class ActionStateMachine : ActionStateMachineBase
     {
-        public ActionStateMachine(AActorBody actorBody, HoldItem holdItem)
+        public ActionStateMachine(ActorBody actorBody, HoldItem holdItem)
             : base(
                 new ActionState[]
                 {
@@ -39,7 +38,7 @@ public partial class Wand : HoldItem
 
         protected class NotAttacking : ActionState
         {
-            public NotAttacking(AActorBody actorBody, HoldItem holdItem)
+            public NotAttacking(ActorBody actorBody, HoldItem holdItem)
                 : base(actorBody, holdItem)
             { }
 
@@ -66,7 +65,7 @@ public partial class Wand : HoldItem
 
         protected class WeakAttack1 : ActionState
         {
-            public WeakAttack1(AActorBody actorBody, HoldItem holdItem)
+            public WeakAttack1(ActorBody actorBody, HoldItem holdItem)
                 : base(actorBody, holdItem)
             {
                 AnimationName = "WeakAttack1";
@@ -92,7 +91,7 @@ public partial class Wand : HoldItem
             public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
+                    || HoldItem!.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.SubAction.IsActionPressed)
                     return stateMachine.TrySwitchTo<NotAttacking>();
                 if (_counter <= 0)
@@ -103,7 +102,7 @@ public partial class Wand : HoldItem
 
         protected class Charge : ActionState
         {
-            public Charge(AActorBody actorBody, HoldItem holdItem)
+            public Charge(ActorBody actorBody, HoldItem holdItem)
                 : base(actorBody, holdItem)
             {
                 AnimationName = "Charge";
@@ -144,7 +143,7 @@ public partial class Wand : HoldItem
             public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName)
+                    || HoldItem!.AnimationPlayer.CurrentAnimation != AnimationName)
                     return stateMachine.TrySwitchTo<NotAttacking>();
                 if (!InputHandler.SubAction.IsActionPressed)
                 {
@@ -160,7 +159,7 @@ public partial class Wand : HoldItem
 
         protected class BigAttack1 : ActionState
         {
-            public BigAttack1(AActorBody actorBody, HoldItem holdItem)
+            public BigAttack1(ActorBody actorBody, HoldItem holdItem)
                 : base(actorBody, holdItem)
             {
                 AnimationName = "BigAttack1";
@@ -183,7 +182,7 @@ public partial class Wand : HoldItem
             public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (StateController.IsBlocked(BlockedState.Attack)
-                    || HoldItem.AnimationPlayer.CurrentAnimation != AnimationName
+                    || HoldItem!.AnimationPlayer.CurrentAnimation != AnimationName
                     || !InputHandler.SubAction.IsActionPressed)
                     return stateMachine.TrySwitchTo<NotAttacking>();
                 return false;

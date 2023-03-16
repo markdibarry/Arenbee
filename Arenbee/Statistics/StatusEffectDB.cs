@@ -1,116 +1,77 @@
-﻿using GameCore.Actors;
-using GameCore.Enums;
+﻿using GameCore.Enums;
 using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class StatusEffectDB : StatusEffectDBBase
+public class StatusEffectDB : AStatusEffectDB
 {
-    public StatusEffectDB()
+    protected override StatusEffectData[] BuildDB()
     {
-        BuildDB();
-    }
-
-    private void BuildDB()
-    {
-        Effects[StatusEffectType.KO] = new StatusEffectData()
+        return new StatusEffectData[]
         {
-            EffectType = StatusEffectType.KO,
-            Name = "KO",
-            AbbrName = "KO",
-            PastTenseName = "KO'd",
-            Description = "Character is unable to fight!"
-        };
-        Effects[StatusEffectType.Burn] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Burn,
-            Name = "Burn",
-            AbbrName = "Brn",
-            PastTenseName = "Burned",
-            Description = "Character takes fire damage and runs to put out the flames!",
-            ExpireNotifier = new TimedNotifier(10f, true),
-            TickNotifier = new TimedNotifier(3f, false),
-            TickEffect = (statusEffect) =>
+            new()
             {
-                IDamageable statsOwner = statusEffect.Stats.StatsOwner;
-                if (statsOwner is AActor actor && actor.ActorBody != null)
-                    actor.ActorBody.InputHandler.Jump.IsActionJustPressed = true;
-                var actionData = new ActionData()
-                {
-                    Value = (int)(statsOwner.Stats.GetMaxHP() * 0.05),
-                    SourceName = statusEffect.EffectData.Name,
-                    ActionType = ActionType.Status,
-                    StatusEffectDamage = statusEffect.StatusEffectType
-                };
-                statsOwner.Stats.ReceiveAction(actionData);
-            }
-        };
-        Effects[StatusEffectType.Freeze] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Freeze,
-            Name = "Freeze",
-            AbbrName = "Frz",
-            PastTenseName = "Frozen",
-            Description = "Character can't move.",
-            ExpireNotifier = new TimedNotifier(10f, true),
-        };
-        Effects[StatusEffectType.Paralysis] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Paralysis,
-            Name = "Paralysis",
-            AbbrName = "Pyz",
-            PastTenseName = "Paralyzed",
-            Description = "Character can't move.",
-            ExpireNotifier = new TimedNotifier(10f, true),
-        };
-        Effects[StatusEffectType.Poison] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Poison,
-            Name = "Poison",
-            AbbrName = "Psn",
-            PastTenseName = "Poisoned",
-            Description = "Feel nauseous.",
-            ExpireNotifier = new TimedNotifier(10f, true),
-            TickNotifier = new TimedNotifier(3f),
-            TickEffect = (statusEffect) =>
+                EffectType = (int)StatusEffectType.KO,
+                Name = "KO",
+                AbbrName = "KO",
+                PastTenseName = "KO'd",
+                Description = "Character is unable to fight!"
+            },
+            new()
             {
-                var stats = statusEffect.Stats;
-                var actionData = new ActionData()
+                EffectType = (int)StatusEffectType.Burn,
+                Name = "Burn",
+                AbbrName = "Brn",
+                PastTenseName = "Burned",
+                Description = "Character takes fire damage and runs to put out the flames!",
+                EffectModifiers = new Modifier[]
                 {
-                    Value = (int)(stats.GetMaxHP() * 0.05),
-                    SourceName = statusEffect.EffectData.Name,
-                    ActionType = ActionType.Status,
-                    StatusEffectDamage = statusEffect.StatusEffectType
-                };
-                stats.ReceiveAction(actionData);
-            }
-        };
-        Effects[StatusEffectType.Zombie] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Zombie,
-            Name = "Zombie",
-            AbbrName = "Zom",
-            PastTenseName = "Zombified",
-            Description = "Character takes damage from healing.",
-            ExpireNotifier = new TimedNotifier(10f, true)
-        };
-        Effects[StatusEffectType.Attack] = new StatusEffectData()
-        {
-            EffectType = StatusEffectType.Attack,
-            Name = "Attack",
-            AbbrName = "Atk",
-            Description = "Character's Attack is increased or decreased.",
-            ExpireNotifier = new TimedNotifier(10f, true),
-            GetEffectModifiers = (statusEffect) =>
+                    new Modifier((int)StatType.Attack, ModOp.Percent, 80)
+                },
+                TickCondition = new()
+                {
+                    ConditionType = 0,
+                    TargetValue = 3
+                },
+                TickEffect = StatusEffectMethods.BurnTick
+            },
+            new()
             {
-                return new()
+                EffectType = (int)StatusEffectType.Freeze,
+                Name = "Freeze",
+                AbbrName = "Frz",
+                PastTenseName = "Frozen",
+                Description = "Character can't move.",
+            },
+            new()
+            {
+                EffectType = (int)StatusEffectType.Paralysis,
+                Name = "Paralysis",
+                AbbrName = "Pyz",
+                PastTenseName = "Paralyzed",
+                Description = "Character can't move."
+            },
+            new()
+            {
+                EffectType = (int)StatusEffectType.Poison,
+                Name = "Poison",
+                AbbrName = "Psn",
+                PastTenseName = "Poisoned",
+                Description = "Feel nauseous.",
+                TickCondition = new()
                 {
-                    new Modifier(
-                        StatType.Attribute,
-                        (int)AttributeType.Attack,
-                        ModOperator.Multiply,
-                        statusEffect.ModifiedValue > 0 ? 20 : -20)
-                };
+                    ConditionType = 0,
+                    TargetValue = 3
+                },
+                TickEffect = StatusEffectMethods.PoisonTick
+            },
+            new()
+            {
+                EffectType = (int)StatusEffectType.Zombie,
+                Name = "Zombie",
+                AbbrName = "Zom",
+                PastTenseName = "Zombified",
+                Description = "Character takes damage from healing.",
             }
         };
     }

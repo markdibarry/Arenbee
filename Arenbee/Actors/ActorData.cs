@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Arenbee.Items;
+using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Items;
 using GameCore.Statistics;
@@ -10,59 +12,67 @@ using Godot;
 
 namespace Arenbee.Actors;
 
-public class ActorData : IActorData
+public partial class ActorData : AActorData
 {
     private static readonly AItemDB s_itemDB = Locator.ItemDB;
     private static readonly AActorDataDB s_actorDataDB = Locator.ActorDataDB;
+
+    public ActorData() { }
 
     public ActorData(AActor actor)
     {
         ActorId = actor.ActorId;
         ActorName = actor.Name;
-        Stats = actor.Stats;
-        List<ItemStackData> itemStackData = new();
+        StatsData = new StatsData((Stats)actor.Stats);
         List<EquipmentSlotData> equipmentSlotData = new();
-        foreach (var itemStack in actor.Inventory.Items)
+        for (int i = 0; i < actor.Inventory.Items.Count; i++)
         {
-            itemStackData.Add(new ItemStackData(itemStack));
-            foreach (var reservation in itemStack.Reservations)
+            ItemStack itemStack = actor.Inventory.Items.ElementAt(i);
+            foreach (Reservation reservation in itemStack.Reservations)
             {
                 if (reservation.Actor == actor)
-                    equipmentSlotData.Add(reservation.EquipmentSlot)
+                    equipmentSlotData.Add(new(reservation.EquipmentSlot.SlotCategory.Id, i));
             }
         }
-        ItemStackData = actor.Inventory.Items.Select(x => new ItemStackData(x));
-        EquipmentSlotData = actor.Equipment.Slots.Select(x => new EquipmentSlotData(x, actor.Inventory.Items));
+
+        EquipmentSlotData = equipmentSlotData;
     }
 
+    [JsonConstructor]
     public ActorData(
         string actorId,
         string actorName,
-        Stats stats,
+        StatsData statsData,
         IEnumerable<EquipmentSlotData> equipmentSlotData,
         IEnumerable<ItemStackData> itemStackData)
     {
         ActorId = actorId;
         ActorName = actorName;
-        Stats = stats;
+        StatsData = statsData;
         EquipmentSlotData = equipmentSlotData;
         ItemStackData = itemStackData;
     }
 
-    public string ActorId { get; }
-    public string ActorName { get; }
-    public Stats Stats { get; }
-    public IEnumerable<EquipmentSlotData> EquipmentSlotData { get; }
-    public IEnumerable<ItemStackData> ItemStackData { get; }
-
-    public IActorData Clone()
+    public ActorData(ActorData actorData)
+        : this(
+              actorData.ActorId,
+              actorData.ActorName,
+              actorData.StatsData,
+              actorData.EquipmentSlotData.Select(x => new EquipmentSlotData(x)),
+              actorData.ItemStackData.Select(x => new ItemStackData(x)))
     {
-        return new ActorData(
-            ActorId,
-            ActorName,
-            new Stats(Stats),
-            EquipmentSlotData.Select(x => x.Clone()),
-            ItemStackData.Select(x => x.Clone()));
+    }
+
+    [Export]
+    public string ActorName { get; set; }
+    [Export]
+    public StatsData StatsData { get; set; }
+    public IEnumerable<EquipmentSlotData> EquipmentSlotData { get; } = Array.Empty<EquipmentSlotData>();
+    public IEnumerable<ItemStackData> ItemStackData { get; } = Array.Empty<ItemStackData>();
+
+    public override AActorData Clone()
+    {
+        return new ActorData(this);
     }
 
     public static AActor? CreateActorAndBody(string actorId, PackedScene actorBodyScene)
@@ -74,51 +84,38 @@ public class ActorData : IActorData
         }
         AActor actor = actorData.CreateActor();
         AActorBody actorBody = actorBodyScene.Instantiate<ActorBody>();
-        actor.SetActorBody(actorBody);
+        actor.ActorBody = actorBody;
         actorBody.Actor = actor;
         return actor;
     }
 
-    public AActor CreateActor()
+    public AActor CreateActor(AInventory? externalInventory = null)
     {
-        return CreateActor(s_itemDB, ((EquipmentSlotCategoryDB)Locator.EquipmentSlotCategoryDB).BasicEquipment);
+        return CreateActor(s_itemDB, ((EquipmentSlotCategoryDB)Locator.EquipmentSlotCategoryDB).BasicEquipment, externalInventory);
     }
 
-    public AActor CreateActor(AItemDB itemDB, IEnumerable<EquipmentSlotCategory> equipmentSlotCategories)
+    public override AActor CreateActor(AItemDB itemDB, IEnumerable<EquipmentSlotCategory> equipmentSlotCategories, AInventory? externalInventory)
     {
-        List<AItemStack> itemStacks = new();
-        foreach (var itemStackData in ItemStackData)
-        {
-            AItemStack? itemStack = itemStackData.CreateItemStack(itemDB);
-            if (itemStack != null)
-                itemStacks.Add(itemStack);
-        }
-
-        List<EquipmentSlot> equipmentSlots = new();
-        EquipmentSlotData[] equipmentSlotData = EquipmentSlotData.ToArray();
-        foreach (EquipmentSlotCategory category in equipmentSlotCategories)
-        {
-            var slotData = Array.Find(equipmentSlotData, x => x.SlotCategoryId == category.Id);
-            if (slotData == null || slotData.ItemStackIndex == -1)
-                equipmentSlots.Add(new(category));
-            else
-                equipmentSlots.Add(new(category, itemStacks[slotData.ItemStackIndex]));
-        }
-
-        Inventory inventory = new(itemStacks);
-        Equipment equipment = new(inventory, equipmentSlots.ToArray());
-        Stats stats = new(Stats);
+        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(itemDB)).OfType<ItemStack>());
+        Equipment equipment = new(inventory, equipmentSlotCategories);
         Actor actor = new(
             actorId: ActorId,
             actorName: ActorName,
             equipment,
-            inventory,
-            stats);
+            inventory);
 
-        stats.StatsOwner = actor;
+        foreach (Stat stat in StatsData.StatLookup)
+            actor.Stats.StatLookup[stat.StatType] = new Stat(stat);
+        foreach (Modifier mod in StatsData.Modifiers)
+            actor.Stats.AddMod(new Modifier(mod));
 
-        foreach (var slot in equipmentSlots)
-            slot.ItemStack?.AddReservation(actor, slot);
+        foreach (EquipmentSlotData slotData in EquipmentSlotData)
+        {
+            EquipmentSlot? slot = equipment.GetSlot(slotData.SlotCategoryId);
+            if (slot == null)
+                continue;
+            slot.TrySetItem(actor, inventory.Items.ElementAt(slotData.ItemStackIndex));
+        }
 
         return actor;
     }

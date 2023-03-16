@@ -50,7 +50,7 @@ public partial class AActorBody
     public void ChangeDirectionX()
     {
         Direction = Direction.SetX(Direction.X * -1);
-        _body.FlipScaleX();
+        Body.FlipScaleX();
     }
 
     public bool IsMovingDown() => Velocity.Dot(UpDirection) < 0;
@@ -71,7 +71,7 @@ public partial class AActorBody
         if (velocity.X != 0 && velocity.X != Direction.X)
         {
             Direction = Direction.SetX(velocity.X);
-            _body.FlipScaleX();
+            Body.FlipScaleX();
         }
         if (IsFloater && velocity.Y != 0 && velocity.Y != Direction.Y)
             Direction = Direction.SetY(velocity.Y);

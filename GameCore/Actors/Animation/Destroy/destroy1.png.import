@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/destroy1.png-8790a9530a22fa57df53640122b67ddf
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

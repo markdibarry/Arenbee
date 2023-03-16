@@ -29,9 +29,10 @@ public abstract partial class AGameSession : Node2D
             GD.PrintErr("AreaScene already active. Cannot add new AreaScene.");
             return;
         }
-        areaScene.Init(HUD);
+
         CurrentAreaScene = areaScene;
         AreaSceneContainer.AddChild(areaScene);
+        areaScene.Init(HUD);
     }
 
     /// <summary>

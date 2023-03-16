@@ -1,50 +1,41 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using GameCore.Utility;
+using Godot;
 
 namespace GameCore.Statistics;
 
-public abstract class Stat
+[Tool]
+public partial class Stat : Resource
 {
-    /// <summary>
-    /// Creates a new instance of Stat
-    /// </summary>
-    protected Stat(int type)
-    {
-        SubType = type;
-        BaseValue = 0;
-        MaxValue = 999;
-        Modifiers = new();
-    }
+    public Stat() { }
 
-    protected Stat(int type, int baseValue, int maxValue)
-        : this(type)
+    [JsonConstructor]
+    public Stat(int statType, int value, int maxValue = 999)
     {
-        BaseValue = baseValue;
+        StatType = statType;
+        Value = value;
         MaxValue = maxValue;
     }
 
-    /// <summary>
-    /// Creates a clone of a Stat
-    /// </summary>
-    /// <param name="valueStat"></param>
-    protected Stat(int type, Stat valueStat)
+    public Stat(Stat stat)
+        : this(stat.StatType, stat.Value, stat.MaxValue)
+    { }
+
+    private int _statType;
+    public int StatType
     {
-        SubType = type;
-        BaseValue = valueStat.BaseValue;
-        MaxValue = valueStat.MaxValue;
-        Modifiers = new(valueStat.Modifiers);
+        get => _statType;
+        set
+        {
+            _statType = value;
+            NotifyPropertyListChanged();
+        }
     }
+    public int Value { get; set; }
+    [Export] public int MaxValue { get; set; }
 
-    public int BaseValue { get; set; }
-    public int MaxValue { get; set; }
-    [JsonIgnore]
-    public int DisplayValue => CalculateStat(true);
-    [JsonIgnore]
-    public int ModifiedValue => CalculateStat();
-    [JsonIgnore]
-    public List<Modifier> Modifiers { get; set; }
-    [JsonIgnore]
-    public int SubType { get; protected set; }
-
-    public abstract int CalculateStat(bool ignoreHidden = false);
+    public override Godot.Collections.Array<Godot.Collections.Dictionary> _GetPropertyList()
+    {
+        return Locator.StatTypeDB.GetStatPropertyList(_statType);
+    }
 }

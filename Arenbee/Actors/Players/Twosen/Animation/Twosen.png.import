@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/Twosen.png-197346308bde1c7e5424f95998f7e8ae.c
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

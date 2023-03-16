@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/underground_repeat.png-6ec6ee5be94c116ab4f5d5
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

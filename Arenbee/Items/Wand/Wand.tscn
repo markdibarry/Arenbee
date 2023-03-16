@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3]
 
-[ext_resource type="PackedScene" path="res://GameCore/Items/HoldItem.tscn" id="1_uru46"]
+[ext_resource type="PackedScene" uid="uid://db5jux5dv13e4" path="res://Arenbee/Items/HoldItem.tscn" id="1_uru46"]
 [ext_resource type="Script" path="res://Arenbee/Items/Wand/Wand.cs" id="2_t65lf"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Weapon.gdshader" id="3_w88c3"]
 [ext_resource type="Texture2D" uid="uid://cbiry5or4pger" path="res://Arenbee/Items/Wand/WandPalette.png" id="4_7o2gx"]

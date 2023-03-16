@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Arenbee.Statistics;
 using GameCore.ActionEffects;
+using GameCore.Enums;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -38,8 +40,8 @@ public class ItemDB : AItemDB
             Price = 10,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Attack, ModOperator.Add, 1),
-                new(StatType.ElementOff, (int)ElementType.Earth, ModOperator.Add, 2)
+                new((int)StatType.Attack, ModOp.Add, 1),
+                new((int)StatType.AttackElement, ModOp.Add, (int)ElementType.Earth)
             }
         });
 
@@ -53,8 +55,8 @@ public class ItemDB : AItemDB
             Price = 10,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Attack, ModOperator.Add, 1),
-                new(StatType.ElementOff, (int)ElementType.Water, ModOperator.Add, 2)
+                new((int)StatType.Attack, ModOp.Add, 1),
+                new((int)StatType.AttackElement, ModOp.Add, (int)ElementType.Water)
             }
         });
 
@@ -68,8 +70,8 @@ public class ItemDB : AItemDB
             Price = 10,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1),
-                new(StatType.ElementOff, (int)ElementType.Fire, ModOperator.Add, 2)
+                new((int)StatType.MagicAttack, ModOp.Add, 1),
+                new((int)StatType.AttackElement, ModOp.Add, (int)ElementType.Fire)
             }
         });
     }
@@ -86,7 +88,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1)
+                new((int)StatType.MagicAttack, ModOp.Add, 1)
             }
         });
 
@@ -100,7 +102,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModOperator.Add, 20)
+                new((int)StatType.PoisonResist, ModOp.Add, 20)
             }
         });
 
@@ -114,8 +116,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, -1)
+                new((int)StatType.MagicDefense, ModOp.Add, 1),
+                new((int)StatType.Defense, ModOp.Subtract, 1)
             }
         });
 
@@ -129,7 +131,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.ElementDef, (int)ElementType.Dark, ModOperator.Add, ElementDef.Resist)
+                new((int)StatType.DarkResist, ModOp.Add, ElementResist.Resist)
             }
         });
     }
@@ -146,8 +148,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
-                new(StatType.Attribute, (int)AttributeType.MagicAttack, ModOperator.Add, 1)
+                new((int)StatType.Defense, ModOp.Add, 1),
+                new((int)StatType.MagicAttack, ModOp.Add, 1)
             }
         });
 
@@ -161,7 +163,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1)
+                new((int)StatType.Defense, ModOp.Add, 1)
             }
         });
     }
@@ -178,8 +180,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
-                new(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Weak)
+                new((int)StatType.Defense, ModOp.Add, 1),
+                new((int)StatType.WaterResist, ModOp.Add, ElementResist.Weak)
             }
         });
 
@@ -193,7 +195,7 @@ public class ItemDB : AItemDB
             Price = 14,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 2),
+                new((int)StatType.Defense, ModOp.Add, 2),
             }
         });
     }
@@ -210,7 +212,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 2)
+                new((int)StatType.Defense, ModOp.Add, 2)
             }
         });
 
@@ -224,9 +226,9 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1),
-                new(StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
-                new(StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Resist)
+                new((int)StatType.Defense, ModOp.Add, 1),
+                new((int)StatType.MagicDefense, ModOp.Add, 1),
+                new((int)StatType.WaterResist, ModOp.Add, ElementResist.Resist)
             }
         });
 
@@ -240,8 +242,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new (StatType.ElementDef, (int)ElementType.Water, ModOperator.Add, ElementDef.Resist),
-                new (StatType.StatusEffectDef, (int)StatusEffectType.Poison, ModOperator.Add, 100)
+                new ((int)StatType.WaterResist, ModOp.Add, ElementResist.Resist),
+                new ((int)StatType.PoisonResist, ModOp.Add, 100)
             }
         });
     }
@@ -258,7 +260,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.Attribute, (int)AttributeType.MaxHP, ModOperator.Add, 10)
+                new((int)StatType.MaxHP, ModOp.Add, 10)
             }
         });
 
@@ -272,7 +274,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new(StatType.StatusEffect, (int)StatusEffectType.Poison, ModOperator.Add, 1)
+                new((int)StatType.Poison, ModOp.Add, 1)
             }
         });
 
@@ -286,8 +288,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new (StatType.Attribute, (int)AttributeType.MagicDefense, ModOperator.Add, 1),
-                new (StatType.ElementDef, (int)ElementType.Dark, ModOperator.Add, ElementDef.Resist)
+                new ((int)StatType.MagicDefense, ModOp.Add, 1),
+                new ((int)StatType.DarkResist, ModOp.Add, ElementResist.Resist)
             }
         });
 
@@ -301,7 +303,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new (StatType.Attribute, (int)AttributeType.Defense, ModOperator.Add, 1)
+                new ((int)StatType.Defense, ModOp.Add, 1)
             }
         });
 
@@ -315,8 +317,8 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new (StatType.ElementDef, (int)ElementType.Fire, ModOperator.Add, ElementDef.Resist),
-                new (StatType.StatusEffectDef, (int)StatusEffectType.Burn, ModOperator.Add, 10)
+                new ((int)StatType.FireResist, ModOp.Add, ElementResist.Resist),
+                new ((int)StatType.BurnResist, ModOp.Add, 10)
             }
         });
     }

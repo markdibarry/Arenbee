@@ -1,4 +1,5 @@
 ﻿using GameCore.Actors;
+using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -7,10 +8,10 @@ namespace GameCore.AreaScenes;
 
 public partial class AAreaScene : Node2D
 {
-    public AHUD HUD { get; private set; }
-    public Node2D ActorsContainer { get; private set; }
-    public Node2D EventContainer { get; private set; }
-    public Node2D SpawnPointContainer { get; private set; }
+    public AHUD HUD { get; private set; } = null!;
+    public Node2D ActorsContainer { get; private set; } = null!;
+    public Node2D EventContainer { get; private set; } = null!;
+    public Node2D SpawnPointContainer { get; private set; } = null!;
 
     public override void _Ready()
     {
@@ -76,9 +77,9 @@ public partial class AAreaScene : Node2D
 
     private void SetNodeReferences()
     {
-        ActorsContainer = GetNodeOrNull<Node2D>("Actors");
-        SpawnPointContainer = GetNodeOrNull<Node2D>("SpawnPoints");
-        EventContainer = GetNodeOrNull<Node2D>("Events");
+        ActorsContainer = GetNode<Node2D>("Actors");
+        SpawnPointContainer = GetNode<Node2D>("SpawnPoints");
+        EventContainer = GetNode<Node2D>("Events");
     }
 
     private void SubscribeActorEvents(AActor actor)

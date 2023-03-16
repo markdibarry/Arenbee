@@ -1,5 +1,5 @@
-﻿using GameCore.Extensions;
-using GameCore.Statistics;
+﻿using Arenbee.Statistics;
+using GameCore.Extensions;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -9,12 +9,13 @@ public partial class ElementLarge : ElementDisplay
 {
     public ElementLarge()
     {
-        Effectiveness = ElementDef.None;
+        Effectiveness = ElementResist.None;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
+    private Sprite2D _effectivenessSprite = null!;
     public int Effectiveness { get; set; }
-    private Sprite2D _effectivenessSprite;
+
 
     public override void _Ready()
     {
@@ -25,30 +26,30 @@ public partial class ElementLarge : ElementDisplay
 
     public void SetEffectiveness(int value)
     {
-        if (Effectiveness == ElementDef.None) return;
+        if (Effectiveness == ElementResist.None) return;
         _effectivenessSprite.Show();
-        if (value > ElementDef.VeryWeak)
-            value = ElementDef.VeryWeak;
-        else if (value < ElementDef.Absorb)
-            value = ElementDef.Absorb;
+        if (value > ElementResist.VeryWeak)
+            value = ElementResist.VeryWeak;
+        else if (value < ElementResist.Absorb)
+            value = ElementResist.Absorb;
 
         switch (value)
         {
-            case ElementDef.VeryWeak:
+            case ElementResist.VeryWeak:
                 _effectivenessSprite.Frame = 0;
                 _effectivenessSprite.Modulate = GameCore.Colors.TextRed;
                 break;
-            case ElementDef.Weak:
+            case ElementResist.Weak:
                 _effectivenessSprite.Frame = 0;
                 break;
-            case ElementDef.Resist:
+            case ElementResist.Resist:
                 _effectivenessSprite.Frame = 1;
                 break;
-            case ElementDef.Nullify:
+            case ElementResist.Nullify:
                 _effectivenessSprite.Frame = 2;
                 _effectivenessSprite.Modulate = GameCore.Colors.DimGrey;
                 break;
-            case ElementDef.Absorb:
+            case ElementResist.Absorb:
                 _effectivenessSprite.Frame = 3;
                 _effectivenessSprite.Modulate = GameCore.Colors.TextGreen;
                 break;

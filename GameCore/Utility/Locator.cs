@@ -13,22 +13,28 @@ public static class Locator
     private static AGameRoot s_gameRoot = null!;
     private static AActorDataDB s_actorDataDB = null!;
     private static AAudioController s_audioController = null!;
+    private static IConditionEventFilterFactory s_conditionEventFilterFactory = null!;
     private static AEquipmentSlotCategoryDB s_equipmentSlotCategoryDB = null!;
     private static AItemDB s_itemDB = null!;
     private static AItemCategoryDB s_itemCategoryDB = null!;
-    private static StatusEffectDBBase s_statusEffectDB = null!;
+    private static AStatTypeDB s_statTypeDB = null!;
+    private static AStatusEffectDB s_statusEffectDB = null!;
+    private static IStatusEffectModifierFactory s_statusEffectModifierFactory = null!;
     private static ActionEffectDBBase s_actionEffectDB = null!;
     private static TransitionControllerBase s_transitionController = null!;
 
     public static ActionEffectDBBase ActionEffectDB => s_actionEffectDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
     public static AAudioController Audio => s_audioController;
+    public static IConditionEventFilterFactory ConditionEventFilterFactory => s_conditionEventFilterFactory;
     public static AEquipmentSlotCategoryDB EquipmentSlotCategoryDB => s_equipmentSlotCategoryDB;
     public static AItemDB ItemDB => s_itemDB;
     public static AItemCategoryDB ItemCategoryDB => s_itemCategoryDB;
     public static AGameRoot Root => s_gameRoot;
     public static AGameSession? Session => s_gameRoot.GameSession;
-    public static StatusEffectDBBase StatusEffectDB => s_statusEffectDB;
+    public static AStatTypeDB StatTypeDB => s_statTypeDB;
+    public static AStatusEffectDB StatusEffectDB => s_statusEffectDB;
+    public static IStatusEffectModifierFactory StatusEffectModifierFactory => s_statusEffectModifierFactory;
     public static TransitionControllerBase TransitionController => s_transitionController;
 
     public static void ProvideActionEffectDB(ActionEffectDBBase actionEffectDB)
@@ -46,6 +52,11 @@ public static class Locator
         if (GodotObject.IsInstanceValid(s_audioController))
             s_audioController.Free();
         s_audioController = audioController;
+    }
+
+    public static void ProvideConditionEventFilterFactory(IConditionEventFilterFactory factory)
+    {
+        s_conditionEventFilterFactory = factory;
     }
 
     public static void ProvideEquipmentSlotCategoryDB(AEquipmentSlotCategoryDB equipmentSlotCategoryDB)
@@ -70,9 +81,19 @@ public static class Locator
         s_gameRoot = gameRoot;
     }
 
-    public static void ProvideStatusEffectDB(StatusEffectDBBase statusEffectDB)
+    public static void ProvideStatTypeDB(AStatTypeDB statTypeDB)
+    {
+        s_statTypeDB = statTypeDB;
+    }
+
+    public static void ProvideStatusEffectDB(AStatusEffectDB statusEffectDB)
     {
         s_statusEffectDB = statusEffectDB;
+    }
+
+    public static void ProvideStatusEffectModifierFactory(IStatusEffectModifierFactory factory)
+    {
+        s_statusEffectModifierFactory = factory;
     }
 
     public static void ProvideTransitionController(TransitionControllerBase transitionController)

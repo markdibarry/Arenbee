@@ -1,13 +1,12 @@
-﻿using GameCore.Actors;
-using GameCore.Items;
-using GameCore.Statistics;
+﻿using Arenbee.Actors;
+using Arenbee.Statistics;
 using GameCore.Utility;
 
 namespace Arenbee.Items;
 
 public partial class HockeyStick : HoldItem
 {
-    public override void Init(AActorBody actor)
+    public override void Init(ActorBody actor)
     {
         Setup("HockeyStick", GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
     }
@@ -31,7 +30,7 @@ public partial class HockeyStick : HoldItem
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(AActorBody actor, HoldItem holdItem)
+    public ActionStateMachine(ActorBody actor, HoldItem holdItem)
         : base(
             new ActionState[]
             {
@@ -45,7 +44,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class NotAttacking : ActionState
     {
-        public NotAttacking(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
+        public NotAttacking(ActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
         }
 
@@ -72,7 +71,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class WeakAttack1 : ActionState
     {
-        public WeakAttack1(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
+        public WeakAttack1(ActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
             AnimationName = "WeakAttack1";
         }
@@ -106,7 +105,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     protected class WeakAttack2 : ActionState
     {
-        public WeakAttack2(AActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
+        public WeakAttack2(ActorBody actor, HoldItem? holdItem) : base(actor, holdItem)
         {
             AnimationName = "WeakAttack2";
         }

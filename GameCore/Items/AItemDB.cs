@@ -21,7 +21,7 @@ public abstract class AItemDB
 
     public IEnumerable<AItem> GetItemsByCategory(string itemCategoryId)
     {
-        return _items.Where(item => item.ItemCategoryId.Equals(itemCategoryId));
+        return _items.Where(item => item.ItemCategory.Id.Equals(itemCategoryId));
     }
 
     protected abstract AItem[] BuildDB(AItemCategoryDB itemCategoryDB);

@@ -1,4 +1,5 @@
-﻿using GameCore.Actors;
+﻿using Arenbee.Statistics;
+using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.Statistics;
@@ -13,13 +14,13 @@ public partial class FireballBig : Node2D
     private double _speed = 250;
     private double _expiration = 0.5;
     public Direction Direction { get; set; }
-    public HitBox HitBox { get; set; }
+    public AHitBox HitBox { get; set; }
 
     public override void _Ready()
     {
         _animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animatedSprite2D.Play();
-        HitBox = GetNode<HitBox>("HitBox");
+        HitBox = GetNode<AHitBox>("HitBox");
         if (Direction == Direction.Left)
         {
             _speed *= -1;
@@ -47,23 +48,20 @@ public partial class FireballBig : Node2D
         }
         fireball.GlobalPosition = new Vector2(actorBody.GlobalPosition.X + fireballOffset, actorBody.GlobalPosition.Y);
         actorBody.GetParent().AddChild(fireball);
-        var actionData = fireball.HitBox.ActionData;
-        actionData.SourceName = actorBody.Actor.Name;
-        actionData.ActionType = ActionType.Magic;
-        actionData.ElementDamage = ElementType.Fire;
-        actionData.StatusEffects.Add(new Modifier(
-            statType: StatType.StatusEffectOff,
-            subType: (int)StatusEffectType.Burn,
-            modOperator: ModOperator.Add,
-            value: 1,
-            chance: 50));
-        actionData.Value = actorBody.Actor.Stats.Attributes.GetStat(AttributeType.Attack).ModifiedValue + 1;
-        fireball.HitBox.GetActionData = () =>
+        string sourceName = actorBody.Name;
+        int attackValue = actorBody.Actor.Stats.CalculateStat((int)StatType.Attack) + 1;
+        fireball.HitBox.GetDamageRequest = () =>
         {
             fireball.QueueFree();
-            var actionData = fireball.HitBox.ActionData;
-            actionData.SourcePosition = fireball.HitBox.GlobalPosition;
-            return actionData;
+            return new DamageRequest()
+            {
+                SourceName = sourceName,
+                SourcePosition = fireball.HitBox.GlobalPosition,
+                ActionType = ActionType.Magic,
+                ElementType = ElementType.Fire,
+                StatusChances = new StatusChance[] { new(StatusEffectType.Burn, 20) },
+                Value = attackValue
+            };
         };
     }
 }

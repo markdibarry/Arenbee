@@ -33,7 +33,7 @@ public class CheckTargetInRayCastRange : BTNode
         if (_rayCast2D.IsColliding())
         {
             target = _rayCast2D.GetCollider();
-            if (target is AActorBody)
+            if (target is ActorBody)
             {
                 SetData("Target", target);
 

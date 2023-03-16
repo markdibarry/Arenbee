@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Arenbee/Projectiles/Fireball/Fireball.cs" id="1_6oopk"]
-[ext_resource type="Texture2D" path="res://Arenbee/Projectiles/Fireball/Fireball.png" id="1_tqaxo"]
-[ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="2_n7652"]
+[ext_resource type="Texture2D" uid="uid://frfwqhwwirma" path="res://Arenbee/Projectiles/Fireball/Fireball.png" id="1_tqaxo"]
+[ext_resource type="PackedScene" path="res://Arenbee/Statistics/HitBox.tscn" id="2_n7652"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ydun5"]
 size = Vector2(10, 8)

@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/greyscale16.png-74cad3a2b32308b04d9d4ae2dfd26
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

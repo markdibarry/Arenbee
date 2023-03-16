@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Arenbee.Actors.Players;
+using Arenbee.Actors;
+using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
+using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
-using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.Items;
 using GameCore.Utility;
 using Godot;
 
@@ -16,8 +17,8 @@ namespace Arenbee.GUI.Menus.Title;
 [Tool]
 public partial class MainSubMenu : OptionSubMenu
 {
-    private OptionContainer _startOptions;
-    private GameRoot _gameRoot = (GameRoot)Locator.Root;
+    private OptionContainer _startOptions = null!;
+    private AGameRoot _gameRoot = Locator.Root;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_Title_Continue,
@@ -89,14 +90,9 @@ public partial class MainSubMenu : OptionSubMenu
         CurrentState = State.Busy;
         async Task Callback(Loader loader)
         {
-            var sessionScene = loader.GetObject<PackedScene>(_gameRoot.GameSessionScenePath);
-            var twosenScene = loader.GetObject<PackedScene>(Twosen.GetScenePath());
-            List<AActorBody> actors = new() { twosenScene.Instantiate<Twosen>() };
-            List<AItemStack> items = new() { new ItemStack("HockeyStick", 1) };
-            GameSave gameSave = new(actors, items);
-            var session = sessionScene.Instantiate<AGameSession>();
+            GameSave gameSave = GetNewGame();
             await _gameRoot.RemoveSession();
-            await _gameRoot.StartNewSession(session, gameSave);
+            await _gameRoot.StartNewSession(gameSave);
         }
 
         var tController = Locator.TransitionController;
@@ -105,7 +101,7 @@ public partial class MainSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { _gameRoot.GameSessionScenePath, Twosen.GetScenePath() },
+            Array.Empty<string>(),
             Callback);
         tController.RequestTransition(request);
     }
@@ -113,5 +109,31 @@ public partial class MainSubMenu : OptionSubMenu
     private void OpenContiueSaveSubMenu()
     {
         _ = OpenSubMenuAsync(LoadGameSubMenu.GetScenePath());
+    }
+
+    private GameSave GetNewGame()
+    {
+        ActorData actorData = (ActorData)Locator.ActorDataDB.GetActorData("Twosen")!;
+        return new GameSave(
+            0,
+            new SessionState(),
+            "default",
+            new PartyData[]
+            {
+                new PartyData(
+                    "default",
+                    new ActorData[] { actorData },
+                    0,
+                    Array.Empty<ItemStackData>()
+                )
+            },
+            new InventoryData[]
+            {
+                new InventoryData(
+                    new ItemStackData[]
+                    {
+                        new ItemStackData("HockeyStick", 1)
+                    })
+            });
     }
 }

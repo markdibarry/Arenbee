@@ -1,11 +1,10 @@
-﻿using GameCore.Actors;
-using GameCore.Items;
+﻿using Arenbee.Items;
 
 namespace Arenbee.Actors.Enemies.Default.State;
 
 public class ActionStateMachine : ActionStateMachineBase
 {
-    public ActionStateMachine(AActorBody actor)
+    public ActionStateMachine(ActorBody actor)
         : base(
             new ActionState[]
             {
@@ -17,7 +16,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
     public class NotAttacking : ActionState
     {
-        public NotAttacking(AActorBody actor, HoldItem? holdItem)
+        public NotAttacking(ActorBody actor, HoldItem? holdItem)
             : base(actor, holdItem)
         {
         }

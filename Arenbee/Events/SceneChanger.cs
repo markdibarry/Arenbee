@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Arenbee.Game;
 using Arenbee.GUI;
-using GameCore;
 using GameCore.Actors;
 using GameCore.AreaScenes;
 using GameCore.Events;
 using GameCore.GUI;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Events;
@@ -27,14 +24,14 @@ public partial class SceneChanger : SceneChangerBase
             {
                 var areaScenePacked = loader.GetObject<PackedScene>(PackedScenePath);
                 await GUIController.CloseAllLayersAsync();
-                PlayerParty party = ((GameSession)GameSession).Party;
+                Party party = ((GameSession)GameSession).MainParty;
                 foreach (var player in party.Actors)
                     GameSession.CurrentAreaScene?.RemoveActor(player.ActorBody!);
                 GameSession.RemoveAreaScene();
 
                 AAreaScene areaScene = areaScenePacked.Instantiate<AAreaScene>();
                 GameSession.AddAreaScene(areaScene);
-                AActor actor = party.Actors.ElementAt(0);
+                AActor actor = party.Actors.First();
                 areaScene.AddActor(actor.ActorBody!, areaScene.GetSpawnPoint(0));
             });
         TController.RequestTransition(request);

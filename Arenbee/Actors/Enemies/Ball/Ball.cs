@@ -1,8 +1,7 @@
-﻿using Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
+using Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
 using Arenbee.Actors.Enemies.Default.State;
-using GameCore.Actors;
+using Arenbee.Statistics;
 using GameCore.Extensions;
-using GameCore.Statistics;
 
 namespace Arenbee.Actors.Enemies;
 
@@ -10,7 +9,7 @@ public partial class Ball : ActorBody
 {
     public Ball()
     {
-        StateController = new AStateController(
+        StateController = new StateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

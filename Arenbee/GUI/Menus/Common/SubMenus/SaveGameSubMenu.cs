@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Arenbee.Game.SaveData;
+using Arenbee.SaveData;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.SaveData;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -40,7 +39,7 @@ public partial class SaveGameSubMenu : OptionSubMenu
     private List<SaveGameOption> GetSaveGameOptions()
     {
         var saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
-        var gameSaves = ASaveService.GetGameSaves();
+        var gameSaves = SaveService.GetGameSaves();
         List<SaveGameOption> options = new();
         foreach (var gameSave in gameSaves)
         {

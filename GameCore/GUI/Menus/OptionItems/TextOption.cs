@@ -7,7 +7,7 @@ namespace GameCore.GUI;
 public partial class TextOption : OptionItem
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private Label _label;
+    private Label _label = null!;
     private string _labelText = string.Empty;
     [Export(PropertyHint.MultilineText)]
     public string LabelText

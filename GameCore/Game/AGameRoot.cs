@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GameCore.Audio;
+using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.SaveData;
@@ -12,7 +13,6 @@ public abstract partial class AGameRoot : Node
 {
     public string GameSessionScenePath { get; set; } = string.Empty;
     public string TitleMenuScenePath { get; set; } = string.Empty;
-    public ColorAdjustment ColorAdjustment { get; set; } = null!;
     public AAudioController AudioController { get; protected set; } = null!;
     public GameCamera GameCamera { get; protected set; } = null!;
     public Node2D GameDisplay { get; set; } = null!;
@@ -38,7 +38,6 @@ public abstract partial class AGameRoot : Node
         AudioController = GameDisplay.GetNode<AAudioController>("AudioController");
         GameSessionContainer = GameDisplay.GetNode<Node2D>("GameSessionContainer");
         Transition = GameDisplay.GetNode<CanvasLayer>("Transition");
-        ColorAdjustment = GameDisplay.GetNode<ColorAdjustment>("ColorAdjustment");
         GameCamera = GameDisplay.GetNode<GameCamera>("GameCamera");
     }
 
@@ -73,11 +72,11 @@ public abstract partial class AGameRoot : Node
         await GUIController.CloseAllLayersAsync(true);
     }
 
-    public virtual async Task StartNewSession(AGameSession session, IGameSave gameSave)
+    public virtual async Task StartNewSession(IGameSave gameSave)
     {
-        GameSession = session;
-        GameSessionContainer.AddChild(session);
-        session.Init(GUIController, gameSave);
+        GameSession = GDEx.Instantiate<AGameSession>(GameSessionScenePath);
+        GameSessionContainer.AddChild(GameSession);
+        GameSession.Init(GUIController, gameSave);
         await GUIController.CloseAllLayersAsync(true);
     }
 

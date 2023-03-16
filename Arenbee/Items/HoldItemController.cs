@@ -1,22 +1,52 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Actors;
 using GameCore;
-using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.Items;
+using Godot;
 
 namespace Arenbee.Items;
 
-public partial class HoldItemController : AHoldItemController
+public partial class HoldItemController : Node2D
 {
     private readonly string[] _holdItemIds = { ItemCategoryIds.Weapon, ItemCategoryIds.SubWeapon };
+    protected ActorBody ActorBody { get; set; } = null!;
+    public List<HoldItem> HoldItems { get; set; } = new();
 
-    public override void Init(AActorBody actorBody)
+    protected virtual void AttachHoldItem(HoldItem holdItem)
     {
-        base.Init(actorBody);
+        if (holdItem == null)
+            return;
+        holdItem.Init(ActorBody);
+        HoldItems.Add(holdItem);
+        AddChild(holdItem);
     }
 
-    public override void SetHoldItem(AItem? oldItem, AItem? newItem)
+    protected virtual void DetachHoldItemByItem(AItem item)
+    {
+        HoldItem? holdItem = HoldItems.Find(x => x.Item == item);
+        if (holdItem != null)
+            DetachHoldItem(holdItem);
+    }
+
+    protected virtual void DetachHoldItem(HoldItem holdItem)
+    {
+        if (!HoldItems.Contains(holdItem))
+            return;
+        HoldItems.Remove(holdItem);
+        holdItem.StateMachine.ExitState();
+        RemoveChild(holdItem);
+        holdItem.QueueFree();
+    }
+
+    public void Init(ActorBody actorBody)
+    {
+        ActorBody = actorBody;
+    }
+
+    public void SetHoldItem(AItem? oldItem, AItem? newItem)
     {
         if (!_holdItemIds.Contains(oldItem?.ItemCategory.Id) && !_holdItemIds.Contains(newItem?.ItemCategory.Id))
             return;

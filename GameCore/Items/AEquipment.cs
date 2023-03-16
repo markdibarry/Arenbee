@@ -36,34 +36,28 @@ public class AEquipment
 
     public bool TrySetItem(AActor actor, EquipmentSlot slot, AItem item)
     {
-        AItemStack? itemStack = _inventory.GetItemStacks(item)
+        ItemStack? itemStack = _inventory.GetItemStacks(item)
             .FirstOrDefault(x => x.CanReserve());
         if (itemStack == null)
             return false;
         return TrySetItem(actor, slot, itemStack);
     }
 
-    public bool TrySetItem(AActor actor, EquipmentSlot slot, AItemStack newItemStack)
+    public bool TrySetItem(AActor actor, EquipmentSlot slot, ItemStack newItemStack)
     {
-        if (!newItemStack.CanReserve())
-            return false;
-        if (!slot.IsCompatible(newItemStack.Item))
-            return false;
         AItem? oldItem = slot.Item;
-        slot.ItemStack?.RemoveReservation(slot);
-        newItemStack.AddReservation(actor, slot);
-        slot.ItemStack = newItemStack;
+        if (!slot.TrySetItem(actor, newItemStack))
+            return false;
         EquipmentSet?.Invoke(slot, oldItem, newItemStack.Item);
         return true;
     }
 
-    public void RemoveItem(EquipmentSlot slot)
+    public void RemoveItem(AActor actor, EquipmentSlot slot)
     {
         if (slot.ItemStack == null)
             return;
         AItem? oldItem = slot.Item;
-        slot.ItemStack.RemoveReservation(slot);
-        slot.ItemStack = null;
+        slot.RemoveItem(actor);
         EquipmentSet?.Invoke(slot, oldItem, null);
     }
 }

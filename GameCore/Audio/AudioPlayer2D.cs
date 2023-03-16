@@ -4,7 +4,7 @@ namespace GameCore.Audio;
 
 public partial class AudioPlayer2D : AudioStreamPlayer2D
 {
-    public Node2D SoundSource { get; set; }
+    public Node2D? SoundSource { get; set; }
     public ulong TimeStamp { get; set; }
 
     public override void _Ready()
@@ -14,13 +14,12 @@ public partial class AudioPlayer2D : AudioStreamPlayer2D
 
     public override void _Process(double delta)
     {
-        if (SoundSource != null)
-        {
-            if (IsInstanceValid(SoundSource))
-                GlobalPosition = SoundSource.GlobalPosition;
-            else
-                SoundSource = null;
-        }
+        if (SoundSource == null)
+            return;
+        if (IsInstanceValid(SoundSource))
+            GlobalPosition = SoundSource.GlobalPosition;
+        else
+            SoundSource = null;
     }
 
     public void Reset()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://nbqjbe4vr5nk"]
 
 [ext_resource type="PackedScene" path="res://GameCore/Utility/ColorAdjustment.tscn" id="2_rv66l"]
 
@@ -12,11 +12,10 @@
 
 [node name="Events" type="Node2D" parent="."]
 
-[node name="Enemies" type="Node2D" parent="."]
-
-[node name="Players" type="Node2D" parent="."]
+[node name="Actors" type="Node2D" parent="."]
 
 [node name="Effects" type="Node2D" parent="."]
 
-[node name="ColorAdjustment" parent="." instance=ExtResource( "2_rv66l" )]
+[node name="ColorAdjustment" parent="." instance=ExtResource("2_rv66l")]
 layer = 20
+TintColor = Color(1, 1, 1, 1)

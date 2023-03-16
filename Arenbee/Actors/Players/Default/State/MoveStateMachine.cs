@@ -1,12 +1,11 @@
-﻿using GameCore.Actors;
-using GameCore.Statistics;
+﻿using Arenbee.Statistics;
 using GameCore.Utility;
 
 namespace Arenbee.Actors.Default.State;
 
 public class MoveStateMachine : MoveStateMachineBase
 {
-    public MoveStateMachine(AActorBody actorBody)
+    public MoveStateMachine(ActorBody actorBody)
         : base(
             new MoveState[]
             {
@@ -20,7 +19,7 @@ public class MoveStateMachine : MoveStateMachineBase
 
     public class Standing : MoveState
     {
-        public Standing(AActorBody actorBody)
+        public Standing(ActorBody actorBody)
             : base(actorBody)
         {
             AnimationName = "Standing";
@@ -39,7 +38,7 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return false;
-            if (Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
+            if (Stats.HasStatusEffect((int)StatusEffectType.Burn))
                 return stateMachine.TrySwitchTo<Running>();
             if (InputHandler.GetLeftAxis().X == 0)
                 return false;
@@ -51,7 +50,7 @@ public class MoveStateMachine : MoveStateMachineBase
 
     public class Walking : MoveState
     {
-        public Walking(AActorBody actorBody) : base(actorBody)
+        public Walking(ActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Walk";
         }
@@ -72,7 +71,7 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return stateMachine.TrySwitchTo<Standing>();
-            if (Stats.StatusEffects.HasEffect(StatusEffectType.Burn))
+            if (Stats.HasStatusEffect((int)StatusEffectType.Burn))
                 return stateMachine.TrySwitchTo<Running>();
             if (InputHandler.GetLeftAxis().X == 0)
                 return stateMachine.TrySwitchTo<Standing>();
@@ -84,7 +83,7 @@ public class MoveStateMachine : MoveStateMachineBase
 
     public class Running : MoveState
     {
-        public Running(AActorBody actorBody) : base(actorBody)
+        public Running(ActorBody actorBody) : base(actorBody)
         {
             AnimationName = "Run";
         }
@@ -105,7 +104,7 @@ public class MoveStateMachine : MoveStateMachineBase
         {
             if (StateController.IsBlocked(BlockedState.Move))
                 return stateMachine.TrySwitchTo<Standing>();
-            if (Stats.HasEffect(StatusEffectType.Burn))
+            if (Stats.HasStatusEffect((int)StatusEffectType.Burn))
                 return false;
             if (InputHandler.GetLeftAxis().X == 0)
                 return stateMachine.TrySwitchTo<Standing>();

@@ -1,11 +1,10 @@
-﻿using GameCore.Actors;
-using GameCore.Utility;
+﻿using GameCore.Utility;
 
 namespace Arenbee.Actors.Enemies.Default.State;
 
 public class AirStateMachine : AirStateMachineBase
 {
-    public AirStateMachine(AActorBody actor)
+    public AirStateMachine(ActorBody actor)
         : base(
             new AirState[]
             {
@@ -18,7 +17,7 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Grounded : AirState
     {
-        public Grounded(AActorBody actor) : base(actor)
+        public Grounded(ActorBody actor) : base(actor)
         {
         }
 
@@ -44,7 +43,7 @@ public class AirStateMachine : AirStateMachineBase
 
     public class Falling : AirState
     {
-        public Falling(AActorBody actor) : base(actor)
+        public Falling(ActorBody actor) : base(actor)
         {
         }
 

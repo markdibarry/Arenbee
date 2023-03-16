@@ -10,13 +10,13 @@ public abstract class AActorDataDB
         _actorData = BuildDB();
     }
 
-    private readonly IActorData[] _actorData;
-    public IReadOnlyCollection<IActorData> ActorData => _actorData;
+    private readonly AActorData[] _actorData;
+    public IReadOnlyCollection<AActorData> ActorData => _actorData;
 
-    public IActorData? GetActorData(string id)
+    public AActorData? GetActorData(string id)
     {
         return Array.Find(_actorData, actorData => actorData.ActorId.Equals(id));
     }
 
-    protected abstract IActorData[] BuildDB();
+    protected abstract AActorData[] BuildDB();
 }

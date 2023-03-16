@@ -1,4 +1,5 @@
-﻿using GameCore.ActionEffects;
+﻿using Arenbee.Statistics;
+using GameCore.ActionEffects;
 using GameCore.Actors;
 using GameCore.Statistics;
 
@@ -10,21 +11,21 @@ public class RestoreHP : IActionEffect
     {
         if (targets.Length == 0)
             return false;
-        AActor target = targets[0];
-        return !target.Stats.HasFullHP() && !target.Stats.HasNoHP();
+        Stats stats = (Stats)targets[0].Stats;
+        return !stats.HasFullHP && !stats.HasNoHP;
     }
 
     public void Use(ActionEffectRequest request, AActor[] targets)
     {
         AActor target = targets[0];
-        var actionData = new ActionData()
+        var actionData = new DamageRequest()
         {
             SourceName = target.Name,
             ActionType = request.ActionType,
             Value = request.Value1 * -1,
-            ElementDamage = ElementType.Healing
+            ElementType = ElementType.Healing
         };
 
-        target.Stats.ReceiveAction(actionData);
+        target.Stats.ReceiveDamageRequest(actionData);
     }
 }

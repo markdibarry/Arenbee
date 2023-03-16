@@ -9,7 +9,7 @@ public partial class OptionItem : MarginContainer
     public OptionItem()
     {
         DimWhenUnfocused = true;
-        OptionData = new Dictionary<string, object>();
+        OptionData = new();
     }
 
     private bool _dimWhenUnfocused;

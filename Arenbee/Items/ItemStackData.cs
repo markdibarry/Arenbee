@@ -7,7 +7,12 @@ public class ItemStackData
 {
     private static readonly AItemDB s_itemDB = Locator.ItemDB;
 
-    public ItemStackData(AItemStack itemStack)
+    public ItemStackData(ItemStackData itemStackData)
+        : this(itemStackData.ItemId, itemStackData.Count)
+    {
+    }
+
+    public ItemStackData(ItemStack itemStack)
         : this(itemStack.Item.Id, itemStack.Count)
     {
     }
@@ -21,11 +26,9 @@ public class ItemStackData
     public int Count { get; }
     public string ItemId { get; }
 
-    public ItemStackData Clone() => new(ItemId, Count);
+    public ItemStack? CreateItemStack() => CreateItemStack(s_itemDB);
 
-    public AItemStack? CreateItemStack() => CreateItemStack(s_itemDB);
-
-    public AItemStack? CreateItemStack(AItemDB itemDB)
+    public ItemStack? CreateItemStack(AItemDB itemDB)
     {
         AItem? item = s_itemDB.GetItem(ItemId);
         if (item == null)

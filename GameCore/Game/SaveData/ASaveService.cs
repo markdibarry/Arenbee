@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using GameCore.Utility.JsonConverters;
 
 namespace GameCore.SaveData;
 
@@ -31,15 +30,12 @@ public abstract class ASaveService<T> where T : IGameSave
         if (!File.Exists(path))
             return default;
         string content = File.ReadAllText(path);
-        JsonSerializerOptions options = new();
-        options.Converters.Add(new StatsNotifierConverter());
-        return JsonSerializer.Deserialize<T>(content, options);
+        return JsonSerializer.Deserialize<T>(content);
     }
 
     public static void SaveGame(T gameSave)
     {
         JsonSerializerOptions options = new();
-        options.Converters.Add(new StatsNotifierConverter());
         options.WriteIndented = true;
         string saveString = JsonSerializer.Serialize(gameSave, options);
         string savepath = $"{Config.SavePath}{Config.SavePrefix}{gameSave.Id}.json";

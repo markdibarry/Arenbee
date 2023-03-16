@@ -1,12 +1,19 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Arenbee.Statistics;
+using GameCore.Extensions;
+using GameCore.Statistics;
+using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
 
 [Tool]
 public partial class ElementContainer : HBoxContainer
 {
+    private PackedScene _elementScene = GD.Load<PackedScene>(ElementLarge.GetScenePath());
     private bool _dim;
-    private string _statNameText;
+    private string _statNameText = string.Empty;
+    private StatCategory _statCategory;
 
     [Export]
     public bool Dim
@@ -18,8 +25,8 @@ public partial class ElementContainer : HBoxContainer
             Modulate = _dim ? GameCore.Colors.DimGrey : Colors.White;
         }
     }
-    public HBoxContainer Elements { get; set; }
-    public Label StatNameLabel { get; set; }
+    public HBoxContainer Elements { get; set; } = null!;
+    public Label StatNameLabel { get; set; } = null!;
     [Export]
     public string StatNameText
     {
@@ -37,5 +44,135 @@ public partial class ElementContainer : HBoxContainer
         StatNameLabel = GetNode<Label>("Key");
         StatNameLabel.Text = _statNameText;
         Elements = GetNode<HBoxContainer>("Elements");
+    }
+
+    public void UpdateType(StatCategory category)
+    {
+        Elements.QueueFreeAllChildren();
+        StatNameText = Tr(StatTypeDB.GetStatCategoryData(category).Abbreviation) + ":";
+        if (category == StatCategory.AttackElement)
+        {
+            var elementLg = _elementScene.Instantiate<ElementLarge>();
+            Elements.AddChild(elementLg);
+            elementLg.Hide();
+        }
+        else if (category == StatCategory.ElementResist)
+        {
+            foreach (ElementType element in GDEx.GetEnums<ElementType>())
+            {
+                if (element == ElementType.None)
+                    continue;
+                var elementLg = _elementScene.Instantiate<ElementLarge>();
+                elementLg.ElementType = element;
+                Elements.AddChild(elementLg);
+                elementLg.Hide();
+            }
+        }
+    }
+
+    public void UpdateBaseValue(Stats stats)
+    {
+        if (_statCategory == StatCategory.AttackElement)
+            UpdateBaseElementAttack(stats);
+        else if (_statCategory == StatCategory.ElementResist)
+            UpdateBaseElementResist(stats);
+    }
+
+    public void UpdateValue(Stats stats)
+    {
+        if (_statCategory == StatCategory.AttackElement)
+            UpdateElementAttack(stats);
+        else if (_statCategory == StatCategory.ElementResist)
+            UpdateElementResist(stats);
+    }
+
+    public void UpdateValue(List<Modifier> modifiers)
+    {
+        if (_statCategory == StatCategory.AttackElement)
+            UpdateElementAttack(modifiers);
+        else if (_statCategory == StatCategory.ElementResist)
+            UpdateElementResist(modifiers);
+    }
+
+    private void UpdateBaseElementAttack(Stats stats)
+    {
+        ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
+        ElementType elementType = (ElementType)stats.CalculateStat(StatType.AttackElement);
+        lgElement.BaseElementType = elementType;
+    }
+
+    private void UpdateBaseElementResist(Stats stats)
+    {
+        IEnumerable<ElementLarge> elements = Elements.GetChildren<ElementLarge>();
+        foreach (ElementLarge element in elements)
+        {
+            StatType statType = StatTypeHelpers.GetElementResist(element.ElementType);
+            int effectiveness = stats.CalculateStat(statType);
+            element.BaseEffectiveness = effectiveness;
+        }
+    }
+
+    private void UpdateElementAttack(List<Modifier> modifiers)
+    {
+        Dim = true;
+        ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
+        lgElement.Hide();
+        var atkElMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) != StatCategory.AttackElement);
+        if (!modifiers.Any())
+            return;
+        foreach (Modifier modifier in atkElMods)
+        {
+            ElementType elementType = StatTypeHelpers.GetElement((StatType)modifier.StatType);
+            lgElement.ElementType = (ElementType)modifier.Value;
+        }
+        lgElement.Show();
+        Dim = false;
+    }
+
+    private void UpdateElementAttack(Stats stats)
+    {
+        Dim = true;
+        ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
+        ElementType elementType = (ElementType)stats.CalculateStat(StatType.AttackElement);
+        lgElement.ElementType = elementType;
+        if (elementType == lgElement.BaseElementType)
+            return;
+        lgElement.Visible = elementType != ElementType.None;
+        Dim = false;
+    }
+
+    private void UpdateElementResist(List<Modifier> modifiers)
+    {
+        Dim = true;
+        IEnumerable<ElementLarge> elements = Elements.GetChildren<ElementLarge>();
+        foreach (ElementLarge element in elements)
+            element.Hide();
+        var resistMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) != StatCategory.ElementResist);
+        if (!modifiers.Any())
+            return;
+        foreach (Modifier modifier in resistMods)
+        {
+            ElementType elementType = StatTypeHelpers.GetElement((StatType)modifier.StatType);
+            ElementLarge element = elements.First(x => x.ElementType == elementType);
+            element.Effectiveness = modifier.Value;
+            element.Show();
+        }
+        Dim = false;
+    }
+
+    private void UpdateElementResist(Stats stats)
+    {
+        IEnumerable<ElementLarge> elements = Elements.GetChildren<ElementLarge>();
+        bool changed = false;
+        foreach (ElementLarge element in elements)
+        {
+            StatType statType = StatTypeHelpers.GetElementResist(element.ElementType);
+            int effectiveness = stats.CalculateStat(statType);
+            element.Effectiveness = effectiveness;
+            if (effectiveness != element.BaseEffectiveness)
+                changed = true;
+            element.Visible = effectiveness != ElementResist.None;
+        }
+        Dim = !changed;
     }
 }

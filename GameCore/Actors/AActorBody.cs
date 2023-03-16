@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using Arenbee.Actors;
+using Arenbee.Statistics;
+using GameCore.Enums;
 using GameCore.Events;
+using GameCore.Extensions;
 using GameCore.Input;
-using GameCore.Items;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -17,23 +20,21 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         Acceleration = 600;
         AnimationPlayer = null!;
-        _body = null!;
+        Body = null!;
         BodySprite = null!;
         ContextAreas = new();
         Direction = new(1, 1);
         Friction = 600;
         GroundedGravity = 0.05;
-        HoldItemController = null!;
         HurtBoxes = null!;
         HitBoxes = null!;
-        IFrameController = new IFrameController(this);
         InputHandler = ActorInputHandler.DummyInputHandler;
         StateController = null!;
         UpDirection = Vector2.Up;
         WalkSpeed = 50;
     }
 
-    private Node2D _body;
+    protected Node2D Body { get; set; } = null!;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; }
     public AActor Actor { get; set; } = null!;
@@ -41,11 +42,9 @@ public abstract partial class AActorBody : CharacterBody2D
     public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
-    public AHoldItemController HoldItemController { get; private set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
-    public IFrameController IFrameController { get; }
-    public AStateController StateController { get; protected set; }
+    public IStateController StateController { get; protected set; }
     public int ShaderCycleStart
     {
         get => (int)BodyShader.GetShaderParameter("cycle_start");
@@ -65,11 +64,7 @@ public abstract partial class AActorBody : CharacterBody2D
     public override void _Ready()
     {
         SetNodeReferences();
-        _floatPosition = GlobalPosition;
-        SetHitBoxes();
-        InitMovement();
-        InitState();
-        HoldItemController.Init(this);
+        Init();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -80,8 +75,6 @@ public abstract partial class AActorBody : CharacterBody2D
         foreach (var context in ContextAreas)
             context.TriggerContext(this);
         StateController.UpdateStates(delta);
-        IFrameController.Process(delta);
-        Actor.Stats.DamageToProcess.Clear();
         HandleMove(delta);
     }
 
@@ -89,7 +82,6 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         if (gameState.CutsceneActive)
         {
-            IFrameController.Stop();
             HurtBoxes.SetMonitoringDeferred(false);
             InputHandler.UserInputDisabled = true;
         }
@@ -110,22 +102,37 @@ public abstract partial class AActorBody : CharacterBody2D
         Locator.Audio.PlaySoundFX(this, sound);
     }
 
+    public virtual void SetNodeReferences()
+    {
+        Body = GetNode<Node2D>("Body");
+        BodySprite = Body.GetNode<Sprite2D>("BodySprite");
+        HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
+        HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");
+        AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+    }
+
     protected virtual void SetHitBoxes() { }
+
+    protected virtual void Init()
+    {
+        _floatPosition = GlobalPosition;
+        SetHitBoxes();
+        InitMovement();
+        InitState();
+        InitActor();
+    }
+
+    protected void InitActor()
+    {
+        if (Actor == null)
+            return;
+        foreach (AHurtBox hurtbox in HurtBoxes.GetChildren<AHurtBox>())
+            hurtbox.DamageRequested += Actor.Stats.OnDamageReceived;
+    }
 
     private void InitState()
     {
         StateController.Init();
-        IFrameController.Init();
         OnGameStateChanged(Locator.Root.GameState);
-    }
-
-    private void SetNodeReferences()
-    {
-        _body = GetNode<Node2D>("Body");
-        BodySprite = _body.GetNode<Sprite2D>("BodySprite");
-        HoldItemController = _body.GetNode<AHoldItemController>("HoldItems");
-        HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
-        HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");
-        AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
     }
 }

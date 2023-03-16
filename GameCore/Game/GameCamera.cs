@@ -6,7 +6,7 @@ namespace GameCore;
 
 public partial class GameCamera : Camera2D
 {
-    public Node2D CurrentTarget { get; set; }
+    public Node2D? CurrentTarget { get; set; }
     private Vector2 _viewSize;
     private int _goalLimitTop;
     private int _goalLimitBottom;

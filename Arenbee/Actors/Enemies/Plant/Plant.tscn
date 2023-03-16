@@ -1,12 +1,12 @@
 [gd_scene load_steps=12 format=3]
 
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBody.tscn" id="1_sddne"]
+[ext_resource type="PackedScene" uid="uid://bemdsaiiodtmd" path="res://Arenbee/Actors/ActorBody.tscn" id="1_sddne"]
 [ext_resource type="Script" path="res://Arenbee/Actors/Enemies/Plant/Plant.cs" id="2_ulj8y"]
 [ext_resource type="AnimationLibrary" uid="uid://bhrmwra8ak20u" path="res://Arenbee/Actors/Enemies/Plant/Animation/PlantLibrary.res" id="3_t10r8"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="4_dfcpf"]
 [ext_resource type="Texture2D" uid="uid://bqd3pi5wu88t" path="res://Arenbee/Actors/Enemies/Plant/Animation/plant_idle.png" id="5_16lo8"]
-[ext_resource type="PackedScene" path="res://GameCore/Statistics/HurtBox.tscn" id="6_jqek7"]
-[ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="7_acsg3"]
+[ext_resource type="PackedScene" path="res://Arenbee/Statistics/HurtBox.tscn" id="6_jqek7"]
+[ext_resource type="PackedScene" path="res://Arenbee/Statistics/HitBox.tscn" id="7_acsg3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_60ce4"]
 resource_local_to_scene = true

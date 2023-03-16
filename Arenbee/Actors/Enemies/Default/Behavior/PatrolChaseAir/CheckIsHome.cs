@@ -9,13 +9,12 @@ public class CheckIsHome : BTNode
     private readonly float _minHomeDistance = 20f;
     public override NodeState Evaluate(double delta)
     {
-        object home = GetData("Home");
-        if (home == null)
+        if (!TryGetData("Home", out Vector2? home))
         {
             home = Actor.GlobalPosition;
             SetData("Home", Actor.GlobalPosition);
         }
-        var distance = Actor.GlobalPosition.DistanceTo((Vector2)home);
+        float distance = Actor.GlobalPosition.DistanceTo((Vector2)home);
         if (distance <= _minHomeDistance)
         {
             Actor.InputHandler.SetLeftAxis(Vector2.Zero);

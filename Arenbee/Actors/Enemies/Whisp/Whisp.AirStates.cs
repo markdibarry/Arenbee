@@ -7,7 +7,7 @@ public partial class Whisp : ActorBody
     public class AirStateMachine : AirStateMachineBase
     {
 
-        public AirStateMachine(AActorBody actor)
+        public AirStateMachine(ActorBody actor)
             : base(
                 new AirState[]
                 {
@@ -19,7 +19,7 @@ public partial class Whisp : ActorBody
 
         private class Floating : AirState
         {
-            public Floating(AActorBody actor) : base(actor)
+            public Floating(ActorBody actor) : base(actor)
             {
             }
 

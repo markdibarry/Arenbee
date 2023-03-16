@@ -248,7 +248,7 @@ public partial class DynamicText : RichTextLabel
     private void Init()
     {
         BbcodeEnabled = true;
-        FitContentHeight = true;
+        FitContent = true;
         EndChar = -1;
         VisibleCharacters = 0;
         VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;

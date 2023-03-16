@@ -1,5 +1,4 @@
-﻿using Arenbee.Actors.Default.State;
-using GameCore.Actors;
+using Arenbee.Actors.Default.State;
 using GameCore.Extensions;
 
 namespace Arenbee.Actors.Players;
@@ -9,7 +8,7 @@ public partial class Twosen : ActorBody
     public Twosen()
     {
         WalkSpeed = 100;
-        StateController = new AStateController(
+        StateController = new StateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

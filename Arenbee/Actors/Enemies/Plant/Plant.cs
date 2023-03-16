@@ -1,7 +1,6 @@
-﻿using GameCore.Actors;
-using GameCore.Statistics;
+﻿using Arenbee.Actors.Enemies.Default.State;
+using Arenbee.Statistics;
 using GameCore.Extensions;
-using Arenbee.Actors.Enemies.Default.State;
 
 namespace Arenbee.Actors.Enemies;
 
@@ -9,7 +8,7 @@ public partial class Plant : ActorBody
 {
     public Plant()
     {
-        StateController = new AStateController(
+        StateController = new StateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

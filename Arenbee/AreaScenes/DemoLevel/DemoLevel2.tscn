@@ -1,12 +1,19 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=27 format=3 uid="uid://dvwmnskthhdf2"]
 
-[ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
+[ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
+[ext_resource type="Script" path="res://Arenbee/AreaScenes/AreaScene.cs" id="2_avwur"]
 [ext_resource type="Texture2D" uid="uid://ba4b7pjwnhbf" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Terrain (16 x 16).png" id="2_lfhbd"]
 [ext_resource type="Texture2D" uid="uid://chj220l1bt2wy" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/6 - Distant_trees.png" id="3_2hkv5"]
 [ext_resource type="Texture2D" uid="uid://gnrvt0dyrg15" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/5 - Tree_row_BG_2.png" id="4_6lr6k"]
 [ext_resource type="Texture2D" uid="uid://dnm6k1qshq4d" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
+[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="9_a4h73"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Modifier.cs" id="10_vl3f5"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Stat.cs" id="11_57xhx"]
+[ext_resource type="Script" path="res://Arenbee/Statistics/StatsData.cs" id="12_6ns1n"]
+[ext_resource type="Script" path="res://Arenbee/Actors/ActorData.cs" id="13_wdv2i"]
+[ext_resource type="PackedScene" uid="uid://bhh8r7w8jepqu" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="14_nfj3v"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
@@ -169,7 +176,58 @@ size = Vector2(672, 256)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lq81b"]
 size = Vector2(20, 33)
 
+[sub_resource type="Resource" id="Resource_i2cn5"]
+script = ExtResource("10_vl3f5")
+IsHidden = false
+Op = 2
+SourceType = 0
+ActivationConditions = []
+RemovalConditions = []
+
+[sub_resource type="Resource" id="Resource_eo1wh"]
+script = ExtResource("10_vl3f5")
+IsHidden = false
+Op = 2
+SourceType = 0
+ActivationConditions = []
+RemovalConditions = []
+
+[sub_resource type="Resource" id="Resource_rh2yn"]
+script = ExtResource("11_57xhx")
+StatType = 3
+Value = 6
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_xk0wm"]
+script = ExtResource("11_57xhx")
+StatType = 2
+Value = 6
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_hjbak"]
+script = ExtResource("11_57xhx")
+StatType = 6
+Value = 4
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_pr4qi"]
+script = ExtResource("11_57xhx")
+StatType = 7
+Value = 0
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_rrod8"]
+script = ExtResource("12_6ns1n")
+StatLookup = [SubResource("Resource_rh2yn"), SubResource("Resource_xk0wm"), SubResource("Resource_hjbak"), SubResource("Resource_pr4qi")]
+Modifiers = [SubResource("Resource_i2cn5"), SubResource("Resource_eo1wh")]
+
+[sub_resource type="Resource" id="Resource_jv785"]
+script = ExtResource("13_wdv2i")
+ActorName = "Ball"
+StatsData = SubResource("Resource_rrod8")
+
 [node name="AreaScene" instance=ExtResource("1_d3aeo")]
+script = ExtResource("2_avwur")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Scenery" index="0"]
 layer = -1
@@ -255,3 +313,11 @@ offset_left = -16.0
 offset_top = -8.0
 offset_right = 4.0
 offset_bottom = 24.0
+
+[node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_a4h73")]
+position = Vector2(240, 165)
+ActorData = SubResource("Resource_jv785")
+ActorDataId = "Ball"
+
+[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("14_nfj3v")]
+ActorType = 2

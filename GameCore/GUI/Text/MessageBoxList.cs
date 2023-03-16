@@ -9,12 +9,11 @@ public partial class MessageBoxList : VBoxContainer
     public static string GetScenePath() => GDEx.GetScenePath();
     public Vector2 MaxSize { get; set; }
     public bool IsReady { get; set; }
-    private PackedScene _timedMessageBoxScene;
+    private PackedScene _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
 
     public override void _Ready()
     {
         ChildEnteredTree += OnChildEnteredTree;
-        _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
         MaxSize = GetParentOrNull<Control>().Size;
         foreach (MessageBox messageBox in this.GetChildren<MessageBox>())
             messageBox.SetMessage(MaxSize);

@@ -1,6 +1,6 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=33 format=3 uid="uid://ce7srvti8tlr7"]
 
-[ext_resource type="PackedScene" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
+[ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
 [ext_resource type="Texture2D" uid="uid://ca4gtx3ponkhv" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/3 - Cloud_cover_1.png" id="3_ga5hp"]
 [ext_resource type="Texture2D" uid="uid://to2ph6ykrnoo" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/2 - Hills.png" id="4_3n0vj"]
@@ -9,14 +9,17 @@
 [ext_resource type="TileSet" uid="uid://khoms20r0v0l" path="res://Arenbee/Scenery/DemoTiles.tres" id="6_uemtd"]
 [ext_resource type="PackedScene" path="res://Arenbee/Scenery/Barrel/Barrel.tscn" id="7_3y5rn"]
 [ext_resource type="Texture2D" uid="uid://c5wf4cfd7uty4" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/underground_repeat.png" id="7_wwrsr"]
-[ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="8_1uhok"]
+[ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://m235kimduuai" path="res://Arenbee/Scenery/Spike.png" id="9_bgkj2"]
 [ext_resource type="PackedScene" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
-[ext_resource type="PackedScene" uid="uid://dmqmf430q1p0c" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="15_5maqv"]
-[ext_resource type="PackedScene" uid="uid://b531opjmqk3j4" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="16_8h35j"]
-[ext_resource type="PackedScene" uid="uid://x5nilmjfvbf5" path="res://Arenbee/Actors/Enemies/Whisp/Whisp.tscn" id="17_g0fp2"]
+[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="15_2jr03"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Modifier.cs" id="16_nfvki"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Stat.cs" id="16_que06"]
+[ext_resource type="Script" path="res://Arenbee/Statistics/StatsData.cs" id="17_7g55l"]
+[ext_resource type="Script" path="res://Arenbee/Actors/ActorData.cs" id="18_xc78f"]
+[ext_resource type="PackedScene" uid="uid://bhh8r7w8jepqu" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="20_h7exy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)
@@ -30,6 +33,60 @@ size = Vector2(560, 200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpp7m"]
 size = Vector2(20, 33)
 
+[sub_resource type="Resource" id="Resource_fcpwg"]
+script = ExtResource("16_nfvki")
+StatType = 17
+Value = 3
+IsHidden = false
+Op = 2
+SourceType = 0
+ActivationConditions = []
+RemovalConditions = []
+
+[sub_resource type="Resource" id="Resource_rpsdk"]
+script = ExtResource("16_nfvki")
+StatType = 32
+Value = 100
+IsHidden = false
+Op = 2
+SourceType = 0
+ActivationConditions = []
+RemovalConditions = []
+
+[sub_resource type="Resource" id="Resource_tof01"]
+script = ExtResource("16_que06")
+StatType = 3
+Value = 6
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_3jmpj"]
+script = ExtResource("16_que06")
+StatType = 2
+Value = 6
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_0g4hd"]
+script = ExtResource("16_que06")
+StatType = 6
+Value = 4
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_m1dtg"]
+script = ExtResource("16_que06")
+StatType = 7
+Value = 0
+MaxValue = 999
+
+[sub_resource type="Resource" id="Resource_v4dyw"]
+script = ExtResource("17_7g55l")
+StatLookup = [SubResource("Resource_tof01"), SubResource("Resource_3jmpj"), SubResource("Resource_0g4hd"), SubResource("Resource_m1dtg")]
+Modifiers = [SubResource("Resource_fcpwg"), SubResource("Resource_rpsdk")]
+
+[sub_resource type="Resource" id="Resource_1eptf"]
+script = ExtResource("18_xc78f")
+ActorName = "Ball"
+StatsData = SubResource("Resource_v4dyw")
+
 [node name="DemoLevel1" instance=ExtResource("1_ua3fi")]
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Scenery" index="0"]
@@ -40,14 +97,14 @@ scroll_limit_end = Vector2(0, 270)
 [node name="bgfar" type="Sprite2D" parent="Scenery/ParallaxBackground" index="0"]
 texture_filter = 1
 texture_repeat = 2
+scale = Vector2(1, 1.698)
 texture = ExtResource("2_gf6r1")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 2880, 270)
+region_rect = Rect2(0, 0, 1696, 270)
 
 [node name="ParallaxLayerClouds" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="1"]
 motion_scale = Vector2(0, 0.9)
-motion_mirroring = Vector2(288, 0)
 
 [node name="Sprite" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerClouds" index="0"]
 texture_filter = 1
@@ -55,12 +112,11 @@ texture_repeat = 2
 texture = ExtResource("3_ga5hp")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 2880, 208)
+region_rect = Rect2(0, 0, 1696, 208)
 
 [node name="ParallaxLayerHills" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="2"]
 motion_scale = Vector2(0.025, 1.05)
 motion_offset = Vector2(0, 6)
-motion_mirroring = Vector2(288, 0)
 
 [node name="bghills" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerHills" index="0"]
 texture_filter = 1
@@ -69,12 +125,11 @@ position = Vector2(0, 156)
 texture = ExtResource("4_3n0vj")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 2880, 80)
+region_rect = Rect2(0, 0, 1696, 80)
 
 [node name="ParallaxLayerForest" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="3"]
 motion_scale = Vector2(0.05, 1.025)
 motion_offset = Vector2(0, 6)
-motion_mirroring = Vector2(288, 0)
 
 [node name="bgforest" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerForest" index="0"]
 texture_filter = 1
@@ -83,7 +138,7 @@ position = Vector2(0, 176)
 texture = ExtResource("5_up4wo")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 2880, 64)
+region_rect = Rect2(0, 0, 1696, 64)
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="4"]
 
@@ -94,7 +149,7 @@ position = Vector2(0, 230)
 texture = ExtResource("6_pet0m")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 3200, 11)
+region_rect = Rect2(0, 0, 1696, 11)
 
 [node name="ug_repeat" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayer" index="1"]
 texture_filter = 1
@@ -103,7 +158,7 @@ position = Vector2(0, 241)
 texture = ExtResource("7_wwrsr")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 3200, 254)
+region_rect = Rect2(0, 0, 1696, 254)
 
 [node name="Solids" type="TileMap" parent="Scenery" index="1"]
 texture_filter = 1
@@ -215,11 +270,9 @@ position = Vector2(96, 80)
 DialogPath = "res://Arenbee/GUI/Dialog/test.json"
 Hint = true
 
-[node name="Ball" parent="Enemies" index="0" instance=ExtResource("15_5maqv")]
-position = Vector2(355, 198)
+[node name="Spawner" parent="Actors" index="0" instance=ExtResource("15_2jr03")]
+position = Vector2(357, 179)
+ActorData = SubResource("Resource_1eptf")
+ActorDataId = "Ball"
 
-[node name="Orc" parent="Enemies" index="1" instance=ExtResource("16_8h35j")]
-position = Vector2(566, 187)
-
-[node name="Whisp" parent="Enemies" index="2" instance=ExtResource("17_g0fp2")]
-position = Vector2(391, 27)
+[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("20_h7exy")]

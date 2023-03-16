@@ -1,8 +1,7 @@
-﻿using Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseAir;
+using Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseAir;
 using Arenbee.Actors.Enemies.Default.State;
-using GameCore.Actors;
+using Arenbee.Statistics;
 using GameCore.Extensions;
-using GameCore.Statistics;
 
 namespace Arenbee.Actors.Enemies;
 
@@ -11,7 +10,7 @@ public partial class Whisp : ActorBody
     public Whisp()
     {
         IsFloater = true;
-        StateController = new AStateController(
+        StateController = new StateController(
             this,
             new MoveStateMachine(this),
             new AirStateMachine(this),

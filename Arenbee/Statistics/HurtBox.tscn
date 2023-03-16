@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://xyrk1dqs840g"]
+
+[ext_resource type="Script" path="res://Arenbee/Statistics/HurtBox.cs" id="1"]
+
+[node name="HurtBox" type="Area2D"]
+modulate = Color(0, 1, 0, 0.384314)
+collision_layer = 2
+collision_mask = 8
+script = ExtResource("1")

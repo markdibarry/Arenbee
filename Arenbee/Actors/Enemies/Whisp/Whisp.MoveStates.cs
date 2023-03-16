@@ -7,7 +7,7 @@ public partial class Whisp : ActorBody
 {
     public class MoveStateMachine : MoveStateMachineBase
     {
-        public MoveStateMachine(AActorBody actor)
+        public MoveStateMachine(ActorBody actor)
             : base(
                 new MoveState[]
                 {
@@ -21,7 +21,7 @@ public partial class Whisp : ActorBody
 
         private class Standing : MoveState
         {
-            public Standing(AActorBody actor) : base(actor)
+            public Standing(ActorBody actor) : base(actor)
             {
                 AnimationName = "Standing";
             }
@@ -49,7 +49,7 @@ public partial class Whisp : ActorBody
 
         private class Running : MoveState
         {
-            public Running(AActorBody actor) : base(actor)
+            public Running(ActorBody actor) : base(actor)
             {
             }
 
@@ -78,7 +78,7 @@ public partial class Whisp : ActorBody
 
         private class Walking : MoveState
         {
-            public Walking(AActorBody actor) : base(actor)
+            public Walking(ActorBody actor) : base(actor)
             {
             }
 

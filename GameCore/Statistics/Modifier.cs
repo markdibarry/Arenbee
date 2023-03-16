@@ -1,99 +1,177 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using System.Text.Json.Serialization;
+using GameCore.Enums;
+using GameCore.Utility;
+using Godot;
 
 namespace GameCore.Statistics;
 
-public struct Modifier
+public partial class Modifier : Resource
 {
+    public Modifier() { }
+
     [JsonConstructor]
     public Modifier(
-        StatType statType,
-        int subType,
-        ModOperator modOperator,
+        int statType,
+        ModOp modOperator,
         int value,
-        int chance,
+        Godot.Collections.Array<Condition>? activationConditions = null,
+        Godot.Collections.Array<Condition>? removalConditions = null,
         bool isHidden = false)
     {
         StatType = statType;
-        SubType = subType;
-        ModOperator = modOperator;
-        Chance = chance;
+        Op = modOperator;
         Value = value;
+        ActivationConditions = activationConditions ?? new();
+        RemovalConditions = removalConditions ?? new();
         IsHidden = isHidden;
     }
-
-    public Modifier(
-        StatType statType,
-        int subType,
-        ModOperator modOperator,
-        int value,
-        bool isHidden = false)
-        : this(statType, subType, modOperator, value, 100, isHidden)
-    { }
-
-    public Modifier(
-        StatType statType,
-        int subType,
-        bool isHidden = false)
-        : this(statType, subType, ModOperator.None, 0, 100, isHidden)
-    { }
 
     public Modifier(Modifier mod)
     {
         StatType = mod.StatType;
-        SubType = mod.SubType;
-        ModOperator = mod.ModOperator;
+        Op = mod.Op;
         IsHidden = mod.IsHidden;
         Value = mod.Value;
-        Chance = mod.Chance;
+        ActivationConditions = new(mod.ActivationConditions?.Select(x => new Condition(x)));
+        RemovalConditions = new(mod.RemovalConditions?.Select(x => new Condition(x)));
     }
 
-    public int Chance { get; set; }
-    public bool IsHidden { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public ModOperator ModOperator { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public StatType StatType { get; set; }
-    public int SubType { get; set; }
-    public int Value { get; }
-
-    public int Apply(int baseValue)
+    private int _statType;
+    public int StatType
     {
-        return s_methods[ModOperator](baseValue, Value);
-    }
-
-    /// <summary>
-    /// TODO MAKE BETTER
-    /// </summary>
-    /// <returns></returns>
-    private static readonly Dictionary<ModOperator, Func<int, int, int>> s_methods =
-        new()
+        get => _statType;
+        set
         {
-            { ModOperator.None, None },
-            { ModOperator.Add, Add },
-            { ModOperator.Multiply, Multiply }
-        };
+            _statType = value;
+            NotifyPropertyListChanged();
+        }
+    }
+    public int Value { get; set; }
+    [Export] public bool IsHidden { get; set; }
+    [Export] public ModOp Op { get; set; }
+    [Export] public SourceType SourceType { get; set; }
+    [Export] public Godot.Collections.Array<Condition> ActivationConditions { get; set; }
+    [Export] public Godot.Collections.Array<Condition> RemovalConditions { get; set; }
+    public bool IsActive { get; set; }
+    public event System.Action<Modifier>? RemovalConditionMet;
 
-    private static int None(int baseValue, int modValue)
+    // TODO Add special case handling i.e. +5% for every 100 enemies killed
+    public int Apply(int baseValue) => MathI.Compute(Op, baseValue, Value);
+
+    public void InitActivationConditions(AStats stats, IConditionEventFilterFactory factory)
     {
-        return baseValue;
+        InitConditions(stats, factory, ActivationConditions);
     }
 
-    private static int Add(int baseValue, int modValue)
+    public void InitRemovalConditions(AStats stats, IConditionEventFilterFactory factory)
     {
-        return baseValue + modValue;
+        InitConditions(stats, factory, RemovalConditions);
     }
 
-    public static int Multiply(int baseValue, int modValue)
+    public void ResetConditions()
     {
-        return (int)(baseValue + (baseValue * modValue * 0.01));
+        if (RemovalConditions == null)
+            return;
+        foreach (Condition condition in RemovalConditions)
+            condition.Reset();
+    }
+
+    public bool ShouldActivate()
+    {
+        if (!ActivationConditions.Any())
+            return true;
+        return CheckConditions(ActivationConditions);
+    }
+
+    public bool ShouldRemove() => CheckConditions(RemovalConditions);
+
+    public void SubscribeActivationConditions()
+    {
+        SubscribeConditions(ActivationConditions, ConditionActivationHandler);
+    }
+
+    public void SubscribeRemovalConditions()
+    {
+        SubscribeConditions(RemovalConditions, ConditionRemovalHandler);
+    }
+
+    public void UnsubscribeActivationConditions()
+    {
+        UnsubscribeConditions(ActivationConditions, ConditionActivationHandler);
+    }
+
+    public void UnsubscribeRemovalConditions()
+    {
+        UnsubscribeConditions(RemovalConditions, ConditionRemovalHandler);
+    }
+
+    private static bool CheckConditions(Godot.Collections.Array<Condition> conditions)
+    {
+        foreach (Condition condition in conditions)
+        {
+            if (condition.EventFilter == null)
+                continue;
+            if (condition.EventFilter.CheckCondition())
+            {
+                if (condition.LogicOp != LogicOp.And)
+                    return true;
+            }
+            else
+            {
+                if (condition.LogicOp != LogicOp.Or)
+                    return false;
+            }
+        }
+        return false;
+    }
+
+    private void ConditionActivationHandler()
+    {
+        IsActive = ShouldActivate();
+    }
+
+    private void ConditionRemovalHandler()
+    {
+        if (ShouldRemove())
+            RemovalConditionMet?.Invoke(this);
+    }
+
+    private static void InitConditions(AStats stats, IConditionEventFilterFactory factory, Godot.Collections.Array<Condition> conditions)
+    {
+        foreach (Condition condition in conditions)
+            condition.EventFilter = factory.GetEventFilter(stats, condition);
+    }
+
+    private static void SubscribeConditions(Godot.Collections.Array<Condition> conditions, System.Action handler)
+    {
+        foreach (Condition condition in conditions)
+        {
+            if (condition.EventFilter == null)
+                continue;
+            condition.EventFilter.ConditionChanged += handler;
+        }
+    }
+
+    private static void UnsubscribeConditions(Godot.Collections.Array<Condition> conditions, System.Action handler)
+    {
+        foreach (Condition condition in conditions)
+        {
+            if (condition.EventFilter == null)
+                continue;
+            condition.EventFilter.ConditionChanged -= handler;
+        }
+    }
+
+    public override Godot.Collections.Array<Godot.Collections.Dictionary> _GetPropertyList()
+    {
+        return Locator.StatTypeDB.GetStatPropertyList(_statType);
     }
 }
 
-public enum ModOperator : byte
+public enum SourceType
 {
-    None,
-    Add,
-    Multiply
+    //Innate,
+    Dependent,
+    Independent
 }

@@ -1,4 +1,4 @@
-﻿using GameCore.Actors;
+﻿using System;
 using GameCore.Input;
 using Godot;
 
@@ -8,7 +8,8 @@ public class TaskMoveHome : BTNode
 {
     public override NodeState Evaluate(double delta)
     {
-        var home = (Vector2)GetData("Home");
+        if (!TryGetData("Home", out Vector2 home))
+            throw new Exception("Home not defined");
         Vector2 direction = Actor.GlobalPosition.DirectionTo(home);
         Actor.InputHandler.SetLeftAxis(direction);
 

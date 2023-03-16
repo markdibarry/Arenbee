@@ -1,4 +1,5 @@
 ﻿using GameCore.Actors;
+using GameCore.Enums;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;

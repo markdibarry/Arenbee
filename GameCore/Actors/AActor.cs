@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using GameCore.Enums;
+using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -7,73 +8,55 @@ namespace GameCore.Actors;
 
 public abstract class AActor : IDamageable
 {
-    protected AActor(string actorName, string actorId, AEquipment equipment, AInventory inventory, Stats stats)
+    protected AActor(string actorName, string actorId, AEquipment equipment, AInventory inventory)
     {
         ActorId = actorId;
         Inventory = inventory;
         Name = actorName;
         Equipment = equipment;
-        Stats = stats;
         Equipment.EquipmentSet += OnEquipmentSet;
-        Stats.DamageReceived += OnDamageRecieved;
-        Stats.HPDepleted += OnHPDepleted;
-        Stats.StatsChanged += OnStatsChanged;
-        Stats.ModChanged += OnModChanged;
     }
 
-    public ActorType ActorType { get; set; }
-    public AActorBody? ActorBody { get; private set; }
-    public string Name { get; set; }
+    public AActorBody? ActorBody { get; set; }
     public string ActorId { get; set; }
+    public ActorType ActorType { get; set; }
     public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }
-    public Stats Stats { get; }
-    public event Action<AActor, ModChangeData>? ModChanged;
-    public event Action<AActor>? StatsChanged;
+    public string Name { get; set; }
+    public AStats Stats { get; protected set; } = null!;
     public event Action<AActor>? Defeated;
-    public event Action<AActor, DamageData>? DamageRecieved;
+    public event Action<AActor, ADamageResult>? DamageRecieved;
+    public event Action<AActor, Modifier, ChangeType>? ModChanged;
+    public event Action<AActor>? StatsChanged;
+    public event Action<AActor, int, ChangeType>? StatusEffectChanged;
 
-    public void SetActorBody(AActorBody actorBody)
+    public virtual void InitStats()
     {
-        if (ActorBody != null)
-        {
-            foreach (HurtBox hurtbox in ActorBody.HurtBoxes.GetChildren().Cast<HurtBox>())
-                hurtbox.AreaEntered -= Stats.OnHurtBoxEntered;
-        }
-
-        ActorBody = actorBody;
-
-        foreach (HurtBox hurtbox in ActorBody.HurtBoxes.GetChildren().Cast<HurtBox>())
-            hurtbox.AreaEntered += Stats.OnHurtBoxEntered;
+        Stats.DamageReceived += OnDamageRecieved;
+        Stats.StatChanged += OnStatsChanged;
+        Stats.ModChanged += OnModChanged;
+        Stats.StatusEffectChanged += OnStatusEffectChanged;
     }
 
-    private void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem)
-    {
-        oldItem?.RemoveFromStats(Stats);
-        newItem?.AddToStats(Stats);
-        ActorBody?.HoldItemController.SetHoldItem(oldItem, newItem);
-    }
+    protected void RaiseDefeated() => Defeated?.Invoke(this);
 
-    private void OnModChanged(ModChangeData modChangeData)
+    protected abstract void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem);
+
+    private void OnModChanged(Modifier mod, ChangeType changeType)
     {
-        modChangeData.Actor = this;
-        ModChanged?.Invoke(this, modChangeData);
+        ModChanged?.Invoke(this, mod, changeType);
     }
 
     private void OnStatsChanged() => StatsChanged?.Invoke(this);
 
-    private void OnDamageRecieved(DamageData damageData)
+    private void OnDamageRecieved(ADamageResult damageResult)
     {
-        damageData.RecieverName = Name;
-        DamageRecieved?.Invoke(this, damageData);
+        damageResult.RecieverName = Name;
+        DamageRecieved?.Invoke(this, damageResult);
     }
 
-    private void OnHPDepleted() => Defeated?.Invoke(this);
-}
-
-public enum ActorType
-{
-    NPC,
-    Player,
-    Enemy,
+    private void OnStatusEffectChanged(int statusEffectType, ChangeType changeType)
+    {
+        StatusEffectChanged?.Invoke(this, statusEffectType, changeType);
+    }
 }

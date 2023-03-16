@@ -7,8 +7,8 @@ namespace Arenbee.GUI.Menus.Common;
 public partial class EqualContainer : MarginContainer
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    public MarginContainer KeyContainer { get; set; }
-    public MarginContainer ValueContainer { get; set; }
+    public MarginContainer KeyContainer { get; set; } = null!;
+    public MarginContainer ValueContainer { get; set; } = null!;
 
     public override void _Ready()
     {

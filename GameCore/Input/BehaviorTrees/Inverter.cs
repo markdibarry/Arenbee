@@ -15,7 +15,7 @@ public class Inverter : BTNode
             throw new System.ApplicationException("Inverter must have a child node!");
         }
 
-        var result = Children[0].Evaluate(delta);
+        NodeState result = Children[0].Evaluate(delta);
         if (result == NodeState.Failure)
         {
             State = NodeState.Success;

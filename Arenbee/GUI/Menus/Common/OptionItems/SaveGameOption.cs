@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Game;
 using Arenbee.SaveData;
+using Arenbee.Statistics;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.Statistics;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -50,9 +50,9 @@ public partial class SaveGameOption : OptionItem
                 GameTimeLabel.Text = _gameTimeText;
         }
     }
-    public Label GameNameLabel { get; private set; }
-    public Label LevelLabel { get; private set; }
-    public Label GameTimeLabel { get; private set; }
+    public Label GameNameLabel { get; private set; } = null!;
+    public Label LevelLabel { get; private set; } = null!;
+    public Label GameTimeLabel { get; private set; } = null!;
 
     public override void _Ready()
     {
@@ -67,8 +67,9 @@ public partial class SaveGameOption : OptionItem
     public void UpdateDisplay(GameSave gameSave)
     {
         GameNameText = "File" + gameSave.Id;
-        IEnumerable<AttributeData> attributes = gameSave.ActorData.ElementAt(0).Attributes;
-        int level = attributes.First(x => x.AttributeType == AttributeType.Level).BaseValue;
+        PartyData mainParty = gameSave.Parties.ElementAt(0);
+        StatsData stats = mainParty.ActorData.ElementAt(0).StatsData;
+        int level = stats.StatLookup.First(x => x.StatType == (int)StatType.Level).Value;
         LevelText = "Lv. " + level;
         var timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);
         GameTimeText = timeSpan.ToString(@"hh\:mm\:ss");

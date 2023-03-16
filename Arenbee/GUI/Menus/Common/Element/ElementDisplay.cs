@@ -1,4 +1,4 @@
-﻿using GameCore.Statistics;
+﻿using Arenbee.Statistics;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -6,15 +6,17 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ElementDisplay : MarginContainer
 {
-    private TextureRect _elementColor;
-    private ElementType _element;
+    private TextureRect _elementColor = null!;
+    private ElementType _elementType;
+    public int BaseEffectiveness { get; set; } = ElementResist.None;
+    public ElementType BaseElementType { get; set; }
     [Export]
-    public ElementType Element
+    public ElementType ElementType
     {
-        get { return _element; }
+        get => _elementType;
         set
         {
-            _element = value;
+            _elementType = value;
             SetElementColor();
         }
     }
@@ -29,6 +31,6 @@ public partial class ElementDisplay : MarginContainer
     private void SetElementColor()
     {
         if (_elementColor != null)
-            _elementColor.Modulate = _element.Get().Color;
+            _elementColor.Modulate = StatTypeHelpers.GetElementColor(_elementType);
     }
 }

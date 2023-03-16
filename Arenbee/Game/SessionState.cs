@@ -1,4 +1,5 @@
 ﻿using GameCore.Actors;
+using GameCore.Enums;
 using GameCore.Statistics;
 
 namespace Arenbee;
@@ -21,7 +22,7 @@ public class SessionState
             EnemiesDefeated++;
     }
 
-    public void OnActorDamaged(AActor actor, DamageData damageData)
+    public void OnActorDamaged(AActor actor, ADamageResult damageData)
     {
         if (actor.ActorType == ActorType.Player)
             TimesReceivedDamaged++;

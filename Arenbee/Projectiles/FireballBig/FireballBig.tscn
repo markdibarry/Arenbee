@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://Arenbee/Projectiles/FireballBig/FireballBig.cs" id="1_2g6sn"]
-[ext_resource type="Texture2D" path="res://Arenbee/Projectiles/FireballBig/fireball_big.png" id="1_yr53w"]
-[ext_resource type="PackedScene" path="res://GameCore/Statistics/HitBox.tscn" id="2_w0xb8"]
+[ext_resource type="Texture2D" uid="uid://bgg84np5mja5b" path="res://Arenbee/Projectiles/FireballBig/fireball_big.png" id="1_yr53w"]
+[ext_resource type="PackedScene" path="res://Arenbee/Statistics/HitBox.tscn" id="2_w0xb8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q2a63"]
 atlas = ExtResource( "1_yr53w" )

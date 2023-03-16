@@ -14,15 +14,9 @@ public abstract class BehaviorTree
     private readonly BTNode _root;
     private readonly BlackBoard _blackBoard;
 
-    public void Update(double delta)
-    {
-        _root?.Evaluate(delta);
-    }
+    public void Update(double delta) => _root?.Evaluate(delta);
 
-    public void ClearBlackBoard()
-    {
-        _blackBoard.Clear();
-    }
+    public void ClearBlackBoard() => _blackBoard.Clear();
 
     protected abstract BTNode SetupTree();
 }

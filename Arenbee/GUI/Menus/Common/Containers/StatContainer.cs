@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Statistics;
+using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.Statistics;
 using Godot;
@@ -11,6 +13,8 @@ public partial class StatContainer : EqualContainer
 {
     public static new string GetScenePath() => GDEx.GetScenePath();
     private bool _dim;
+    private int _baseValue;
+    private StatType _statType;
     private string _statNameText = string.Empty;
     private string _statValueText = string.Empty;
     [Export]
@@ -64,40 +68,47 @@ public partial class StatContainer : EqualContainer
         ResizeItems(StatNameLabel, StatValueLabel);
     }
 
-    public void UpdateDisplay(IEnumerable<Modifier> mods, AttributeType attributeType)
+    public void UpdateType(AttributeType attributeType)
     {
-        Dim = true;
-        StatNameText = attributeType.Get().Abbreviation + ":";
-        StatValueText = "0";
-        var mod = mods?.FirstOrDefault(x => (AttributeType)x.SubType == attributeType);
-        var value = mod != null ? mod.Value : 0;
-        StatValueText = value.ToString();
-        if (value != 0)
-            Dim = false;
-        DisplayValueColor(0, value);
+        _statType = StatTypeHelpers.GetStatType(attributeType);
+        StatNameText = Tr(StatTypeDB.GetStatTypeData(_statType).Abbreviation) + ":";
     }
 
-    public void UpdateDisplay(Stats? oldStats, Stats newStats, AttributeType attributeType)
+    public void UpdateBaseValue(Stats stats)
     {
-        int? oldValue = oldStats?.Attributes.GetStat(attributeType)?.DisplayValue;
-        int newValue = newStats.Attributes.GetStat(attributeType)?.DisplayValue ?? default;
-        StatNameText = attributeType.Get().Abbreviation + ":";
-        StatValueText = newValue.ToString();
-        Dim = oldStats != null && oldValue == newValue;
-        DisplayValueColor(oldValue, newValue);
+        _baseValue = stats.CalculateStat(_statType);
     }
 
-    private void DisplayValueColor(int? oldValue, int newValue)
+    public void UpdateValue(IEnumerable<Modifier> mods)
     {
-        if (oldValue == null)
+        int value = 0;
+        foreach (Modifier mod in mods)
         {
-            StatValueLabel.Modulate = Colors.White;
-            return;
+            if (mod.StatType != (int)_statType)
+                continue;
+            if (mod.Op == ModOp.Add)
+                value += mod.Value;
+            else if (mod.Op == ModOp.Subtract)
+                value -= mod.Value;
         }
+        StatValueText = value.ToString();
+        Dim = value == 0;
+        DisplayValueColor(value);
+    }
 
-        if (newValue > oldValue)
+    public void UpdateValue(Stats stats)
+    {
+        int newValue = stats.CalculateStat(_statType);
+        StatValueText = newValue.ToString();
+        Dim = _baseValue == newValue;
+        DisplayValueColor(newValue);
+    }
+
+    private void DisplayValueColor(int newValue)
+    {
+        if (newValue > _baseValue)
             StatValueLabel.Modulate = GameCore.Colors.TextGreen;
-        else if (newValue < oldValue)
+        else if (newValue < _baseValue)
             StatValueLabel.Modulate = GameCore.Colors.TextRed;
         else
             StatValueLabel.Modulate = Colors.White;

@@ -14,7 +14,7 @@ config/name="Arenbee"
 run/main_scene="res://Arenbee/Game/GameRoot.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Godot_User_Data"
-config/features=PackedStringArray("4.0", "C#", "Forward Plus")
+config/features=PackedStringArray("4.1", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -23,7 +23,7 @@ LocatorAutoload="*res://Arenbee/Game/LocatorAutoload.cs"
 
 [debug]
 
-shapes/collision/shape_color=Color(1, 1, 1, 0.419608)
+shapes/collision/shape_color=Color(1, 1, 1, 0.262745)
 
 [display]
 
@@ -39,6 +39,7 @@ project/assembly_name="Arenbee"
 
 [editor]
 
+naming/scene_name_casing=1
 scene/scene_naming=1
 
 [gui]

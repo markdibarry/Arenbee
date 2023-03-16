@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using GameCore.Actors;
 
 namespace GameCore.Input;
@@ -29,10 +30,10 @@ public class BTNode
             child.SetDependencies(actor, blackBoard);
     }
 
-    private BlackBoard _blackBoard;
-    public BTNode Parent { get; set; }
+    private BlackBoard _blackBoard = null!;
+    public BTNode? Parent { get; set; }
+    protected AActorBody Actor { get; private set; } = null!;
     protected List<BTNode> Children { get; }
-    protected AActorBody Actor { get; private set; }
     protected NodeState State { get; set; }
 
     public virtual void Init() { }
@@ -53,11 +54,22 @@ public class BTNode
         _blackBoard[key] = value;
     }
 
-    public object GetData(string key)
+    public object? GetData(string key)
     {
-        if (_blackBoard.TryGetValue(key, out object value))
+        if (_blackBoard.TryGetValue(key, out object? value))
             return value;
         return null;
+    }
+
+    public bool TryGetData<T>(string key, [NotNullWhen(returnValue: true)] out T? value)
+    {
+        if (!_blackBoard.TryGetValue(key, out object? result) || result is not T)
+        {
+            value = default;
+            return false;
+        }
+        value = (T)result;
+        return true;
     }
 
     public bool ClearData(string key)

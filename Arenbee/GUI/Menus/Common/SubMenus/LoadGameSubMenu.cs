@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Arenbee.SaveData;
-using GameCore;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
@@ -42,10 +42,8 @@ public partial class LoadGameSubMenu : OptionSubMenu
         CurrentState = State.Busy;
         async Task Callback(Loader loader)
         {
-            var sessionScene = loader.GetObject<PackedScene>(_gameRoot.GameSessionScenePath);
-            var session = sessionScene.Instantiate<AGameSession>();
             await _gameRoot.RemoveSession();
-            await _gameRoot.StartNewSession(session, gameSave);
+            await _gameRoot.StartNewSession(gameSave);
         };
 
         var tController = Locator.TransitionController;
@@ -54,7 +52,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
             TransitionType.Game,
             FadeTransition.GetScenePath(),
             FadeTransition.GetScenePath(),
-            new string[] { _gameRoot.GameSessionScenePath },
+            Array.Empty<string>(),
             Callback);
         tController.RequestTransition(request);
     }
@@ -63,7 +61,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
     {
         var saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
         List<SaveGameOption> options = new();
-        foreach (var gameSave in SaveService.GetGameSaves())
+        foreach (GameSave gameSave in SaveService.GetGameSaves())
         {
             var option = saveGameOptionScene.Instantiate<SaveGameOption>();
             option.UpdateDisplay(gameSave);

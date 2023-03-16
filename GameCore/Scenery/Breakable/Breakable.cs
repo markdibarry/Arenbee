@@ -9,14 +9,15 @@ public partial class Breakable : StaticBody2D
     {
         _hitsToNextStage = 1;
     }
-    private CollisionShape2D _collision;
-    private AnimatedSprite2D _animatedSprite;
-    private Area2D _hurtBox;
+
+    private CollisionShape2D _collision = null!;
+    private AnimatedSprite2D _animatedSprite = null!;
+    private Area2D _hurtBox = null!;
     private bool _broken;
     private int _hits;
     private int _currentFrame;
     private int _frameCount;
-    private event EventHandler BreakableDestroyed;
+    private event Action? BreakableDestroyed;
 
     /// <summary>
     /// The number of hits between texture changes
@@ -28,7 +29,7 @@ public partial class Breakable : StaticBody2D
     public override void _Ready()
     {
         _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite");
-        _frameCount = _animatedSprite.Frames.GetFrameCount("default");
+        _frameCount = _animatedSprite.SpriteFrames.GetFrameCount("default");
         _collision = GetNode<CollisionShape2D>("Collision");
         _hurtBox = GetNode<Area2D>("HurtBox");
         _hurtBox.AreaEntered += OnAreaEntered;
@@ -58,9 +59,9 @@ public partial class Breakable : StaticBody2D
     private void Destroy()
     {
         _broken = true;
-        BreakableDestroyed?.Invoke(this, EventArgs.Empty);
-        _hurtBox.SetDeferred("monitoring", false);
-        _collision.SetDeferred("disabled", true);
+        BreakableDestroyed?.Invoke();
+        _hurtBox.SetDeferred(Area2D.PropertyName.Monitoring, false);
+        _collision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
         _animatedSprite.AnimationFinished += OnAnimationFinished;
         _animatedSprite.Play("destroy");
     }

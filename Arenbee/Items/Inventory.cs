@@ -6,7 +6,7 @@ namespace Arenbee.Items;
 public class Inventory : AInventory
 {
     public Inventory() { }
-    public Inventory(IEnumerable<AItemStack> itemStacks)
+    public Inventory(IEnumerable<ItemStack> itemStacks)
         : base(itemStacks)
     { }
 }

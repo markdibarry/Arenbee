@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/4 - Tree_row_BG_1.png-99ca4d377b2ab2e209527fd
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

@@ -6,7 +6,7 @@ public partial class Plant : ActorBody
 {
     public class MoveStateMachine : MoveStateMachineBase
     {
-        public MoveStateMachine(AActorBody actor)
+        public MoveStateMachine(ActorBody actor)
             : base(
                 new MoveState[]
                 {
@@ -18,7 +18,7 @@ public partial class Plant : ActorBody
 
         private class Standing : MoveState
         {
-            public Standing(AActorBody actor) : base(actor)
+            public Standing(ActorBody actor) : base(actor)
             {
                 AnimationName = "Standing";
             }

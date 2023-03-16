@@ -10,13 +10,13 @@ public abstract class AInventory
         _itemStacks = new();
     }
 
-    protected AInventory(IEnumerable<AItemStack> itemStacks)
+    protected AInventory(IEnumerable<ItemStack> itemStacks)
     {
         _itemStacks = itemStacks.ToList();
     }
 
-    private readonly List<AItemStack> _itemStacks;
-    public IReadOnlyCollection<AItemStack> Items => _itemStacks;
+    private readonly List<ItemStack> _itemStacks;
+    public IReadOnlyCollection<ItemStack> Items => _itemStacks;
     public bool AllowMultipleStacks { get; }
 
     /// <summary>
@@ -24,7 +24,7 @@ public abstract class AInventory
     /// </summary>
     /// <param name="itemId"></param>
     /// <returns>ItemStack</returns>
-    public IReadOnlyCollection<AItemStack> GetItemStacks(string itemId)
+    public IReadOnlyCollection<ItemStack> GetItemStacks(string itemId)
     {
         return _itemStacks.Where(x => x.Item.Id.Equals(itemId)).ToList();
     }
@@ -34,14 +34,14 @@ public abstract class AInventory
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
-    public IReadOnlyCollection<AItemStack> GetItemStacks(AItem item) => GetItemStacks(item.Id);
+    public IReadOnlyCollection<ItemStack> GetItemStacks(AItem item) => GetItemStacks(item.Id);
 
     /// <summary>
     /// Returns ItemStacks matching the category Id provided.
     /// </summary>
     /// <param name="itemCategoryId"></param>
     /// <returns></returns>
-    public IReadOnlyCollection<AItemStack> GetItemsByType(string itemCategoryId)
+    public IReadOnlyCollection<ItemStack> GetItemsByType(string itemCategoryId)
     {
         return _itemStacks.Where(x => x.Item.ItemCategory.Id == itemCategoryId).ToList();
     }
@@ -56,7 +56,7 @@ public abstract class AInventory
     public int AddItem(AItem item, int amount = 1)
     {
         int leftOver = amount;
-        IReadOnlyCollection<AItemStack> itemStacks = GetItemStacks(item);
+        IReadOnlyCollection<ItemStack> itemStacks = GetItemStacks(item);
 
         // if multiple stacks aren't allowed, there should be only one.
         foreach (var stack in itemStacks)
@@ -74,22 +74,22 @@ public abstract class AInventory
 
         if (leftOver <= item.MaxStack)
         {
-            _itemStacks.Add(new AItemStack(item, leftOver));
+            _itemStacks.Add(new ItemStack(item, leftOver));
             return 0;
         }
 
         if (!AllowMultipleStacks)
         {
-            _itemStacks.Add(new AItemStack(item, item.MaxStack));
+            _itemStacks.Add(new ItemStack(item, item.MaxStack));
             return leftOver - item.MaxStack;
         }
 
         while (leftOver > item.MaxStack)
         {
-            _itemStacks.Add(new AItemStack(item, item.MaxStack));
+            _itemStacks.Add(new ItemStack(item, item.MaxStack));
             leftOver -= item.MaxStack;
         }
-        _itemStacks.Add(new AItemStack(item, leftOver));
+        _itemStacks.Add(new ItemStack(item, leftOver));
         return 0;
     }
 
@@ -100,7 +100,7 @@ public abstract class AInventory
     /// <param name="itemStack"></param>
     /// <param name="amount"></param>
     /// <returns>The number of items unable to be added to the inventory.</returns>
-    public int AddItem(AItemStack itemStack, int amount = 1)
+    public int AddItem(ItemStack itemStack, int amount = 1)
     {
         if (!_itemStacks.Contains(itemStack))
             return amount;
@@ -121,7 +121,7 @@ public abstract class AInventory
     public int RemoveItem(AItem item, int amount = 1)
     {
         int leftOver = amount;
-        IReadOnlyCollection<AItemStack> itemStacks = GetItemStacks(item);
+        IReadOnlyCollection<ItemStack> itemStacks = GetItemStacks(item);
         foreach (var stack in itemStacks)
         {
             if (leftOver == 0)
@@ -140,7 +140,7 @@ public abstract class AInventory
     /// <param name="item"></param>
     /// <param name="amount"></param>
     /// <returns>The number of items unable to be removed from the inventory.</returns>
-    public int RemoveItem(AItemStack itemStack, int amount = 1)
+    public int RemoveItem(ItemStack itemStack, int amount = 1)
     {
         if (!_itemStacks.Contains(itemStack))
             return amount;

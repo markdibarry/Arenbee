@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,6 +9,8 @@ namespace GameCore.Extensions;
 
 public static class GDEx
 {
+    public static T[] GetEnums<T>() => (T[])Enum.GetValues(typeof(T));
+
     public static Vector2 GDExSign(this Vector2 vec)
     {
         var x = vec.X > 0 ? 1 : vec.X < 0 ? -1 : 0;
@@ -74,7 +74,7 @@ public static class GDEx
     /// <returns>The value at the key's location</returns>
     public static TValue GetOrAddNew<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new()
     {
-        if (!dict.TryGetValue(key, out TValue stat))
+        if (!dict.TryGetValue(key, out TValue? stat))
         {
             dict[key] = new TValue();
             return dict[key];
@@ -155,6 +155,10 @@ public static class GDEx
     public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
     {
         return source ?? Enumerable.Empty<T>();
+    }
+    public static Godot.Collections.Array<T> ToGArray<[MustBeVariant] T>(this IEnumerable<T> source)
+    {
+        return new Godot.Collections.Array<T>(source);
     }
 
     public static void QueueFreeAllChildren(this Node node)

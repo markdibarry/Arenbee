@@ -1,5 +1,5 @@
-﻿using GameCore.Extensions;
-using GameCore.Statistics;
+﻿using Arenbee.Statistics;
+using GameCore.Extensions;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -9,9 +9,12 @@ public partial class PointContainer : EqualContainer
 {
     public static new string GetScenePath() => GDEx.GetScenePath();
     private bool _dim;
-    private string _statNameText;
-    private string _statCurrentValueText;
-    private string _statMaxValueText;
+    private int _maxBaseValue;
+    private StatType _statType;
+    private StatType _maxStatType;
+    private string _statNameText = string.Empty;
+    private string _statCurrentValueText = string.Empty;
+    private string _statMaxValueText = string.Empty;
     [Export]
     public bool Dim
     {
@@ -55,10 +58,10 @@ public partial class PointContainer : EqualContainer
                 StatMaxValueLabel.Text = _statMaxValueText;
         }
     }
-    public Label StatNameLabel { get; set; }
-    public HBoxContainer ValueHBox { get; set; }
-    public Label StatCurrentValueLabel { get; set; }
-    public Label StatMaxValueLabel { get; set; }
+    public Label StatNameLabel { get; set; } = null!;
+    public HBoxContainer ValueHBox { get; set; } = null!;
+    public Label StatCurrentValueLabel { get; set; } = null!;
+    public Label StatMaxValueLabel { get; set; } = null!;
 
     public override void _Ready()
     {
@@ -79,35 +82,35 @@ public partial class PointContainer : EqualContainer
         ResizeItems(StatNameLabel, ValueHBox);
     }
 
-    public void UpdateDisplay(Stats? oldStats, Stats newStats, AttributeType attributeType)
+    public void UpdateType(AttributeType attributeType)
     {
-        AttributeType maxType;
-        if (attributeType == AttributeType.HP)
-            maxType = AttributeType.MaxHP;
-        else if (attributeType == AttributeType.MP)
-            maxType = AttributeType.MaxMP;
-        else
-            return;
-        int? oldValue = oldStats?.Attributes.GetStat(maxType)?.DisplayValue;
-        int newValue = newStats.Attributes.GetStat(maxType)?.DisplayValue ?? default;
-        StatNameText = attributeType.Get().Abbreviation + ":";
-        StatCurrentValueText = newStats.Attributes.GetStat(attributeType)?.DisplayValue.ToString();
-        StatMaxValueText = newValue.ToString();
-        Dim = oldStats != null && oldValue == newValue;
-        DisplayValueColor(oldValue, newValue);
+        _statType = StatTypeHelpers.GetStatType(attributeType);
+        if (_statType == StatType.HP)
+            _maxStatType = StatType.MaxHP;
+        else if (_statType == StatType.MP)
+            _maxStatType = StatType.MaxMP;
+        StatNameText = Tr(StatTypeDB.GetStatTypeData(_statType).Abbreviation) + ":";
     }
 
-    private void DisplayValueColor(int? oldValue, int newValue)
+    public void UpdateBaseValue(Stats stats)
     {
-        if (oldValue == null)
-        {
-            StatMaxValueLabel.Modulate = Colors.White;
-            return;
-        }
+        _maxBaseValue = stats.CalculateStat(_maxStatType);
+    }
 
-        if (newValue > oldValue)
+    public void UpdateDisplay(Stats stats)
+    {
+        int newMaxValue = stats.CalculateStat(_maxStatType);
+        StatCurrentValueText = stats.CalculateStat(_statType).ToString();
+        StatMaxValueText = newMaxValue.ToString();
+        Dim = _maxBaseValue == newMaxValue;
+        DisplayValueColor(newMaxValue);
+    }
+
+    private void DisplayValueColor(int newValue)
+    {
+        if (newValue > _maxBaseValue)
             StatMaxValueLabel.Modulate = GameCore.Colors.TextGreen;
-        else if (newValue < oldValue)
+        else if (newValue < _maxBaseValue)
             StatMaxValueLabel.Modulate = GameCore.Colors.TextRed;
         else
             StatMaxValueLabel.Modulate = Colors.White;

@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/Blocks (16 x 16).png-1d4135d672b36f7419f98aac
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=0
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
