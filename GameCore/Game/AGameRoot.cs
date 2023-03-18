@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GameCore.Audio;
 using GameCore.Extensions;
 using GameCore.GUI;
@@ -69,6 +70,7 @@ public abstract partial class AGameRoot : Node
 
         GameSessionContainer.RemoveChild(GameSession);
         GameSession.QueueFree();
+        GameSession = null;
         await GUIController.CloseAllLayersAsync(true);
     }
 
@@ -89,6 +91,11 @@ public abstract partial class AGameRoot : Node
 
     protected void HandleInput(double delta)
     {
+        if (Godot.Input.IsActionJustPressed("collect"))
+        {
+            GC.Collect(GC.MaxGeneration);
+            GC.WaitForPendingFinalizers();
+        }
         GUIController.HandleInput(MenuInput, delta);
         GameSession?.HandleInput(MenuInput, delta);
         MenuInput.Update();

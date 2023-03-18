@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://dw7gmmr8uxn8k"]
 
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/SaveGameOption.cs" id="1_qudwj"]
 
@@ -7,44 +7,28 @@ modulate = Color(0.7, 0.7, 0.7, 1)
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_qudwj")
-GameNameText = "Game 1"
-LevelText = "Level 1"
-GameTimeText = "0:0:00"
+GameNameText = "Empty"
+LevelText = "---"
+GameTimeText = "---"
+DimWhenUnfocused = true
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 2
-offset_right = 97.0
-offset_bottom = 40.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 90.0
-offset_bottom = 33.0
 
 [node name="GameName" type="Label" parent="PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_top = 8.0
-offset_right = 27.0
-offset_bottom = 18.0
-text = "Game 1"
+text = "Empty"
 
 [node name="Level" type="Label" parent="PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 31.0
-offset_top = 8.0
-offset_right = 59.0
-offset_bottom = 18.0
-text = "Level 1"
+text = "---"
 
 [node name="GameTime" type="Label" parent="PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 63.0
-offset_top = 8.0
-offset_right = 83.0
-offset_bottom = 18.0
-text = "0:0:00"
+text = "---"

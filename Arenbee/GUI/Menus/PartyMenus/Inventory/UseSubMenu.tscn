@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c5pjiwtlxhl84"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_d15qu"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Inventory/UseSubMenu.cs" id="2_ne4ov"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UseSubMenu.cs" id="2_ne4ov"]
 [ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="3_axmp3"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_os84m"]
 

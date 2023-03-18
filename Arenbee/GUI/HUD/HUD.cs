@@ -22,12 +22,6 @@ public partial class HUD : AHUD
         _playerStatsDisplay = GetNode<PlayerStatsDisplay>("PlayerStatsDisplay");
     }
 
-    public override void OnActorAdded(AActor actor)
-    {
-        if (actor.ActorType == ActorType.Player && ProcessMode != ProcessModeEnum.Disabled)
-            _playerStatsDisplay.Update((Stats)actor.Stats);
-    }
-
     public override void OnActorDamaged(AActor actor, ADamageResult aDamageResult)
     {
         DamageResult damageResult = (DamageResult)aDamageResult;

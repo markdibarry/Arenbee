@@ -34,8 +34,8 @@ public partial class ActorStatsDisplay : PanelContainer
     public void UpdateTypes()
     {
         _levelContainer.UpdateType(AttributeType.Level);
-        _hpContainer.UpdateType(AttributeType.MaxHP);
-        _mpContainer.UpdateType(AttributeType.MaxMP);
+        _hpContainer.UpdateType(AttributeType.HP);
+        _mpContainer.UpdateType(AttributeType.MP);
         _attackContainer.UpdateType(AttributeType.Attack);
         _defenseContainer.UpdateType(AttributeType.Defense);
         _mAttackContainer.UpdateType(AttributeType.MagicAttack);
@@ -57,16 +57,16 @@ public partial class ActorStatsDisplay : PanelContainer
         _elResistContainer.UpdateBaseValue(stats);
     }
 
-    public void UpdateStatsDisplay(Stats stats)
+    public void UpdateStatsDisplay(Stats stats, bool updateColor)
     {
-        _levelContainer.UpdateValue(stats);
-        _hpContainer.UpdateDisplay(stats);
-        _mpContainer.UpdateDisplay(stats);
-        _attackContainer.UpdateValue(stats);
-        _defenseContainer.UpdateValue(stats);
-        _mAttackContainer.UpdateValue(stats);
-        _mDefenseContainer.UpdateValue(stats);
-        _elAttackContainer.UpdateValue(stats);
-        _elResistContainer.UpdateValue(stats);
+        _levelContainer.UpdateValue(stats, updateColor);
+        _hpContainer.UpdateDisplay(stats, updateColor);
+        _mpContainer.UpdateDisplay(stats, updateColor);
+        _attackContainer.UpdateValue(stats, updateColor);
+        _defenseContainer.UpdateValue(stats, updateColor);
+        _mAttackContainer.UpdateValue(stats, updateColor);
+        _mDefenseContainer.UpdateValue(stats, updateColor);
+        _elAttackContainer.UpdateValue(stats, updateColor);
+        _elResistContainer.UpdateValue(stats, updateColor);
     }
 }

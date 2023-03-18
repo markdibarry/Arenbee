@@ -1,12 +1,11 @@
-﻿using GameCore.Actors;
-using GameCore.Input;
+﻿using GameCore.Input;
 using Godot;
 
 namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseGround;
 
 public class CheckTargetInRayCastRange : BTNode
 {
-    private RayCast2D _rayCast2D;
+    private RayCast2D? _rayCast2D;
 
     public override void Init()
     {
@@ -23,14 +22,14 @@ public class CheckTargetInRayCastRange : BTNode
 
     public override NodeState Evaluate(double delta)
     {
-        object target = GetData("Target");
+        object? target = GetData("Target");
         if (target != null)
         {
             State = NodeState.Success;
             return State;
         }
 
-        if (_rayCast2D.IsColliding())
+        if (_rayCast2D != null && _rayCast2D.IsColliding())
         {
             target = _rayCast2D.GetCollider();
             if (target is ActorBody)

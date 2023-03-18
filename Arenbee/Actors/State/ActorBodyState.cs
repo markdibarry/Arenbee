@@ -16,7 +16,7 @@ public abstract class ActorBodyState : State
     public BlockedState BlockedStates { get; set; }
     public ActorInputHandler InputHandler => ActorBody.InputHandler;
     public StateController StateController => (StateController)ActorBody.StateController;
-    public Stats Stats => (Stats)ActorBody.Actor.Stats;
+    public Stats Stats => (Stats)ActorBody.Actor!.Stats;
     protected ActorBody ActorBody { get; }
 
     protected abstract void PlayAnimation(string animationName);

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Arenbee.Actors;
-using Arenbee.Statistics;
 using GameCore.Enums;
 using GameCore.Events;
 using GameCore.Extensions;
@@ -37,29 +35,13 @@ public abstract partial class AActorBody : CharacterBody2D
     protected Node2D Body { get; set; } = null!;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; }
-    public AActor Actor { get; set; } = null!;
+    public AActor? Actor { get; set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
-    public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
     public IStateController StateController { get; protected set; }
-    public int ShaderCycleStart
-    {
-        get => (int)BodyShader.GetShaderParameter("cycle_start");
-        set => BodyShader.SetShaderParameter("cycle_start", value);
-    }
-    public int ShaderCycleEnd
-    {
-        get => (int)BodyShader.GetShaderParameter("cycle_end");
-        set => BodyShader.SetShaderParameter("cycle_end", value);
-    }
-    public float ShaderSpeed
-    {
-        get => (float)BodyShader.GetShaderParameter("speed");
-        set => BodyShader.SetShaderParameter("speed", value);
-    }
 
     public override void _Ready()
     {
@@ -71,7 +53,7 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         GlobalPosition = _floatPosition;
         _move = Vector2.Zero;
-        Actor.Stats.Process(delta);
+        Actor?.Stats.Process(delta);
         foreach (var context in ContextAreas)
             context.TriggerContext(this);
         StateController.UpdateStates(delta);

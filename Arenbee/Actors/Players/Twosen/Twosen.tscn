@@ -33,7 +33,7 @@ size = Vector2(14, 24)
 [node name="Twosen" instance=ExtResource("1_mabku")]
 collision_mask = 276
 script = ExtResource("2_0vmt5")
-ActorType = 0
+ActorType = 1
 
 [node name="AnimationPlayer" parent="." index="0"]
 libraries = {

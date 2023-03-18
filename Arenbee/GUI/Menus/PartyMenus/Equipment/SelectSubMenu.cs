@@ -30,7 +30,7 @@ public partial class SelectSubMenu : OptionSubMenu
     private ItemStack? _currentItemStack;
     private OptionContainer _equipOptions = null!;
     private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
-    private Stats? _mockStats;
+    private Stats _mockStats = null!;
     private readonly List<Modifier> _mockMods = new();
     private ActorStatsDisplay _actorStatsDisplay = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
@@ -58,31 +58,30 @@ public partial class SelectSubMenu : OptionSubMenu
                 _mockStats.RemoveMod(mod, false);
         }
 
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out _currentItemStack))
-            return;
-
         _mockMods.Clear();
 
-        foreach (Modifier mod in _currentItemStack.Item.Modifiers)
+        if (CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out _currentItemStack))
         {
-            Modifier newMod = new(mod);
-            _mockMods.Add(newMod);
-            _mockStats.AddMod(newMod);
+            foreach (Modifier mod in _currentItemStack.Item.Modifiers)
+            {
+                Modifier newMod = new(mod);
+                _mockMods.Add(newMod);
+                _mockStats.AddMod(newMod);
+            }
         }
 
-        _actorStatsDisplay.UpdateStatsDisplay(_mockStats);
-        _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack.Item);
+        _actorStatsDisplay.UpdateStatsDisplay(_mockStats, updateColor: true);
+        _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack?.Item);
     }
 
     protected override void OnItemSelected()
     {
         if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out ItemStack? itemStack))
-            return;
-        if (TryEquip(itemStack, _slot))
-        {
-            CloseSoundPath = string.Empty;
-            _ = CloseSubMenuAsync();
-        }
+            _actor.Equipment.RemoveItem(_actor, _slot);
+        else
+            _actor.Equipment.TrySetItem(_actor, _slot, itemStack);
+        CloseSoundPath = string.Empty;
+        _ = CloseSubMenuAsync();
     }
 
     protected override void SetNodeReferences()

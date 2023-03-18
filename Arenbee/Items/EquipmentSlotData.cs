@@ -1,4 +1,6 @@
-﻿namespace Arenbee.Items;
+﻿using System.Text.Json.Serialization;
+
+namespace Arenbee.Items;
 
 public class EquipmentSlotData
 {
@@ -7,6 +9,7 @@ public class EquipmentSlotData
     {
     }
 
+    [JsonConstructor]
     public EquipmentSlotData(string slotCategoryId, int itemStackIndex)
     {
         ItemStackIndex = itemStackIndex;

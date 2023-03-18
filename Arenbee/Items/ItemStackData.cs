@@ -1,4 +1,5 @@
-﻿using GameCore.Items;
+﻿using System.Text.Json.Serialization;
+using GameCore.Items;
 using GameCore.Utility;
 
 namespace Arenbee.Items;
@@ -17,6 +18,7 @@ public class ItemStackData
     {
     }
 
+    [JsonConstructor]
     public ItemStackData(string itemId, int count)
     {
         Count = count;

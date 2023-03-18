@@ -1,5 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Input;
+﻿using GameCore.Input;
 using Godot;
 
 namespace Arenbee.Actors.Enemies.Default.Behavior.PatrolChaseAir;
@@ -10,7 +9,12 @@ public class TaskChaseTargetInAir : BTNode
     private readonly float _maxChaseDistance = 150f;
     public override NodeState Evaluate(double delta)
     {
-        var target = (Node2D)GetData("Target");
+        if (GetData("Target") is not Node2D target)
+        {
+            State = NodeState.Failure;
+            return State;
+        }
+
         float distance = Actor.GlobalPosition.DistanceTo(target.GlobalPosition);
         if (distance > _attackDistance)
         {

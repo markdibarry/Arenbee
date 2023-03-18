@@ -18,9 +18,9 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(GameSave), out GameSave? loadChoice))
+        if (CurrentContainer?.FocusedItem == null || !CurrentContainer.FocusedItem.TryGetData("fileName", out string? fileName))
             return;
-        ContinueSavedGame(loadChoice);
+        ContinueSavedGame(fileName);
     }
 
     protected override void CustomSetup()
@@ -32,18 +32,19 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     protected override void SetupOptions()
     {
-        _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions");
+        _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions")!;
         var options = GetSaveGameOptions();
         _loadOptions.ReplaceChildren(options);
     }
 
-    private void ContinueSavedGame(GameSave gameSave)
+    private void ContinueSavedGame(string fileName)
     {
         CurrentState = State.Busy;
         async Task Callback(Loader loader)
         {
             await _gameRoot.RemoveSession();
-            await _gameRoot.StartNewSession(gameSave);
+            GameSave? gameSave = SaveService.GetGameSave(fileName);
+            await _gameRoot.StartNewSession(gameSave!);
         };
 
         var tController = Locator.TransitionController;
@@ -59,12 +60,14 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     private static List<SaveGameOption> GetSaveGameOptions()
     {
-        var saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
+        PackedScene saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
+        List<(string, GameSave)> gameSaves = SaveService.GetAllSaves();
         List<SaveGameOption> options = new();
-        foreach (GameSave gameSave in SaveService.GetGameSaves())
+        for (int i = 0; i < gameSaves.Count; i++)
         {
-            var option = saveGameOptionScene.Instantiate<SaveGameOption>();
-            option.UpdateDisplay(gameSave);
+            SaveGameOption option = saveGameOptionScene.Instantiate<SaveGameOption>();
+            option.GameNameText = $"File {i + 1}";
+            option.UpdateDisplay(gameSaves[i].Item2, gameSaves[i].Item1);
             options.Add(option);
         }
         return options;

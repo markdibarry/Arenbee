@@ -1,10 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dakighl02xwc0"]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" uid="uid://qbivbh8nuiuw" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_h1eqx"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/PartyMenu.cs" id="2_uav68"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/PartyMenu.cs" id="2_uav68"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Scroll.gdshader" id="3_c8k6s"]
 [ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Arenbee/GUI/Backgrounds/star.png" id="4_7v3px"]
-[ext_resource type="PackedScene" uid="uid://b5tsh6y5ba8tx" path="res://Arenbee/GUI/Menus/Party/MainSubMenu.tscn" id="5_3yu3w"]
+[ext_resource type="PackedScene" uid="uid://b5tsh6y5ba8tx" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.tscn" id="5_3yu3w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1f80b"]
 shader = ExtResource("3_c8k6s")

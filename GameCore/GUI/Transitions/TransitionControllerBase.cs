@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
@@ -29,7 +30,8 @@ public abstract class TransitionControllerBase
         Loader loader = new(request.Paths);
         await TransitionInAsync(request);
         await LoadAsync(loader);
-        await request.Callback?.Invoke(loader);
+        if (request.Callback != null)
+            await request.Callback.Invoke(loader);
         await TransitionOutAsync(request);
     }
 
@@ -49,14 +51,14 @@ public abstract class TransitionControllerBase
     {
         Node target = GetTarget(request.TransitionType);
         // Use Loader Transition
-        if (request.TransitionAPath == null)
+        if (request.TransitionAPath == string.Empty)
         {
             _loadingScreen = GDEx.Instantiate<LoadingScreen>(request.LoadingScreenPath);
             target.AddChild(_loadingScreen);
             await _loadingScreen.TransistionFrom();
         }
         // No loader just Transition
-        else if (request.TransitionBPath == null)
+        else if (request.TransitionBPath == string.Empty)
         {
             _transitionA = GDEx.Instantiate<Transition>(request.TransitionAPath);
             target.AddChild(_transitionA);
@@ -116,7 +118,7 @@ public abstract class TransitionControllerBase
         {
             TransitionType.Game => Locator.Root.Transition,
             TransitionType.Session => Locator.Session?.Transition,
-            _ => null
+            _ => throw new NotImplementedException()
         };
     }
 }

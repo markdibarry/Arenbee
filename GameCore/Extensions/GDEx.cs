@@ -152,10 +152,11 @@ public static class GDEx
         return current + Math.Sign(target - current) * delta;
     }
 
-    public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T> source)
+    public static IEnumerable<T> OrEmpty<T>(this IEnumerable<T>? source)
     {
-        return source ?? Enumerable.Empty<T>();
+        return source ?? Array.Empty<T>();
     }
+
     public static Godot.Collections.Array<T> ToGArray<[MustBeVariant] T>(this IEnumerable<T> source)
     {
         return new Godot.Collections.Array<T>(source);

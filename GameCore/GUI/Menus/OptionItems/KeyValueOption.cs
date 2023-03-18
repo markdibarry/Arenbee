@@ -30,8 +30,8 @@ public partial class KeyValueOption : OptionItem
                 ValueLabel.Text = _valueText;
         }
     }
-    public Label KeyLabel { get; private set; }
-    public Label ValueLabel { get; private set; }
+    public Label KeyLabel { get; private set; } = null!;
+    public Label ValueLabel { get; private set; } = null!;
 
     public override void _Ready()
     {

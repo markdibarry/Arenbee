@@ -50,6 +50,7 @@ public partial class ElementContainer : HBoxContainer
     {
         Elements.QueueFreeAllChildren();
         StatNameText = Tr(StatTypeDB.GetStatCategoryData(category).Abbreviation) + ":";
+        _statCategory = category;
         if (category == StatCategory.AttackElement)
         {
             var elementLg = _elementScene.Instantiate<ElementLarge>();
@@ -78,12 +79,12 @@ public partial class ElementContainer : HBoxContainer
             UpdateBaseElementResist(stats);
     }
 
-    public void UpdateValue(Stats stats)
+    public void UpdateValue(Stats stats, bool updateColor)
     {
         if (_statCategory == StatCategory.AttackElement)
-            UpdateElementAttack(stats);
+            UpdateElementAttack(stats, updateColor);
         else if (_statCategory == StatCategory.ElementResist)
-            UpdateElementResist(stats);
+            UpdateElementResist(stats, updateColor);
     }
 
     public void UpdateValue(List<Modifier> modifiers)
@@ -117,28 +118,22 @@ public partial class ElementContainer : HBoxContainer
         Dim = true;
         ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
         lgElement.Hide();
-        var atkElMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) != StatCategory.AttackElement);
+        var atkElMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) == StatCategory.AttackElement);
         if (!modifiers.Any())
             return;
         foreach (Modifier modifier in atkElMods)
-        {
-            ElementType elementType = StatTypeHelpers.GetElement((StatType)modifier.StatType);
             lgElement.ElementType = (ElementType)modifier.Value;
-        }
         lgElement.Show();
         Dim = false;
     }
 
-    private void UpdateElementAttack(Stats stats)
+    private void UpdateElementAttack(Stats stats, bool updateColor)
     {
-        Dim = true;
         ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
         ElementType elementType = (ElementType)stats.CalculateStat(StatType.AttackElement);
         lgElement.ElementType = elementType;
-        if (elementType == lgElement.BaseElementType)
-            return;
         lgElement.Visible = elementType != ElementType.None;
-        Dim = false;
+        Dim = updateColor && elementType == lgElement.BaseElementType;
     }
 
     private void UpdateElementResist(List<Modifier> modifiers)
@@ -147,7 +142,7 @@ public partial class ElementContainer : HBoxContainer
         IEnumerable<ElementLarge> elements = Elements.GetChildren<ElementLarge>();
         foreach (ElementLarge element in elements)
             element.Hide();
-        var resistMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) != StatCategory.ElementResist);
+        var resistMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) == StatCategory.ElementResist);
         if (!modifiers.Any())
             return;
         foreach (Modifier modifier in resistMods)
@@ -160,7 +155,7 @@ public partial class ElementContainer : HBoxContainer
         Dim = false;
     }
 
-    private void UpdateElementResist(Stats stats)
+    private void UpdateElementResist(Stats stats, bool updateColor)
     {
         IEnumerable<ElementLarge> elements = Elements.GetChildren<ElementLarge>();
         bool changed = false;
@@ -173,6 +168,6 @@ public partial class ElementContainer : HBoxContainer
                 changed = true;
             element.Visible = effectiveness != ElementResist.None;
         }
-        Dim = !changed;
+        Dim = updateColor && !changed;
     }
 }

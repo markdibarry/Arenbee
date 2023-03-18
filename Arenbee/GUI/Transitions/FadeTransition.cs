@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using GameCore;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -10,7 +9,7 @@ public partial class FadeTransition : Transition
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private ColorRect _colorRect;
+    private ColorRect _colorRect = null!;
 
     public override void _Ready()
     {

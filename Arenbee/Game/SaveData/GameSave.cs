@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Arenbee.Game;
@@ -13,6 +14,7 @@ public class GameSave : IGameSave
     public GameSave(int id, GameSession gameSession)
     {
         Id = id;
+        LastModifiedUtc = DateTime.UtcNow;
         List<AInventory> inventories = gameSession.Parties.Select(x => x.Inventory)
             .Distinct()
             .ToList();
@@ -26,12 +28,14 @@ public class GameSave : IGameSave
     [JsonConstructor]
     public GameSave(
         int id,
+        DateTime lastModifiedUtc,
         SessionState sessionState,
         string mainPartyId,
         IEnumerable<PartyData> parties,
         IEnumerable<InventoryData> inventories)
     {
         Id = id;
+        LastModifiedUtc = lastModifiedUtc;
         SessionState = sessionState;
         MainPartyId = mainPartyId;
         Parties = parties;
@@ -39,6 +43,7 @@ public class GameSave : IGameSave
     }
 
     public int Id { get; }
+    public DateTime LastModifiedUtc { get; }
     public SessionState SessionState { get; }
     public string MainPartyId { get; }
     public IEnumerable<PartyData> Parties { get; }

@@ -97,13 +97,18 @@ public partial class PointContainer : EqualContainer
         _maxBaseValue = stats.CalculateStat(_maxStatType);
     }
 
-    public void UpdateDisplay(Stats stats)
+    public void UpdateDisplay(Stats stats, bool updateColor)
     {
         int newMaxValue = stats.CalculateStat(_maxStatType);
         StatCurrentValueText = stats.CalculateStat(_statType).ToString();
         StatMaxValueText = newMaxValue.ToString();
-        Dim = _maxBaseValue == newMaxValue;
-        DisplayValueColor(newMaxValue);
+        if (updateColor)
+        {
+            Dim = _maxBaseValue == newMaxValue;
+            DisplayValueColor(newMaxValue);
+            return;
+        }
+        Dim = false;
     }
 
     private void DisplayValueColor(int newValue)

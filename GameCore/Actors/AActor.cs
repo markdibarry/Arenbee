@@ -1,6 +1,5 @@
 ﻿using System;
 using GameCore.Enums;
-using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 

@@ -1,45 +1,67 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using Godot;
+using System.Text.Json.Serialization.Metadata;
 
 namespace GameCore.SaveData;
 
 public abstract class ASaveService<T> where T : IGameSave
 {
-    public static T? LoadGame(string path)
+    private static readonly string _globalPath = ProjectSettings.GlobalizePath(Config.SavePath);
+    private static readonly string[] _ignoredPropertyNames = new string[]
     {
-        return LoadSavedGame(path);
+            nameof(GodotObject.NativeInstance),
+            nameof(Resource.ResourceName),
+            nameof(Resource.ResourcePath),
+            nameof(Resource.ResourceLocalToScene)
+    };
+
+    public static void IgnoreBaseClass(JsonTypeInfo typeInfo)
+    {
+        if (!typeInfo.Type.IsAssignableTo(typeof(Resource)))
+            return;
+
+        var props = typeInfo.Properties.Where(x => !_ignoredPropertyNames.Contains(x.Name)).ToList();
+        typeInfo.Properties.Clear();
+        foreach (JsonPropertyInfo prop in props)
+            typeInfo.Properties.Add(prop);
     }
 
-    public static List<T> GetGameSaves()
+    public static List<(string, T)> GetAllSaves()
     {
-        List<T> gamesaves = new();
-        for (int i = 1; i <= 3; i++)
-        {
-            string savepath = $"{Config.SavePath}{Config.SavePrefix}{i}.json";
-            T? gamesave = LoadSavedGame(savepath);
-            if (gamesave != null)
-                gamesaves.Add(gamesave);
-        }
-        return gamesaves;
+        return Directory
+            .EnumerateFiles(_globalPath, $"{Config.SavePrefix}*")
+            .Select(x =>
+            {
+                string fileName = Path.GetFileName(x);
+                return (fileName, GetGameSave(fileName));
+            })
+            .OfType<(string, T)>()
+            .OrderBy(x => x.Item2.LastModifiedUtc)
+            .ToList();
     }
 
-    private static T? LoadSavedGame(string path)
+    public static T? GetGameSave(string fileName)
     {
-        path = Godot.ProjectSettings.GlobalizePath(path);
-        if (!File.Exists(path))
-            return default;
-        string content = File.ReadAllText(path);
+        string content = File.ReadAllText(_globalPath + fileName);
         return JsonSerializer.Deserialize<T>(content);
     }
 
-    public static void SaveGame(T gameSave)
+    public static void SaveGame(T gameSave, string? fileName = null)
     {
-        JsonSerializerOptions options = new();
-        options.WriteIndented = true;
+        fileName ??= $"{Config.SavePrefix}_{DateTime.UtcNow.Ticks}.json";
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true,
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver
+            {
+                Modifiers = { IgnoreBaseClass }
+            }
+        };
         string saveString = JsonSerializer.Serialize(gameSave, options);
-        string savepath = $"{Config.SavePath}{Config.SavePrefix}{gameSave.Id}.json";
-        savepath = Godot.ProjectSettings.GlobalizePath(savepath);
-        File.WriteAllText(savepath, saveString);
+        File.WriteAllText(_globalPath + fileName, saveString);
     }
 }

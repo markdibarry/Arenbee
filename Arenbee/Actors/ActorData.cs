@@ -63,10 +63,8 @@ public partial class ActorData : AActorData
     {
     }
 
-    [Export]
-    public string ActorName { get; set; }
-    [Export]
-    public StatsData StatsData { get; set; }
+    [Export] public string ActorName { get; set; } = string.Empty;
+    [Export] public StatsData StatsData { get; set; } = null!;
     public IEnumerable<EquipmentSlotData> EquipmentSlotData { get; } = Array.Empty<EquipmentSlotData>();
     public IEnumerable<ItemStackData> ItemStackData { get; } = Array.Empty<ItemStackData>();
 

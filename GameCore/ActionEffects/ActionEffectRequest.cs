@@ -5,7 +5,7 @@ namespace GameCore.ActionEffects;
 
 public class ActionEffectRequest
 {
-    public AActorBody User { get; set; }
+    public AActorBody? User { get; set; }
     public ActionType ActionType { get; set; }
     public int Value1 { get; set; }
     public int Value2 { get; set; }

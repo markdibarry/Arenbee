@@ -7,6 +7,11 @@ public abstract class AStatTypeDB
     public abstract string[] GetTypeNames();
     public abstract string[]? GetValueEnumOptions(int statType);
 
+    /// <summary>
+    /// Gets display properties for editor
+    /// </summary>
+    /// <param name="statType"></param>
+    /// <returns></returns>
     public Godot.Collections.Array<Godot.Collections.Dictionary> GetStatPropertyList(int statType)
     {
         Godot.Collections.Array<Godot.Collections.Dictionary> properties = new();
@@ -20,6 +25,7 @@ public abstract class AStatTypeDB
             { "hint", (int)PropertyHint.Enum },
             { "hint_string", GetTypeNames().Join(",") }
         });
+
         if (valueOptions != null)
         {
             properties.Add(new Godot.Collections.Dictionary()

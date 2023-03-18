@@ -74,10 +74,10 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
     {
-        var options = new List<EquipSelectOption>();
+        List<EquipSelectOption> options = new();
         if (optionItem == null)
             return options;
-        if (!optionItem.TryGetData(nameof(AActor), out AActor? actorData))
+        if (!optionItem.TryGetData(nameof(Actor), out Actor? actorData))
             return options;
         foreach (var slot in actorData.Equipment.Slots)
         {
@@ -115,11 +115,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         if (!optionItem.TryGetData(nameof(EquipmentSlot), out EquipmentSlot? slot))
             return;
 
-        SelectSubMenuDataModel data = new()
-        {
-            Slot = slot,
-            Actor = actor
-        };
+        SelectSubMenuDataModel data = new(slot, actor);
         _ = OpenSubMenuAsync(path: SelectSubMenu.GetScenePath(), data: data);
     }
 

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using GameCore;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -10,8 +9,8 @@ public partial class WipeTransition : Transition
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private ColorRect _colorRect;
-    private ColorRect _colorRect2;
+    private ColorRect _colorRect = null!;
+    private ColorRect _colorRect2 = null!;
 
     public override void _Ready()
     {

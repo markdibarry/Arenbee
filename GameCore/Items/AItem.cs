@@ -4,10 +4,12 @@ using GameCore.Statistics;
 
 namespace GameCore.Items;
 
-public class AItem : IEquatable<AItem>
+public abstract class AItem : IEquatable<AItem>
 {
-    protected AItem()
+    protected AItem(string id, ItemCategory itemCategory)
     {
+        Id = id;
+        ItemCategory = itemCategory;
         MaxStack = 1;
         IsDroppable = false;
         IsSellable = false;
@@ -15,23 +17,16 @@ public class AItem : IEquatable<AItem>
         UseData = new ItemUseData();
     }
 
-    public AItem(string id, ItemCategory itemCategory)
-        : this()
-    {
-        Id = id;
-        ItemCategory = itemCategory;
-    }
-
-    public string Id { get; init; }
-    public string Description { get; init; }
-    public string DisplayName { get; init; }
-    public string ImgPath { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string DisplayName { get; init; } = string.Empty;
+    public string ImgPath { get; init; } = string.Empty;
     public bool IsDroppable { get; init; }
     public bool IsReusable { get; init; }
     public bool IsSellable { get; init; }
     public ItemCategory ItemCategory { get; }
     public int MaxStack { get; init; }
-    public ICollection<Modifier> Modifiers { get; set; }
+    public ICollection<Modifier> Modifiers { get; set; } = Array.Empty<Modifier>();
     public int Price { get; init; }
     public ItemUseData UseData { get; init; }
 

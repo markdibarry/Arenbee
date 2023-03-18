@@ -10,7 +10,7 @@ public class TransitionRequest
         TransitionType transitionType,
         string[] paths,
         Func<Loader, Task> callback)
-        : this(loadingScreenPath, transitionType, null, null, paths, callback)
+        : this(loadingScreenPath, transitionType, string.Empty, string.Empty, paths, callback)
     {
     }
 
@@ -19,7 +19,7 @@ public class TransitionRequest
         string transitionA,
         string[] paths,
         Func<Loader, Task> callback)
-        : this(null, transitionType, transitionA, null, paths, callback)
+        : this(string.Empty, transitionType, transitionA, string.Empty, paths, callback)
     {
     }
 
@@ -31,10 +31,10 @@ public class TransitionRequest
         string[] paths,
         Func<Loader, Task> callback)
     {
-        TransitionAPath = transitionA;
-        TransitionBPath = transitionB;
         LoadingScreenPath = loadingScreenPath;
         TransitionType = transitionType;
+        TransitionAPath = transitionA;
+        TransitionBPath = transitionB;
         Paths = paths;
         Callback = callback;
     }

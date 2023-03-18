@@ -24,7 +24,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData("index", out int selectedIndex))
+        if (CurrentContainer?.FocusedItem == null || !CurrentContainer.FocusedItem.TryGetData("index", out int selectedIndex))
             return;
         var data = new List<Choice>(1) { DialogChoices[selectedIndex] };
         _ = CloseSubMenuAsync(data: data);

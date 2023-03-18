@@ -111,12 +111,12 @@ public partial class InventorySubMenu : OptionSubMenu
         if (!itemStacks.Any())
             return Enumerable.Empty<KeyValueOption>();
         List<KeyValueOption> options = new(itemStacks.Count);
-        foreach (var itemStack in itemStacks)
+        foreach (ItemStack itemStack in itemStacks)
         {
             var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
             option.KeyText = itemStack.Item.DisplayName;
             option.ValueText = "x" + itemStack.Count.ToString();
-            option.OptionData[nameof(ItemStack.Item)] = itemStack.Item;
+            option.OptionData[nameof(ItemStack)] = itemStack;
             options.Add(option);
         }
         return options;

@@ -5,10 +5,10 @@ namespace GameCore.Statistics;
 
 public class StatusEffectData
 {
-    public string Name { get; init; }
-    public string AbbrName { get; init; }
-    public string PastTenseName { get; init; }
-    public string Description { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string AbbrName { get; init; } = string.Empty;
+    public string PastTenseName { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
     public int EffectType { get; init; }
     public Action<StatusEffect>? EnterEffect { get; init; }
     public Action<StatusEffect>? ExitEffect { get; init; }

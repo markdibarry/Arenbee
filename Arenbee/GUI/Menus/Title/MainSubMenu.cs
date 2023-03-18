@@ -70,9 +70,9 @@ public partial class MainSubMenu : OptionSubMenu
 
     private List<TextOption> GetMenuOptions()
     {
-        var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        var options = new List<TextOption>();
-        var gameSaves = SaveService.GetGameSaves();
+        PackedScene textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+        List<TextOption> options = new();
+        List<(string, GameSave)> gameSaves = SaveService.GetAllSaves();
         foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
@@ -116,6 +116,7 @@ public partial class MainSubMenu : OptionSubMenu
         ActorData actorData = (ActorData)Locator.ActorDataDB.GetActorData("Twosen")!;
         return new GameSave(
             0,
+            DateTime.UtcNow,
             new SessionState(),
             "default",
             new PartyData[]

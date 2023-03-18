@@ -16,9 +16,9 @@ public partial class MessageBox : MarginContainer
     private string _messageText;
     private HorizontalAlignment _messageAlign;
     private SizeFlags _boxAlign;
-    private MarginContainer _boxWrapper;
-    private MarginContainer _messageMargin;
-    private Label _message;
+    private MarginContainer _boxWrapper = null!;
+    private MarginContainer _messageMargin = null!;
+    private Label _message = null!;
     [Export(PropertyHint.MultilineText)]
     public string MessageText
     {
@@ -41,10 +41,6 @@ public partial class MessageBox : MarginContainer
                 _message.HorizontalAlignment = _messageAlign;
         }
     }
-    /// <summary>
-    /// Godot doesn't contain an enum for none, so I made my own.
-    /// </summary>
-    /// <value></value>
     [Export(PropertyHint.Enum)]
     public SizeFlags BoxAlign
     {

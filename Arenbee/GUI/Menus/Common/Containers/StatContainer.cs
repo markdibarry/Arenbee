@@ -79,7 +79,7 @@ public partial class StatContainer : EqualContainer
         _baseValue = stats.CalculateStat(_statType);
     }
 
-    public void UpdateValue(IEnumerable<Modifier> mods)
+    public void UpdateValue(List<Modifier> mods)
     {
         int value = 0;
         foreach (Modifier mod in mods)
@@ -96,12 +96,17 @@ public partial class StatContainer : EqualContainer
         DisplayValueColor(value);
     }
 
-    public void UpdateValue(Stats stats)
+    public void UpdateValue(Stats stats, bool updateColor)
     {
         int newValue = stats.CalculateStat(_statType);
         StatValueText = newValue.ToString();
-        Dim = _baseValue == newValue;
-        DisplayValueColor(newValue);
+        if (updateColor)
+        {
+            Dim = _baseValue == newValue;
+            DisplayValueColor(newValue);
+            return;
+        }
+        Dim = false;
     }
 
     private void DisplayValueColor(int newValue)

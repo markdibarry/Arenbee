@@ -12,7 +12,7 @@ public class ObjectLoaderGameSave : ObjectLoader
 
     public override Task<object?> LoadAsync()
     {
-        LoadedObject = SaveService.LoadGame(Path);
+        LoadedObject = SaveService.GetGameSave(Path);
         Progress = 100;
         ReportProgress();
         return Task.FromResult(LoadedObject);

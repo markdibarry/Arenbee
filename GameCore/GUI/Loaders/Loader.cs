@@ -17,7 +17,7 @@ public class Loader
         _objects = new();
         foreach (string path in paths)
         {
-            if (path.EndsWith("gamesave.json"))
+            if (path.StartsWith(Config.SavePrefix))
                 _objects.Add(new ObjectLoaderGameSave(path, OnReport));
             else
                 _objects.Add(new ObjectLoaderResource(path, OnReport));
@@ -25,9 +25,9 @@ public class Loader
     }
 
     private readonly List<IObjectLoader> _objects;
-    public event Action<int> ProgressUpdate;
+    public event Action<int>? ProgressUpdate;
 
-    public T GetObject<T>(string path)
+    public T? GetObject<T>(string path)
     {
         var result = _objects.FirstOrDefault(x => x.Path == path)?.LoadedObject;
         if (result is not T)

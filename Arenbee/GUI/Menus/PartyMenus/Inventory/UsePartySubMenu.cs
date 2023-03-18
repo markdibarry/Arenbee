@@ -32,16 +32,17 @@ public partial class UsePartySubMenu : OptionSubMenu
     private PackedScene _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
     private OptionContainer _partyContainer = null!;
 
-    public ItemStack ItemStack { get; set; }
-    public AItem Item { get; set; }
+    public ItemStack ItemStack { get; set; } = null!;
+    public AItem Item { get; set; } = null!;
 
     public IActionEffect ActionEffect { get; set; }
 
-    public override void SetupData(object data)
+    public override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
         ItemStack = itemStack;
+        Item = ItemStack.Item;
     }
 
     protected override void SetupOptions()
@@ -58,16 +59,15 @@ public partial class UsePartySubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions");
+        _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions")!;
         if (ItemStack == null)
             return;
-        Item = ItemStack.Item;
         if (Item.UseData.UseType == ItemUseType.PartyMemberAll)
         {
             _partyContainer.AllOptionEnabled = true;
             _partyContainer.SingleOptionsEnabled = false;
         }
-        ActionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect);
+        ActionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
 
     private void DisplayOptions()

@@ -48,9 +48,7 @@ public partial class ItemStatsDisplay : PanelContainer
 
     public void UpdateStatsDisplay(AItem? item)
     {
-        List<Modifier>? mods = item?.Modifiers?.Where(x => !x.IsHidden).ToList();
-        if (mods == null)
-            return;
+        List<Modifier> mods = item?.Modifiers?.Where(x => !x.IsHidden).ToList() ?? new();
         _hpContainer.UpdateValue(mods);
         _mpContainer.UpdateValue(mods);
         _attackContainer.UpdateValue(mods);

@@ -64,15 +64,14 @@ public partial class SaveGameOption : OptionItem
         GameTimeLabel.Text = _gameTimeText;
     }
 
-    public void UpdateDisplay(GameSave gameSave)
+    public void UpdateDisplay(GameSave gameSave, string fileName)
     {
-        GameNameText = "File" + gameSave.Id;
         PartyData mainParty = gameSave.Parties.ElementAt(0);
         StatsData stats = mainParty.ActorData.ElementAt(0).StatsData;
         int level = stats.StatLookup.First(x => x.StatType == (int)StatType.Level).Value;
         LevelText = "Lv. " + level;
-        var timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);
+        TimeSpan timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);
         GameTimeText = timeSpan.ToString(@"hh\:mm\:ss");
-        OptionData[nameof(GameSave)] = gameSave;
+        OptionData["fileName"] = fileName;
     }
 }

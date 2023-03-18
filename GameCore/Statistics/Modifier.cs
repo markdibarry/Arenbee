@@ -51,8 +51,8 @@ public partial class Modifier : Resource
     [Export] public bool IsHidden { get; set; }
     [Export] public ModOp Op { get; set; }
     [Export] public SourceType SourceType { get; set; }
-    [Export] public Godot.Collections.Array<Condition> ActivationConditions { get; set; }
-    [Export] public Godot.Collections.Array<Condition> RemovalConditions { get; set; }
+    [Export] public Godot.Collections.Array<Condition> ActivationConditions { get; set; } = new();
+    [Export] public Godot.Collections.Array<Condition> RemovalConditions { get; set; } = new();
     public bool IsActive { get; set; }
     public event System.Action<Modifier>? RemovalConditionMet;
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b1v8cunik7qvr"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_uvd47"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Equipment/SelectSubMenu.cs" id="2_kopb2"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_kopb2"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_a8so6"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="6_dccvk"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="7_qosjr"]

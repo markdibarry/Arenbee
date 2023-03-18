@@ -50,7 +50,7 @@ public partial class OptionSubMenu : SubMenu
             }
 
             _rapidScrollTimer = _rapidScrollInterval;
-            CurrentContainer.FocusDirection(_currentDirection);
+            CurrentContainer?.FocusDirection(_currentDirection);
             return;
         }
 
@@ -63,6 +63,6 @@ public partial class OptionSubMenu : SubMenu
 
         _rapidScrollTimerEnabled = true;
         _rapidScrollTimer = _rapidScrollDelay;
-        CurrentContainer.FocusDirection(_currentDirection);
+        CurrentContainer?.FocusDirection(_currentDirection);
     }
 }

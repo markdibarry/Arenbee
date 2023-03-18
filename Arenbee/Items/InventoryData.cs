@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using GameCore.Items;
 
 namespace Arenbee.Items;
@@ -11,6 +12,7 @@ public class InventoryData
         ItemStackData = inventory.Items.Select(x => new ItemStackData(x));
     }
 
+    [JsonConstructor]
     public InventoryData(IEnumerable<ItemStackData> itemStackData)
     {
         ItemStackData = itemStackData;

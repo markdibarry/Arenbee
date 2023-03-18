@@ -226,6 +226,7 @@ public partial class DynamicText : RichTextLabel
 
     private void HandleTextDirty()
     {
+        bool writeQueued = CurrentState == State.Writing;
         CurrentState = State.Loading;
         LoadingStarted?.Invoke();
         _textEvents = new();
@@ -234,7 +235,7 @@ public partial class DynamicText : RichTextLabel
         Text = _customText;
         Text = GetEventParsedText(_customText, Text, _textEvents);
         UpdateTextData();
-        CurrentState = State.Idle;
+        CurrentState = writeQueued ? State.Writing : State.Idle;
         TextUpdated?.Invoke();
         _textDirty = false;
     }
@@ -273,8 +274,8 @@ public partial class DynamicText : RichTextLabel
 
     private void RaiseTextEvents()
     {
-        var textEvents = _textEvents.Where(x => !x.Seen && x.Index <= VisibleCharacters);
-        foreach (var textEvent in textEvents)
+        IEnumerable<TextEvent> textEvents = _textEvents.Where(x => !x.Seen && x.Index <= VisibleCharacters);
+        foreach (TextEvent textEvent in textEvents)
         {
             textEvent.Seen = true;
             HandleTextEvent(textEvent);

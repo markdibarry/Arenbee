@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Arenbee.Actors;
 using Arenbee.Items;
 using GameCore.Actors;
@@ -17,6 +18,7 @@ public class PartyData
         Items = Array.Empty<ItemStackData>();
     }
 
+    [JsonConstructor]
     public PartyData(string partyId, IEnumerable<ActorData> actorData, int inventoryIndex, IEnumerable<ItemStackData> items)
     {
         PartyId = partyId;

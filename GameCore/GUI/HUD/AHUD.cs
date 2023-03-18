@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Arenbee.GUI;
+using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Statistics;
@@ -28,8 +30,6 @@ public abstract partial class AHUD : CanvasLayer
         MessageBoxList.AddMessageToTop(MessageQueue.Dequeue());
     }
 
-    public abstract void OnActorAdded(AActor actor);
-
     public abstract void OnActorDamaged(AActor actor, ADamageResult data);
 
     public abstract void OnActorDefeated(AActor actor);
@@ -55,10 +55,11 @@ public abstract partial class AHUD : CanvasLayer
         actor.Defeated += OnActorDefeated;
         actor.DamageRecieved += OnActorDamaged;
         actor.StatusEffectChanged += OnActorStatusEffectChanged;
-        if (actor.ActorType == ActorType.Player)
+        if (actor.ActorBody!.ActorType == ActorType.Player)
         {
             actor.ModChanged += OnActorModChanged;
             actor.StatsChanged += OnActorStatsChanged;
+            OnActorStatsChanged(actor);
         }
     }
 

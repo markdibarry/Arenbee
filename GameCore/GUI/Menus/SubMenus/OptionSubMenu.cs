@@ -123,22 +123,26 @@ public partial class OptionSubMenu : SubMenu
 
     private void OnContainerChanged(OptionContainer optionContainer)
     {
-        if (optionContainer == CurrentContainer)
+        if (optionContainer == CurrentContainer && optionContainer.FocusedItem != null)
             MoveCursorToItem(optionContainer.FocusedItem);
     }
 
     private void OnItemFocusedBase()
     {
-        _cursor.Visible = !CurrentContainer.AllSelected;
-        if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex)
-            Locator.Audio.PlaySoundFX(FocusedSoundPath);
-        MoveCursorToItem(CurrentContainer.FocusedItem);
+        _cursor.Visible = CurrentContainer != null && !CurrentContainer.AllSelected;
+        if (CurrentContainer != null)
+        {
+            if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex)
+                Locator.Audio.PlaySoundFX(FocusedSoundPath);
+            if (CurrentContainer.FocusedItem != null)
+                MoveCursorToItem(CurrentContainer.FocusedItem);
+        }
         OnItemFocused();
     }
 
     private void OnItemSelectedBase()
     {
-        if (CurrentContainer.FocusedItem.Disabled)
+        if (CurrentContainer?.FocusedItem == null || CurrentContainer.FocusedItem.Disabled)
         {
             Locator.Audio.PlaySoundFX(FocusedSoundPath);
             return;

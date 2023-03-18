@@ -21,14 +21,13 @@ public partial class StatsSubMenu : OptionSubMenu
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly Party _playerParty;
-    private ActorStatsDisplay _statsDisplay;
-    private OptionContainer _partyOptions;
-    private PackedScene _textOptionScene;
+    private ActorStatsDisplay _statsDisplay = null!;
+    private OptionContainer _partyOptions = null!;
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
 
     protected override void SetNodeReferences()
     {
         base.SetNodeReferences();
-        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
         _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
         _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
     }
@@ -42,7 +41,7 @@ public partial class StatsSubMenu : OptionSubMenu
     {
         if (!CurrentContainer.FocusedItem.TryGetData(nameof(AActor), out AActor? actor))
             return;
-        _statsDisplay.UpdateStatsDisplay((Stats)actor.Stats);
+        _statsDisplay.UpdateStatsDisplay((Stats)actor.Stats, updateColor: false);
     }
 
     private List<TextOption> GetPartyMemberOptions()

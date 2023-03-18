@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7eq34w6io0p0"]
 
 [ext_resource type="PackedScene" uid="uid://vm13acghyp35" path="res://GameCore/GUI/Menus/OptionItems/KeyValueOption.tscn" id="1_t0ipt"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Party/Equipment/EquipSelectOption.cs" id="2_jhylh"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipSelectOption.cs" id="2_jhylh"]
 
 [node name="EquipSelectOption" instance=ExtResource("1_t0ipt")]
 script = ExtResource("2_jhylh")

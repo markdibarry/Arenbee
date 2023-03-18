@@ -1,4 +1,4 @@
-using GameCore.Actors;
+﻿using GameCore.Actors;
 using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
@@ -18,6 +18,8 @@ public partial class HitBox : AHitBox
 
     public void SetBasicMeleeBox(AActorBody actorBody)
     {
+        if (actorBody.Actor == null)
+            return;
         GetDamageRequest = () =>
         {
             Stats stats = (Stats)actorBody.Actor.Stats;

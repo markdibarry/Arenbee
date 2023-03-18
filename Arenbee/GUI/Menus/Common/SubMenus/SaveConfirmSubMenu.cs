@@ -3,7 +3,6 @@ using System.Linq;
 using Arenbee.SaveData;
 using GameCore.Extensions;
 using GameCore.GUI;
-using GameCore.SaveData;
 using GameCore.Utility;
 using Godot;
 
@@ -12,20 +11,20 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class SaveConfirmSubMenu : OptionSubMenu
 {
-    private int _gameSaveId;
+    public static string GetScenePath() => GDEx.GetScenePath();
+    private string? _fileName;
     private GameSession? _gameSession = Locator.Session as GameSession;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_SaveConfirm_Yes,
         Localization.Menus.Menus_SaveConfirm_No
     };
-    public static string GetScenePath() => GDEx.GetScenePath();
 
     public override void SetupData(object? data)
     {
-        if (data is not int gameSaveId)
+        if (data is not string fileName)
             return;
-        _gameSaveId = gameSaveId;
+        _fileName = fileName;
     }
 
     protected override void SetupOptions()
@@ -53,17 +52,17 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
     {
         if (_gameSession == null)
             return;
-        ASaveService<GameSave>.SaveGame(new GameSave(_gameSaveId, _gameSession));
+        SaveService.SaveGame(new GameSave(0, _gameSession), _fileName);
         _ = OpenSubMenuAsync(SaveSuccessSubMenu.GetScenePath());
     }
 
     private List<TextOption> GetMenuOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        var options = new List<TextOption>();
-        foreach (var menuKey in _menuKeys)
+        List<TextOption> options = new();
+        foreach (string menuKey in _menuKeys)
         {
-            var option = textOptionScene.Instantiate<TextOption>();
+            TextOption option = textOptionScene.Instantiate<TextOption>();
             option.LabelText = Tr(menuKey);
             option.OptionData["value"] = menuKey;
             options.Add(option);

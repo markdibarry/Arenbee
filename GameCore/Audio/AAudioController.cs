@@ -15,8 +15,8 @@ public abstract partial class AAudioController : Node2D
     private const int MaxFXStreams = 8;
     private readonly AudioStreamPlayer[] _menuFXPlayers;
     private readonly AudioPlayer2D[] _sceneFXPlayers;
-    private Node2D _sceneFX;
-    private Node2D _menuFX;
+    private Node2D _sceneFX = null!;
+    private Node2D _menuFX = null!;
 
     public override void _Ready()
     {
@@ -126,7 +126,7 @@ public abstract partial class AAudioController : Node2D
         return _menuFXPlayers[0];
     }
 
-    private AudioPlayer2D GetNextScenePlayer()
+    private AudioPlayer2D? GetNextScenePlayer()
     {
         var audioPlayer = Array.Find(_sceneFXPlayers, x => !x.Playing);
         if (audioPlayer != null)

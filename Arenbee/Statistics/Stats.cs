@@ -9,7 +9,13 @@ public class Stats : AStats
 {
     public Stats(IDamageable damageable)
         : base(damageable)
-    { }
+    {
+        AddStatIfMissing((int)StatType.Level, 1);
+        AddStatIfMissing((int)StatType.HP, 1);
+        AddStatIfMissing((int)StatType.MaxHP, 1);
+        AddStatIfMissing((int)StatType.MP, 1);
+        AddStatIfMissing((int)StatType.MaxMP, 1);
+    }
 
     public Stats(Stats stats)
         : base(stats)
@@ -80,6 +86,12 @@ public class Stats : AStats
         };
         RaiseDamageReceived(damageResult);
         return damageResult;
+    }
+
+    private void AddStatIfMissing(int statType, int value, int max = 999)
+    {
+        if (!StatLookup.ContainsKey(statType))
+            StatLookup[statType] = new Stat(statType, value, max);
     }
 
     private int GetDamageFromActionType(ActionType type, int totalDamage)

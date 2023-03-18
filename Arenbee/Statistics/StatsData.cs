@@ -9,7 +9,11 @@ namespace Arenbee.Statistics;
 
 public partial class StatsData : Resource
 {
-    public StatsData() { }
+    public StatsData()
+    {
+        StatLookup = new();
+        Modifiers = new();
+    }
 
     public StatsData(Stats stats)
     {
@@ -27,6 +31,12 @@ public partial class StatsData : Resource
     }
 
     [JsonConstructor]
+    public StatsData(Godot.Collections.Array<Stat> statLookup, Godot.Collections.Array<Modifier> modifiers)
+    {
+        StatLookup = statLookup;
+        Modifiers = modifiers;
+    }
+
     public StatsData(IEnumerable<Stat> statLookup, IEnumerable<Modifier> modifiers)
     {
         StatLookup = statLookup.ToGArray();

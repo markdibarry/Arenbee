@@ -30,7 +30,7 @@ public partial class GameSession : AGameSession
 
     public override void _Process(double delta)
     {
-        SessionState.Update(delta, CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled);
+        SessionState.Update(delta, CurrentAreaScene == null || CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled);
     }
 
     public Party? GetParty(string id) => Parties.FirstOrDefault(x => x.Id == id);
@@ -66,11 +66,11 @@ public partial class GameSession : AGameSession
         SessionState = save.SessionState;
         InitAreaScene();
         Twosen actorBody = GDEx.Instantiate<Twosen>(Twosen.GetScenePath());
-        AActor actor = MainParty.Actors.First();
+        AActor actor = MainParty!.Actors.First();
         actorBody.Actor = actor;
         actor.ActorBody = actorBody;
         Locator.Root.GameCamera.CurrentTarget = actorBody;
         actorBody.InputHandler = Locator.Root.PlayerOneInput;
-        CurrentAreaScene.AddActor(actorBody, CurrentAreaScene.GetSpawnPoint(0));
+        CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));
     }
 }

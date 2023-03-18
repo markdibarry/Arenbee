@@ -32,6 +32,7 @@ public class IFrameController
         get => (Color)_spriteShader.GetShaderParameter("flash_color");
         set => _spriteShader.SetShaderParameter("flash_color", value);
     }
+    private Sprite2D BodySprite => _actorBody.BodySprite;
 
     public void Process(double delta)
     {
@@ -40,9 +41,9 @@ public class IFrameController
         HandleBlinking();
     }
 
-    public void Init()
+    public void Init(ShaderMaterial shaderMaterial)
     {
-        _spriteShader = _actorBody.BodyShader;
+        _spriteShader = shaderMaterial;
     }
 
     public void Start(DamageResult damageResult, bool overDamageThreshold)
@@ -65,17 +66,14 @@ public class IFrameController
         _iframeTimerEnabled = false;
         _flashTimerEnabled = false;
         _blinkEnabled = false;
-        _actorBody.BodySprite.Modulate = new Color(_actorBody.BodySprite.Modulate, 1);
+        BodySprite.Modulate = new Color(BodySprite.Modulate, 1);
     }
 
     private void HandleBlinking()
     {
         if (!_blinkEnabled)
             return;
-        if (_actorBody.BodySprite.Modulate.A == 0)
-            _actorBody.BodySprite.Modulate = new Color(_actorBody.BodySprite.Modulate, 0.75f);
-        else
-            _actorBody.BodySprite.Modulate = new Color(_actorBody.BodySprite.Modulate, 0);
+        BodySprite.Modulate = BodySprite.Modulate with { A = BodySprite.Modulate.A == 0 ? 0.75f : 0 };
     }
 
     private void HandleFlashTimer(double delta)
@@ -108,32 +106,25 @@ public class IFrameController
         }
     }
 
-    private void OnFlashTimerExpire()
-    {
-        FlashMix = 0;
-    }
+    private void OnFlashTimerExpire() => FlashMix = 0;
 
-    private void OnIFrameTimerExpire()
-    {
-        Stop();
-    }
+    private void OnIFrameTimerExpire() => Stop();
 
     private void SetShaderFlashColor(DamageResult damageResult)
     {
-        if (damageResult.ActionType == ActionType.Status)
-        {
-            FlashColor = damageResult.StatusEffectDamage switch
-            {
-                StatusEffectType.Burn => new Color(1, 0.35f, 0.35f),
-                StatusEffectType.Freeze => new Color(0.4f, 0.9f, 1),
-                StatusEffectType.Paralysis => new Color(1, 0.9f, 0.45f),
-                StatusEffectType.Poison => new Color(1, 0.65f, 1),
-                _ => Colors.White
-            };
-        }
-        else
+        if (damageResult.ActionType != ActionType.Status)
         {
             FlashColor = StatTypeHelpers.GetElementColor(damageResult.ElementDamage);
+            return;
         }
+
+        FlashColor = damageResult.StatusEffectDamage switch
+        {
+            StatusEffectType.Burn => new Color(1, 0.35f, 0.35f),
+            StatusEffectType.Freeze => new Color(0.4f, 0.9f, 1),
+            StatusEffectType.Paralysis => new Color(1, 0.9f, 0.45f),
+            StatusEffectType.Poison => new Color(1, 0.65f, 1),
+            _ => Colors.White
+        };
     }
 }
