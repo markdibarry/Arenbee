@@ -44,11 +44,11 @@ scene/scene_naming=1
 
 [gui]
 
+fonts/dynamic_fonts/use_oversampling=false
 theme/custom="res://Arenbee/GUI/Themes/BaseTheme.tres"
 theme/default_font_antialiasing=0
 theme/default_font_subpixel_positioning=0
 theme/lcd_subpixel_layout=0
-fonts/dynamic_fonts/use_oversampling=false
 theme/default_font_antialiased=false
 
 [importer_defaults]
@@ -163,6 +163,7 @@ locale/translations=PackedStringArray("res://Arenbee/GUI/Localization/Menus.en.t
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 shader_compiler/shader_cache/compress=false
 textures/default_filters/use_nearest_mipmap_filter=true
 anti_aliasing/screen_space_roughness_limiter/enabled=false
@@ -170,4 +171,3 @@ textures/decals/filter=0
 textures/light_projectors/filter=0
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
-textures/canvas_textures/default_texture_filter=0

@@ -105,6 +105,8 @@ public class StateController : IStateController
 
     public bool ValidateAnimation(string stateMachineName)
     {
+        if (stateMachineName == "Health")
+            return true;
         if (HealthStateMachine.State.AnimationName != string.Empty)
             return false;
         if (stateMachineName == "Action")
@@ -125,18 +127,18 @@ public class StateController : IStateController
 
     public bool PlayFallbackAnimation()
     {
-        if (HealthStateMachine.State.AnimationName != null)
+        if (HealthStateMachine.State.AnimationName != string.Empty)
             return TryPlayAnimation(HealthStateMachine.State.AnimationName, "Health");
         foreach (var holdItem in HoldItems)
         {
-            if (holdItem.StateMachine.State.AnimationName != null)
+            if (holdItem.StateMachine.State.AnimationName != string.Empty)
                 return TryPlayAnimation(holdItem.StateMachine.State.AnimationName, "Action", holdItem);
         }
-        if (!BaseActionDisabled && BaseActionStateMachine.State.AnimationName != null)
+        if (!BaseActionDisabled && BaseActionStateMachine.State.AnimationName != string.Empty)
             return TryPlayAnimation(BaseActionStateMachine.State.AnimationName, "Action", null);
-        else if (AirStateMachine.State.AnimationName != null)
+        else if (AirStateMachine.State.AnimationName != string.Empty)
             return TryPlayAnimation(AirStateMachine.State.AnimationName, "Air");
-        else if (MoveStateMachine.State.AnimationName != null)
+        else if (MoveStateMachine.State.AnimationName != string.Empty)
             return TryPlayAnimation(MoveStateMachine.State.AnimationName, "Move");
         return false;
     }

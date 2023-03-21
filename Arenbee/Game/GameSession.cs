@@ -46,7 +46,7 @@ public partial class GameSession : AGameSession
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel2);
+            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }
@@ -67,8 +67,8 @@ public partial class GameSession : AGameSession
         InitAreaScene();
         Twosen actorBody = GDEx.Instantiate<Twosen>(Twosen.GetScenePath());
         AActor actor = MainParty!.Actors.First();
-        actorBody.Actor = actor;
-        actor.ActorBody = actorBody;
+        actor.SetActorBody(actorBody);
+        actorBody.SetActor(actor);
         Locator.Root.GameCamera.CurrentTarget = actorBody;
         actorBody.InputHandler = Locator.Root.PlayerOneInput;
         CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));

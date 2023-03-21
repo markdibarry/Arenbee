@@ -14,9 +14,9 @@ public partial class Spawner : ASpawner
             return;
         AActor actor = ((ActorData)ActorData).CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
-        actorBody.Actor = actor;
-        actor.ActorBody = actorBody;
+        actor.SetActorBody(actorBody);
+        actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;
-        Owner.CallDeferred(MethodName.AddChild, actorBody);
+        GetParent().CallDeferred(Node.MethodName.AddChild, actorBody);
     }
 }

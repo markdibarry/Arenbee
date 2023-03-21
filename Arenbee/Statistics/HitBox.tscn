@@ -3,6 +3,5 @@
 [ext_resource type="Script" path="res://Arenbee/Statistics/HitBox.cs" id="1"]
 
 [node name="HitBox" type="Area2D"]
-modulate = Color(1, 0, 0, 0.494118)
 monitoring = false
 script = ExtResource("1")

@@ -119,7 +119,7 @@ public partial class ElementContainer : HBoxContainer
         ElementLarge lgElement = Elements.GetChild<ElementLarge>(0);
         lgElement.Hide();
         var atkElMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) == StatCategory.AttackElement);
-        if (!modifiers.Any())
+        if (!atkElMods.Any())
             return;
         foreach (Modifier modifier in atkElMods)
             lgElement.ElementType = (ElementType)modifier.Value;
@@ -143,7 +143,7 @@ public partial class ElementContainer : HBoxContainer
         foreach (ElementLarge element in elements)
             element.Hide();
         var resistMods = modifiers.Where(x => StatTypeHelpers.GetStatCategory(x.StatType) == StatCategory.ElementResist);
-        if (!modifiers.Any())
+        if (!resistMods.Any())
             return;
         foreach (Modifier modifier in resistMods)
         {

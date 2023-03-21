@@ -14,12 +14,17 @@ public class StatusCondition : ConditionEventFilter
     {
         if (Condition.TargetValue != statusEffectType)
             return;
-        RaiseConditionChanged();
+        bool result = CheckCondition();
+        if (result != ConditionMet)
+        {
+            ConditionMet = result;
+            RaiseConditionChanged();
+        }
     }
 
     public override bool CheckCondition()
     {
-        return Source.HasStatusEffect(Condition.TargetValue);
+        return Source.HasStatusEffect((int)Condition.TargetValue);
     }
 
     public override void SubscribeEvents()

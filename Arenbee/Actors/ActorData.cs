@@ -82,8 +82,8 @@ public partial class ActorData : AActorData
         }
         AActor actor = actorData.CreateActor();
         AActorBody actorBody = actorBodyScene.Instantiate<ActorBody>();
-        actor.ActorBody = actorBody;
-        actorBody.Actor = actor;
+        actor.SetActorBody(actorBody);
+        actorBody.SetActor(actor);
         return actor;
     }
 

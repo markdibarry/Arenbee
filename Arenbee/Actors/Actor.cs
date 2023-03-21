@@ -26,6 +26,29 @@ public class Actor : AActor
         ((Stats)Stats).HPDepleted += OnHPDepleted;
     }
 
+    public override void SetActorBody(AActorBody? actorBody)
+    {
+        ActorBody? oldActorBody = ActorBody as ActorBody;
+        ActorBody? newActorBody = actorBody as ActorBody;
+
+        AItem? weapon = Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
+        if (oldActorBody != null)
+        {
+            if (weapon != null)
+                oldActorBody.SetHoldItem(weapon, null);
+            DamageRecieved -= oldActorBody.OnDamageReceived;
+        }
+
+        ActorBody = newActorBody;
+
+        if (newActorBody != null)
+        {
+            if (weapon != null)
+                newActorBody.SetHoldItem(null, weapon);
+            DamageRecieved += newActorBody.OnDamageReceived;
+        }
+    }
+
     protected override void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem)
     {
         (ActorBody as ActorBody)?.HoldItemController.SetHoldItem(oldItem, newItem);

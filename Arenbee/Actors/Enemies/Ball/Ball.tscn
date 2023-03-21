@@ -36,7 +36,7 @@ size = Vector2(21, 23)
 collision_layer = 256
 collision_mask = 21
 script = ExtResource("2_b2iak")
-ActorType = 1
+ActorType = 2
 
 [node name="AnimationPlayer" parent="." index="0"]
 libraries = {
@@ -48,24 +48,24 @@ material = SubResource("ShaderMaterial_d3ogl")
 texture = ExtResource("6_d6e16")
 hframes = 4
 vframes = 3
-frame = 2
+frame = 8
 
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("6_46up2")]
-modulate = Color(0, 1, 0, 1)
 collision_layer = 0
 collision_mask = 40
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
 shape = SubResource("RectangleShape2D_642qn")
+debug_color = Color(0, 1, 0, 0.368627)
 
 [node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("7_o5066")]
-modulate = Color(1, 0, 0, 1)
 collision_layer = 128
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]
 shape = SubResource("RectangleShape2D_7icgy")
+debug_color = Color(1, 0, 0, 0.439216)
 
 [node name="RayCast2D" type="RayCast2D" parent="Body/BodySprite" index="2"]
 target_position = Vector2(100, 0)

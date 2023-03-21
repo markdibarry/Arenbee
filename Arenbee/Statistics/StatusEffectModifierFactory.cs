@@ -12,31 +12,31 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.KO,
                 modOperator: ModOp.One,
                 value: 1,
-                activationConditions: null,
-                removalConditions: null,
+                conditions: null,
                 isHidden: false),
             StatusEffectType.Poison => new Modifier(
                 statType: (int)StatType.Poison,
                 modOperator: ModOp.One,
                 value: 1,
-                activationConditions: null,
-                removalConditions: new Godot.Collections.Array<Condition>()
+                conditions: new Godot.Collections.Array<Condition>()
                 {
                     new Condition()
                     {
                         ConditionType = (int)ConditionType.Timed,
-                        Target = 10,
-                        LogicOp = LogicOp.Or
+                        TargetValue = 10,
+                        ResultType = ConditionResultType.Remove
                     },
                     new Condition()
                     {
                         ConditionType = (int)ConditionType.HPPercent,
+                        CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
-                        LogicOp = LogicOp.Or
-                    },
-                    new Condition()
-                    {
-                        ConditionType = (int)ConditionType.KO
+                        ResultType = ConditionResultType.RemoveOrDeactivate,
+                        AdditionalLogicOp = LogicOp.Or,
+                        AdditionalCondition = new Condition()
+                        {
+                            ConditionType = (int)ConditionType.KO
+                        }
                     }
                 },
                 isHidden: false),
@@ -44,24 +44,25 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.Burn,
                 modOperator: ModOp.One,
                 value: 1,
-                activationConditions: null,
-                removalConditions: new Godot.Collections.Array<Condition>()
+                conditions: new Godot.Collections.Array<Condition>()
                 {
                     new Condition()
                     {
                         ConditionType = (int)ConditionType.Timed,
-                        Target = 10,
-                        LogicOp = LogicOp.Or
+                        TargetValue = 10,
+                        ResultType = ConditionResultType.Remove
                     },
                     new Condition()
                     {
                         ConditionType = (int)ConditionType.HPPercent,
+                        CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
-                        LogicOp = LogicOp.Or
-                    },
-                    new Condition()
-                    {
-                        ConditionType = (int)ConditionType.KO
+                        ResultType = ConditionResultType.RemoveOrDeactivate,
+                        AdditionalLogicOp = LogicOp.Or,
+                        AdditionalCondition = new Condition()
+                        {
+                            ConditionType = (int)ConditionType.KO
+                        }
                     }
                 },
                 isHidden: false),
@@ -69,18 +70,18 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.Burn,
                 modOperator: ModOp.One,
                 value: 1,
-                activationConditions: null,
-                removalConditions: new Godot.Collections.Array<Condition>()
+                conditions: new Godot.Collections.Array<Condition>()
                 {
                     new Condition()
                     {
                         ConditionType = (int)ConditionType.Timed,
-                        Target = 10,
-                        LogicOp = LogicOp.Or
+                        TargetValue = 10,
+                        ResultType = ConditionResultType.Remove
                     },
                     new Condition()
                     {
-                        ConditionType = (int)ConditionType.KO
+                        ConditionType = (int)ConditionType.KO,
+                        ResultType = ConditionResultType.RemoveOrDeactivate
                     }
                 },
                 isHidden: false),

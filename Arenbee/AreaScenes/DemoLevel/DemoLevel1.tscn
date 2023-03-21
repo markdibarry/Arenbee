@@ -1,13 +1,14 @@
-[gd_scene load_steps=33 format=3 uid="uid://ce7srvti8tlr7"]
+[gd_scene load_steps=34 format=3 uid="uid://ce7srvti8tlr7"]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
+[ext_resource type="Script" path="res://Arenbee/AreaScenes/AreaScene.cs" id="2_kq8ys"]
 [ext_resource type="Texture2D" uid="uid://ca4gtx3ponkhv" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/3 - Cloud_cover_1.png" id="3_ga5hp"]
 [ext_resource type="Texture2D" uid="uid://to2ph6ykrnoo" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/2 - Hills.png" id="4_3n0vj"]
 [ext_resource type="Texture2D" uid="uid://cqbj3025on4xp" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/1 - Foreground_scenery.png" id="5_up4wo"]
 [ext_resource type="Texture2D" uid="uid://dk5hejpfvqv3w" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/underground_top.png" id="6_pet0m"]
 [ext_resource type="TileSet" uid="uid://khoms20r0v0l" path="res://Arenbee/Scenery/DemoTiles.tres" id="6_uemtd"]
-[ext_resource type="PackedScene" path="res://Arenbee/Scenery/Barrel/Barrel.tscn" id="7_3y5rn"]
+[ext_resource type="PackedScene" uid="uid://bwli6ooj2pcts" path="res://Arenbee/Scenery/Barrel/Barrel.tscn" id="7_3y5rn"]
 [ext_resource type="Texture2D" uid="uid://c5wf4cfd7uty4" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/underground_repeat.png" id="7_wwrsr"]
 [ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://m235kimduuai" path="res://Arenbee/Scenery/Spike.png" id="9_bgkj2"]
@@ -33,61 +34,60 @@ size = Vector2(560, 200)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpp7m"]
 size = Vector2(20, 33)
 
-[sub_resource type="Resource" id="Resource_fcpwg"]
+[sub_resource type="Resource" id="Resource_0caf6"]
 script = ExtResource("16_nfvki")
 StatType = 17
 Value = 3
 IsHidden = false
 Op = 2
 SourceType = 0
-ActivationConditions = []
-RemovalConditions = []
+Conditions = []
 
-[sub_resource type="Resource" id="Resource_rpsdk"]
+[sub_resource type="Resource" id="Resource_0617i"]
 script = ExtResource("16_nfvki")
 StatType = 32
 Value = 100
 IsHidden = false
 Op = 2
 SourceType = 0
-ActivationConditions = []
-RemovalConditions = []
+Conditions = []
 
-[sub_resource type="Resource" id="Resource_tof01"]
+[sub_resource type="Resource" id="Resource_73mng"]
 script = ExtResource("16_que06")
 StatType = 3
 Value = 6
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_3jmpj"]
+[sub_resource type="Resource" id="Resource_l4d71"]
 script = ExtResource("16_que06")
 StatType = 2
 Value = 6
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_0g4hd"]
+[sub_resource type="Resource" id="Resource_od5h4"]
 script = ExtResource("16_que06")
 StatType = 6
 Value = 4
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_m1dtg"]
+[sub_resource type="Resource" id="Resource_88bgk"]
 script = ExtResource("16_que06")
 StatType = 7
 Value = 0
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_v4dyw"]
+[sub_resource type="Resource" id="Resource_k6qik"]
 script = ExtResource("17_7g55l")
-StatLookup = [SubResource("Resource_tof01"), SubResource("Resource_3jmpj"), SubResource("Resource_0g4hd"), SubResource("Resource_m1dtg")]
-Modifiers = [SubResource("Resource_fcpwg"), SubResource("Resource_rpsdk")]
+StatLookup = [SubResource("Resource_73mng"), SubResource("Resource_l4d71"), SubResource("Resource_od5h4"), SubResource("Resource_88bgk")]
+Modifiers = [SubResource("Resource_0caf6"), SubResource("Resource_0617i")]
 
-[sub_resource type="Resource" id="Resource_1eptf"]
+[sub_resource type="Resource" id="Resource_jsjpe"]
 script = ExtResource("18_xc78f")
 ActorName = "Ball"
-StatsData = SubResource("Resource_v4dyw")
+StatsData = SubResource("Resource_k6qik")
 
 [node name="DemoLevel1" instance=ExtResource("1_ua3fi")]
+script = ExtResource("2_kq8ys")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Scenery" index="0"]
 layer = -1
@@ -206,6 +206,7 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Scenery/Spike" index="0"]
 shape = SubResource("RectangleShape2D_wrpfu")
+debug_color = Color(1, 0, 0, 0.462745)
 
 [node name="Sprite2D" type="Sprite2D" parent="Scenery/Spike" index="1"]
 texture = ExtResource("9_bgkj2")
@@ -217,6 +218,7 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Scenery/Spike2" index="0"]
 shape = SubResource("RectangleShape2D_wrpfu")
+debug_color = Color(1, 0, 0, 0.462745)
 
 [node name="Sprite2D" type="Sprite2D" parent="Scenery/Spike2" index="1"]
 texture = ExtResource("9_bgkj2")
@@ -272,7 +274,7 @@ Hint = true
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("15_2jr03")]
 position = Vector2(357, 179)
-ActorData = SubResource("Resource_1eptf")
+ActorData = SubResource("Resource_jsjpe")
 ActorDataId = "Ball"
 
 [node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("20_h7exy")]

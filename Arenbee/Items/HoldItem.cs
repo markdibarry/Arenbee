@@ -7,17 +7,12 @@ namespace Arenbee.Items;
 
 public abstract partial class HoldItem : Node2D
 {
-    public AnimationPlayer AnimationPlayer { get; set; }
-    public AItem Item
-    {
-        get => Locator.ItemDB.GetItem(ItemId);
-        private set => ItemId = value?.Id;
-    }
-    public string ItemId { get; private set; }
-    public Sprite2D Sprite { get; set; }
-    public string HoldItemType { get; set; }
-    protected ActorBody ActorBody { get; set; }
-    public ActionStateMachineBase StateMachine { get; protected set; }
+    public AnimationPlayer AnimationPlayer { get; set; } = null!;
+    public AItem Item { get; set; } = null!;
+    public Sprite2D Sprite { get; set; } = null!;
+    public string HoldItemType { get; set; } = null!;
+    protected ActorBody ActorBody { get; set; } = null!;
+    public ActionStateMachineBase StateMachine { get; protected set; } = null!;
 
     public override void _Ready()
     {
@@ -51,7 +46,7 @@ public abstract partial class HoldItem : Node2D
         ActorBody actorBody,
         ActionStateMachineBase stateMachine)
     {
-        Item = Locator.ItemDB.GetItem(itemId);
+        Item = Locator.ItemDB.GetItem(itemId)!;
         HoldItemType = holdItemType;
         ActorBody = actorBody;
         StateMachine = stateMachine;

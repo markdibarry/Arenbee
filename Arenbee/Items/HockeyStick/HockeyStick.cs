@@ -11,8 +11,8 @@ public partial class HockeyStick : HoldItem
         Setup("HockeyStick", GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
     }
 
-    public HitBox WeakAttack1HitBox { get; set; }
-    public HitBox WeakAttack2HitBox { get; set; }
+    public HitBox WeakAttack1HitBox { get; set; } = null!;
+    public HitBox WeakAttack2HitBox { get; set; } = null!;
 
     protected override void SetHitBoxes()
     {
@@ -87,7 +87,7 @@ public class ActionStateMachine : ActionStateMachineBase
 
         public override void Exit()
         {
-            var hockeyStick = HoldItem as HockeyStick;
+            HockeyStick hockeyStick = (HockeyStick)HoldItem!;
             hockeyStick.WeakAttack1HitBox.SetMonitorableDeferred(false);
             hockeyStick.WeakAttack1HitBox.Visible = false;
         }

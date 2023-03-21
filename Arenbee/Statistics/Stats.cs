@@ -72,12 +72,13 @@ public class Stats : AStats
         int totalDamage = damageRequest.Value;
         totalDamage = GetDamageFromActionType(damageRequest.ActionType, totalDamage);
         StatType elementResistType = StatTypeHelpers.GetElementResist(damageRequest.ElementType);
-        int elementMultiplier = CalculateStat(elementResistType);
+        int elementMultiplier = CalculateElementResist((int)elementResistType, false);
         totalDamage = GetDamageFromElement(totalDamage, elementMultiplier);
-        ApplyStatusEffects(damageRequest);
+        ApplyDamageStatusEffects(damageRequest);
         ModifyHP(totalDamage);
         DamageResult damageResult = new()
         {
+            ActionType = damageRequest.ActionType,
             TotalDamage = totalDamage,
             SourcePosition = damageRequest.SourcePosition,
             ElementDamage = damageRequest.ElementType,
@@ -85,6 +86,9 @@ public class Stats : AStats
             SourceName = damageRequest.SourceName
         };
         RaiseDamageReceived(damageResult);
+        RaiseStatChanged();
+        if (HasNoHP)
+            HPDepleted?.Invoke();
         return damageResult;
     }
 
@@ -228,33 +232,7 @@ public class Stats : AStats
 
     protected override void UpdateSpecialCategory(int statType) => UpdateSpecialCategory((StatType)statType);
 
-    private void UpdateSpecialCategory(StatType statType)
-    {
-        StatCategory statCategory = StatTypeHelpers.GetStatCategory(statType);
-        if (statCategory == StatCategory.StatusEffect || statCategory == StatCategory.StatusResist)
-        {
-            StatusEffectType effectType = StatTypeHelpers.GetStatusEffectType(statType);
-            if (CalculateStat(statType) > 0)
-                AddStatusEffect((int)effectType);
-            else
-                RemoveStatusEffect((int)effectType);
-        }
-        else if (statCategory == StatCategory.StatusAttack)
-        {
-            StatusEffectType effectType = StatTypeHelpers.GetStatusEffectType(statType);
-            UpdateStatusChances(effectType, CalculateStat(statType));
-        }
-    }
-
-    private void UpdateStatusChances(StatusEffectType statusEffectType, int chance)
-    {
-        if (chance == 0)
-            _statusChanceCache.Remove(statusEffectType);
-        else
-            _statusChanceCache[statusEffectType] = chance;
-    }
-
-    private void ApplyStatusEffects(DamageRequest damageRequest)
+    private void ApplyDamageStatusEffects(DamageRequest damageRequest)
     {
         if (damageRequest.StatusChances.Count == 0)
             return;
@@ -267,7 +245,48 @@ public class Stats : AStats
             effectChance = Math.Clamp(effectChance, 0, 100);
 
             if (100 - effectChance <= s_random.Next(100))
-                AddMod(EffectModifierFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType));
+            {
+                Modifier effectMod = EffectModifierFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
+                effectMod.SourceType = SourceType.Independent;
+                AddMod(effectMod);
+            }
         }
+    }
+
+    private void UpdateSpecialCategory(StatType statType)
+    {
+        StatCategory statCategory = StatTypeHelpers.GetStatCategory(statType);
+        if (statCategory == StatCategory.StatusEffect)
+        {
+            StatType resistType = StatTypeHelpers.GetStatusResistType(statType);
+            UpdateStatusEffect(statType, resistType);
+        }
+        else if (statCategory == StatCategory.StatusResist)
+        {
+            StatType effectStatType = StatTypeHelpers.GetStatusEffect(statType);
+            UpdateStatusEffect(effectStatType, statType);
+        }
+        else if (statCategory == StatCategory.StatusAttack)
+        {
+            StatusEffectType effectType = StatTypeHelpers.GetStatusEffectType(statType);
+            UpdateStatusChances(effectType, CalculateStat(statType));
+        }
+    }
+
+    private void UpdateStatusEffect(StatType effectStatType, StatType resistStatType)
+    {
+        StatusEffectType effectType = StatTypeHelpers.GetStatusEffectType(effectStatType);
+        if (CalculateStat(effectStatType) > 0 && CalculateStat(resistStatType) <= 100)
+            AddStatusEffect((int)effectType);
+        else
+            RemoveStatusEffect((int)effectType);
+    }
+
+    private void UpdateStatusChances(StatusEffectType statusEffectType, int chance)
+    {
+        if (chance == 0)
+            _statusChanceCache.Remove(statusEffectType);
+        else
+            _statusChanceCache[statusEffectType] = chance;
     }
 }

@@ -128,7 +128,7 @@ public class HealthStateMachine : HealthStateMachineBase
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {
-            if (Stats != null && Stats.HasNoHP)
+            if (Stats != null && !Stats.HasNoHP)
                 return stateMachine.TrySwitchTo<Normal>();
             return false;
         }

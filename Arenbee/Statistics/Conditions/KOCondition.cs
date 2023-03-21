@@ -9,6 +9,16 @@ public class KOCondition : ConditionEventFilter
     {
     }
 
+    public void OnHPDepleted()
+    {
+        bool result = CheckCondition();
+        if (result != ConditionMet)
+        {
+            ConditionMet = result;
+            RaiseConditionChanged();
+        }
+    }
+
     public override bool CheckCondition()
     {
         return ((Stats)Source).CurrentHP <= 0;
@@ -16,11 +26,11 @@ public class KOCondition : ConditionEventFilter
 
     public override void SubscribeEvents()
     {
-        ((Stats)Source).HPDepleted += RaiseConditionChanged;
+        ((Stats)Source).HPDepleted += OnHPDepleted;
     }
 
     public override void UnsubscribeEvents()
     {
-        ((Stats)Source).HPDepleted -= RaiseConditionChanged;
+        ((Stats)Source).HPDepleted -= OnHPDepleted;
     }
 }

@@ -30,7 +30,7 @@ public class StatusEffectDB : AStatusEffectDB
                 },
                 TickCondition = new()
                 {
-                    ConditionType = 0,
+                    ConditionType = (int)ConditionType.Timed,
                     TargetValue = 3
                 },
                 TickEffect = StatusEffectMethods.BurnTick
@@ -60,7 +60,7 @@ public class StatusEffectDB : AStatusEffectDB
                 Description = "Feel nauseous.",
                 TickCondition = new()
                 {
-                    ConditionType = 0,
+                    ConditionType = (int)ConditionType.Timed,
                     TargetValue = 3
                 },
                 TickEffect = StatusEffectMethods.PoisonTick

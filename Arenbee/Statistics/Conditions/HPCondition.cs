@@ -12,7 +12,12 @@ public class HPCondition : ConditionEventFilter
 
     public void OnDamageReceived(ADamageResult damageResult)
     {
-        RaiseConditionChanged();
+        bool result = CheckCondition();
+        if (result != ConditionMet)
+        {
+            ConditionMet = result;
+            RaiseConditionChanged();
+        }
     }
 
     public override bool CheckCondition()

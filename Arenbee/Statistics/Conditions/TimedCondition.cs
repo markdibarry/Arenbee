@@ -15,12 +15,17 @@ public class TimedCondition : ConditionEventFilter
         if (Condition.CurrentValue != Condition.TargetValue)
         {
             if (Condition.CurrentValue < Condition.TargetValue)
-                Condition.CurrentValue = Math.Min(Condition.CurrentValue + (int)amount, Condition.TargetValue);
+                Condition.CurrentValue = Math.Min(Condition.CurrentValue + (float)amount, Condition.TargetValue);
             else
-                Condition.CurrentValue = Math.Max(Condition.CurrentValue - (int)amount, Condition.TargetValue);
+                Condition.CurrentValue = Math.Max(Condition.CurrentValue - (float)amount, Condition.TargetValue);
         }
 
-        RaiseConditionChanged();
+        bool result = CheckCondition();
+        if (result != ConditionMet)
+        {
+            ConditionMet = result;
+            RaiseConditionChanged();
+        }
     }
 
     public override bool CheckCondition()

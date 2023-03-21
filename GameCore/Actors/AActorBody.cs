@@ -35,7 +35,7 @@ public abstract partial class AActorBody : CharacterBody2D
     protected Node2D Body { get; set; } = null!;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; }
-    public AActor? Actor { get; set; }
+    public AActor? Actor { get; protected set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
@@ -83,6 +83,8 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         Locator.Audio.PlaySoundFX(this, sound);
     }
+
+    public abstract void SetActor(AActor? actor);
 
     public virtual void SetNodeReferences()
     {

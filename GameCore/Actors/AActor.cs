@@ -16,7 +16,7 @@ public abstract class AActor : IDamageable
         Equipment.EquipmentSet += OnEquipmentSet;
     }
 
-    public AActorBody? ActorBody { get; set; }
+    public AActorBody? ActorBody { get; protected set; }
     public string ActorId { get; set; }
     public ActorType ActorType { get; set; }
     public AEquipment Equipment { get; }
@@ -36,6 +36,8 @@ public abstract class AActor : IDamageable
         Stats.ModChanged += OnModChanged;
         Stats.StatusEffectChanged += OnStatusEffectChanged;
     }
+
+    public abstract void SetActorBody(AActorBody? actorBody);
 
     protected void RaiseDefeated() => Defeated?.Invoke(this);
 

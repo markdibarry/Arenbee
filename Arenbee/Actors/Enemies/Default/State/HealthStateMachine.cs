@@ -105,6 +105,7 @@ public class HealthStateMachine : HealthStateMachineBase
             ActorBody.PlaySoundFX("agh2.wav");
             ActorBody.Velocity = new Vector2(0, 0);
             CreateDeathEffect();
+            ActorBody.QueueFree();
         }
 
         public override void Update(double delta) { }

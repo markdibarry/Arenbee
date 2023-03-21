@@ -49,8 +49,8 @@ public abstract class AStats
 
     public virtual void AddMod(Modifier mod)
     {
-        mod.InitRemovalConditions(this, EventFilterFactory);
-        if (mod.ShouldRemove())
+        mod.InitConditions(this, EventFilterFactory);
+        if (mod.ShouldRemove() && mod.SourceType == SourceType.Independent)
             return;
         List<Modifier> mods = Modifiers.GetOrAddNew(mod.StatType);
 
@@ -62,12 +62,11 @@ public abstract class AStats
             return;
         }
 
-        mod.InitActivationConditions(this, EventFilterFactory);
-        mod.IsActive = mod.ShouldActivate();
+        mod.IsActive = !mod.ShouldDeactivate();
 
         mods.Add(mod);
-        mod.SubscribeActivationConditions();
-        mod.SubscribeRemovalConditions();
+        mod.SubscribeConditions();
+        SubscribeModConditions(mod);
         UpdateSpecialCategory(mod.StatType);
         RaiseModChanged(mod, ChangeType.Add);
     }
@@ -107,8 +106,8 @@ public abstract class AStats
             return;
         if (unsubscribe)
         {
-            mod.UnsubscribeRemovalConditions();
-            mod.UnsubscribeActivationConditions();
+            mod.UnsubscribeConditions();
+            UnsubscribeModConditions(mod);
         }
         mods.Remove(mod);
         if (mods.Count == 0)
@@ -144,9 +143,22 @@ public abstract class AStats
 
     protected abstract ADamageResult HandleDamage(ADamageRequest damageData);
 
+    protected void OnActivationConditionMet(Modifier mod)
+    {
+        UpdateSpecialCategory(mod.StatType);
+    }
+
+    protected void OnRemovalConditionMet(Modifier mod)
+    {
+        if (mod.SourceType == SourceType.Independent)
+            RemoveMod(mod);
+    }
+
     protected void RaiseModChanged(Modifier mod, ChangeType modChange) => ModChanged?.Invoke(mod, modChange);
 
     protected void RaiseDamageReceived(ADamageResult damageResult) => DamageReceived?.Invoke(damageResult);
+
+    protected void RaiseStatChanged() => StatChanged?.Invoke();
 
     protected virtual void UpdateSpecialCategory(int statType) { }
 
@@ -157,7 +169,7 @@ public abstract class AStats
         StatusEffectData? effectData = StatusEffectDB.GetEffectData(statusEffectType);
         if (effectData == null)
             return;
-        StatusEffect statusEffect = new(this, effectData);
+        StatusEffect statusEffect = new(this, effectData, EventFilterFactory);
         statusEffect.SubscribeCondition();
         StatusEffects.Add(statusEffect);
         statusEffect.EffectData.EnterEffect?.Invoke(statusEffect);
@@ -173,5 +185,17 @@ public abstract class AStats
         statusEffect.EffectData.ExitEffect?.Invoke(statusEffect);
         StatusEffects.Remove(statusEffect);
         StatusEffectChanged?.Invoke(statusEffectType, ChangeType.Remove);
+    }
+
+    protected void SubscribeModConditions(Modifier mod)
+    {
+        mod.ActivationConditionMet += OnActivationConditionMet;
+        mod.RemovalConditionMet += OnRemovalConditionMet;
+    }
+
+    protected void UnsubscribeModConditions(Modifier mod)
+    {
+        mod.ActivationConditionMet -= OnActivationConditionMet;
+        mod.RemovalConditionMet -= OnRemovalConditionMet;
     }
 }

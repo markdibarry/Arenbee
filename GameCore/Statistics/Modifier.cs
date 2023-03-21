@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using GameCore.Enums;
 using GameCore.Utility;
@@ -15,15 +16,13 @@ public partial class Modifier : Resource
         int statType,
         ModOp modOperator,
         int value,
-        Godot.Collections.Array<Condition>? activationConditions = null,
-        Godot.Collections.Array<Condition>? removalConditions = null,
+        Godot.Collections.Array<Condition>? conditions = null,
         bool isHidden = false)
     {
         StatType = statType;
         Op = modOperator;
         Value = value;
-        ActivationConditions = activationConditions ?? new();
-        RemovalConditions = removalConditions ?? new();
+        Conditions = conditions ?? new();
         IsHidden = isHidden;
     }
 
@@ -33,8 +32,7 @@ public partial class Modifier : Resource
         Op = mod.Op;
         IsHidden = mod.IsHidden;
         Value = mod.Value;
-        ActivationConditions = new(mod.ActivationConditions?.Select(x => new Condition(x)));
-        RemovalConditions = new(mod.RemovalConditions?.Select(x => new Condition(x)));
+        Conditions = new(mod.Conditions?.Select(x => new Condition(x)));
     }
 
     private int _statType;
@@ -51,84 +49,64 @@ public partial class Modifier : Resource
     [Export] public bool IsHidden { get; set; }
     [Export] public ModOp Op { get; set; }
     [Export] public SourceType SourceType { get; set; }
-    [Export] public Godot.Collections.Array<Condition> ActivationConditions { get; set; } = new();
-    [Export] public Godot.Collections.Array<Condition> RemovalConditions { get; set; } = new();
+    [Export] public Godot.Collections.Array<Condition> Conditions { get; set; } = new();
     public bool IsActive { get; set; }
-    public event System.Action<Modifier>? RemovalConditionMet;
+    public event Action<Modifier>? RemovalConditionMet;
+    public event Action<Modifier>? ActivationConditionMet;
 
     // TODO Add special case handling i.e. +5% for every 100 enemies killed
     public int Apply(int baseValue) => MathI.Compute(Op, baseValue, Value);
 
-    public void InitActivationConditions(AStats stats, IConditionEventFilterFactory factory)
+    public void InitConditions(AStats stats, IConditionEventFilterFactory factory)
     {
-        InitConditions(stats, factory, ActivationConditions);
-    }
-
-    public void InitRemovalConditions(AStats stats, IConditionEventFilterFactory factory)
-    {
-        InitConditions(stats, factory, RemovalConditions);
+        foreach (Condition condition in Conditions)
+            condition.EventFilter = factory.GetEventFilter(stats, condition);
     }
 
     public void ResetConditions()
     {
-        if (RemovalConditions == null)
+        if (Conditions == null)
             return;
-        foreach (Condition condition in RemovalConditions)
+        foreach (Condition condition in Conditions)
             condition.Reset();
     }
 
-    public bool ShouldActivate()
+    public bool ShouldDeactivate() => CheckConditions(ConditionResultType.Deactivate);
+
+    public bool ShouldRemove() => CheckConditions(ConditionResultType.Remove);
+
+    public void SubscribeConditions()
     {
-        if (!ActivationConditions.Any())
-            return true;
-        return CheckConditions(ActivationConditions);
+        foreach (Condition condition in Conditions)
+            condition.Subscribe(GetHandler(condition));
     }
 
-    public bool ShouldRemove() => CheckConditions(RemovalConditions);
-
-    public void SubscribeActivationConditions()
+    public void UnsubscribeConditions()
     {
-        SubscribeConditions(ActivationConditions, ConditionActivationHandler);
+        foreach (Condition condition in Conditions)
+            condition.Unsubscribe(GetHandler(condition));
     }
 
-    public void SubscribeRemovalConditions()
+    private bool CheckConditions(ConditionResultType resultType)
     {
-        SubscribeConditions(RemovalConditions, ConditionRemovalHandler);
-    }
-
-    public void UnsubscribeActivationConditions()
-    {
-        UnsubscribeConditions(ActivationConditions, ConditionActivationHandler);
-    }
-
-    public void UnsubscribeRemovalConditions()
-    {
-        UnsubscribeConditions(RemovalConditions, ConditionRemovalHandler);
-    }
-
-    private static bool CheckConditions(Godot.Collections.Array<Condition> conditions)
-    {
-        foreach (Condition condition in conditions)
+        foreach (Condition condition in Conditions)
         {
-            if (condition.EventFilter == null)
+            if (condition.ResultType != ConditionResultType.RemoveOrDeactivate && condition.ResultType != resultType)
                 continue;
-            if (condition.EventFilter.CheckCondition())
-            {
-                if (condition.LogicOp != LogicOp.And)
-                    return true;
-            }
-            else
-            {
-                if (condition.LogicOp != LogicOp.Or)
-                    return false;
-            }
+            if (condition.CheckCondition())
+                return true;
         }
         return false;
     }
 
     private void ConditionActivationHandler()
     {
-        IsActive = ShouldActivate();
+        bool isActive = !ShouldDeactivate();
+        if (IsActive != isActive)
+        {
+            IsActive = isActive;
+            ActivationConditionMet?.Invoke(this);
+        }
     }
 
     private void ConditionRemovalHandler()
@@ -137,30 +115,16 @@ public partial class Modifier : Resource
             RemovalConditionMet?.Invoke(this);
     }
 
-    private static void InitConditions(AStats stats, IConditionEventFilterFactory factory, Godot.Collections.Array<Condition> conditions)
+    private Action GetHandler(Condition condition)
     {
-        foreach (Condition condition in conditions)
-            condition.EventFilter = factory.GetEventFilter(stats, condition);
-    }
-
-    private static void SubscribeConditions(Godot.Collections.Array<Condition> conditions, System.Action handler)
-    {
-        foreach (Condition condition in conditions)
-        {
-            if (condition.EventFilter == null)
-                continue;
-            condition.EventFilter.ConditionChanged += handler;
-        }
-    }
-
-    private static void UnsubscribeConditions(Godot.Collections.Array<Condition> conditions, System.Action handler)
-    {
-        foreach (Condition condition in conditions)
-        {
-            if (condition.EventFilter == null)
-                continue;
-            condition.EventFilter.ConditionChanged -= handler;
-        }
+        Action handler;
+        if (condition.ResultType == ConditionResultType.Remove)
+            handler = ConditionRemovalHandler;
+        else if (condition.ResultType == ConditionResultType.Deactivate)
+            handler = ConditionActivationHandler;
+        else
+            handler = SourceType == SourceType.Independent ? ConditionRemovalHandler : ConditionActivationHandler;
+        return handler;
     }
 
     public override Godot.Collections.Array<Godot.Collections.Dictionary> _GetPropertyList()

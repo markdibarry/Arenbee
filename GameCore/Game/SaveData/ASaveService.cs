@@ -10,8 +10,8 @@ namespace GameCore.SaveData;
 
 public abstract class ASaveService<T> where T : IGameSave
 {
-    private static readonly string _globalPath = ProjectSettings.GlobalizePath(Config.SavePath);
-    private static readonly string[] _ignoredPropertyNames = new string[]
+    private static readonly string s_globalPath = ProjectSettings.GlobalizePath(Config.SavePath);
+    private static readonly string[] s_ignoredPropertyNames = new string[]
     {
             nameof(GodotObject.NativeInstance),
             nameof(Resource.ResourceName),
@@ -24,7 +24,7 @@ public abstract class ASaveService<T> where T : IGameSave
         if (!typeInfo.Type.IsAssignableTo(typeof(Resource)))
             return;
 
-        var props = typeInfo.Properties.Where(x => !_ignoredPropertyNames.Contains(x.Name)).ToList();
+        var props = typeInfo.Properties.Where(x => !s_ignoredPropertyNames.Contains(x.Name)).ToList();
         typeInfo.Properties.Clear();
         foreach (JsonPropertyInfo prop in props)
             typeInfo.Properties.Add(prop);
@@ -33,7 +33,7 @@ public abstract class ASaveService<T> where T : IGameSave
     public static List<(string, T)> GetAllSaves()
     {
         return Directory
-            .EnumerateFiles(_globalPath, $"{Config.SavePrefix}*")
+            .EnumerateFiles(s_globalPath, $"{Config.SavePrefix}*")
             .Select(x =>
             {
                 string fileName = Path.GetFileName(x);
@@ -46,7 +46,7 @@ public abstract class ASaveService<T> where T : IGameSave
 
     public static T? GetGameSave(string fileName)
     {
-        string content = File.ReadAllText(_globalPath + fileName);
+        string content = File.ReadAllText(s_globalPath + fileName);
         return JsonSerializer.Deserialize<T>(content);
     }
 
@@ -62,6 +62,6 @@ public abstract class ASaveService<T> where T : IGameSave
             }
         };
         string saveString = JsonSerializer.Serialize(gameSave, options);
-        File.WriteAllText(_globalPath + fileName, saveString);
+        File.WriteAllText(s_globalPath + fileName, saveString);
     }
 }

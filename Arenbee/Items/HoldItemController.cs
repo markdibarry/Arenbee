@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
@@ -44,6 +44,12 @@ public partial class HoldItemController : Node2D
     public void Init(ActorBody actorBody)
     {
         ActorBody = actorBody;
+        if (ActorBody.Actor != null)
+        {
+            AItem? weapon = ActorBody.Actor.Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
+            if (weapon != null)
+                SetHoldItem(null, weapon);
+        }
     }
 
     public void SetHoldItem(AItem? oldItem, AItem? newItem)

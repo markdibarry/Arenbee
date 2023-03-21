@@ -1,25 +1,25 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://dwqd4qvglvauf"]
 
-[ext_resource type="PackedScene" path="res://Arenbee/Items/HockeyStick/HockeyStick.tscn" id="1_bqbp3"]
+[ext_resource type="PackedScene" uid="uid://bl0gfnjwn0d36" path="res://Arenbee/Items/HockeyStick/HockeyStick.tscn" id="1_bqbp3"]
 [ext_resource type="Script" path="res://Arenbee/Items/MetalHockeyStick/MetalHockeyStick.cs" id="2_lcd6o"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Weapon.gdshader" id="3_g161r"]
-[ext_resource type="Texture2D" path="res://Arenbee/Items/MetalHockeyStick/MetalHockeyStickPalette.png" id="4_5qvd7"]
+[ext_resource type="Texture2D" uid="uid://dkwuy3ow2ys70" path="res://Arenbee/Items/MetalHockeyStick/MetalHockeyStickPalette.png" id="4_5qvd7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d32fs"]
 resource_local_to_scene = true
-shader = ExtResource( "3_g161r" )
-flash_color = null
-flash_mix = null
-speed = null
-cycle_start = null
-cycle_end = null
-cycle_direction = null
-use_palette1 = true
-use_palette2 = null
-palette1 = ExtResource( "4_5qvd7" )
+shader = ExtResource("3_g161r")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_mix = 0.0
+shader_parameter/speed = 0.0
+shader_parameter/cycle_start = 0.0
+shader_parameter/cycle_end = 0.0
+shader_parameter/cycle_direction = 1.0
+shader_parameter/use_palette1 = true
+shader_parameter/use_palette2 = null
+shader_parameter/palette1 = ExtResource("4_5qvd7")
 
-[node name="MetalHockeyStick" instance=ExtResource( "1_bqbp3" )]
-script = ExtResource( "2_lcd6o" )
+[node name="MetalHockeyStick" instance=ExtResource("1_bqbp3")]
+script = ExtResource("2_lcd6o")
 
 [node name="Sprite" parent="." index="0"]
-material = SubResource( "ShaderMaterial_d32fs" )
+material = SubResource("ShaderMaterial_d32fs")

@@ -8,12 +8,12 @@
 [ext_resource type="Texture2D" uid="uid://dnm6k1qshq4d" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
-[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="9_a4h73"]
-[ext_resource type="Script" path="res://GameCore/Statistics/Modifier.cs" id="10_vl3f5"]
-[ext_resource type="Script" path="res://GameCore/Statistics/Stat.cs" id="11_57xhx"]
-[ext_resource type="Script" path="res://Arenbee/Statistics/StatsData.cs" id="12_6ns1n"]
-[ext_resource type="Script" path="res://Arenbee/Actors/ActorData.cs" id="13_wdv2i"]
-[ext_resource type="PackedScene" uid="uid://bhh8r7w8jepqu" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="14_nfj3v"]
+[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="9_ti87r"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Modifier.cs" id="10_ub45t"]
+[ext_resource type="Script" path="res://GameCore/Statistics/Stat.cs" id="11_65w8a"]
+[ext_resource type="Script" path="res://Arenbee/Statistics/StatsData.cs" id="12_ytr4d"]
+[ext_resource type="Script" path="res://Arenbee/Actors/ActorData.cs" id="13_rn370"]
+[ext_resource type="PackedScene" uid="uid://cd20kml21ec8w" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="14_whpk2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
@@ -176,55 +176,55 @@ size = Vector2(672, 256)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lq81b"]
 size = Vector2(20, 33)
 
-[sub_resource type="Resource" id="Resource_i2cn5"]
-script = ExtResource("10_vl3f5")
+[sub_resource type="Resource" id="Resource_83ukl"]
+script = ExtResource("10_ub45t")
 IsHidden = false
 Op = 2
 SourceType = 0
 ActivationConditions = []
 RemovalConditions = []
 
-[sub_resource type="Resource" id="Resource_eo1wh"]
-script = ExtResource("10_vl3f5")
+[sub_resource type="Resource" id="Resource_pc5pw"]
+script = ExtResource("10_ub45t")
 IsHidden = false
 Op = 2
 SourceType = 0
 ActivationConditions = []
 RemovalConditions = []
 
-[sub_resource type="Resource" id="Resource_rh2yn"]
-script = ExtResource("11_57xhx")
+[sub_resource type="Resource" id="Resource_688qc"]
+script = ExtResource("11_65w8a")
 StatType = 3
 Value = 6
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_xk0wm"]
-script = ExtResource("11_57xhx")
+[sub_resource type="Resource" id="Resource_i0koj"]
+script = ExtResource("11_65w8a")
 StatType = 2
 Value = 6
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_hjbak"]
-script = ExtResource("11_57xhx")
+[sub_resource type="Resource" id="Resource_83xuw"]
+script = ExtResource("11_65w8a")
 StatType = 6
 Value = 4
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_pr4qi"]
-script = ExtResource("11_57xhx")
+[sub_resource type="Resource" id="Resource_jd8fe"]
+script = ExtResource("11_65w8a")
 StatType = 7
 Value = 0
 MaxValue = 999
 
-[sub_resource type="Resource" id="Resource_rrod8"]
-script = ExtResource("12_6ns1n")
-StatLookup = [SubResource("Resource_rh2yn"), SubResource("Resource_xk0wm"), SubResource("Resource_hjbak"), SubResource("Resource_pr4qi")]
-Modifiers = [SubResource("Resource_i2cn5"), SubResource("Resource_eo1wh")]
+[sub_resource type="Resource" id="Resource_sg1ob"]
+script = ExtResource("12_ytr4d")
+StatLookup = [SubResource("Resource_688qc"), SubResource("Resource_i0koj"), SubResource("Resource_83xuw"), SubResource("Resource_jd8fe")]
+Modifiers = [SubResource("Resource_83ukl"), SubResource("Resource_pc5pw")]
 
-[sub_resource type="Resource" id="Resource_jv785"]
-script = ExtResource("13_wdv2i")
-ActorName = "Ball"
-StatsData = SubResource("Resource_rrod8")
+[sub_resource type="Resource" id="Resource_qkfa0"]
+script = ExtResource("13_rn370")
+ActorName = "Orc"
+StatsData = SubResource("Resource_sg1ob")
 
 [node name="AreaScene" instance=ExtResource("1_d3aeo")]
 script = ExtResource("2_avwur")
@@ -314,10 +314,9 @@ offset_top = -8.0
 offset_right = 4.0
 offset_bottom = 24.0
 
-[node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_a4h73")]
-position = Vector2(240, 165)
-ActorData = SubResource("Resource_jv785")
-ActorDataId = "Ball"
+[node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_ti87r")]
+position = Vector2(169, 165)
+ActorData = SubResource("Resource_qkfa0")
+ActorDataId = "Orc"
 
-[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("14_nfj3v")]
-ActorType = 2
+[node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("14_whpk2")]

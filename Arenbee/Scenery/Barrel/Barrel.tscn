@@ -1,45 +1,63 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=12 format=3 uid="uid://bwli6ooj2pcts"]
 
 [ext_resource type="PackedScene" path="res://GameCore/Scenery/Breakable/Breakable.tscn" id="1_0ty7v"]
-[ext_resource type="Texture2D" path="res://Arenbee/Scenery/Barrel/barrel_default.png" id="2_ccwov"]
+[ext_resource type="Texture2D" uid="uid://ck1823nneumj2" path="res://Arenbee/Scenery/Barrel/barrel_default.png" id="2_ccwov"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uhhpb"]
 resource_local_to_scene = true
 size = Vector2(14, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2h30e"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(0, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qcxvw"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(16, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c8tjx"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(32, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pxatw"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pk2p7"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(64, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h1iyb"]
-atlas = ExtResource( "2_ccwov" )
+atlas = ExtResource("2_ccwov")
 region = Rect2(80, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_pjfaf"]
 animations = [{
-"frames": [SubResource( "AtlasTexture_2h30e" ), SubResource( "AtlasTexture_qcxvw" )],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2h30e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qcxvw")
+}],
+"loop": false,
 "name": &"default",
 "speed": 5.0
 }, {
-"frames": [SubResource( "AtlasTexture_c8tjx" ), SubResource( "AtlasTexture_pxatw" ), SubResource( "AtlasTexture_pk2p7" ), SubResource( "AtlasTexture_h1iyb" )],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c8tjx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pxatw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pk2p7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1iyb")
+}],
+"loop": false,
 "name": &"destroy",
 "speed": 8.0
 }]
@@ -48,13 +66,13 @@ animations = [{
 resource_local_to_scene = true
 size = Vector2(14, 16)
 
-[node name="Barrel" instance=ExtResource( "1_0ty7v" )]
+[node name="Barrel" instance=ExtResource("1_0ty7v")]
 
 [node name="Collision" parent="." index="0"]
-shape = SubResource( "RectangleShape2D_uhhpb" )
+shape = SubResource("RectangleShape2D_uhhpb")
 
 [node name="AnimatedSprite" parent="." index="1"]
-frames = SubResource( "SpriteFrames_pjfaf" )
+sprite_frames = SubResource("SpriteFrames_pjfaf")
 
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
-shape = SubResource( "RectangleShape2D_82lx4" )
+shape = SubResource("RectangleShape2D_82lx4")

@@ -11,6 +11,7 @@ public abstract class ConditionEventFilter : EventFilter<AStats>
     }
 
     protected Condition Condition { get; set; }
+    public bool ConditionMet { get; set; }
 
     public abstract bool CheckCondition();
 }

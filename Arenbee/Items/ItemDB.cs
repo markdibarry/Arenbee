@@ -4,11 +4,14 @@ using GameCore.ActionEffects;
 using GameCore.Enums;
 using GameCore.Items;
 using GameCore.Statistics;
+using GameCore.Utility;
 
 namespace Arenbee.Items;
 
 public class ItemDB : AItemDB
 {
+    private static readonly IStatusEffectModifierFactory s_effectModFactory = Locator.StatusEffectModifierFactory;
+
     public ItemDB(AItemCategoryDB itemCategoryDB)
         : base(itemCategoryDB)
     {
@@ -274,7 +277,7 @@ public class ItemDB : AItemDB
             Price = 15,
             Modifiers = new Modifier[]
             {
-                new((int)StatType.Poison, ModOp.Add, 1)
+                s_effectModFactory.GetStatusEffectModifier((int)StatusEffectType.Poison)
             }
         });
 
