@@ -6,17 +6,18 @@ namespace Arenbee.Actors;
 [Tool]
 public partial class Spawner : ASpawner
 {
-    public override void Spawn()
+    public override AActorBody? Spawn()
     {
-        if (Engine.IsEditorHint())
-            return;
+        if (ActorData == null && ActorDataId != string.Empty)
+            ActorData = ActorDataDB.GetData<ActorData>(ActorDataId)?.Clone();
         if (ActorData == null || ActorBody == null)
-            return;
+            return null;
         AActor actor = ((ActorData)ActorData).CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;
-        GetParent().CallDeferred(Node.MethodName.AddChild, actorBody);
+        SpawnPending = false;
+        return actorBody;
     }
 }

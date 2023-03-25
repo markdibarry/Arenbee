@@ -33,7 +33,7 @@ public class ItemDB : AItemDB
 
     private static void BuildWeapons(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("HockeyStick", itemCategory)
+        items.Add(new Item(ItemIds.HockeyStick, itemCategory)
         {
             DisplayName = "Hockey Stick",
             Description = "Perfect for slap-shots.",
@@ -48,7 +48,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("MetalHockeyStick", itemCategory)
+        items.Add(new Item(ItemIds.MetalHockeyStick, itemCategory)
         {
             DisplayName = "Metal Hockey Stick",
             Description = "It's not sharp. Don't worry!",
@@ -63,7 +63,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("Wand", itemCategory)
+        items.Add(new Item(ItemIds.Wand, itemCategory)
         {
             DisplayName = "Magic Wand",
             Description = "Boom! Blast!",
@@ -81,7 +81,7 @@ public class ItemDB : AItemDB
 
     private static void BuildHeadGear(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("CheeseHat", itemCategory)
+        items.Add(new Item(ItemIds.CheeseHat, itemCategory)
         {
             DisplayName = "Cheese Hat",
             Description = "A Wisconsin favorite!",
@@ -95,7 +95,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("FaceMask", itemCategory)
+        items.Add(new Item(ItemIds.FaceMask, itemCategory)
         {
             DisplayName = "Face Mask",
             Description = "Cheap but effective.",
@@ -109,7 +109,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("RamenBoushi", itemCategory)
+        items.Add(new Item(ItemIds.RamenBoushi, itemCategory)
         {
             DisplayName = "Ramen Boushi",
             Description = "Vital for any fisherman!",
@@ -124,7 +124,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("SunGlasses", itemCategory)
+        items.Add(new Item(ItemIds.SunGlasses, itemCategory)
         {
             DisplayName = "Sun Glasses",
             Description = "To be worn exclusively at night.",
@@ -141,7 +141,7 @@ public class ItemDB : AItemDB
 
     private static void BuildShirt(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("ClemsonHoodie", itemCategory)
+        items.Add(new Item(ItemIds.ClemsonHoodie, itemCategory)
         {
             DisplayName = "Clemson Hoodie",
             Description = "Football is a sport!",
@@ -156,7 +156,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("MotleyCrueTee", itemCategory)
+        items.Add(new Item(ItemIds.MotleyCrueTee, itemCategory)
         {
             DisplayName = "Motley Crue Tshirt",
             Description = "Shout at the devil!",
@@ -173,7 +173,7 @@ public class ItemDB : AItemDB
 
     private static void BuildPants(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("JNCOJeans", itemCategory)
+        items.Add(new Item(ItemIds.JNCOJeans, itemCategory)
         {
             DisplayName = "JNCO Jeans",
             Description = "Watch out for puddles.",
@@ -188,7 +188,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("ZubazPants", itemCategory)
+        items.Add(new Item(ItemIds.ZubazPants, itemCategory)
         {
             DisplayName = "Zubaz Pants",
             Description = "They're like the 80's but in the 90's.",
@@ -205,7 +205,7 @@ public class ItemDB : AItemDB
 
     private static void BuildFootwear(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("Vibrams", itemCategory)
+        items.Add(new Item(ItemIds.Vibrams, itemCategory)
         {
             DisplayName = "Vibrams",
             Description = "They feel as cool as they look!",
@@ -219,7 +219,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("Uggs", itemCategory)
+        items.Add(new Item(ItemIds.Uggs, itemCategory)
         {
             DisplayName = "Uggs",
             Description = "Lets get white-girl wasted!",
@@ -235,7 +235,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("SnakeskinShoes", itemCategory)
+        items.Add(new Item(ItemIds.SnakeskinShoes, itemCategory)
         {
             DisplayName = "Snakeskin Shoes",
             Description = "Goro Majima approved!",
@@ -253,7 +253,7 @@ public class ItemDB : AItemDB
 
     private static void BuildAccessories(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("FriendshipBracelet", itemCategory)
+        items.Add(new Item(ItemIds.FriendshipBracelet, itemCategory)
         {
             DisplayName = "Friendship Bracelet",
             Description = "Because I love you 5-ever.",
@@ -267,7 +267,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("SnakeRing", itemCategory)
+        items.Add(new Item(ItemIds.SnakeRing, itemCategory)
         {
             DisplayName = "Snake Ring",
             Description = "Why would you wear this?",
@@ -281,7 +281,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("MoodRing", itemCategory)
+        items.Add(new Item(ItemIds.MoodRing, itemCategory)
         {
             DisplayName = "Mood Ring",
             Description = "It's just black.",
@@ -296,7 +296,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("FingerlessGloves", itemCategory)
+        items.Add(new Item(ItemIds.FingerlessGloves, itemCategory)
         {
             DisplayName = "Fingerless Gloves",
             Description = "That bohemian look.",
@@ -310,7 +310,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("OvenMitts", itemCategory)
+        items.Add(new Item(ItemIds.OvenMitts, itemCategory)
         {
             DisplayName = "Oven Mitts",
             Description = "Keeps your hands burn-free for up to 5 seconds!",
@@ -328,7 +328,7 @@ public class ItemDB : AItemDB
 
     private static void BuildRestorative(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("Potion", itemCategory)
+        items.Add(new Item(ItemIds.Potion, itemCategory)
         {
             DisplayName = "Potion",
             Description = "Restores a bit of HP.",
@@ -344,7 +344,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("FlavorAid", itemCategory)
+        items.Add(new Item(ItemIds.FlavorAid, itemCategory)
         {
             DisplayName = "Flavor Aid",
             Description = "Made to share!",
@@ -360,7 +360,7 @@ public class ItemDB : AItemDB
             }
         });
 
-        items.Add(new Item("GeneSupreme", itemCategory)
+        items.Add(new Item(ItemIds.GeneSupreme, itemCategory)
         {
             DisplayName = "Gene Supreme",
             Description = "Restores a good bit of HP, and you get your name on the wall if you finish it!",
@@ -370,7 +370,7 @@ public class ItemDB : AItemDB
             Price = 30
         });
 
-        items.Add(new Item("SuperDonut", itemCategory)
+        items.Add(new Item(ItemIds.SuperDonut, itemCategory)
         {
             DisplayName = "Super Donut",
             Description = "Restores a bit of MP. Even more when microwaved.",
@@ -380,7 +380,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("TurboEther", itemCategory)
+        items.Add(new Item(ItemIds.TurboEther, itemCategory)
         {
             DisplayName = "Turbo Ether",
             Description = "Restores a good bit of MP.",
@@ -390,7 +390,7 @@ public class ItemDB : AItemDB
             Price = 30
         });
 
-        items.Add(new Item("Elixer", itemCategory)
+        items.Add(new Item(ItemIds.Elixer, itemCategory)
         {
             DisplayName = "Elixer",
             Description = "Restores 30% of your HP & MP.",
@@ -400,7 +400,7 @@ public class ItemDB : AItemDB
             Price = 90
         });
 
-        items.Add(new Item("Antidote", itemCategory)
+        items.Add(new Item(ItemIds.Antidote, itemCategory)
         {
             DisplayName = "Antidote",
             Description = "Removes Poison status.",
@@ -410,7 +410,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("Aloe", itemCategory)
+        items.Add(new Item(ItemIds.Aloe, itemCategory)
         {
             DisplayName = "Aloe",
             Description = "Removes Burn status.",
@@ -420,7 +420,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("LifeAlert", itemCategory)
+        items.Add(new Item(ItemIds.LifeAlert, itemCategory)
         {
             DisplayName = "Life Alert",
             Description = "Auto-Restores KO once.",
@@ -430,7 +430,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("EscapeRope", itemCategory)
+        items.Add(new Item(ItemIds.EscapeRope, itemCategory)
         {
             DisplayName = "Escape Rope",
             Description = "Returns you to the entrance of a dungeon.",
@@ -440,7 +440,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("EyeDrops", itemCategory)
+        items.Add(new Item(ItemIds.EyeDrops, itemCategory)
         {
             DisplayName = "Eye Drops",
             Description = "Removes the Blind status.",
@@ -450,7 +450,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("ThroatSpray", itemCategory)
+        items.Add(new Item(ItemIds.ThroatSpray, itemCategory)
         {
             DisplayName = "Throat Spray",
             Description = "Removes the Silent status.",
@@ -460,7 +460,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("SubwaySandwich", itemCategory)
+        items.Add(new Item(ItemIds.SubwaySandwich, itemCategory)
         {
             DisplayName = "Subway Sandwich",
             Description = "Baked fresh, yet somehow tastes old.",
@@ -470,7 +470,7 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item("IPA", itemCategory)
+        items.Add(new Item(ItemIds.IPA, itemCategory)
         {
             DisplayName = "IPA",
             Description = "People say it tastes good. It doesn't.",
@@ -483,10 +483,10 @@ public class ItemDB : AItemDB
 
     private static void BuildKey(List<AItem> items, ItemCategory itemCategory)
     {
-        items.Add(new Item("BunnyNugget", itemCategory)
+        items.Add(new Item(ItemIds.BunnyNugget, itemCategory)
         {
             DisplayName = "Bunny Nugget",
-            Description = "Unseals the dreaded Di-a-blur.",
+            Description = "A very key item.",
             MaxStack = 1,
             IsSellable = false,
             IsDroppable = false,

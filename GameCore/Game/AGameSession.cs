@@ -12,8 +12,7 @@ public abstract partial class AGameSession : Node2D
     protected AHUD HUD { get; set; } = null!;
     protected GUIController GUIController { get; set; } = null!;
     public AAreaScene? CurrentAreaScene { get; private set; }
-
-    public CanvasLayer Transition { get; private set; } = null!;
+    public TransitionLayer Transition { get; private set; } = null!;
 
     public override void _Ready()
     {
@@ -76,6 +75,6 @@ public abstract partial class AGameSession : Node2D
     {
         HUD = GetNode<AHUD>("HUD");
         AreaSceneContainer = GetNode<Node2D>("AreaSceneContainer");
-        Transition = GetNode<CanvasLayer>("Transition");
+        Transition = GetNode<TransitionLayer>("Transition");
     }
 }

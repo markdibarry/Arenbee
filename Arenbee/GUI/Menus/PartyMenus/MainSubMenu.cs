@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.PartyMenus.Equipment;
 using GameCore.Extensions;
@@ -81,19 +80,9 @@ public partial class MainSubMenu : OptionSubMenu
     private void QuitToTitle()
     {
         CurrentState = State.Busy;
-        var tController = Locator.TransitionController;
-        var request = new TransitionRequest(
+        _gameRoot.ResetToTitleScreen(
             BasicLoadingScreen.GetScenePath(),
-            TransitionType.Game,
             WipeTransition.GetScenePath(),
-            FadeTransition.GetScenePath(),
-            new string[] { _gameRoot.TitleMenuScenePath },
-            (loader) =>
-            {
-                var titleMenuScene = loader.GetObject<PackedScene>(_gameRoot.TitleMenuScenePath);
-                Locator.Root?.ResetToTitleScreenAsync(titleMenuScene);
-                return Task.CompletedTask;
-            });
-        tController.RequestTransition(request);
+            FadeTransition.GetScenePath());
     }
 }

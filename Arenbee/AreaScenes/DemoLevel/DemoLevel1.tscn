@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://ce7srvti8tlr7"]
+[gd_scene load_steps=22 format=3 uid="uid://ce7srvti8tlr7"]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -16,11 +16,7 @@
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
 [ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="15_2jr03"]
-[ext_resource type="Script" path="res://GameCore/Statistics/Modifier.cs" id="16_nfvki"]
-[ext_resource type="Script" path="res://GameCore/Statistics/Stat.cs" id="16_que06"]
-[ext_resource type="Script" path="res://Arenbee/Statistics/StatsData.cs" id="17_7g55l"]
-[ext_resource type="Script" path="res://Arenbee/Actors/ActorData.cs" id="18_xc78f"]
-[ext_resource type="PackedScene" uid="uid://bhh8r7w8jepqu" path="res://Arenbee/Actors/Enemies/Ball/Ball.tscn" id="20_h7exy"]
+[ext_resource type="PackedScene" uid="uid://cd20kml21ec8w" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="21_3e0g1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)
@@ -33,58 +29,6 @@ size = Vector2(560, 200)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpp7m"]
 size = Vector2(20, 33)
-
-[sub_resource type="Resource" id="Resource_0caf6"]
-script = ExtResource("16_nfvki")
-StatType = 17
-Value = 3
-IsHidden = false
-Op = 2
-SourceType = 0
-Conditions = []
-
-[sub_resource type="Resource" id="Resource_0617i"]
-script = ExtResource("16_nfvki")
-StatType = 32
-Value = 100
-IsHidden = false
-Op = 2
-SourceType = 0
-Conditions = []
-
-[sub_resource type="Resource" id="Resource_73mng"]
-script = ExtResource("16_que06")
-StatType = 3
-Value = 6
-MaxValue = 999
-
-[sub_resource type="Resource" id="Resource_l4d71"]
-script = ExtResource("16_que06")
-StatType = 2
-Value = 6
-MaxValue = 999
-
-[sub_resource type="Resource" id="Resource_od5h4"]
-script = ExtResource("16_que06")
-StatType = 6
-Value = 4
-MaxValue = 999
-
-[sub_resource type="Resource" id="Resource_88bgk"]
-script = ExtResource("16_que06")
-StatType = 7
-Value = 0
-MaxValue = 999
-
-[sub_resource type="Resource" id="Resource_k6qik"]
-script = ExtResource("17_7g55l")
-StatLookup = [SubResource("Resource_73mng"), SubResource("Resource_l4d71"), SubResource("Resource_od5h4"), SubResource("Resource_88bgk")]
-Modifiers = [SubResource("Resource_0caf6"), SubResource("Resource_0617i")]
-
-[sub_resource type="Resource" id="Resource_jsjpe"]
-script = ExtResource("18_xc78f")
-ActorName = "Ball"
-StatsData = SubResource("Resource_k6qik")
 
 [node name="DemoLevel1" instance=ExtResource("1_ua3fi")]
 script = ExtResource("2_kq8ys")
@@ -274,7 +218,11 @@ Hint = true
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("15_2jr03")]
 position = Vector2(357, 179)
-ActorData = SubResource("Resource_jsjpe")
-ActorDataId = "Ball"
+Respawn = false
+ActorDataId = "Orc"
+CreateUnique = false
+ActorData = null
 
-[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("20_h7exy")]
+[node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("21_3e0g1")]
+collision_layer = 256
+collision_mask = 21

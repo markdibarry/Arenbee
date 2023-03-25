@@ -8,7 +8,7 @@ public partial class HockeyStick : HoldItem
 {
     public override void Init(ActorBody actor)
     {
-        Setup("HockeyStick", GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
+        Setup(ItemIds.HockeyStick, GameCore.WeaponTypes.LongStick, actor, new ActionStateMachine(actor, this));
     }
 
     public HitBox WeakAttack1HitBox { get; set; } = null!;

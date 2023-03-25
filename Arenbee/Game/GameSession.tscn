@@ -1,18 +1,18 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://0jwexuukefa0"]
 
 [ext_resource type="Script" path="res://Arenbee/Game/GameSession.cs" id="1_wqoak"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/HUD/HUD.tscn" id="2_ii0go"]
+[ext_resource type="PackedScene" uid="uid://dstnpk2jrgkny" path="res://Arenbee/GUI/HUD/HUD.tscn" id="2_ii0go"]
+[ext_resource type="PackedScene" uid="uid://f1ad6egrl20n" path="res://GameCore/GUI/Transitions/TransitionLayer.tscn" id="2_inqdh"]
 
 [node name="GameSession" type="Node2D"]
 position = Vector2(-1, 0)
-script = ExtResource( "1_wqoak" )
+script = ExtResource("1_wqoak")
 
 [node name="AreaSceneContainer" type="Node2D" parent="."]
 
-[node name="Transition" type="CanvasLayer" parent="."]
-layer = 25
+[node name="Transition" parent="." instance=ExtResource("2_inqdh")]
 
-[node name="HUD" parent="." instance=ExtResource( "2_ii0go" )]
+[node name="HUD" parent="." instance=ExtResource("2_ii0go")]
 
 [node name="SkillController" type="CanvasLayer" parent="."]
 layer = 45

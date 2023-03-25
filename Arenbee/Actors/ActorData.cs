@@ -15,9 +15,23 @@ namespace Arenbee.Actors;
 public partial class ActorData : AActorData
 {
     private static readonly AItemDB s_itemDB = Locator.ItemDB;
-    private static readonly AActorDataDB s_actorDataDB = Locator.ActorDataDB;
 
     public ActorData() { }
+
+    [JsonConstructor]
+    public ActorData(
+        string actorId,
+        string actorName,
+        StatsData statsData,
+        IEnumerable<EquipmentSlotData> equipmentSlotData,
+        IEnumerable<ItemStackData> itemStackData)
+    {
+        ActorId = actorId;
+        ActorName = actorName;
+        StatsData = statsData;
+        EquipmentSlotData = equipmentSlotData;
+        ItemStackData = itemStackData;
+    }
 
     public ActorData(AActor actor)
     {
@@ -38,21 +52,6 @@ public partial class ActorData : AActorData
         EquipmentSlotData = equipmentSlotData;
     }
 
-    [JsonConstructor]
-    public ActorData(
-        string actorId,
-        string actorName,
-        StatsData statsData,
-        IEnumerable<EquipmentSlotData> equipmentSlotData,
-        IEnumerable<ItemStackData> itemStackData)
-    {
-        ActorId = actorId;
-        ActorName = actorName;
-        StatsData = statsData;
-        EquipmentSlotData = equipmentSlotData;
-        ItemStackData = itemStackData;
-    }
-
     public ActorData(ActorData actorData)
         : this(
               actorData.ActorId,
@@ -68,34 +67,18 @@ public partial class ActorData : AActorData
     public IEnumerable<EquipmentSlotData> EquipmentSlotData { get; } = Array.Empty<EquipmentSlotData>();
     public IEnumerable<ItemStackData> ItemStackData { get; } = Array.Empty<ItemStackData>();
 
-    public override AActorData Clone()
-    {
-        return new ActorData(this);
-    }
-
-    public static AActor? CreateActorAndBody(string actorId, PackedScene actorBodyScene)
-    {
-        if (s_actorDataDB.GetActorData(actorId) is not ActorData actorData)
-        {
-            GD.PrintErr($"{actorId} ActorData not found.");
-            return null;
-        }
-        AActor actor = actorData.CreateActor();
-        AActorBody actorBody = actorBodyScene.Instantiate<ActorBody>();
-        actor.SetActorBody(actorBody);
-        actorBody.SetActor(actor);
-        return actor;
-    }
+    public override AActorData Clone() => new ActorData(this);
 
     public AActor CreateActor(AInventory? externalInventory = null)
     {
-        return CreateActor(s_itemDB, ((EquipmentSlotCategoryDB)Locator.EquipmentSlotCategoryDB).BasicEquipment, externalInventory);
+        return CreateActor(EquipmentSlotPresetIds.BasicEquipment, externalInventory);
     }
 
-    public override AActor CreateActor(AItemDB itemDB, IEnumerable<EquipmentSlotCategory> equipmentSlotCategories, AInventory? externalInventory)
+    public override AActor CreateActor(string equipmentSlotPresetId, AInventory? externalInventory)
     {
-        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(itemDB)).OfType<ItemStack>());
-        Equipment equipment = new(inventory, equipmentSlotCategories);
+        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
+        IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = Locator.EquipmentSlotCategoryDB.GetCategoryPreset(equipmentSlotPresetId);
+        Equipment equipment = new(inventory, equipmentPreset);
         Actor actor = new(
             actorId: ActorId,
             actorName: ActorName,

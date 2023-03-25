@@ -25,7 +25,7 @@ public abstract partial class SceneChangerBase : Area2D
 
     public void OnBodyEntered(Node body)
     {
-        if (IsActive || PackedScenePath == null)
+        if (IsActive || PackedScenePath == string.Empty)
             return;
         if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
             return;

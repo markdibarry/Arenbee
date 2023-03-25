@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GameCore.Audio;
 using GameCore.Enums;
 using GameCore.Events;
 using GameCore.Extensions;
@@ -32,6 +33,7 @@ public abstract partial class AActorBody : CharacterBody2D
         WalkSpeed = 50;
     }
 
+    protected static AAudioController Audio { get; } = Locator.Audio;
     protected Node2D Body { get; set; } = null!;
     [Export(PropertyHint.Enum)]
     public ActorType ActorType { get; set; }
@@ -54,7 +56,7 @@ public abstract partial class AActorBody : CharacterBody2D
         GlobalPosition = _floatPosition;
         _move = Vector2.Zero;
         Actor?.Stats.Process(delta);
-        foreach (var context in ContextAreas)
+        foreach (IContextArea context in ContextAreas)
             context.TriggerContext(this);
         StateController.UpdateStates(delta);
         HandleMove(delta);
@@ -76,12 +78,12 @@ public abstract partial class AActorBody : CharacterBody2D
 
     public void PlaySoundFX(string soundPath)
     {
-        Locator.Audio.PlaySoundFX(this, soundPath);
+        Audio.PlaySoundFX(this, soundPath);
     }
 
     public void PlaySoundFX(AudioStream sound)
     {
-        Locator.Audio.PlaySoundFX(this, sound);
+        Audio.PlaySoundFX(this, sound);
     }
 
     public abstract void SetActor(AActor? actor);

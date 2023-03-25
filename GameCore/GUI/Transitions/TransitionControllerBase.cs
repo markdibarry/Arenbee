@@ -2,16 +2,12 @@
 using System.Threading.Tasks;
 using GameCore.Extensions;
 using GameCore.Utility;
-using Godot;
 
 namespace GameCore.GUI;
 
 public abstract class TransitionControllerBase
 {
-    private LoadingScreen? _loadingScreen;
     private TransitionRequest? _pendingTransition;
-    private Transition? _transitionA;
-    private Transition? _transitionB;
 
     public virtual void Update()
     {
@@ -24,100 +20,99 @@ public abstract class TransitionControllerBase
         _pendingTransition = request;
     }
 
-    public async Task TransitionAsync(TransitionRequest request)
+    private async Task TransitionAsync(TransitionRequest request)
     {
         _pendingTransition = null;
         Loader loader = new(request.Paths);
-        await TransitionInAsync(request);
-        await LoadAsync(loader);
+        TransitionLayer transitionLayer = GetTransitionLayer(request.TransitionType);
+        LoadingScreen? loadingScreen = null;
+        Transition? transitionA = null;
+        Transition? transitionB = null;
+        if (request.LoadingScreenPath != string.Empty)
+            loadingScreen = GDEx.Instantiate<LoadingScreen>(request.LoadingScreenPath);
+        if (request.TransitionAPath != string.Empty)
+            transitionA = GDEx.Instantiate<Transition>(request.TransitionAPath);
+        if (request.TransitionBPath != string.Empty)
+            transitionB = GDEx.Instantiate<Transition>(request.TransitionBPath);
+
+        await TransitionInAsync(transitionLayer, loadingScreen, transitionA);
+        await LoadAsync(loadingScreen, loader);
         if (request.Callback != null)
             await request.Callback.Invoke(loader);
-        await TransitionOutAsync(request);
+        await TransitionOutAsync(transitionLayer, loadingScreen, transitionA, transitionB);
+
+        loadingScreen?.QueueFree();
+        transitionA?.QueueFree();
+        transitionB?.QueueFree();
     }
 
-    private async Task LoadAsync(Loader loader)
+    private async Task LoadAsync(LoadingScreen? loadingScreen, Loader loader)
     {
         loader.ProgressUpdate += OnProgressUpdate;
         await loader.LoadAsync();
         loader.ProgressUpdate -= OnProgressUpdate;
+
+        void OnProgressUpdate(int progress) => loadingScreen?.Update(progress);
     }
 
-    private void OnProgressUpdate(int progress)
+    private static async Task TransitionInAsync(TransitionLayer transitionLayer, LoadingScreen? loadingScreen, Transition? transitionA)
     {
-        _loadingScreen?.Update(progress);
+        if (loadingScreen == null)
+        {
+            if (transitionA == null)
+                return;
+            transitionLayer.AddChild(transitionA);
+            await transitionA.TransistionFrom();
+            return;
+        }
+
+        if (transitionA == null)
+        {
+            transitionLayer.LoadingScreenContainer.AddChild(loadingScreen);
+            await loadingScreen.TransistionFrom();
+            return;
+        }
+
+        transitionLayer.AddChild(transitionA);
+        await transitionA.TransistionFrom();
+        transitionLayer.LoadingScreenContainer.AddChild(loadingScreen);
+        await transitionA.TransitionTo();
+        transitionLayer.RemoveChild(transitionA);
     }
 
-    private async Task TransitionInAsync(TransitionRequest request)
+    private static async Task TransitionOutAsync(TransitionLayer transitionLayer, LoadingScreen? loadingScreen, Transition? transitionA, Transition? transitionB)
     {
-        Node target = GetTarget(request.TransitionType);
-        // Use Loader Transition
-        if (request.TransitionAPath == string.Empty)
+        if (loadingScreen == null)
         {
-            _loadingScreen = GDEx.Instantiate<LoadingScreen>(request.LoadingScreenPath);
-            target.AddChild(_loadingScreen);
-            await _loadingScreen.TransistionFrom();
+            if (transitionA == null)
+                return;
+            await transitionA.TransitionTo();
+            transitionLayer.RemoveChild(transitionA);
+            return;
         }
-        // No loader just Transition
-        else if (request.TransitionBPath == string.Empty)
+
+        if (transitionA == null)
         {
-            _transitionA = GDEx.Instantiate<Transition>(request.TransitionAPath);
-            target.AddChild(_transitionA);
-            await _transitionA.TransistionFrom();
+            await loadingScreen.TransitionTo();
+            transitionLayer.LoadingScreenContainer.RemoveChild(loadingScreen);
+            return;
         }
-        // Both loader and transition
-        else
-        {
-            _transitionA = GDEx.Instantiate<Transition>(request.TransitionAPath);
-            target.AddChild(_transitionA);
-            await _transitionA.TransistionFrom();
-            _loadingScreen = GDEx.Instantiate<LoadingScreen>(request.LoadingScreenPath);
-            target.AddChild(_loadingScreen);
-            await _transitionA.TransitionTo();
-            target.RemoveChild(_transitionA);
-            _transitionA.QueueFree();
-        }
+
+        Transition transitionOut = transitionB ?? transitionA;
+
+        transitionLayer.AddChild(transitionOut);
+        await transitionOut.TransistionFrom();
+        transitionLayer.LoadingScreenContainer.RemoveChild(loadingScreen);
+        await transitionOut.TransitionTo();
+        transitionLayer.RemoveChild(transitionOut);
     }
 
-    private async Task TransitionOutAsync(TransitionRequest request)
-    {
-        Node target = GetTarget(request.TransitionType);
-        // Use Loader Transition
-        if (request.TransitionAPath == null)
-        {
-            await _loadingScreen.TransitionTo();
-            target.RemoveChild(_loadingScreen);
-            _loadingScreen.QueueFree();
-        }
-        // No loader just Transition
-        else if (request.TransitionBPath == null)
-        {
-            await _transitionA.TransitionTo();
-            target.RemoveChild(_transitionA);
-            _transitionA.QueueFree();
-        }
-        // Both loader and transition
-        else
-        {
-            _transitionB = GDEx.Instantiate<Transition>(request.TransitionBPath);
-            target.AddChild(_transitionB);
-            await _transitionB.TransistionFrom();
-            target.RemoveChild(_loadingScreen);
-            _loadingScreen.QueueFree();
-            await _transitionB.TransitionTo();
-            target.RemoveChild(_transitionB);
-            _transitionB.QueueFree();
-        }
-        _transitionA = null;
-        _transitionB = null;
-        _loadingScreen = null;
-    }
-
-    private static Node GetTarget(TransitionType transitionType)
+    private static TransitionLayer GetTransitionLayer(TransitionType transitionType)
     {
         return transitionType switch
         {
             TransitionType.Game => Locator.Root.Transition,
-            TransitionType.Session => Locator.Session?.Transition,
+            TransitionType.Session => Locator.Session?.Transition!,
             _ => throw new NotImplementedException()
         };
     }

@@ -5,6 +5,13 @@ namespace GameCore.GUI;
 
 public class TransitionRequest
 {
+    /// <summary>
+    /// Request with Loader transition
+    /// </summary>
+    /// <param name="loadingScreenPath"></param>
+    /// <param name="transitionType"></param>
+    /// <param name="paths"></param>
+    /// <param name="callback"></param>
     public TransitionRequest(
         string loadingScreenPath,
         TransitionType transitionType,
@@ -14,6 +21,13 @@ public class TransitionRequest
     {
     }
 
+    /// <summary>
+    /// Request with no loader, and single transition
+    /// </summary>
+    /// <param name="transitionType"></param>
+    /// <param name="transitionA"></param>
+    /// <param name="paths"></param>
+    /// <param name="callback"></param>
     public TransitionRequest(
         TransitionType transitionType,
         string transitionA,
@@ -23,6 +37,15 @@ public class TransitionRequest
     {
     }
 
+    /// <summary>
+    /// Request with loader, and two separate transitions
+    /// </summary>
+    /// <param name="loadingScreenPath"></param>
+    /// <param name="transitionType"></param>
+    /// <param name="transitionA"></param>
+    /// <param name="transitionB"></param>
+    /// <param name="paths"></param>
+    /// <param name="callback"></param>
     public TransitionRequest(
         string loadingScreenPath,
         TransitionType transitionType,

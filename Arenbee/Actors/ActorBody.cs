@@ -1,6 +1,5 @@
 ﻿using Arenbee.GUI;
 using Arenbee.Items;
-using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Items;
 using GameCore.Statistics;
@@ -34,12 +33,6 @@ public abstract partial class ActorBody : AActorBody
         set => BodyShader.SetShaderParameter("speed", value);
     }
 
-    public override void _Ready()
-    {
-        base._Ready();
-        HoldItemController.Init(this);
-    }
-
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
@@ -71,6 +64,7 @@ public abstract partial class ActorBody : AActorBody
 
     protected override void Init()
     {
+        HoldItemController.Init(this);
         base.Init();
         IFrameController.Init(BodyShader);
     }

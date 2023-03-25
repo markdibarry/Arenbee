@@ -37,6 +37,7 @@ public class Actor : AActor
             if (weapon != null)
                 oldActorBody.SetHoldItem(weapon, null);
             DamageRecieved -= oldActorBody.OnDamageReceived;
+            //Defeated -= newActorBody.OnDefeated;
         }
 
         ActorBody = newActorBody;
@@ -46,6 +47,7 @@ public class Actor : AActor
             if (weapon != null)
                 newActorBody.SetHoldItem(null, weapon);
             DamageRecieved += newActorBody.OnDamageReceived;
+            //Defeated += newActorBody.OnDefeated;
         }
     }
 

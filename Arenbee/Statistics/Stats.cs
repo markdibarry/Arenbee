@@ -141,10 +141,12 @@ public class Stats : AStats
 
     private int CalculateElementResist(int statType, bool ignoreHidden)
     {
+        if (statType == (int)StatType.None)
+            return ElementResist.None;
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (var mod in GetModifiers(statType).OrderBy(x => x.Op))
+        foreach (Modifier? mod in GetModifiers(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;

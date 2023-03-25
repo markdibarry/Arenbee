@@ -1,4 +1,4 @@
-using Arenbee.GUI;
+﻿using Arenbee.GUI;
 using Arenbee.GUI.Menus;
 using Arenbee.Input;
 using GameCore;
@@ -22,5 +22,10 @@ public partial class GameRoot : AGameRoot
         Locator.ProvideGameRoot(this);
         Locator.ProvideAudioController(AudioController);
         Locator.ProvideTransitionController(TransitionController);
+    }
+
+    protected override void StartRoot()
+    {
+        ResetToTitleScreen(string.Empty, FadeTransition.GetScenePath(), string.Empty);
     }
 }

@@ -23,13 +23,14 @@ public abstract partial class AGameRoot : Node
     public GUIController GUIController { get; protected set; } = null!;
     public GUIInputHandler MenuInput { get; protected set; } = null!;
     public ActorInputHandler PlayerOneInput { get; protected set; } = null!;
-    public CanvasLayer Transition { get; protected set; } = null!;
+    public TransitionLayer Transition { get; protected set; } = null!;
     public TransitionControllerBase TransitionController { get; protected set; } = null!;
 
     public override void _Ready()
     {
         SetNodeReferences();
-        _ = Init();
+        ProvideLocatorReferences();
+        Init();
     }
 
     protected virtual void SetNodeReferences()
@@ -38,23 +39,26 @@ public abstract partial class AGameRoot : Node
         GUIController = GameDisplay.GetNode<GUIController>("GUIController");
         AudioController = GameDisplay.GetNode<AAudioController>("AudioController");
         GameSessionContainer = GameDisplay.GetNode<Node2D>("GameSessionContainer");
-        Transition = GameDisplay.GetNode<CanvasLayer>("Transition");
+        Transition = GameDisplay.GetNode<TransitionLayer>("Transition");
         GameCamera = GameDisplay.GetNode<GameCamera>("GameCamera");
     }
 
-    protected virtual async Task Init()
+    protected virtual void Init()
     {
-        ProvideLocatorReferences();
         GameState.Init(GUIController);
         GameState.GameStateChanged += OnGameStateChanged;
-        PackedScene titleMenuScene = GD.Load<PackedScene>(TitleMenuScenePath);
-        await ResetToTitleScreenAsync(titleMenuScene);
+        StartRoot();
     }
 
     protected virtual void ProvideLocatorReferences()
     {
         Locator.ProvideGameRoot(this);
         Locator.ProvideAudioController(AudioController);
+    }
+
+    protected virtual void StartRoot()
+    {
+        ResetToTitleScreen(string.Empty, string.Empty, string.Empty);
     }
 
     public override void _Process(double delta)
@@ -82,11 +86,22 @@ public abstract partial class AGameRoot : Node
         await GUIController.CloseAllLayersAsync(true);
     }
 
-    public virtual async Task ResetToTitleScreenAsync(PackedScene titleMenuScene)
+    public virtual void ResetToTitleScreen(string loadingScreenPath, string transitionA, string transitionB)
     {
-        AudioController.Reset();
-        await RemoveSession();
-        await GUIController.OpenMenuAsync(titleMenuScene, true);
+        TransitionRequest request = new(
+            loadingScreenPath: loadingScreenPath,
+            transitionType: TransitionType.Game,
+            transitionA: transitionA,
+            transitionB: transitionB,
+            paths: new string[] { TitleMenuScenePath },
+            callback: async (loader) =>
+            {
+                PackedScene? titleMenuScene = loader.GetObject<PackedScene>(TitleMenuScenePath);
+                AudioController.Reset();
+                await RemoveSession();
+                await GUIController.OpenMenuAsync(titleMenuScene, true);
+            });
+        TransitionController.RequestTransition(request);
     }
 
     protected void HandleInput(double delta)

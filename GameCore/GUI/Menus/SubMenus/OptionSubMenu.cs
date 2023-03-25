@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GameCore.Enums;
 using GameCore.Extensions;
-using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -133,7 +132,7 @@ public partial class OptionSubMenu : SubMenu
         if (CurrentContainer != null)
         {
             if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex)
-                Locator.Audio.PlaySoundFX(FocusedSoundPath);
+                Audio.PlaySoundFX(FocusedSoundPath);
             if (CurrentContainer.FocusedItem != null)
                 MoveCursorToItem(CurrentContainer.FocusedItem);
         }
@@ -144,11 +143,11 @@ public partial class OptionSubMenu : SubMenu
     {
         if (CurrentContainer?.FocusedItem == null || CurrentContainer.FocusedItem.Disabled)
         {
-            Locator.Audio.PlaySoundFX(FocusedSoundPath);
+            Audio.PlaySoundFX(FocusedSoundPath);
             return;
         }
 
-        Locator.Audio.PlaySoundFX(SelectedSoundPath);
+        Audio.PlaySoundFX(SelectedSoundPath);
         OnItemSelected();
     }
 }

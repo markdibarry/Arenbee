@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GameCore.Audio;
 using GameCore.Extensions;
 using GameCore.Input;
 using GameCore.Utility;
@@ -10,6 +11,7 @@ namespace GameCore.GUI;
 [Tool]
 public partial class SubMenu : Control
 {
+    protected static AAudioController Audio { get; } = Locator.Audio;
     private bool _dim;
 
     [Export]
@@ -25,7 +27,7 @@ public partial class SubMenu : Control
             }
         }
     }
-    public State CurrentState { get; set; }
+    public State CurrentState { get; protected set; }
     protected Control Background { get; private set; } = null!;
     protected Control Foreground { get; private set; } = null!;
     [Export] protected bool PreventCancel { get; set; }
@@ -109,7 +111,7 @@ public partial class SubMenu : Control
     public async Task TransitionCloseAsync(bool preventAnimation = false)
     {
         CurrentState = State.Closing;
-        Locator.Audio.PlaySoundFX(CloseSoundPath);
+        Audio.PlaySoundFX(CloseSoundPath);
         if (!preventAnimation)
             await AnimateCloseAsync();
         CurrentState = State.Closed;
@@ -126,7 +128,7 @@ public partial class SubMenu : Control
 
     protected virtual async Task CloseSubMenuAsync(Type? cascadeTo = null, bool preventAnimation = false, object? data = null)
     {
-        Locator.Audio.PlaySoundFX(CloseSoundPath);
+        Audio.PlaySoundFX(CloseSoundPath);
         await Menu.CloseSubMenuAsync(cascadeTo, preventAnimation, data);
     }
 

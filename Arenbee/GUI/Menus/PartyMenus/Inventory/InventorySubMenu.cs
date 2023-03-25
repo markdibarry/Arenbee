@@ -35,7 +35,7 @@ public partial class InventorySubMenu : OptionSubMenu
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
         {
             UpdateItemDescription(null);
-            Locator.Audio.PlaySoundFX("menu_close1.wav");
+            Audio.PlaySoundFX("menu_close1.wav");
             FocusContainer(_typeList);
             return;
         }

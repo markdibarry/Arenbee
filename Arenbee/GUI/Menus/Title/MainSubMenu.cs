@@ -113,7 +113,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     private GameSave GetNewGame()
     {
-        ActorData actorData = (ActorData)Locator.ActorDataDB.GetActorData("Twosen")!;
+        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>("Twosen")!;
         return new GameSave(
             0,
             DateTime.UtcNow,
@@ -133,7 +133,7 @@ public partial class MainSubMenu : OptionSubMenu
                 new InventoryData(
                     new ItemStackData[]
                     {
-                        new ItemStackData("HockeyStick", 1)
+                        new ItemStackData(ItemIds.HockeyStick, 1)
                     })
             });
     }

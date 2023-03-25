@@ -9,7 +9,7 @@ public partial class Wand : HoldItem
 {
     public override void Init(ActorBody actorBody)
     {
-        Setup("Wand", WeaponTypes.Wand, actorBody, new ActionStateMachine(actorBody, this));
+        Setup(ItemIds.Wand, WeaponTypes.Wand, actorBody, new ActionStateMachine(actorBody, this));
     }
 
     protected override void SetHitBoxes()

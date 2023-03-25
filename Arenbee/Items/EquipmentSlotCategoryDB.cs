@@ -20,17 +20,24 @@ public class EquipmentSlotCategoryDB : AEquipmentSlotCategoryDB
         };
     }
 
-    public IReadOnlyCollection<EquipmentSlotCategory> BasicEquipment => Categories;
-}
-
-public static class EquipmentSlotCategoryIds
-{
-    public const string SubWeapon = "SubWeapon";
-    public const string Weapon = "Weapon";
-    public const string Headgear = "Headgear";
-    public const string Shirt = "Shirt";
-    public const string Pants = "Pants";
-    public const string Footwear = "Footwear";
-    public const string Accessory1 = "Accessory1";
-    public const string Accessory2 = "Accessory2";
+    protected override Dictionary<string, string[]> BuildPresetDB()
+    {
+        return new()
+        {
+            {
+                EquipmentSlotPresetIds.BasicEquipment,
+                new string[]
+                {
+                    EquipmentSlotCategoryIds.Weapon,
+                    EquipmentSlotCategoryIds.Headgear,
+                    EquipmentSlotCategoryIds.Shirt,
+                    EquipmentSlotCategoryIds.Pants,
+                    EquipmentSlotCategoryIds.Footwear,
+                    EquipmentSlotCategoryIds.Accessory1,
+                    EquipmentSlotCategoryIds.Accessory2,
+                    EquipmentSlotCategoryIds.SubWeapon
+                }
+            }
+        };
+    }
 }

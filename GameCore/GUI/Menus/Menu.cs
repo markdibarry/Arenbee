@@ -28,9 +28,7 @@ public partial class Menu : GUILayer, IMenu
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
-        if (CurrentState != State.Available
-            || CurrentSubMenu == null
-            || CurrentSubMenu.CurrentState != SubMenu.State.Available)
+        if (CurrentState != State.Available || CurrentSubMenu?.CurrentState != SubMenu.State.Available)
             return;
         CurrentSubMenu.HandleInput(menuInput, delta);
     }

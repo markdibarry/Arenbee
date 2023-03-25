@@ -37,11 +37,8 @@ public partial class AAreaScene : Node2D
     public void Init(AHUD hud)
     {
         HUD = hud;
-        foreach (var actorBody in ActorsContainer.GetChildren<AActorBody>())
-        {
-            if (actorBody.Actor != null)
-                HUD.SubscribeActorEvents(actorBody.Actor);
-        }
+        ConnectHUDToActors();
+        ConnectSpawners();
     }
 
     public void Pause() => ProcessMode = ProcessModeEnum.Disabled;
@@ -61,8 +58,35 @@ public partial class AAreaScene : Node2D
 
     public void OnGameStateChanged(GameState gameState)
     {
-        foreach (var actor in ActorsContainer.GetChildren<AActorBody>())
+        foreach (AActorBody actor in ActorsContainer.GetChildren<AActorBody>())
             actor.OnGameStateChanged(gameState);
+    }
+
+    private void OnSpawnRequested(ASpawner spawner)
+    {
+        if (!spawner.SpawnPending)
+            return;
+        AActorBody? actorBody = spawner.Spawn();
+        if (actorBody != null)
+            AddActorBody(actorBody, actorBody.GlobalPosition);
+    }
+
+    private void ConnectHUDToActors()
+    {
+        foreach (var actorBody in ActorsContainer.GetChildren<AActorBody>())
+        {
+            if (actorBody.Actor != null)
+                HUD.SubscribeActorEvents(actorBody.Actor);
+        }
+    }
+
+    private void ConnectSpawners()
+    {
+        foreach (ASpawner spawner in ActorsContainer.GetChildren<ASpawner>())
+        {
+            spawner.SpawnRequested += OnSpawnRequested;
+            OnSpawnRequested(spawner);
+        }
     }
 
     private void SetNodeReferences()

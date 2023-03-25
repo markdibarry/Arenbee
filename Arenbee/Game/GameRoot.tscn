@@ -16,6 +16,9 @@ mouse_filter = 2
 [node name="AudioController" parent="GameDisplay" index="0"]
 script = ExtResource("5_ognf4")
 
+[node name="Transition" parent="GameDisplay" index="3"]
+layer = 90
+
 [node name="GameCamera" type="Camera2D" parent="GameDisplay" index="4"]
 limit_left = 0
 limit_bottom = 270
