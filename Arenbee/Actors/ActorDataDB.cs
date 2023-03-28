@@ -5,7 +5,6 @@ using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Enums;
 using GameCore.Statistics;
-using Godot;
 
 namespace Arenbee.Actors;
 
@@ -20,6 +19,8 @@ public class ActorDataDB : AActorDataDB
                 new ActorData(
                     actorId: ActorDataIds.Ball,
                     actorName: "Ball",
+                    actorBodyId: ActorBodyIds.Ball,
+                    equipmentSlotPresetId: EquipmentSlotPresetIds.BasicEquipment,
                     statsData: new StatsData(
                         statLookup: new Stat[]
                         {
@@ -41,6 +42,8 @@ public class ActorDataDB : AActorDataDB
                 new ActorData(
                     actorId: ActorDataIds.Orc,
                     actorName: "Orc",
+                    actorBodyId: ActorBodyIds.Orc,
+                    equipmentSlotPresetId: EquipmentSlotPresetIds.BasicEquipment,
                     statsData: new StatsData(
                         statLookup: new Stat[]
                         {
@@ -62,6 +65,8 @@ public class ActorDataDB : AActorDataDB
                 new ActorData(
                     actorId: ActorDataIds.Plant,
                     actorName: "Plant",
+                    actorBodyId: ActorBodyIds.Plant,
+                    equipmentSlotPresetId: EquipmentSlotPresetIds.BasicEquipment,
                     statsData: new StatsData(
                         statLookup: new Stat[]
                         {
@@ -83,6 +88,8 @@ public class ActorDataDB : AActorDataDB
                 new ActorData(
                     actorId: ActorDataIds.Whisp,
                     actorName: "Whisp",
+                    actorBodyId: ActorBodyIds.Whisp,
+                    equipmentSlotPresetId: EquipmentSlotPresetIds.BasicEquipment,
                     statsData: new StatsData(
                         statLookup: new Stat[]
                         {
@@ -108,6 +115,8 @@ public class ActorDataDB : AActorDataDB
                 new ActorData(
                     actorId: ActorDataIds.Twosen,
                     actorName: "Twosen",
+                    actorBodyId: ActorBodyIds.Twosen,
+                    equipmentSlotPresetId: EquipmentSlotPresetIds.BasicEquipment,
                     statsData: new StatsData(
                         statLookup: new Stat[]
                         {

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Actors;
 using Arenbee.Actors.Players;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.PartyMenus;
@@ -65,10 +67,14 @@ public partial class GameSession : AGameSession
         MainParty = GetParty(save.MainPartyId);
         SessionState = save.SessionState;
         InitAreaScene();
-        Twosen actorBody = GDEx.Instantiate<Twosen>(Twosen.GetScenePath());
         AActor actor = MainParty!.Actors.First();
+        string? bodyPath = ActorBodyDB.ById(actor.ActorBodyId);
+        if (bodyPath == null)
+            throw new Exception($"No Body {actor.ActorBodyId} found.");
+        ActorBody actorBody = GDEx.Instantiate<ActorBody>(bodyPath);
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
+        actorBody.SetCollisionLayerValue(1, true);
         Locator.Root.GameCamera.CurrentTarget = actorBody;
         actorBody.InputHandler = Locator.Root.PlayerOneInput;
         CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));

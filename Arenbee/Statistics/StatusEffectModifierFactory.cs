@@ -10,13 +10,13 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
         {
             StatusEffectType.KO => new Modifier(
                 statType: (int)StatType.KO,
-                modOperator: ModOp.One,
+                op: ModOp.One,
                 value: 1,
                 conditions: null,
                 isHidden: false),
             StatusEffectType.Poison => new Modifier(
                 statType: (int)StatType.Poison,
-                modOperator: ModOp.One,
+                op: ModOp.One,
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {
@@ -42,7 +42,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 isHidden: false),
             StatusEffectType.Burn => new Modifier(
                 statType: (int)StatType.Burn,
-                modOperator: ModOp.One,
+                op: ModOp.One,
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {
@@ -68,7 +68,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 isHidden: false),
             StatusEffectType.Paralysis => new Modifier(
                 statType: (int)StatType.Burn,
-                modOperator: ModOp.One,
+                op: ModOp.One,
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {

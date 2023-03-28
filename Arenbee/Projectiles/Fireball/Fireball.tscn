@@ -1,22 +1,22 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://dyainfihru5v0"]
 
 [ext_resource type="Script" path="res://Arenbee/Projectiles/Fireball/Fireball.cs" id="1_6oopk"]
 [ext_resource type="Texture2D" uid="uid://frfwqhwwirma" path="res://Arenbee/Projectiles/Fireball/Fireball.png" id="1_tqaxo"]
-[ext_resource type="PackedScene" path="res://Arenbee/Statistics/HitBox.tscn" id="2_n7652"]
+[ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="2_n7652"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ydun5"]
 size = Vector2(10, 8)
 
 [node name="Fireball" type="Node2D"]
-script = ExtResource( "1_6oopk" )
+script = ExtResource("1_6oopk")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource( "1_tqaxo" )
+texture = ExtResource("1_tqaxo")
 
-[node name="HitBox" parent="." instance=ExtResource( "2_n7652" )]
-collision_layer = 8
+[node name="HitBox" parent="." instance=ExtResource("2_n7652")]
+collision_layer = 16
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(-2, 0)
-shape = SubResource( "RectangleShape2D_ydun5" )
+shape = SubResource("RectangleShape2D_ydun5")

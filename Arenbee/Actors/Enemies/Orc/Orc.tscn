@@ -30,8 +30,8 @@ resource_local_to_scene = true
 size = Vector2(18, 26)
 
 [node name="Orc" instance=ExtResource("1_kkfne")]
-collision_layer = 256
-collision_mask = 21
+collision_layer = 2
+collision_mask = 6
 script = ExtResource("2_0isoc")
 ActorType = 2
 
@@ -46,7 +46,7 @@ texture = ExtResource("3_cduir")
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_npsqk")]
 modulate = Color(0, 1, 0, 1)
 collision_layer = 0
-collision_mask = 40
+collision_mask = 80
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
@@ -55,7 +55,7 @@ shape = SubResource("RectangleShape2D_d11ek")
 
 [node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("6_ket8o")]
 modulate = Color(1, 0, 0, 1)
-collision_layer = 128
+collision_layer = 32
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]

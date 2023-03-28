@@ -162,7 +162,7 @@ texture = ExtResource("2_lfhbd")
 15:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSet" id="TileSet_1l3xq"]
-physics_layer_0/collision_layer = 16
+physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 0
 sources/0 = SubResource("TileSetAtlasSource_hnqgo")
 
@@ -262,6 +262,9 @@ offset_bottom = 24.0
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_ti87r")]
 position = Vector2(169, 165)
+Respawn = false
 ActorDataId = "Orc"
+CreateUnique = false
+ActorData = null
 
 [node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("14_whpk2")]

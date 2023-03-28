@@ -1,11 +1,12 @@
 ﻿using GameCore.Actors;
-using GameCore.Enums;
 using GameCore.Statistics;
+using GameCore.Utility;
 
 namespace Arenbee;
 
 public class SessionState
 {
+    private readonly GameSession _gameSession = (GameSession)Locator.Session!;
     public double TotalInGameTime { get; set; }
     public double TotalGameTime { get; set; }
     public long CurrentGameTime { get; set; }
@@ -16,17 +17,17 @@ public class SessionState
 
     public void OnActorDefeated(AActor actor)
     {
-        if (actor.ActorType == ActorType.Player)
+        if (_gameSession.MainParty!.ContainsActor(actor))
             TimesDied++;
-        else if (actor.ActorType == ActorType.Enemy)
+        else
             EnemiesDefeated++;
     }
 
     public void OnActorDamaged(AActor actor, ADamageResult damageData)
     {
-        if (actor.ActorType == ActorType.Player)
+        if (_gameSession.MainParty!.ContainsActor(actor))
             TimesReceivedDamaged++;
-        else if (actor.ActorType == ActorType.Enemy)
+        else
             TimesDealtDamage++;
     }
 

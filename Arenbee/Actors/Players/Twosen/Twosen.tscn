@@ -31,7 +31,8 @@ resource_local_to_scene = true
 size = Vector2(14, 24)
 
 [node name="Twosen" instance=ExtResource("1_mabku")]
-collision_mask = 276
+collision_layer = 3
+collision_mask = 6
 script = ExtResource("2_0vmt5")
 ActorType = 1
 
@@ -50,7 +51,7 @@ vframes = 10
 
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("8_tc2pg")]
 collision_layer = 0
-collision_mask = 160
+collision_mask = 96
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]

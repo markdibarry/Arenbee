@@ -36,8 +36,8 @@ public class Party
         }
     }
 
-    public AActor? GetPlayerByName(string name)
-    {
-        return _actors.Find(x => x.Name == name);
-    }
+    public bool ContainsActor(AActor actor) => _actors.Contains(actor);
+    public bool ContainsActor(string id) => _actors.Any(x => x.ActorId == id);
+
+    public AActor? GetActorById(string id) => _actors.Find(x => x.ActorId == id);
 }

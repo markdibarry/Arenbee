@@ -4,7 +4,6 @@ using System.Linq;
 using Arenbee.Items;
 using GameCore.Actors;
 using GameCore.Input;
-using GameCore.Items;
 using Godot;
 
 namespace Arenbee.Actors;
@@ -12,14 +11,14 @@ namespace Arenbee.Actors;
 public class StateController : IStateController
 {
     public StateController(
-        ActorBody actor,
+        ActorBody actorBody,
         MoveStateMachineBase moveStateMachine,
         AirStateMachineBase airStateMachine,
         HealthStateMachineBase healthStateMachine,
         ActionStateMachineBase actionStateMachine,
         Func<AActorBody, BehaviorTree>? behaviorTreeDelegate = null)
     {
-        _actor = actor;
+        _actorBody = actorBody;
         HealthStateMachine = healthStateMachine;
         AirStateMachine = airStateMachine;
         MoveStateMachine = moveStateMachine;
@@ -28,7 +27,7 @@ public class StateController : IStateController
         _behaviorTreeDelegate = behaviorTreeDelegate;
     }
 
-    private readonly ActorBody _actor;
+    private readonly ActorBody _actorBody;
     private bool _baseActionDisabled;
     private readonly StateDisplayController _stateDisplayController;
     private readonly Func<AActorBody, BehaviorTree>? _behaviorTreeDelegate;
@@ -37,8 +36,8 @@ public class StateController : IStateController
     public ActorBodyStateMachine MoveStateMachine { get; }
     public ActorBodyStateMachine HealthStateMachine { get; }
     public ActorBodyStateMachine BaseActionStateMachine { get; }
-    public AnimationPlayer ActorAnimationPlayer => _actor.AnimationPlayer;
-    public List<HoldItem> HoldItems => _actor.HoldItemController.HoldItems;
+    public AnimationPlayer ActorAnimationPlayer => _actorBody.AnimationPlayer;
+    public List<HoldItem> HoldItems => _actorBody.HoldItemController.HoldItems;
     public bool BaseActionDisabled
     {
         get => _baseActionDisabled;
@@ -60,8 +59,8 @@ public class StateController : IStateController
         AirStateMachine.Reset();
         MoveStateMachine.Reset();
         BaseActionStateMachine.Reset();
-        BehaviorTree = _behaviorTreeDelegate?.Invoke(_actor);
-        _stateDisplayController.CreateStateDisplay(_actor);
+        BehaviorTree = _behaviorTreeDelegate?.Invoke(_actorBody);
+        _stateDisplayController.CreateStateDisplay(_actorBody);
     }
 
     public bool IsBlocked(BlockedState stateType)
@@ -153,6 +152,7 @@ public class StateController : IStateController
         foreach (var holdItem in HoldItems)
             holdItem.StateMachine.Update(delta);
         _stateDisplayController.Update(this);
-        BehaviorTree?.Update(delta);
+        if (_actorBody.InputHandler == ActorInputHandler.DummyInputHandler)
+            BehaviorTree?.Update(delta);
     }
 }

@@ -42,10 +42,11 @@ public partial class Breakable : StaticBody2D
 
     private void TryBreak()
     {
-        if (_frameCount <= 0) return;
-        if (_broken) return;
+        if (_frameCount <= 0 || _broken)
+            return;
         _hits++;
-        if (_hits < _hitsToNextStage) return;
+        if (_hits < _hitsToNextStage)
+            return;
         _currentFrame++;
 
         if (_currentFrame < _frameCount)
@@ -66,8 +67,5 @@ public partial class Breakable : StaticBody2D
         _animatedSprite.Play("destroy");
     }
 
-    private void OnAnimationFinished()
-    {
-        QueueFree();
-    }
+    private void OnAnimationFinished() => QueueFree();
 }

@@ -41,7 +41,7 @@ public partial class AAreaScene : Node2D
         ConnectSpawners();
     }
 
-    public void Pause() => ProcessMode = ProcessModeEnum.Disabled;
+    public void Pause() => SetDeferred(PropertyName.ProcessMode, (long)ProcessModeEnum.Disabled);
 
     public void Resume() => ProcessMode = ProcessModeEnum.Inherit;
 

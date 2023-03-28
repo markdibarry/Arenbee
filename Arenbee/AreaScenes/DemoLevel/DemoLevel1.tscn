@@ -129,19 +129,15 @@ layer_2/tile_data = PackedInt32Array()
 
 [node name="Barrel" parent="Scenery/Barrels" index="0" instance=ExtResource("7_3y5rn")]
 position = Vector2(306, 216)
-collision_mask = 8
 
 [node name="Barrel2" parent="Scenery/Barrels" index="1" instance=ExtResource("7_3y5rn")]
 position = Vector2(321, 216)
-collision_mask = 8
 
 [node name="Barrel3" parent="Scenery/Barrels" index="2" instance=ExtResource("7_3y5rn")]
 position = Vector2(314, 200)
-collision_mask = 8
 
 [node name="Barrel4" parent="Scenery/Barrels" index="3" instance=ExtResource("7_3y5rn")]
 position = Vector2(311, 72)
-collision_mask = 8
 
 [node name="Spike" parent="Scenery" index="3" instance=ExtResource("8_1uhok")]
 position = Vector2(712, 217)
@@ -224,5 +220,3 @@ CreateUnique = false
 ActorData = null
 
 [node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("21_3e0g1")]
-collision_layer = 256
-collision_mask = 21

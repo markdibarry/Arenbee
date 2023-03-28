@@ -9,7 +9,7 @@ namespace GameCore.Actors;
 [Tool]
 public abstract partial class ASpawner : Node2D
 {
-    protected AActorDataDB ActorDataDB { get; set; } = Locator.ActorDataDB;
+    protected static AActorDataDB ActorDataDB { get; set; } = Locator.ActorDataDB;
     private string _actorDataId = string.Empty;
     public bool Respawn { get; set; }
     //[Export, ExportGroup("Spawn")]
@@ -19,7 +19,7 @@ public abstract partial class ASpawner : Node2D
         get => false;
         set => OnCreateUnique();
     }
-    public Resource? ActorData { get; set; }
+    public AActorData? ActorData { get; set; }
     public string ActorDataId
     {
         get => _actorDataId;
@@ -97,7 +97,20 @@ public abstract partial class ASpawner : Node2D
         ActorBody?.QueueFree();
     }
 
-    public abstract AActorBody? Spawn();
+    public virtual AActorBody? Spawn()
+    {
+        if (ActorData == null && ActorDataId != string.Empty)
+            ActorData = ActorDataDB.GetData<AActorData>(ActorDataId)?.Clone();
+        if (ActorData == null || ActorBody == null)
+            return null;
+        AActor actor = ActorData.CreateActor();
+        AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
+        actor.SetActorBody(actorBody);
+        actorBody.SetActor(actor);
+        actorBody.GlobalPosition = GlobalPosition;
+        SpawnPending = false;
+        return actorBody;
+    }
 
     public void OnCreateUnique()
     {

@@ -18,12 +18,12 @@ public abstract partial class AGameRoot : Node
     public GameCamera GameCamera { get; protected set; } = null!;
     public Node2D GameDisplay { get; set; } = null!;
     public Node2D GameSessionContainer { get; set; } = null!;
+    public GUIController GUIController { get; protected set; } = null!;
+    public TransitionLayer Transition { get; protected set; } = null!;
     public AGameSession? GameSession { get; set; }
     public GameState GameState { get; } = new();
-    public GUIController GUIController { get; protected set; } = null!;
     public GUIInputHandler MenuInput { get; protected set; } = null!;
     public ActorInputHandler PlayerOneInput { get; protected set; } = null!;
-    public TransitionLayer Transition { get; protected set; } = null!;
     public TransitionControllerBase TransitionController { get; protected set; } = null!;
 
     public override void _Ready()
@@ -58,7 +58,7 @@ public abstract partial class AGameRoot : Node
 
     protected virtual void StartRoot()
     {
-        ResetToTitleScreen(string.Empty, string.Empty, string.Empty);
+        ResetToTitleScreen();
     }
 
     public override void _Process(double delta)
@@ -85,6 +85,8 @@ public abstract partial class AGameRoot : Node
         GameSession.Init(GUIController, gameSave);
         await GUIController.CloseAllLayersAsync(true);
     }
+
+    public virtual void ResetToTitleScreen() => ResetToTitleScreen(string.Empty, string.Empty, string.Empty);
 
     public virtual void ResetToTitleScreen(string loadingScreenPath, string transitionA, string transitionB)
     {
@@ -114,7 +116,6 @@ public abstract partial class AGameRoot : Node
         GUIController.HandleInput(MenuInput, delta);
         GameSession?.HandleInput(MenuInput, delta);
         MenuInput.Update();
-        PlayerOneInput.Update();
     }
 
     protected void OnGameStateChanged(GameState gameState)

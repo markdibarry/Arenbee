@@ -7,18 +7,22 @@ namespace GameCore.Actors;
 
 public abstract class AActor : IDamageable
 {
-    protected AActor(string actorName, string actorId, AEquipment equipment, AInventory inventory)
+    protected AActor(string actorId, string actorBodyId, string actorName, string equipmentSlotPresetId, AEquipment equipment, AInventory inventory)
     {
         ActorId = actorId;
+        ActorBodyId = actorBodyId;
         Inventory = inventory;
         Name = actorName;
+        EquipmentSlotPresetId = equipmentSlotPresetId;
         Equipment = equipment;
         Equipment.EquipmentSet += OnEquipmentSet;
     }
 
     public AActorBody? ActorBody { get; protected set; }
     public string ActorId { get; set; }
+    public string ActorBodyId { get; set; }
     public ActorType ActorType { get; set; }
+    public string EquipmentSlotPresetId { get; }
     public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }
     public string Name { get; set; }

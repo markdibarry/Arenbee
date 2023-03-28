@@ -14,14 +14,16 @@ public partial class Modifier : Resource
     [JsonConstructor]
     public Modifier(
         int statType,
-        ModOp modOperator,
+        ModOp op,
         int value,
+        SourceType sourceType = default,
         Godot.Collections.Array<Condition>? conditions = null,
         bool isHidden = false)
     {
         StatType = statType;
-        Op = modOperator;
+        Op = op;
         Value = value;
+        SourceType = sourceType;
         Conditions = conditions ?? new();
         IsHidden = isHidden;
     }
@@ -31,6 +33,7 @@ public partial class Modifier : Resource
         StatType = mod.StatType;
         Op = mod.Op;
         IsHidden = mod.IsHidden;
+        SourceType = mod.SourceType;
         Value = mod.Value;
         Conditions = new(mod.Conditions?.Select(x => new Condition(x)));
     }

@@ -20,7 +20,7 @@ public abstract class TransitionControllerBase
         _pendingTransition = request;
     }
 
-    private async Task TransitionAsync(TransitionRequest request)
+    public async Task TransitionAsync(TransitionRequest request)
     {
         _pendingTransition = null;
         Loader loader = new(request.Paths);

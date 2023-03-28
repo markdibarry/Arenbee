@@ -97,8 +97,7 @@ public partial class AActorBody
         MoveAndSlide();
         _floatPosition = GlobalPosition;
         GlobalPosition = GlobalPosition.Round();
-        if (InputHandler == ActorInputHandler.DummyInputHandler)
-            InputHandler.Update();
+        InputHandler.Update();
     }
 
     private void InitMovement()

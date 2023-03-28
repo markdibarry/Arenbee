@@ -22,21 +22,27 @@ public partial class ActorData : AActorData
     public ActorData(
         string actorId,
         string actorName,
+        string actorBodyId,
+        string equipmentSlotPresetId,
         StatsData statsData,
         IEnumerable<EquipmentSlotData> equipmentSlotData,
         IEnumerable<ItemStackData> itemStackData)
     {
         ActorId = actorId;
         ActorName = actorName;
+        ActorBodyId = actorBodyId;
         StatsData = statsData;
         EquipmentSlotData = equipmentSlotData;
         ItemStackData = itemStackData;
+        EquipmentSlotPresetId = equipmentSlotPresetId;
     }
 
     public ActorData(AActor actor)
     {
         ActorId = actor.ActorId;
         ActorName = actor.Name;
+        ActorBodyId = actor.ActorBodyId;
+        EquipmentSlotPresetId = actor.EquipmentSlotPresetId;
         StatsData = new StatsData((Stats)actor.Stats);
         List<EquipmentSlotData> equipmentSlotData = new();
         for (int i = 0; i < actor.Inventory.Items.Count; i++)
@@ -55,7 +61,9 @@ public partial class ActorData : AActorData
     public ActorData(ActorData actorData)
         : this(
               actorData.ActorId,
+              actorData.ActorBodyId,
               actorData.ActorName,
+              actorData.EquipmentSlotPresetId,
               actorData.StatsData,
               actorData.EquipmentSlotData.Select(x => new EquipmentSlotData(x)),
               actorData.ItemStackData.Select(x => new ItemStackData(x)))
@@ -69,26 +77,20 @@ public partial class ActorData : AActorData
 
     public override AActorData Clone() => new ActorData(this);
 
-    public AActor CreateActor(AInventory? externalInventory = null)
+    public override AActor CreateActor(AInventory? externalInventory = null)
     {
-        return CreateActor(EquipmentSlotPresetIds.BasicEquipment, externalInventory);
-    }
-
-    public override AActor CreateActor(string equipmentSlotPresetId, AInventory? externalInventory)
-    {
-        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
-        IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = Locator.EquipmentSlotCategoryDB.GetCategoryPreset(equipmentSlotPresetId);
+        AInventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
+        IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = Locator.EquipmentSlotCategoryDB.GetCategoryPreset(EquipmentSlotPresetId);
         Equipment equipment = new(inventory, equipmentPreset);
         Actor actor = new(
             actorId: ActorId,
+            actorBodyId: ActorBodyId,
             actorName: ActorName,
-            equipment,
-            inventory);
-
-        foreach (Stat stat in StatsData.StatLookup)
-            actor.Stats.StatLookup[stat.StatType] = new Stat(stat);
-        foreach (Modifier mod in StatsData.Modifiers)
-            actor.Stats.AddMod(new Modifier(mod));
+            equipmentSlotPresetId: EquipmentSlotPresetId,
+            equipment: equipment,
+            inventory: inventory,
+            stats: StatsData.StatLookup,
+            modifiers: StatsData.Modifiers);
 
         foreach (EquipmentSlotData slotData in EquipmentSlotData)
         {

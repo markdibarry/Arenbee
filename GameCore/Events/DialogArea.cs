@@ -1,5 +1,4 @@
 ﻿using GameCore.Actors;
-using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
@@ -46,14 +45,14 @@ public partial class DialogArea : Area2D, IContextArea
 
     public void OnBodyEntered(Node body)
     {
-        if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
+        if (body is not AActorBody actor)
             return;
         actor.ContextAreas.Add(this);
     }
 
     public void OnBodyExited(Node body)
     {
-        if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
+        if (body is not AActorBody actor)
             return;
         actor.ContextAreas.Remove(this);
     }

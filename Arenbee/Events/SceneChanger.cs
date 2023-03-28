@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Arenbee.Game;
 using Arenbee.GUI;
 using GameCore.Actors;
@@ -11,11 +12,11 @@ namespace Arenbee.Events;
 
 public partial class SceneChanger : SceneChangerBase
 {
-    protected override void ChangeScene()
+    protected override async Task ChangeScene()
     {
         if (GameSession == null)
             return;
-
+        GameSession.Pause();
         TransitionRequest request = new(
             TransitionType.Session,
             FadeTransition.GetScenePath(),
@@ -34,6 +35,7 @@ public partial class SceneChanger : SceneChangerBase
                 AActor actor = party!.Actors.First();
                 areaScene.AddActorBody(actor.ActorBody!, areaScene.GetSpawnPoint(0));
             });
-        TController.RequestTransition(request);
+        await TController.TransitionAsync(request);
+        GameSession.Resume();
     }
 }

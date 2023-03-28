@@ -88,21 +88,19 @@ public partial class MainSubMenu : OptionSubMenu
     private void StartNewGame()
     {
         CurrentState = State.Busy;
-        async Task Callback(Loader loader)
-        {
-            GameSave gameSave = GetNewGame();
-            await _gameRoot.RemoveSession();
-            await _gameRoot.StartNewSession(gameSave);
-        }
-
-        var tController = Locator.TransitionController;
-        var request = new TransitionRequest(
-            BasicLoadingScreen.GetScenePath(),
-            TransitionType.Game,
-            FadeTransition.GetScenePath(),
-            FadeTransition.GetScenePath(),
-            Array.Empty<string>(),
-            Callback);
+        TransitionControllerBase tController = Locator.TransitionController;
+        TransitionRequest request = new(
+            loadingScreenPath: BasicLoadingScreen.GetScenePath(),
+            transitionType: TransitionType.Game,
+            transitionA: FadeTransition.GetScenePath(),
+            transitionB: FadeTransition.GetScenePath(),
+            paths: Array.Empty<string>(),
+            callback: async (loader) =>
+            {
+                GameSave gameSave = GetNewGame();
+                await _gameRoot.RemoveSession();
+                await _gameRoot.StartNewSession(gameSave);
+            });
         tController.RequestTransition(request);
     }
 
@@ -113,22 +111,22 @@ public partial class MainSubMenu : OptionSubMenu
 
     private GameSave GetNewGame()
     {
-        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>("Twosen")!;
+        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Whisp)!;
         return new GameSave(
-            0,
-            DateTime.UtcNow,
-            new SessionState(),
-            "default",
-            new PartyData[]
+            id: 0,
+            lastModifiedUtc: DateTime.UtcNow,
+            sessionState: new SessionState(),
+            mainPartyId: "default",
+            parties: new PartyData[]
             {
                 new PartyData(
-                    "default",
-                    new ActorData[] { actorData },
-                    0,
-                    Array.Empty<ItemStackData>()
+                    partyId: "default",
+                    actorData: new ActorData[] { actorData },
+                    inventoryIndex: 0,
+                    items: Array.Empty<ItemStackData>()
                 )
             },
-            new InventoryData[]
+            inventories: new InventoryData[]
             {
                 new InventoryData(
                     new ItemStackData[]

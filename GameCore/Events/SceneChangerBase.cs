@@ -1,5 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Enums;
+﻿using System.Threading.Tasks;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -27,8 +26,6 @@ public abstract partial class SceneChangerBase : Area2D
     {
         if (IsActive || PackedScenePath == string.Empty)
             return;
-        if (body is not AActorBody actor || actor.ActorType != ActorType.Player)
-            return;
         if (!FileAccess.FileExists(PackedScenePath))
             return;
         IsActive = true;
@@ -38,5 +35,5 @@ public abstract partial class SceneChangerBase : Area2D
     /// <summary>
     /// Replaces an AreaScene with another
     /// </summary>
-    protected abstract void ChangeScene();
+    protected abstract Task ChangeScene();
 }
