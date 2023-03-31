@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://ce7srvti8tlr7"]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -12,11 +12,11 @@
 [ext_resource type="Texture2D" uid="uid://c5wf4cfd7uty4" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/underground_repeat.png" id="7_wwrsr"]
 [ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="8_1uhok"]
 [ext_resource type="Texture2D" uid="uid://m235kimduuai" path="res://Arenbee/Scenery/Spike.png" id="9_bgkj2"]
-[ext_resource type="PackedScene" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
+[ext_resource type="PackedScene" uid="uid://dv4d53yslg4wv" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
 [ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="15_2jr03"]
-[ext_resource type="PackedScene" uid="uid://cd20kml21ec8w" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="21_3e0g1"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Orc/Orc.tscn" id="21_3e0g1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)
@@ -214,9 +214,8 @@ Hint = true
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("15_2jr03")]
 position = Vector2(357, 179)
-Respawn = false
+Respawn = true
+OffScreen = true
 ActorDataId = "Orc"
-CreateUnique = false
-ActorData = null
 
 [node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("21_3e0g1")]

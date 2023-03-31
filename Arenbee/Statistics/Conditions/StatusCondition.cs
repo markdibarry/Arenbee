@@ -1,5 +1,4 @@
-﻿using GameCore.Enums;
-using GameCore.Statistics;
+﻿using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
@@ -10,7 +9,7 @@ public class StatusCondition : ConditionEventFilter
     {
     }
 
-    public void OnStatusEffectChanged(int statusEffectType, ChangeType changeType)
+    public void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)
     {
         if (Condition.TargetValue != statusEffectType)
             return;

@@ -3,6 +3,7 @@ using System.Linq;
 using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
+using Gictionary = Godot.Collections.Dictionary;
 
 namespace GameCore.Actors;
 
@@ -12,8 +13,7 @@ public abstract partial class ASpawner : Node2D
     protected static AActorDataDB ActorDataDB { get; set; } = Locator.ActorDataDB;
     private string _actorDataId = string.Empty;
     public bool Respawn { get; set; }
-    //[Export, ExportGroup("Spawn")]
-    //public bool OffScreen { get; set; }
+    public bool OffScreen { get; set; }
     public bool CreateUnique
     {
         get => false;
@@ -30,13 +30,15 @@ public abstract partial class ASpawner : Node2D
         }
     }
     public AActorBody? ActorBody { get; set; }
+    public AActorBody? SpawnedActorBody { get; set; }
     public bool SpawnPending { get; set; }
+    public VisibleOnScreenNotifier2D VisibleOnScreenNotifier2D { get; private set; } = null!;
 
     public event Action<ASpawner>? SpawnRequested;
 
-    public override Godot.Collections.Array<Godot.Collections.Dictionary> _GetPropertyList()
+    public override Godot.Collections.Array<Gictionary> _GetPropertyList()
     {
-        return new()
+        Godot.Collections.Array<Gictionary> props = new()
         {
             new()
             {
@@ -46,7 +48,13 @@ public abstract partial class ASpawner : Node2D
             },
             new()
             {
-                { "name", "Respawn" },
+                { "name", nameof(Respawn) },
+                { "type", (int)Variant.Type.Bool },
+                { "usage", (int)PropertyUsageFlags.Default },
+            },
+            new()
+            {
+                { "name", nameof(OffScreen) },
                 { "type", (int)Variant.Type.Bool },
                 { "usage", (int)PropertyUsageFlags.Default },
             },
@@ -58,7 +66,7 @@ public abstract partial class ASpawner : Node2D
             },
             new()
             {
-                { "name", "ActorDataId" },
+                { "name", nameof(ActorDataId) },
                 { "type", (int)Variant.Type.String },
                 { "usage", (int)PropertyUsageFlags.Default },
                 { "hint", (int)PropertyHint.Enum },
@@ -66,17 +74,21 @@ public abstract partial class ASpawner : Node2D
             },
             new()
             {
-                { "name", "CreateUnique" },
+                { "name", nameof(CreateUnique) },
                 { "type", (int)Variant.Type.Bool },
-                { "usage", (int)PropertyUsageFlags.Default },
-            },
-            new()
-            {
-                { "name", "ActorData" },
-                { "type", (int)Variant.Type.Object },
                 { "usage", (int)PropertyUsageFlags.Default },
             }
         };
+        if (ActorData != null)
+        {
+            props.Add(new()
+            {
+                { "name", nameof(ActorData) },
+                { "type", (int)Variant.Type.Object },
+                { "usage", (int)PropertyUsageFlags.Default },
+            });
+        }
+        return props;
     }
 
     public override void _Ready()
@@ -87,6 +99,8 @@ public abstract partial class ASpawner : Node2D
             return;
         }
 
+        VisibleOnScreenNotifier2D = GetNode<VisibleOnScreenNotifier2D>(nameof(VisibleOnScreenNotifier2D));
+        VisibleOnScreenNotifier2D.ScreenExited += OnScreenExited;
         ActorBody = this.GetChildren<AActorBody>().FirstOrDefault();
         RemoveChild(ActorBody);
         RaiseSpawnRequested();
@@ -108,7 +122,10 @@ public abstract partial class ASpawner : Node2D
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;
+        actor.Defeated += OnActorDefeated;
+        SpawnedActorBody = actorBody;
         SpawnPending = false;
+        GD.Print("Spawned!");
         return actorBody;
     }
 
@@ -117,6 +134,7 @@ public abstract partial class ASpawner : Node2D
         if (!Engine.IsEditorHint())
             return;
         ActorData = ActorDataDB.GetData<AActorData>(ActorDataId)?.Clone();
+        NotifyPropertyListChanged();
     }
 
     protected void OnChildEnteredTree(Node node)
@@ -131,8 +149,23 @@ public abstract partial class ASpawner : Node2D
         SpawnRequested?.Invoke(this);
     }
 
-    private void OnActorDefeated()
+    private void OnActorDefeated(AActor actor)
     {
+        actor.Defeated -= OnActorDefeated;
+        if (!Respawn)
+            return;
+        if (!OffScreen)
+        {
+            RaiseSpawnRequested();
+            return;
+        }
+        if (!VisibleOnScreenNotifier2D.IsOnScreen())
+            RaiseSpawnRequested();
+    }
 
+    private void OnScreenExited()
+    {
+        if (Respawn && OffScreen && !IsInstanceValid(SpawnedActorBody))
+            RaiseSpawnRequested();
     }
 }

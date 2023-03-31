@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Arenbee.Actors.Enemies;
+using Arenbee.Actors.ActorBodies;
 using Arenbee.Actors.Players;
 
 namespace Arenbee.Actors;

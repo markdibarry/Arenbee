@@ -74,15 +74,10 @@ public static class GDEx
     /// <returns>The value at the key's location</returns>
     public static TValue GetOrAddNew<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new()
     {
-        if (!dict.TryGetValue(key, out TValue? stat))
-        {
-            dict[key] = new TValue();
-            return dict[key];
-        }
-        else
-        {
+        if (dict.TryGetValue(key, out TValue? stat))
             return stat;
-        }
+        dict[key] = new TValue();
+        return dict[key];
     }
 
     public static string GetScenePath([CallerFilePath] string csPath = "")

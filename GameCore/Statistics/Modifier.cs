@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using GameCore.Enums;
 using GameCore.Utility;
 using Godot;
+using Gictionary = Godot.Collections.Dictionary;
 
 namespace GameCore.Statistics;
 
@@ -130,15 +131,8 @@ public partial class Modifier : Resource
         return handler;
     }
 
-    public override Godot.Collections.Array<Godot.Collections.Dictionary> _GetPropertyList()
+    public override Godot.Collections.Array<Gictionary> _GetPropertyList()
     {
         return Locator.StatTypeDB.GetStatPropertyList(_statType);
     }
-}
-
-public enum SourceType
-{
-    //Innate,
-    Dependent,
-    Independent
 }

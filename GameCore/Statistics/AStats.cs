@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using GameCore.Enums;
 using GameCore.Extensions;
-using GameCore.SaveData;
 using GameCore.Utility;
 
 namespace GameCore.Statistics;
@@ -29,6 +27,9 @@ public abstract class AStats
             Modifiers[pair.Key] = pair.Value.ToList();
     }
 
+    protected static IConditionEventFilterFactory EventFilterFactory { get; } = Locator.ConditionEventFilterFactory;
+    protected static IStatusEffectModifierFactory EffectModifierFactory { get; } = Locator.StatusEffectModifierFactory;
+    protected static AStatusEffectDB StatusEffectDB { get; } = Locator.StatusEffectDB;
     [JsonIgnore]
     public Queue<ADamageRequest> DamageToProcess { get; }
     public ADamageResult? CurrentDamageResult { get; private set; }
@@ -36,16 +37,13 @@ public abstract class AStats
     public Dictionary<int, List<Modifier>> Modifiers { get; }
     public Dictionary<int, Stat> StatLookup { get; }
     public IDamageable StatsOwner { get; }
-    protected static IConditionEventFilterFactory EventFilterFactory { get; } = Locator.ConditionEventFilterFactory;
-    protected static IStatusEffectModifierFactory EffectModifierFactory { get; } = Locator.StatusEffectModifierFactory;
-    protected static AStatusEffectDB StatusEffectDB { get; } = Locator.StatusEffectDB;
     protected List<StatusEffect> StatusEffects { get; }
 
     public event Action<ADamageResult>? DamageReceived;
-    public event Action<Modifier, ChangeType>? ModChanged;
+    public event Action<Modifier, ModChangeType>? ModChanged;
     public event Action<double>? Processed;
     public event Action? StatChanged;
-    public event Action<int, ChangeType>? StatusEffectChanged;
+    public event Action<int, ModChangeType>? StatusEffectChanged;
 
     public virtual void AddMod(Modifier mod)
     {
@@ -68,7 +66,7 @@ public abstract class AStats
         mod.SubscribeConditions();
         SubscribeModConditions(mod);
         UpdateSpecialCategory(mod.StatType);
-        RaiseModChanged(mod, ChangeType.Add);
+        RaiseModChanged(mod, ModChangeType.Add);
     }
 
     public abstract int CalculateStat(int statType, bool ignoreHidden = false);
@@ -113,7 +111,7 @@ public abstract class AStats
         if (mods.Count == 0)
             Modifiers.Remove(mod.StatType);
         UpdateSpecialCategory(mod.StatType);
-        RaiseModChanged(mod, ChangeType.Remove);
+        RaiseModChanged(mod, ModChangeType.Remove);
     }
 
     public IReadOnlyCollection<Modifier> GetModifiers(int statType)
@@ -154,7 +152,7 @@ public abstract class AStats
             RemoveMod(mod);
     }
 
-    protected void RaiseModChanged(Modifier mod, ChangeType modChange) => ModChanged?.Invoke(mod, modChange);
+    protected void RaiseModChanged(Modifier mod, ModChangeType modChange) => ModChanged?.Invoke(mod, modChange);
 
     protected void RaiseDamageReceived(ADamageResult damageResult) => DamageReceived?.Invoke(damageResult);
 
@@ -173,7 +171,7 @@ public abstract class AStats
         statusEffect.SubscribeCondition();
         StatusEffects.Add(statusEffect);
         statusEffect.EffectData.EnterEffect?.Invoke(statusEffect);
-        StatusEffectChanged?.Invoke(statusEffectType, ChangeType.Add);
+        StatusEffectChanged?.Invoke(statusEffectType, ModChangeType.Add);
     }
 
     protected void RemoveStatusEffect(int statusEffectType)
@@ -184,7 +182,7 @@ public abstract class AStats
         statusEffect.UnsubscribeCondtion();
         statusEffect.EffectData.ExitEffect?.Invoke(statusEffect);
         StatusEffects.Remove(statusEffect);
-        StatusEffectChanged?.Invoke(statusEffectType, ChangeType.Remove);
+        StatusEffectChanged?.Invoke(statusEffectType, ModChangeType.Remove);
     }
 
     protected void SubscribeModConditions(Modifier mod)

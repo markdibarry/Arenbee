@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Arenbee.Actors.Enemies;
-using Arenbee.Actors.Players;
-
-namespace Arenbee.Actors;
+﻿namespace Arenbee.Actors;
 
 public class ActorBodyIds
 {

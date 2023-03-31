@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://ct8273xjuwr3v"]
+
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/AActorBody.tscn" id="1_gioo5"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_u04ek"]
+[ext_resource type="Texture2D" uid="uid://cnwfyddt1cb8e" path="res://Arenbee/Actors/ActorBodies/Null/Animation/Null.png" id="3_yfyyd"]
+
+[sub_resource type="Animation" id="Animation_suo3e"]
+resource_name = "Idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodySprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_unlx8"]
+resource_name = "Talk"
+length = 0.3
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodySprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w0m04"]
+_data = {
+"Idle": SubResource("Animation_suo3e"),
+"Talk": SubResource("Animation_unlx8")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l3g26"]
+resource_local_to_scene = true
+shader = ExtResource("2_u04ek")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_mix = 0.0
+shader_parameter/speed = 0.0
+shader_parameter/cycle_start = 0.0
+shader_parameter/cycle_end = 0.0
+shader_parameter/cycle_direction = 1.0
+shader_parameter/use_palette1 = null
+shader_parameter/use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wthwg"]
+resource_local_to_scene = true
+size = Vector2(14, 24)
+
+[node name="Null" instance=ExtResource("1_gioo5")]
+
+[node name="AnimationPlayer" parent="." index="0"]
+libraries = {
+"": SubResource("AnimationLibrary_w0m04")
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_l3g26")
+position = Vector2(0, -3)
+texture = ExtResource("3_yfyyd")
+hframes = 2
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_wthwg")

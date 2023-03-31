@@ -32,11 +32,11 @@ public abstract partial class AHUD : CanvasLayer
 
     public abstract void OnActorDefeated(AActor actor);
 
-    public abstract void OnActorModChanged(AActor actor, Modifier mod, ChangeType changeType);
+    public abstract void OnActorModChanged(AActor actor, Modifier mod, ModChangeType changeType);
 
     public abstract void OnActorStatsChanged(AActor actor);
 
-    public abstract void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ChangeType changeType);
+    public abstract void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ModChangeType changeType);
 
     public virtual void Pause()
     {

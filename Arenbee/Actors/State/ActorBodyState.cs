@@ -1,11 +1,10 @@
 ﻿using System;
 using Arenbee.Statistics;
 using GameCore.Input;
-using GameCore.Utility;
 
 namespace Arenbee.Actors;
 
-public abstract class ActorBodyState : State
+public abstract class ActorBodyState : GameCore.Utility.State
 {
     protected ActorBodyState(ActorBody actorBody)
     {

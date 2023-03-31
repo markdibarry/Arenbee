@@ -1,7 +1,6 @@
 ﻿using System;
 using Arenbee.Statistics;
 using GameCore.Actors;
-using GameCore.Enums;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Statistics;
@@ -44,20 +43,20 @@ public partial class HUD : AHUD
         MessageQueue.Enqueue(defeatedMessage);
     }
 
-    public override void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ChangeType changeType)
+    public override void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ModChangeType changeType)
     {
         string message;
         StatusEffectData? effectData = s_statusEffectDB.GetEffectData(statusEffectType);
         if (effectData == null)
             return;
-        if (changeType == ChangeType.Add)
+        if (changeType == ModChangeType.Add)
             message = $"{actor.Name} was {effectData.PastTenseName}!";
         else
             message = $"{actor.Name} recovered from {effectData.Name}!";
         MessageQueue.Enqueue(message);
     }
 
-    public override void OnActorModChanged(AActor actor, Modifier mod, ChangeType changeType)
+    public override void OnActorModChanged(AActor actor, Modifier mod, ModChangeType changeType)
     { }
 
     public override void OnActorStatsChanged(AActor actor)

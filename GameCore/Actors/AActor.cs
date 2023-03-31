@@ -29,9 +29,9 @@ public abstract class AActor : IDamageable
     public AStats Stats { get; protected set; } = null!;
     public event Action<AActor>? Defeated;
     public event Action<AActor, ADamageResult>? DamageRecieved;
-    public event Action<AActor, Modifier, ChangeType>? ModChanged;
+    public event Action<AActor, Modifier, ModChangeType>? ModChanged;
     public event Action<AActor>? StatsChanged;
-    public event Action<AActor, int, ChangeType>? StatusEffectChanged;
+    public event Action<AActor, int, ModChangeType>? StatusEffectChanged;
 
     public virtual void InitStats()
     {
@@ -47,7 +47,7 @@ public abstract class AActor : IDamageable
 
     protected abstract void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem);
 
-    private void OnModChanged(Modifier mod, ChangeType changeType)
+    private void OnModChanged(Modifier mod, ModChangeType changeType)
     {
         ModChanged?.Invoke(this, mod, changeType);
     }
@@ -60,7 +60,7 @@ public abstract class AActor : IDamageable
         DamageRecieved?.Invoke(this, damageResult);
     }
 
-    private void OnStatusEffectChanged(int statusEffectType, ChangeType changeType)
+    private void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)
     {
         StatusEffectChanged?.Invoke(this, statusEffectType, changeType);
     }

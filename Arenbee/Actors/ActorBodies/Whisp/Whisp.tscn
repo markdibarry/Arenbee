@@ -1,0 +1,81 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bemdsaiiodtmd" path="res://Arenbee/Actors/ActorBody.tscn" id="1_e7d2k"]
+[ext_resource type="Script" path="res://Arenbee/Actors/ActorBodies/Whisp/Whisp.cs" id="2_smssj"]
+[ext_resource type="AnimationLibrary" uid="uid://cc0dhjokcf6hg" path="res://Arenbee/Actors/ActorBodies/Whisp/Animation/WhispLibrary.res" id="3_6kwvn"]
+[ext_resource type="Texture2D" uid="uid://bryfxg1olnhug" path="res://Arenbee/Actors/ActorBodies/Whisp/Animation/Idle_Flicker_(32 x 32).png" id="3_gge5r"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="3_mqnde"]
+[ext_resource type="PackedScene" uid="uid://xyrk1dqs840g" path="res://Arenbee/Statistics/HurtBox.tscn" id="5_uvkvh"]
+[ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="6_ttdw0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_esvcb"]
+resource_local_to_scene = true
+shader = ExtResource("3_mqnde")
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+shader_parameter/flash_mix = 0.0
+shader_parameter/speed = 0.0
+shader_parameter/cycle_start = 0.0
+shader_parameter/cycle_end = 0.0
+shader_parameter/cycle_direction = 1.0
+shader_parameter/use_palette1 = null
+shader_parameter/use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pidx0"]
+size = Vector2(16, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sjcgy"]
+size = Vector2(14, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gicn0"]
+radius = 78.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cw5in"]
+resource_local_to_scene = true
+size = Vector2(16, 18)
+
+[node name="Whisp" instance=ExtResource("1_e7d2k")]
+collision_layer = 3
+collision_mask = 2
+script = ExtResource("2_smssj")
+ActorType = 1
+
+[node name="AnimationPlayer" parent="." index="0"]
+autoplay = "Standing"
+libraries = {
+"": ExtResource("3_6kwvn")
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_esvcb")
+scale = Vector2(-1, 1)
+texture = ExtResource("3_gge5r")
+hframes = 21
+
+[node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_uvkvh")]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_pidx0")
+
+[node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("6_ttdw0")]
+collision_layer = 16
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_sjcgy")
+
+[node name="DetectTargetZone" type="Area2D" parent="." index="2"]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectTargetZone" index="0"]
+position = Vector2(0, 6)
+shape = SubResource("CircleShape2D_gicn0")
+
+[node name="CollisionShape2D" parent="." index="3"]
+position = Vector2(0, 6)
+shape = SubResource("RectangleShape2D_cw5in")

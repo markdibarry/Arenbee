@@ -427,13 +427,13 @@ public partial class OptionGrid : MarginContainer
     private void SetNodeReferences()
     {
         GridMargin = GetNode<MarginContainer>("GridMargin");
-        GridWindow = GetNode<ClipContainer>("GridMargin/GridWindow");
+        GridWindow = GridMargin.GetNode<ClipContainer>("GridWindow");
         GridContainer = GridWindow.GetNode<GridContainer>("GridContainer");
         _arrows = GetNode<MarginContainer>("Arrows");
-        _arrowUp = GetNode<TextureRect>("Arrows/ArrowUp");
-        _arrowDown = GetNode<TextureRect>("Arrows/ArrowDown");
-        _arrowLeft = GetNode<TextureRect>("Arrows/ArrowLeft");
-        _arrowRight = GetNode<TextureRect>("Arrows/ArrowRight");
+        _arrowUp = _arrows.GetNode<TextureRect>("ArrowUp");
+        _arrowDown = _arrows.GetNode<TextureRect>("ArrowDown");
+        _arrowLeft = _arrows.GetNode<TextureRect>("ArrowLeft");
+        _arrowRight = _arrows.GetNode<TextureRect>("ArrowRight");
         _scrollBars = GetNode<Control>("ScrollBars");
         _hScrollBar = GetNode<HScrollBar>("%HScrollBar");
         _vScrollBar = GetNode<VScrollBar>("%VScrollBar");

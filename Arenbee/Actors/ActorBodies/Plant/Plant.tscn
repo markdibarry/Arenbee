@@ -1,0 +1,70 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bemdsaiiodtmd" path="res://Arenbee/Actors/ActorBody.tscn" id="1_sddne"]
+[ext_resource type="Script" path="res://Arenbee/Actors/ActorBodies/Plant/Plant.cs" id="2_ulj8y"]
+[ext_resource type="AnimationLibrary" uid="uid://bhrmwra8ak20u" path="res://Arenbee/Actors/ActorBodies/Plant/Animation/PlantLibrary.res" id="3_t10r8"]
+[ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="4_dfcpf"]
+[ext_resource type="Texture2D" uid="uid://bqd3pi5wu88t" path="res://Arenbee/Actors/ActorBodies/Plant/Animation/plant_idle.png" id="5_16lo8"]
+[ext_resource type="PackedScene" uid="uid://xyrk1dqs840g" path="res://Arenbee/Statistics/HurtBox.tscn" id="6_jqek7"]
+[ext_resource type="PackedScene" uid="uid://dj8byf6ki8alm" path="res://Arenbee/Statistics/HitBox.tscn" id="7_acsg3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_60ce4"]
+resource_local_to_scene = true
+shader = ExtResource("4_dfcpf")
+cycle_direction = null
+cycle_end = 0.0
+cycle_start = 0.0
+flash_color = Color(0.556863, 0.482353, 1, 1)
+flash_mix = 0.0
+speed = 0.0
+use_palette1 = false
+use_palette2 = null
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uv6gc"]
+size = Vector2(22, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gkdum"]
+size = Vector2(22, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f7fxt"]
+resource_local_to_scene = true
+size = Vector2(28, 10)
+
+[node name="Plant" instance=ExtResource("1_sddne")]
+script = ExtResource("2_ulj8y")
+ActorType = 1
+
+[node name="AnimationPlayer" parent="." index="0"]
+libraries = {
+"": ExtResource("3_t10r8")
+}
+
+[node name="BodySprite" parent="Body" index="0"]
+material = SubResource("ShaderMaterial_60ce4")
+position = Vector2(4, -24)
+texture = ExtResource("5_16lo8")
+hframes = 3
+vframes = 1
+frame = 0
+
+[node name="HeadBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("6_jqek7")]
+modulate = Color(0, 1, 0, 1)
+collision_layer = 0
+collision_mask = 40
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/HeadBox" index="0"]
+position = Vector2(10, -20)
+shape = SubResource("RectangleShape2D_uv6gc")
+
+[node name="HeadBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("7_acsg3")]
+modulate = Color(1, 0, 0, 1)
+collision_layer = 128
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/HeadBox" index="0"]
+position = Vector2(10, -20)
+shape = SubResource("RectangleShape2D_gkdum")
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_f7fxt")

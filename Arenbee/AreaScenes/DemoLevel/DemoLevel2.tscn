@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dvwmnskthhdf2"]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
 [ext_resource type="Script" path="res://Arenbee/AreaScenes/AreaScene.cs" id="2_avwur"]
@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
 [ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="9_ti87r"]
-[ext_resource type="PackedScene" uid="uid://cd20kml21ec8w" path="res://Arenbee/Actors/Enemies/Orc/Orc.tscn" id="14_whpk2"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Orc/Orc.tscn" id="14_whpk2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
