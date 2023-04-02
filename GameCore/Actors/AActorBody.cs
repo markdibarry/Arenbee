@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using Arenbee.Input;
 using GameCore.Audio;
-using GameCore.Enums;
 using GameCore.Events;
 using GameCore.Extensions;
-using GameCore.Input;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -27,7 +26,7 @@ public abstract partial class AActorBody : CharacterBody2D
         GroundedGravity = 0.05;
         HurtBoxes = null!;
         HitBoxes = null!;
-        InputHandler = ActorInputHandler.DummyInputHandler;
+        InputHandler = new DummyInputHandler();
         StateController = null!;
         UpDirection = Vector2.Up;
         WalkSpeed = 50;
@@ -35,8 +34,7 @@ public abstract partial class AActorBody : CharacterBody2D
 
     protected static AAudioController Audio { get; } = Locator.Audio;
     protected Node2D Body { get; set; } = null!;
-    [Export(PropertyHint.Enum)]
-    public ActorType ActorType { get; set; }
+    public int ActorRole { get; set; }
     public AActor? Actor { get; protected set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
@@ -88,6 +86,8 @@ public abstract partial class AActorBody : CharacterBody2D
 
     public abstract void SetActor(AActor? actor);
 
+    public abstract void SetActorRole(int role);
+
     public virtual void SetNodeReferences()
     {
         Body = GetNode<Node2D>("Body");
@@ -103,6 +103,7 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         _floatPosition = GlobalPosition;
         SetHitBoxes();
+        SetActorRole(ActorRole);
         InitMovement();
         InitState();
         InitActor();

@@ -1,4 +1,5 @@
 ﻿using System;
+using Arenbee.Actors;
 using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Extensions;
@@ -21,7 +22,7 @@ public partial class HUD : AHUD
         _playerStatsDisplay = GetNode<PlayerStatsDisplay>("PlayerStatsDisplay");
     }
 
-    public override void OnActorDamaged(AActor actor, ADamageResult aDamageResult)
+    public void OnActorDamaged(AActor actor, ADamageResult aDamageResult)
     {
         DamageResult damageResult = (DamageResult)aDamageResult;
         switch (damageResult.ActionType)
@@ -37,13 +38,13 @@ public partial class HUD : AHUD
         }
     }
 
-    public override void OnActorDefeated(AActor actor)
+    public void OnActorDefeated(AActor actor)
     {
         string defeatedMessage = $"{actor.Name} was defeated!";
         MessageQueue.Enqueue(defeatedMessage);
     }
 
-    public override void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ModChangeType changeType)
+    public void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ModChangeType changeType)
     {
         string message;
         StatusEffectData? effectData = s_statusEffectDB.GetEffectData(statusEffectType);
@@ -56,12 +57,37 @@ public partial class HUD : AHUD
         MessageQueue.Enqueue(message);
     }
 
-    public override void OnActorModChanged(AActor actor, Modifier mod, ModChangeType changeType)
+    public void OnActorModChanged(AActor actor, Modifier mod, ModChangeType changeType)
     { }
 
-    public override void OnActorStatsChanged(AActor actor)
+    public void OnActorStatsChanged(AActor actor)
     {
         _playerStatsDisplay.Update((Stats)actor.Stats);
+    }
+
+    public override void SubscribeActorEvents(AActor actor)
+    {
+        actor.Defeated += OnActorDefeated;
+        actor.DamageRecieved += OnActorDamaged;
+        actor.StatusEffectChanged += OnActorStatusEffectChanged;
+        if (actor.ActorBody!.ActorRole == (int)ActorRole.Player)
+        {
+            actor.ModChanged += OnActorModChanged;
+            actor.StatsChanged += OnActorStatsChanged;
+            OnActorStatsChanged(actor);
+        }
+    }
+
+    public override void UnsubscribeActorEvents(AActor actor)
+    {
+        actor.Defeated -= OnActorDefeated;
+        actor.DamageRecieved -= OnActorDamaged;
+        actor.StatusEffectChanged -= OnActorStatusEffectChanged;
+        if (actor.ActorRole == (int)ActorRole.Player)
+        {
+            actor.ModChanged -= OnActorModChanged;
+            actor.StatsChanged -= OnActorStatsChanged;
+        }
     }
 
     private void DisplayMeleeMessage(DamageResult damageResult)

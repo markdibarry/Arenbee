@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2aoyhgnokf55"
-path="res://.godot/imported/destroy1.png-8790a9530a22fa57df53640122b67ddf.ctex"
+uid="uid://b7qyn2ix58h4c"
+path="res://.godot/imported/destroy2.png-c313c8a27470167fe03876d17fc94ac4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GameCore/Actors/Animation/Destroy/destroy1.png"
-dest_files=["res://.godot/imported/destroy1.png-8790a9530a22fa57df53640122b67ddf.ctex"]
+source_file="res://Arenbee/Actors/Animation/EnemyDeathEffect/destroy2.png"
+dest_files=["res://.godot/imported/destroy2.png-c313c8a27470167fe03876d17fc94ac4.ctex"]
 
 [params]
 

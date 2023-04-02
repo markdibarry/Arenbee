@@ -10,11 +10,11 @@ namespace Arenbee.Projectiles;
 public partial class FireballBig : Node2D
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private AnimatedSprite2D _animatedSprite2D;
+    private AnimatedSprite2D _animatedSprite2D = null!;
     private double _speed = 250;
     private double _expiration = 0.5;
     public Direction Direction { get; set; }
-    public AHitBox HitBox { get; set; }
+    public AHitBox HitBox { get; set; } = null!;
 
     public override void _Ready()
     {
@@ -40,7 +40,7 @@ public partial class FireballBig : Node2D
     public static void CreateFireball(AActorBody actorBody)
     {
         var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<FireballBig>();
-        var fireballOffset = 10;
+        int fireballOffset = 10;
         if (actorBody.Direction.X < 0)
         {
             fireball.Direction = Direction.Left;
@@ -48,6 +48,7 @@ public partial class FireballBig : Node2D
         }
         fireball.GlobalPosition = new Vector2(actorBody.GlobalPosition.X + fireballOffset, actorBody.GlobalPosition.Y);
         actorBody.GetParent().AddChild(fireball);
+        fireball.HitBox.SetHitboxRole(actorBody.ActorRole);
         string sourceName = actorBody.Name;
         int attackValue = actorBody.Actor.Stats.CalculateStat((int)StatType.Attack) + 1;
         fireball.HitBox.GetDamageRequest = () =>

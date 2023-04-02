@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GameCore.Input;
+namespace GameCore.Actors.Behavior;
 
 public class Selector : BTNode
 {
@@ -14,20 +14,13 @@ public class Selector : BTNode
         {
             switch (node.Evaluate(delta))
             {
-                case NodeState.Failure:
-                    continue;
                 case NodeState.Success:
-                    State = NodeState.Success;
-                    return State;
+                    return NodeState.Success;
                 case NodeState.Running:
-                    State = NodeState.Running;
-                    return State;
-                default:
-                    continue;
+                    return NodeState.Running;
             }
         }
 
-        State = NodeState.Failure;
-        return State;
+        return NodeState.Failure;
     }
 }

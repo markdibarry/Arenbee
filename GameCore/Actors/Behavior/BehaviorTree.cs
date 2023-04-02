@@ -1,18 +1,18 @@
-﻿using GameCore.Actors;
+﻿using System.Collections.Generic;
 
-namespace GameCore.Input;
+namespace GameCore.Actors.Behavior;
 
 public abstract class BehaviorTree
 {
     protected BehaviorTree(AActorBody actor)
     {
-        _blackBoard = new BlackBoard();
+        _blackBoard = new();
         _root = SetupTree();
         _root.SetDependencies(actor, _blackBoard);
     }
 
     private readonly BTNode _root;
-    private readonly BlackBoard _blackBoard;
+    private readonly Dictionary<string, object> _blackBoard;
 
     public void Update(double delta) => _root?.Evaluate(delta);
 

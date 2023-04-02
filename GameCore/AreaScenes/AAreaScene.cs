@@ -1,5 +1,5 @@
-﻿using GameCore.Actors;
-using GameCore.Enums;
+﻿using Arenbee.Actors;
+using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -51,7 +51,7 @@ public partial class AAreaScene : Node2D
         if (actorBody.Actor != null)
         {
             HUD.UnsubscribeActorEvents(actorBody.Actor);
-            if (actorBody.Actor.ActorType == ActorType.Enemy)
+            if (actorBody.Actor.ActorRole == (int)ActorRole.Enemy)
                 actorBody.QueueFree();
         }
     }

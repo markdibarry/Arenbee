@@ -1,8 +1,8 @@
 ﻿using System;
-using GameCore.Input;
+using GameCore.Actors.Behavior;
 using Godot;
 
-namespace Arenbee.Actors.Behavior.PatrolChaseAir;
+namespace Arenbee.Actors.Behavior;
 
 public class TaskMoveHome : BTNode
 {
@@ -12,8 +12,6 @@ public class TaskMoveHome : BTNode
             throw new Exception("Home not defined");
         Vector2 direction = Actor.GlobalPosition.DirectionTo(home);
         Actor.InputHandler.SetLeftAxis(direction);
-
-        State = NodeState.Running;
-        return State;
+        return NodeState.Running;
     }
 }

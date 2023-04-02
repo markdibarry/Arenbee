@@ -19,7 +19,7 @@ public abstract class ASaveService<T> where T : IGameSave
             nameof(Resource.ResourceLocalToScene)
     };
 
-    public static void IgnoreBaseClass(JsonTypeInfo typeInfo)
+    private static void IgnoreBaseClass(JsonTypeInfo typeInfo)
     {
         if (!typeInfo.Type.IsAssignableTo(typeof(Resource)))
             return;

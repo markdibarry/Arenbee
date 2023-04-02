@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Input;
 using Arenbee.Items;
 using GameCore.Actors;
-using GameCore.Input;
+using GameCore.Actors.Behavior;
 using Godot;
 
 namespace Arenbee.Actors;
@@ -144,6 +145,8 @@ public class StateController : IStateController
 
     public void UpdateStates(double delta)
     {
+        if (_actorBody.InputHandler is DummyInputHandler)
+            BehaviorTree?.Update(delta);
         MoveStateMachine.Update(delta);
         AirStateMachine.Update(delta);
         HealthStateMachine.Update(delta);
@@ -152,7 +155,5 @@ public class StateController : IStateController
         foreach (var holdItem in HoldItems)
             holdItem.StateMachine.Update(delta);
         _stateDisplayController.Update(this);
-        if (_actorBody.InputHandler == ActorInputHandler.DummyInputHandler)
-            BehaviorTree?.Update(delta);
     }
 }

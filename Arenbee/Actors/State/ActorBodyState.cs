@@ -1,6 +1,6 @@
 ﻿using System;
+using Arenbee.Input;
 using Arenbee.Statistics;
-using GameCore.Input;
 
 namespace Arenbee.Actors;
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=15 format=3 uid="uid://by40v1o28wlhm"]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
 [ext_resource type="Script" path="res://Arenbee/AreaScenes/AreaScene.cs" id="2_avwur"]
@@ -8,8 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://dnm6k1qshq4d" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
-[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="9_ti87r"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Orc/Orc.tscn" id="14_whpk2"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/Spawner.tscn" id="9_ti87r"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Ball/Ball.tscn" id="10_nugo2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
@@ -188,44 +188,41 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 2880, 270)
 
-[node name="ParallaxLayerClouds" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="1"]
-motion_scale = Vector2(0.1, 0.5)
-motion_offset = Vector2(-216, -70)
+[node name="ParallaxLayerBackTrees" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="1"]
+motion_scale = Vector2(0, 0.9)
 
-[node name="Sprite" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerClouds" index="0"]
+[node name="bgBackTrees" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerBackTrees" index="0"]
 texture_filter = 1
 texture_repeat = 2
-position = Vector2(0, 46)
+position = Vector2(-10, 25)
 texture = ExtResource("4_6lr6k")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 1, 2880, 158)
+region_rect = Rect2(0, 0, 2880, 158)
 
-[node name="ParallaxLayerHills" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="2"]
-motion_scale = Vector2(0.2, 0.75)
-motion_offset = Vector2(-216, -35)
+[node name="ParallaxLayerMidTrees" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="2"]
+motion_scale = Vector2(0.025, 1.05)
 
-[node name="bghills" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerHills" index="0"]
+[node name="bgMidTrees" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerMidTrees" index="0"]
 texture_filter = 1
 texture_repeat = 2
-position = Vector2(0, 124)
+position = Vector2(0, 34)
+texture = ExtResource("4_6lr6k")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 2880, 160)
+
+[node name="ParallaxLayerFrontTrees" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="3"]
+motion_scale = Vector2(0.05, 1.025)
+
+[node name="bgFrontTrees" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerFrontTrees" index="0"]
+texture_filter = 1
+texture_repeat = 2
+position = Vector2(0, 30)
 texture = ExtResource("5_kh535")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 78.1594, 2880, 127.841)
-
-[node name="ParallaxLayerForest" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="3"]
-motion_scale = Vector2(0.3, 1)
-motion_offset = Vector2(-216, 0)
-
-[node name="bgforest" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerForest" index="0"]
-texture_filter = 1
-texture_repeat = 2
-position = Vector2(0, 172)
-texture = ExtResource("4_6lr6k")
-centered = false
-region_enabled = true
-region_rect = Rect2(0, 0, 2880, 64)
+region_rect = Rect2(0, 0, 2880, 208)
 
 [node name="TileMap" type="TileMap" parent="Scenery" index="1"]
 tile_set = SubResource("TileSet_1l3xq")
@@ -262,9 +259,6 @@ offset_bottom = 24.0
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_ti87r")]
 position = Vector2(169, 165)
-Respawn = false
-ActorDataId = "Orc"
-CreateUnique = false
-ActorData = null
+ActorDataId = "Ball"
 
-[node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("14_whpk2")]
+[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("10_nugo2")]

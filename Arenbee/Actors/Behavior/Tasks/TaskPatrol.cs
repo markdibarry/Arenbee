@@ -1,6 +1,7 @@
-﻿using GameCore.Input;
+﻿using GameCore.Actors.Behavior;
+using Godot;
 
-namespace Arenbee.Actors.Behavior.PatrolChaseGround;
+namespace Arenbee.Actors.Behavior;
 
 public class TaskPatrol : BTNode
 {
@@ -12,7 +13,7 @@ public class TaskPatrol : BTNode
     {
         if (_waiting)
         {
-            Actor.InputHandler.SetLeftAxis(Godot.Vector2.Zero);
+            Actor.InputHandler.SetLeftAxis(Vector2.Zero);
             _waitCounter -= delta;
             if (_waitCounter <= 0)
             {
@@ -35,17 +36,16 @@ public class TaskPatrol : BTNode
             Actor.InputHandler.SetLeftAxis(Actor.Direction);
         }
 
-        State = NodeState.Running;
-        return State;
+        return NodeState.Running;
     }
 
     private int GetWallDirection()
     {
         int result = 0;
-        var count = Actor.GetSlideCollisionCount();
+        int count = Actor.GetSlideCollisionCount();
         for (int i = 0; i < count; i++)
         {
-            var collision = Actor.GetSlideCollision(i);
+            KinematicCollision2D collision = Actor.GetSlideCollision(i);
             if (collision.GetNormal().X > 0)
                 result = -1;
             else if (collision.GetNormal().X < 0)

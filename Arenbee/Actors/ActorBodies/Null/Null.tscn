@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ct8273xjuwr3v"]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/AActorBody.tscn" id="1_gioo5"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_u04ek"]

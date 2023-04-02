@@ -66,13 +66,13 @@ public partial class OptionItem : MarginContainer
 
     public bool TryGetData<T>(string key, [NotNullWhen(returnValue: true)] out T? value)
     {
-        if (!OptionData.TryGetValue(key, out object? result) || result is not T)
+        if (OptionData.TryGetValue(key, out object? result) && result is T t)
         {
-            value = default;
-            return false;
+            value = t;
+            return true;
         }
-        value = (T)result;
-        return true;
+        value = default;
+        return false;
     }
 
     public void HandleStateChange()

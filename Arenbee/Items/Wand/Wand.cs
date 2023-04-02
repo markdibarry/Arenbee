@@ -73,6 +73,7 @@ public partial class Wand : HoldItem
             }
             private double _counter;
             private readonly double _countTime = 0.5;
+
             public override void Enter()
             {
                 _counter = _countTime;

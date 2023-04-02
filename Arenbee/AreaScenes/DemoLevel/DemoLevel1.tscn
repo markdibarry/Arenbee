@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=23 format=3 uid="uid://dbu5kwtyog8gw"]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_ua3fi"]
 [ext_resource type="Texture2D" uid="uid://wdrb4344x12b" path="res://Arenbee/Scenery/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" id="2_gf6r1"]
@@ -15,8 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://dv4d53yslg4wv" path="res://GameCore/Events/DialogArea.tscn" id="11_ll7qf"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="12_vgakd"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="13_nnat1"]
-[ext_resource type="PackedScene" uid="uid://bvd6dm7uke0x2" path="res://Arenbee/Actors/Spawner.tscn" id="15_2jr03"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Orc/Orc.tscn" id="21_3e0g1"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/Spawner.tscn" id="15_2jr03"]
+[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Orc/Orc.tscn" id="17_68euy"]
+[ext_resource type="PackedScene" uid="uid://d3w6o1vhooadv" path="res://Arenbee/Actors/ActorBodies/Whisp/Whisp.tscn" id="18_b176l"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrpfu"]
 size = Vector2(16, 12)
@@ -60,7 +61,6 @@ region_rect = Rect2(0, 0, 1696, 208)
 
 [node name="ParallaxLayerHills" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="2"]
 motion_scale = Vector2(0.025, 1.05)
-motion_offset = Vector2(0, 6)
 
 [node name="bghills" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerHills" index="0"]
 texture_filter = 1
@@ -73,7 +73,6 @@ region_rect = Rect2(0, 0, 1696, 80)
 
 [node name="ParallaxLayerForest" type="ParallaxLayer" parent="Scenery/ParallaxBackground" index="3"]
 motion_scale = Vector2(0.05, 1.025)
-motion_offset = Vector2(0, 6)
 
 [node name="bgforest" type="Sprite2D" parent="Scenery/ParallaxBackground/ParallaxLayerForest" index="0"]
 texture_filter = 1
@@ -213,9 +212,17 @@ DialogPath = "res://Arenbee/GUI/Dialog/test.json"
 Hint = true
 
 [node name="Spawner" parent="Actors" index="0" instance=ExtResource("15_2jr03")]
-position = Vector2(357, 179)
+position = Vector2(352, 207)
 Respawn = true
 OffScreen = true
 ActorDataId = "Orc"
 
-[node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("21_3e0g1")]
+[node name="Orc" parent="Actors/Spawner" index="0" instance=ExtResource("17_68euy")]
+
+[node name="Spawner2" parent="Actors" index="1" instance=ExtResource("15_2jr03")]
+position = Vector2(385, 13)
+Respawn = true
+OffScreen = true
+ActorDataId = "Whisp"
+
+[node name="Whisp" parent="Actors/Spawner2" index="0" instance=ExtResource("18_b176l")]

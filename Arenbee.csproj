@@ -33,6 +33,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Arenbee\Actors\Animation\EnemyDeathEffect\" />
-    <Folder Include="GameCore\Actors\Animation\" />
   </ItemGroup>
 </Project>

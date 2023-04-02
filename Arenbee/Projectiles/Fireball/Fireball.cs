@@ -46,6 +46,7 @@ public partial class Fireball : Node2D
         }
         fireball.GlobalPosition = new Vector2(actorBody.GlobalPosition.X + fireballOffset, actorBody.GlobalPosition.Y);
         actorBody.GetParent().AddChild(fireball);
+        fireball.HitBox.SetHitboxRole(actorBody.ActorRole);
         string sourceName = actorBody.Name;
         int attackValue = actorBody.Actor.Stats.CalculateStat((int)StatType.Attack);
         fireball.HitBox.GetDamageRequest = () =>

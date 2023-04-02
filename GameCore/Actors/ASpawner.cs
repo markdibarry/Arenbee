@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Arenbee.Actors;
 using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
@@ -102,7 +103,8 @@ public abstract partial class ASpawner : Node2D
         VisibleOnScreenNotifier2D = GetNode<VisibleOnScreenNotifier2D>(nameof(VisibleOnScreenNotifier2D));
         VisibleOnScreenNotifier2D.ScreenExited += OnScreenExited;
         ActorBody = this.GetChildren<AActorBody>().FirstOrDefault();
-        RemoveChild(ActorBody);
+        if (ActorBody != null)
+            RemoveChild(ActorBody);
         RaiseSpawnRequested();
     }
 
@@ -117,15 +119,17 @@ public abstract partial class ASpawner : Node2D
             ActorData = ActorDataDB.GetData<AActorData>(ActorDataId)?.Clone();
         if (ActorData == null || ActorBody == null)
             return null;
+
         AActor actor = ActorData.CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
+        actorBody.ActorRole = (int)ActorRole.Enemy;
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;
+
         actor.Defeated += OnActorDefeated;
         SpawnedActorBody = actorBody;
         SpawnPending = false;
-        GD.Print("Spawned!");
         return actorBody;
     }
 

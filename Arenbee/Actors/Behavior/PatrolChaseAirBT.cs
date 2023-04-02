@@ -1,11 +1,12 @@
 ﻿using GameCore.Actors;
-using GameCore.Input;
+using GameCore.Actors.Behavior;
 
-namespace Arenbee.Actors.Behavior.PatrolChaseAir;
+namespace Arenbee.Actors.Behavior;
 
 public class PatrolChaseAirBT : BehaviorTree
 {
     public PatrolChaseAirBT(AActorBody actor) : base(actor) { }
+
     protected override BTNode SetupTree()
     {
         return new Selector(new()
@@ -13,7 +14,7 @@ public class PatrolChaseAirBT : BehaviorTree
             new Sequence(new()
             {
                 new CheckTargetInArea(),
-                new TaskChaseTargetInAir()
+                new TaskChaseTarget()
             }),
             new Sequence(new()
             {
@@ -22,8 +23,7 @@ public class PatrolChaseAirBT : BehaviorTree
                     new CheckIsHome()
                 }),
                 new TaskMoveHome()
-            }),
-            new TaskPatrol()
+            })
         });
     }
 }

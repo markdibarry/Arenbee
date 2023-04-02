@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Arenbee.Input;
 using GameCore.Audio;
 using GameCore.Extensions;
 using GameCore.GUI;

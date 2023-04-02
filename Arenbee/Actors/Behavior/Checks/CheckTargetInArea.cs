@@ -1,7 +1,7 @@
-﻿using GameCore.Input;
+﻿using GameCore.Actors.Behavior;
 using Godot;
 
-namespace Arenbee.Actors.Behavior.PatrolChaseAir;
+namespace Arenbee.Actors.Behavior;
 
 public class CheckTargetInArea : BTNode
 {
@@ -18,19 +18,12 @@ public class CheckTargetInArea : BTNode
 
     public override NodeState Evaluate(double delta)
     {
-        if (GetData("Target") is null)
-        {
-            State = NodeState.Failure;
-            return State;
-        }
-
-        State = NodeState.Success;
-        return State;
+        return GetData("Target") is null ? NodeState.Failure : NodeState.Success;
     }
 
     public void OnBodyEntered(Node2D body)
     {
-        if (body is not ActorBody)
+        if (body == Actor || body is not ActorBody)
             return;
         if (GetData("Target") == null)
             SetData("Target", body);

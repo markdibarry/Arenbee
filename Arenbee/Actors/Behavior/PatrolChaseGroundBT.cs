@@ -1,11 +1,12 @@
 ﻿using GameCore.Actors;
-using GameCore.Input;
+using GameCore.Actors.Behavior;
 
-namespace Arenbee.Actors.Behavior.PatrolChaseGround;
+namespace Arenbee.Actors.Behavior;
 
 public class PatrolChaseGroundBT : BehaviorTree
 {
     public PatrolChaseGroundBT(AActorBody actor) : base(actor) { }
+
     protected override BTNode SetupTree()
     {
         return new Selector(new()
@@ -13,7 +14,7 @@ public class PatrolChaseGroundBT : BehaviorTree
             new Sequence(new()
             {
                 new CheckTargetInRayCastRange(),
-                new TaskChaseTargetOnGround()
+                new TaskChaseTarget()
             }),
             new TaskPatrol()
         });

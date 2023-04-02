@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=13 format=3 uid="uid://d3w6o1vhooadv"]
 
 [ext_resource type="PackedScene" uid="uid://bemdsaiiodtmd" path="res://Arenbee/Actors/ActorBody.tscn" id="1_e7d2k"]
 [ext_resource type="Script" path="res://Arenbee/Actors/ActorBodies/Whisp/Whisp.cs" id="2_smssj"]
@@ -34,7 +34,7 @@ resource_local_to_scene = true
 size = Vector2(16, 18)
 
 [node name="Whisp" instance=ExtResource("1_e7d2k")]
-collision_layer = 3
+collision_layer = 0
 collision_mask = 2
 script = ExtResource("2_smssj")
 ActorType = 1
@@ -53,7 +53,7 @@ hframes = 21
 
 [node name="BodyBox" parent="Body/BodySprite/HurtBoxes" index="0" instance=ExtResource("5_uvkvh")]
 collision_layer = 0
-collision_mask = 0
+collision_mask = 16
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HurtBoxes/BodyBox" index="0"]
@@ -61,7 +61,7 @@ position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_pidx0")
 
 [node name="BodyBox" parent="Body/BodySprite/HitBoxes" index="0" instance=ExtResource("6_ttdw0")]
-collision_layer = 16
+collision_layer = 32
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/BodySprite/HitBoxes/BodyBox" index="0"]

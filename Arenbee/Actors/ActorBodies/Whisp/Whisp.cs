@@ -1,4 +1,4 @@
-﻿using Arenbee.Actors.Behavior.PatrolChaseAir;
+﻿using Arenbee.Actors.Behavior;
 using Arenbee.Actors.State.DefaultEnemy;
 using Arenbee.Statistics;
 using GameCore.Extensions;

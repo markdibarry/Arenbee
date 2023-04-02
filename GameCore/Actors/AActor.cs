@@ -21,7 +21,7 @@ public abstract class AActor : IDamageable
     public AActorBody? ActorBody { get; protected set; }
     public string ActorId { get; set; }
     public string ActorBodyId { get; set; }
-    public ActorType ActorType { get; set; }
+    public int ActorRole { get; set; }
     public string EquipmentSlotPresetId { get; }
     public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }

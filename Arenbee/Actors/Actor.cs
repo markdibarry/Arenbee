@@ -1,6 +1,8 @@
-﻿using Arenbee.Items;
+﻿using System;
+using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
+using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -27,7 +29,16 @@ public class Actor : AActor
             Stats.AddMod(new Modifier(mod));
     }
 
-    private void OnHPDepleted() => RaiseDefeated();
+    public ActorBody CreateBody()
+    {
+        string? bodyPath = ActorBodyDB.ById(ActorBodyId);
+        if (bodyPath == null)
+            throw new Exception($"No Body {ActorBodyId} found.");
+        ActorBody actorBody = GDEx.Instantiate<ActorBody>(bodyPath);
+        SetActorBody(actorBody);
+        actorBody.SetActor(this);
+        return actorBody;
+    }
 
     public override void InitStats()
     {
@@ -61,4 +72,6 @@ public class Actor : AActor
     {
         (ActorBody as ActorBody)?.HoldItemController.SetHoldItem(oldItem, newItem);
     }
+
+    private void OnHPDepleted() => RaiseDefeated();
 }

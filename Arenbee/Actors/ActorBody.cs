@@ -1,6 +1,8 @@
 ﻿using Arenbee.GUI;
 using Arenbee.Items;
+using Arenbee.Statistics;
 using GameCore.Actors;
+using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 using Godot;
@@ -49,6 +51,23 @@ public abstract partial class ActorBody : AActorBody
     public override void SetActor(AActor? actor)
     {
         Actor = actor;
+    }
+
+    public override void SetActorRole(int role)
+    {
+        SetCollisionLayerValue(1, (ActorRole)role == Actors.ActorRole.Player);
+        foreach (HurtBox child in HurtBoxes.GetChildren<HurtBox>())
+            child.SetHurtboxRole(role);
+        foreach (HitBox child in HitBoxes.GetChildren<HitBox>())
+            child.SetHitboxRole(role);
+        foreach (HoldItem holdItem in HoldItemController.HoldItems)
+        {
+            foreach (HitBox child in holdItem.GetChildren<HitBox>())
+                child.SetHitboxRole(role);
+        }
+        ActorRole = role;
+        if (Actor != null)
+            Actor.ActorRole = role;
     }
 
     public void SetHoldItem(AItem? oldItem, AItem? newItem)

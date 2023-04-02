@@ -1,6 +1,6 @@
-﻿using GameCore.Input;
-using GameCore.Extensions;
+﻿using GameCore.Extensions;
 using Godot;
+using Arenbee.Input;
 
 namespace GameCore.Actors;
 

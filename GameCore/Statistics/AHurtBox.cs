@@ -19,4 +19,6 @@ public abstract partial class AHurtBox : AreaBox
             return;
         DamageRequested?.Invoke(hitBox.GetDamageRequest());
     }
+
+    public abstract void SetHurtboxRole(int role);
 }

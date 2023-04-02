@@ -1,4 +1,5 @@
-﻿using GameCore.Actors;
+﻿using Arenbee.Actors;
+using GameCore.Actors;
 using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
@@ -33,5 +34,19 @@ public partial class HitBox : AHitBox
                 Value = stats.CalculateStat(StatType.Attack)
             };
         };
+    }
+
+    public override void SetHitboxRole(int role)
+    {
+        if (role == (int)ActorRole.Player)
+        {
+            SetCollisionLayerValue(6, false);
+            SetCollisionLayerValue(5, true);
+        }
+        else if (role == (int)ActorRole.Enemy)
+        {
+            SetCollisionLayerValue(6, true);
+            SetCollisionLayerValue(5, false);
+        }
     }
 }

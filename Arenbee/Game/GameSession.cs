@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
-using Arenbee.Actors.Players;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.PartyMenus;
 using Arenbee.Items;
@@ -66,17 +64,19 @@ public partial class GameSession : AGameSession
         Parties = save.Parties.Select(x => x.CreateParty(inventories)).ToList();
         MainParty = GetParty(save.MainPartyId);
         SessionState = save.SessionState;
+
         InitAreaScene();
+        ActorBody actorBody = InitMainActor();
+        CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));
+    }
+
+    private ActorBody InitMainActor()
+    {
         AActor actor = MainParty!.Actors.First();
-        string? bodyPath = ActorBodyDB.ById(actor.ActorBodyId);
-        if (bodyPath == null)
-            throw new Exception($"No Body {actor.ActorBodyId} found.");
-        ActorBody actorBody = GDEx.Instantiate<ActorBody>(bodyPath);
-        actor.SetActorBody(actorBody);
-        actorBody.SetActor(actor);
-        actorBody.SetCollisionLayerValue(1, true);
+        ActorBody actorBody = ((Actor)actor).CreateBody();
+        actorBody.ActorRole = (int)ActorRole.Player;
         Locator.Root.GameCamera.CurrentTarget = actorBody;
         actorBody.InputHandler = Locator.Root.PlayerOneInput;
-        CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));
+        return actorBody;
     }
 }
