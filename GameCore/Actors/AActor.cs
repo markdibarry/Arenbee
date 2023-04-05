@@ -1,5 +1,4 @@
 ﻿using System;
-using GameCore.Enums;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -26,9 +25,9 @@ public abstract class AActor : IDamageable
     public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }
     public string Name { get; set; }
-    public AStats Stats { get; protected set; } = null!;
+    public abstract AStats Stats { get; protected set; }
     public event Action<AActor>? Defeated;
-    public event Action<AActor, ADamageResult>? DamageRecieved;
+    public event Action<AActor, ADamageResult>? DamageReceived;
     public event Action<AActor, Modifier, ModChangeType>? ModChanged;
     public event Action<AActor>? StatsChanged;
     public event Action<AActor, int, ModChangeType>? StatusEffectChanged;
@@ -57,7 +56,7 @@ public abstract class AActor : IDamageable
     private void OnDamageRecieved(ADamageResult damageResult)
     {
         damageResult.RecieverName = Name;
-        DamageRecieved?.Invoke(this, damageResult);
+        DamageReceived?.Invoke(this, damageResult);
     }
 
     private void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)

@@ -95,12 +95,12 @@ public partial class DialogBox : Control
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
         SpeedUpEnabled = false;
-        if (CurrentState == State.Idle && menuInput.Enter.IsActionJustPressed)
+        if (CurrentState == State.Idle && menuInput.Accept.IsActionJustPressed)
         {
             HandleNext();
             return;
         }
-        else if (CurrentState == State.Writing && menuInput.Enter.IsActionPressed)
+        else if (CurrentState == State.Writing && menuInput.Accept.IsActionPressed)
         {
             SpeedUpEnabled = true;
         }

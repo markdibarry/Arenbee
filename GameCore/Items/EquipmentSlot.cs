@@ -23,6 +23,11 @@ public class EquipmentSlot
     public List<Modifier> Modifiers { get; } = new();
     public AItem? Item => ItemStack?.Item;
 
+    public bool IsCompatible(AItem item)
+    {
+        return Array.IndexOf(SlotCategory.ItemCategoryIds, item.ItemCategory.Id) != -1;
+    }
+
     public void RemoveItem(AActor actor)
     {
         if (ItemStack == null)
@@ -59,11 +64,6 @@ public class EquipmentSlot
     {
         foreach (Modifier mod in item.Modifiers)
             Modifiers.Add(new Modifier(mod));
-    }
-
-    public bool IsCompatible(AItem item)
-    {
-        return Array.IndexOf(SlotCategory.ItemCategoryIds, item.ItemCategory.Id) != -1;
     }
 
     private void RemoveModifiersFromStats(AStats stats)

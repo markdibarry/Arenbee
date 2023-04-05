@@ -1,6 +1,6 @@
 ﻿namespace GameCore.Statistics;
 
-public class StatusEffect
+public class StatusEffect : IStatusEffect
 {
     public StatusEffect(AStats stats, StatusEffectData effectData, IConditionEventFilterFactory factory)
     {
@@ -37,7 +37,7 @@ public class StatusEffect
         }
     }
 
-    public void UnsubscribeCondtion()
+    public void UnsubscribeCondition()
     {
         if (_tickCondition?.EventFilter != null)
         {

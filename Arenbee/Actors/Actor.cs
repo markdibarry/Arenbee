@@ -29,6 +29,8 @@ public class Actor : AActor
             Stats.AddMod(new Modifier(mod));
     }
 
+    public override AStats Stats { get; protected set; }
+
     public ActorBody CreateBody()
     {
         string? bodyPath = ActorBodyDB.ById(ActorBodyId);
@@ -53,7 +55,7 @@ public class Actor : AActor
         {
             if (weapon != null)
                 oldActorBody.SetHoldItem(weapon, null);
-            DamageRecieved -= oldActorBody.OnDamageReceived;
+            DamageReceived -= oldActorBody.OnDamageReceived;
             //Defeated -= newActorBody.OnDefeated;
         }
 
@@ -63,7 +65,7 @@ public class Actor : AActor
         {
             if (weapon != null)
                 newActorBody.SetHoldItem(null, weapon);
-            DamageRecieved += newActorBody.OnDamageReceived;
+            DamageReceived += newActorBody.OnDamageReceived;
             //Defeated += newActorBody.OnDefeated;
         }
     }

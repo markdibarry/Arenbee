@@ -17,7 +17,7 @@ public partial class OptionSubMenu : SubMenu
 
         if (CurrentContainer == null)
             return;
-        if (menuInput.Enter.IsActionJustPressed)
+        if (menuInput.Accept.IsActionJustPressed)
         {
             CurrentContainer.SelectItem();
             return;

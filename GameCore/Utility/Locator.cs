@@ -12,7 +12,6 @@ public static class Locator
 {
     private static AGameRoot s_gameRoot = null!;
     private static AActorDataDB s_actorDataDB = null!;
-    private static AAudioController s_audioController = null!;
     private static IConditionEventFilterFactory s_conditionEventFilterFactory = null!;
     private static AEquipmentSlotCategoryDB s_equipmentSlotCategoryDB = null!;
     private static AItemDB s_itemDB = null!;
@@ -21,11 +20,10 @@ public static class Locator
     private static AStatusEffectDB s_statusEffectDB = null!;
     private static IStatusEffectModifierFactory s_statusEffectModifierFactory = null!;
     private static ActionEffectDBBase s_actionEffectDB = null!;
-    private static TransitionControllerBase s_transitionController = null!;
 
     public static ActionEffectDBBase ActionEffectDB => s_actionEffectDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
-    public static AAudioController Audio => s_audioController;
+    public static AAudioController Audio => s_gameRoot.AudioController;
     public static IConditionEventFilterFactory ConditionEventFilterFactory => s_conditionEventFilterFactory;
     public static AEquipmentSlotCategoryDB EquipmentSlotCategoryDB => s_equipmentSlotCategoryDB;
     public static AItemDB ItemDB => s_itemDB;
@@ -35,7 +33,7 @@ public static class Locator
     public static AStatTypeDB StatTypeDB => s_statTypeDB;
     public static AStatusEffectDB StatusEffectDB => s_statusEffectDB;
     public static IStatusEffectModifierFactory StatusEffectModifierFactory => s_statusEffectModifierFactory;
-    public static TransitionControllerBase TransitionController => s_transitionController;
+    public static TransitionControllerBase TransitionController => s_gameRoot.TransitionController;
 
     public static void ProvideActionEffectDB(ActionEffectDBBase actionEffectDB)
     {
@@ -45,13 +43,6 @@ public static class Locator
     public static void ProvideActorDataDB(AActorDataDB actorDataDB)
     {
         s_actorDataDB = actorDataDB;
-    }
-
-    public static void ProvideAudioController(AAudioController audioController)
-    {
-        if (GodotObject.IsInstanceValid(s_audioController))
-            s_audioController.Free();
-        s_audioController = audioController;
     }
 
     public static void ProvideConditionEventFilterFactory(IConditionEventFilterFactory factory)
@@ -94,10 +85,5 @@ public static class Locator
     public static void ProvideStatusEffectModifierFactory(IStatusEffectModifierFactory factory)
     {
         s_statusEffectModifierFactory = factory;
-    }
-
-    public static void ProvideTransitionController(TransitionControllerBase transitionController)
-    {
-        s_transitionController = transitionController;
     }
 }

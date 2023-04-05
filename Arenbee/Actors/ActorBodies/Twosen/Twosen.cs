@@ -1,7 +1,7 @@
 ﻿using Arenbee.Actors.State.DefaultPlayer;
 using GameCore.Extensions;
 
-namespace Arenbee.Actors.Players;
+namespace Arenbee.Actors.ActorBodies;
 
 public partial class Twosen : ActorBody
 {

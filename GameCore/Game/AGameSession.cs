@@ -66,6 +66,7 @@ public abstract partial class AGameSession : Node2D
     {
         if (CurrentAreaScene == null)
             return;
+
         AreaSceneContainer.RemoveChild(CurrentAreaScene);
         CurrentAreaScene.QueueFree();
         CurrentAreaScene = null;

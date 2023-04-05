@@ -27,13 +27,14 @@ public partial class SceneChanger : SceneChangerBase
                 await GUIController.CloseAllLayersAsync();
                 Party? party = ((GameSession)GameSession).MainParty;
                 foreach (var player in party!.Actors)
-                    GameSession.CurrentAreaScene?.RemoveActor(player.ActorBody!);
+                    GameSession.CurrentAreaScene?.RemoveActorBody(player.ActorBody!);
                 GameSession.RemoveAreaScene();
 
                 AAreaScene areaScene = areaScenePacked!.Instantiate<AAreaScene>();
                 GameSession.AddAreaScene(areaScene);
                 AActor actor = party!.Actors.First();
-                areaScene.AddActorBody(actor.ActorBody!, areaScene.GetSpawnPoint(0));
+                actor.ActorBody!.GlobalPosition = areaScene.GetSpawnPoint(0);
+                areaScene.AddActorBody(actor.ActorBody!);
             });
         await TController.TransitionAsync(request);
         GameSession.Resume();

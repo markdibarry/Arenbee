@@ -29,10 +29,8 @@ public class Loader
 
     public T? GetObject<T>(string path)
     {
-        var result = _objects.FirstOrDefault(x => x.Path == path)?.LoadedObject;
-        if (result is not T)
-            return default;
-        return (T)result;
+        object? result = _objects.FirstOrDefault(x => x.Path == path)?.LoadedObject;
+        return result is T t ? t : default;
     }
 
     public async Task LoadAsync()

@@ -1,6 +1,6 @@
 ﻿using GameCore.Extensions;
+using GameCore.Input;
 using Godot;
-using Arenbee.Input;
 
 namespace GameCore.Actors;
 
@@ -35,7 +35,7 @@ public partial class AActorBody
     public double JumpVelocity { get; protected set; }
     public double JumpGravity { get; protected set; }
     public int RunSpeed { get; protected set; }
-    public ActorInputHandler InputHandler { get; set; }
+    public abstract InputHandler InputHandler { get; set; }
 
     public void ApplyFallGravity(double delta)
     {

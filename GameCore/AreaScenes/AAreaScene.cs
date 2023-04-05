@@ -1,5 +1,4 @@
-﻿using Arenbee.Actors;
-using GameCore.Actors;
+﻿using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
 using Godot;
@@ -18,26 +17,28 @@ public partial class AAreaScene : Node2D
         SetNodeReferences();
     }
 
-    public void AddActorBody(AActorBody actorBody, Vector2 spawnPosition)
+    public override void _ExitTree()
     {
-        actorBody.GlobalPosition = spawnPosition;
+        foreach (var actorBody in ActorsContainer.GetChildren<AActorBody>())
+            actorBody.CleanUpActorBody();
+    }
+
+    public void AddActorBody(AActorBody actorBody)
+    {
+        HUD.SubscribeActorBodyEvents(actorBody);
         ActorsContainer.AddChild(actorBody);
-        if (actorBody.Actor != null)
-            HUD.SubscribeActorEvents(actorBody.Actor);
     }
 
     public Vector2 GetSpawnPoint(int spawnPointIndex)
     {
         var spawnPoint = SpawnPointContainer.GetChild<Marker2D>(spawnPointIndex);
-        if (spawnPoint == null)
-            return new Vector2(100, 100);
-        return spawnPoint.GlobalPosition;
+        return spawnPoint?.GlobalPosition ?? new Vector2(100, 100);
     }
 
     public void Init(AHUD hud)
     {
         HUD = hud;
-        ConnectHUDToActors();
+        ConnectHUDToExistingActors();
         ConnectSpawners();
     }
 
@@ -45,15 +46,10 @@ public partial class AAreaScene : Node2D
 
     public void Resume() => ProcessMode = ProcessModeEnum.Inherit;
 
-    public void RemoveActor(AActorBody actorBody)
+    public void RemoveActorBody(AActorBody actorBody)
     {
         ActorsContainer.RemoveChild(actorBody);
-        if (actorBody.Actor != null)
-        {
-            HUD.UnsubscribeActorEvents(actorBody.Actor);
-            if (actorBody.Actor.ActorRole == (int)ActorRole.Enemy)
-                actorBody.QueueFree();
-        }
+        HUD.UnsubscribeActorBodyEvents(actorBody);
     }
 
     public void OnGameStateChanged(GameState gameState)
@@ -68,15 +64,14 @@ public partial class AAreaScene : Node2D
             return;
         AActorBody? actorBody = spawner.Spawn();
         if (actorBody != null)
-            AddActorBody(actorBody, actorBody.GlobalPosition);
+            AddActorBody(actorBody);
     }
 
-    private void ConnectHUDToActors()
+    private void ConnectHUDToExistingActors()
     {
         foreach (var actorBody in ActorsContainer.GetChildren<AActorBody>())
         {
-            if (actorBody.Actor != null)
-                HUD.SubscribeActorEvents(actorBody.Actor);
+            HUD.SubscribeActorBodyEvents(actorBody);
         }
     }
 

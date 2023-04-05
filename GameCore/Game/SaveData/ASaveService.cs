@@ -13,10 +13,10 @@ public abstract class ASaveService<T> where T : IGameSave
     private static readonly string s_globalPath = ProjectSettings.GlobalizePath(Config.SavePath);
     private static readonly string[] s_ignoredPropertyNames = new string[]
     {
-            nameof(GodotObject.NativeInstance),
-            nameof(Resource.ResourceName),
-            nameof(Resource.ResourcePath),
-            nameof(Resource.ResourceLocalToScene)
+        nameof(GodotObject.NativeInstance),
+        nameof(Resource.ResourceName),
+        nameof(Resource.ResourcePath),
+        nameof(Resource.ResourceLocalToScene)
     };
 
     private static void IgnoreBaseClass(JsonTypeInfo typeInfo)

@@ -37,7 +37,7 @@ public abstract class AStats
     public Dictionary<int, List<Modifier>> Modifiers { get; }
     public Dictionary<int, Stat> StatLookup { get; }
     public IDamageable StatsOwner { get; }
-    protected List<StatusEffect> StatusEffects { get; }
+    protected List<IStatusEffect> StatusEffects { get; }
 
     public event Action<ADamageResult>? DamageReceived;
     public event Action<Modifier, ModChangeType>? ModChanged;
@@ -63,13 +63,30 @@ public abstract class AStats
         mod.IsActive = !mod.ShouldDeactivate();
 
         mods.Add(mod);
-        mod.SubscribeConditions();
         SubscribeModConditions(mod);
         UpdateSpecialCategory(mod.StatType);
         RaiseModChanged(mod, ModChangeType.Add);
     }
 
     public abstract int CalculateStat(int statType, bool ignoreHidden = false);
+
+    /// <summary>
+    /// Unsubscribes and removes all StatusEffects and Modifiers.
+    /// Necessary to prevent memory leak.
+    /// </summary>
+    public void CleanupStats()
+    {
+        // TODO: Find out source of memory leak.
+        foreach (var effect in StatusEffects)
+            effect.UnsubscribeCondition();
+        StatusEffects.Clear();
+        foreach (var kvp in Modifiers)
+        {
+            foreach (var mod in kvp.Value)
+                mod.UnsubscribeConditions();
+        }
+        Modifiers.Clear();
+    }
 
     public Dictionary<int, Stat> CloneStatLookup()
     {
@@ -96,24 +113,6 @@ public abstract class AStats
         return mods;
     }
 
-    public virtual void RemoveMod(Modifier mod, bool unsubscribe = true)
-    {
-        if (!Modifiers.TryGetValue(mod.StatType, out List<Modifier>? mods))
-            return;
-        if (!mods.Contains(mod))
-            return;
-        if (unsubscribe)
-        {
-            mod.UnsubscribeConditions();
-            UnsubscribeModConditions(mod);
-        }
-        mods.Remove(mod);
-        if (mods.Count == 0)
-            Modifiers.Remove(mod.StatType);
-        UpdateSpecialCategory(mod.StatType);
-        RaiseModChanged(mod, ModChangeType.Remove);
-    }
-
     public IReadOnlyCollection<Modifier> GetModifiers(int statType)
     {
         return Modifiers.TryGetValue(statType, out List<Modifier>? mod) ? mod : Array.Empty<Modifier>();
@@ -137,6 +136,21 @@ public abstract class AStats
     public void ReceiveDamageRequest(ADamageRequest damageRequest)
     {
         DamageToProcess.Enqueue(damageRequest);
+    }
+
+    public virtual void RemoveMod(Modifier mod, bool unsubscribe = true)
+    {
+        if (!Modifiers.TryGetValue(mod.StatType, out List<Modifier>? mods))
+            return;
+        if (!mods.Contains(mod))
+            return;
+        if (unsubscribe)
+            UnsubscribeModConditions(mod);
+        mods.Remove(mod);
+        if (mods.Count == 0)
+            Modifiers.Remove(mod.StatType);
+        UpdateSpecialCategory(mod.StatType);
+        RaiseModChanged(mod, ModChangeType.Remove);
     }
 
     protected abstract ADamageResult HandleDamage(ADamageRequest damageData);
@@ -176,10 +190,10 @@ public abstract class AStats
 
     protected void RemoveStatusEffect(int statusEffectType)
     {
-        StatusEffect? statusEffect = StatusEffects.FirstOrDefault(x => x.EffectType == statusEffectType);
+        IStatusEffect? statusEffect = StatusEffects.FirstOrDefault(x => x.EffectType == statusEffectType);
         if (statusEffect == null)
             return;
-        statusEffect.UnsubscribeCondtion();
+        statusEffect.UnsubscribeCondition();
         statusEffect.EffectData.ExitEffect?.Invoke(statusEffect);
         StatusEffects.Remove(statusEffect);
         StatusEffectChanged?.Invoke(statusEffectType, ModChangeType.Remove);
@@ -187,12 +201,14 @@ public abstract class AStats
 
     protected void SubscribeModConditions(Modifier mod)
     {
+        mod.SubscribeConditions();
         mod.ActivationConditionMet += OnActivationConditionMet;
         mod.RemovalConditionMet += OnRemovalConditionMet;
     }
 
     protected void UnsubscribeModConditions(Modifier mod)
     {
+        mod.UnsubscribeConditions();
         mod.ActivationConditionMet -= OnActivationConditionMet;
         mod.RemovalConditionMet -= OnRemovalConditionMet;
     }

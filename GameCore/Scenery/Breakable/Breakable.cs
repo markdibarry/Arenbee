@@ -1,7 +1,7 @@
 ﻿using System;
 using Godot;
 
-namespace Arenbee.Scenery;
+namespace GameCore.Scenery;
 
 public partial class Breakable : StaticBody2D
 {

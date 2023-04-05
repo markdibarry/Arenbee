@@ -21,6 +21,7 @@ public class GameState
     {
         MenuActive = guiController.MenuActive;
         CutsceneActive = guiController.DialogActive;
+        DialogActive = guiController.DialogActive;
         GameStateChanged?.Invoke(this);
     }
 }

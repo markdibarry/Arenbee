@@ -14,7 +14,7 @@ public partial class PromptSubMenu : SubMenu
     {
         base.HandleInput(menuInput, delta);
 
-        if (menuInput.Enter.IsActionJustPressed)
+        if (menuInput.Accept.IsActionJustPressed)
             Confirm();
 
         if (_timerEnabled)

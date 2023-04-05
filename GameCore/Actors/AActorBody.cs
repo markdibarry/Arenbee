@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using Arenbee.Input;
+﻿using System;
+using System.Collections.Generic;
 using GameCore.Audio;
 using GameCore.Events;
 using GameCore.Extensions;
+using GameCore.Input;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -26,7 +27,6 @@ public abstract partial class AActorBody : CharacterBody2D
         GroundedGravity = 0.05;
         HurtBoxes = null!;
         HitBoxes = null!;
-        InputHandler = new DummyInputHandler();
         StateController = null!;
         UpDirection = Vector2.Up;
         WalkSpeed = 50;
@@ -42,6 +42,7 @@ public abstract partial class AActorBody : CharacterBody2D
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
     public IStateController StateController { get; protected set; }
+    public event Action<AActorBody>? Freeing;
 
     public override void _Ready()
     {
@@ -58,6 +59,22 @@ public abstract partial class AActorBody : CharacterBody2D
             context.TriggerContext(this);
         StateController.UpdateStates(delta);
         HandleMove(delta);
+    }
+
+    public override void _ExitTree()
+    {
+        if (!IsQueuedForDeletion())
+            return;
+
+        CleanUpActorBody();
+    }
+
+    public void CleanUpActorBody()
+    {
+        Freeing?.Invoke(this);
+        Actor?.Stats.CleanupStats();
+        Actor?.SetActorBody(null);
+        Actor = null;
     }
 
     public void OnGameStateChanged(GameState gameState)

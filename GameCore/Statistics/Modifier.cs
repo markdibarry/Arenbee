@@ -121,14 +121,12 @@ public partial class Modifier : Resource
 
     private Action GetHandler(Condition condition)
     {
-        Action handler;
-        if (condition.ResultType == ConditionResultType.Remove)
-            handler = ConditionRemovalHandler;
-        else if (condition.ResultType == ConditionResultType.Deactivate)
-            handler = ConditionActivationHandler;
-        else
-            handler = SourceType == SourceType.Independent ? ConditionRemovalHandler : ConditionActivationHandler;
-        return handler;
+        return condition.ResultType switch
+        {
+            ConditionResultType.Remove => ConditionRemovalHandler,
+            ConditionResultType.Deactivate => ConditionActivationHandler,
+            _ => SourceType == SourceType.Independent ? ConditionRemovalHandler : ConditionActivationHandler
+        };
     }
 
     public override Godot.Collections.Array<Gictionary> _GetPropertyList()

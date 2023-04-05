@@ -9,15 +9,15 @@ public class ItemStack
 {
     public ItemStack(AItem item, int amount)
     {
-        _reservations = new();
+        _reservations = new List<Reservation>();
         Item = item;
         Count = Math.Clamp(amount, 1, item.MaxStack);
     }
 
-    private readonly List<Reservation> _reservations;
+    private readonly IList<Reservation> _reservations;
     public int Count { get; private set; }
     public AItem Item { get; }
-    public IReadOnlyCollection<Reservation> Reservations => _reservations;
+    public IReadOnlyCollection<Reservation> Reservations => _reservations.ToList();
 
     public bool CanReserve() => _reservations.Count < Count;
 

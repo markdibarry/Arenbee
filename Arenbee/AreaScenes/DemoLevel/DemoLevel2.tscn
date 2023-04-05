@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://by40v1o28wlhm"]
+[gd_scene load_steps=13 format=3 uid="uid://by40v1o28wlhm"]
 
 [ext_resource type="PackedScene" uid="uid://nbqjbe4vr5nk" path="res://GameCore/AreaScenes/AAreaScene.tscn" id="1_d3aeo"]
 [ext_resource type="Script" path="res://Arenbee/AreaScenes/AreaScene.cs" id="2_avwur"]
@@ -8,8 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://dnm6k1qshq4d" path="res://Arenbee/Scenery/Seasonal Tilesets/2 - Autumn Forest/Background parts/4 - Tree_row_BG_1.png" id="5_kh535"]
 [ext_resource type="Script" path="res://GameCore/AreaScenes/AreaCameraLimit.cs" id="6_1wmsk"]
 [ext_resource type="Script" path="res://Arenbee/Events/SceneChanger.cs" id="7_ftrnt"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/Spawner.tscn" id="9_ti87r"]
-[ext_resource type="PackedScene" path="res://Arenbee/Actors/ActorBodies/Ball/Ball.tscn" id="10_nugo2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hnqgo"]
 texture = ExtResource("2_lfhbd")
@@ -256,9 +254,3 @@ offset_left = -16.0
 offset_top = -8.0
 offset_right = 4.0
 offset_bottom = 24.0
-
-[node name="Spawner" parent="Actors" index="0" instance=ExtResource("9_ti87r")]
-position = Vector2(169, 165)
-ActorDataId = "Ball"
-
-[node name="Ball" parent="Actors/Spawner" index="0" instance=ExtResource("10_nugo2")]

@@ -1,17 +1,15 @@
-﻿using System.Threading.Tasks;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.GUI;
 
 public partial class DamageNumber : Label
 {
-    public async Task Start(int num)
+    public void Start(int num)
     {
         Position = Position with { Y = -8 };
         Text = num.ToString();
-        var tween = CreateTween();
+        Tween tween = CreateTween();
         tween.TweenProperty(this, "position:y", -20, 0.5);
-        await ToSignal(tween, Tween.SignalName.Finished);
-        QueueFree();
+        tween.TweenCallback(Callable.From(QueueFree));
     }
 }

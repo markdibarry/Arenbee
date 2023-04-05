@@ -137,7 +137,7 @@ public abstract class AInventory
     /// If more is needed removed, it will search for more stacks and remove items
     /// from them as well.
     /// </summary>
-    /// <param name="item"></param>
+    /// <param name="itemStack"></param>
     /// <param name="amount"></param>
     /// <returns>The number of items unable to be removed from the inventory.</returns>
     public int RemoveItem(ItemStack itemStack, int amount = 1)

@@ -13,7 +13,7 @@ public abstract class ActorBodyState : GameCore.Utility.State
 
     public string AnimationName { get; protected set; } = string.Empty;
     public BlockedState BlockedStates { get; set; }
-    public ActorInputHandler InputHandler => ActorBody.InputHandler;
+    public ActorInputHandler InputHandler => (ActorInputHandler)ActorBody.InputHandler;
     public StateController StateController => (StateController)ActorBody.StateController;
     public Stats? Stats => ActorBody.Actor?.Stats as Stats;
     protected ActorBody ActorBody { get; }

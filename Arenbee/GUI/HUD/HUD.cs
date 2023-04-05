@@ -65,12 +65,20 @@ public partial class HUD : AHUD
         _playerStatsDisplay.Update((Stats)actor.Stats);
     }
 
-    public override void SubscribeActorEvents(AActor actor)
+    public void OnActorBodyFreeing(AActorBody actorBody)
     {
+        UnsubscribeActorBodyEvents(actorBody);
+    }
+
+    public override void SubscribeActorBodyEvents(AActorBody actorBody)
+    {
+        actorBody.Freeing += OnActorBodyFreeing;
+        if (actorBody.Actor is not Actor actor)
+            return;
         actor.Defeated += OnActorDefeated;
-        actor.DamageRecieved += OnActorDamaged;
+        actor.DamageReceived += OnActorDamaged;
         actor.StatusEffectChanged += OnActorStatusEffectChanged;
-        if (actor.ActorBody!.ActorRole == (int)ActorRole.Player)
+        if (actorBody!.ActorRole == (int)ActorRole.Player)
         {
             actor.ModChanged += OnActorModChanged;
             actor.StatsChanged += OnActorStatsChanged;
@@ -78,12 +86,15 @@ public partial class HUD : AHUD
         }
     }
 
-    public override void UnsubscribeActorEvents(AActor actor)
+    public override void UnsubscribeActorBodyEvents(AActorBody actorBody)
     {
+        actorBody.Freeing -= OnActorBodyFreeing;
+        if (actorBody.Actor is not Actor actor)
+            return;
         actor.Defeated -= OnActorDefeated;
-        actor.DamageRecieved -= OnActorDamaged;
+        actor.DamageReceived -= OnActorDamaged;
         actor.StatusEffectChanged -= OnActorStatusEffectChanged;
-        if (actor.ActorRole == (int)ActorRole.Player)
+        if (actorBody!.ActorRole == (int)ActorRole.Player)
         {
             actor.ModChanged -= OnActorModChanged;
             actor.StatsChanged -= OnActorStatsChanged;

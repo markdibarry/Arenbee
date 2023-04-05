@@ -6,7 +6,6 @@ using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Items;
-using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
 

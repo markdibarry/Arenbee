@@ -4,18 +4,10 @@ namespace GameCore.Input;
 
 public abstract class InputHandler
 {
-    protected InputHandler()
-    {
-        Up = new InputAction(this);
-        Down = new InputAction(this);
-        Left = new InputAction(this);
-        Right = new InputAction(this);
-    }
-
-    public InputAction Up { get; protected set; }
-    public InputAction Down { get; protected set; }
-    public InputAction Left { get; protected set; }
-    public InputAction Right { get; protected set; }
+    public abstract InputAction Up { get; }
+    public abstract InputAction Down { get; }
+    public abstract InputAction Left { get; }
+    public abstract InputAction Right { get; }
     public bool UserInputDisabled { get; set; }
 
     public Vector2 GetLeftAxis()

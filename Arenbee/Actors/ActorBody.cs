@@ -1,8 +1,10 @@
 ﻿using Arenbee.GUI;
+using Arenbee.Input;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Extensions;
+using GameCore.Input;
 using GameCore.Items;
 using GameCore.Statistics;
 using Godot;
@@ -12,10 +14,13 @@ namespace Arenbee.Actors;
 public abstract partial class ActorBody : AActorBody
 {
     public ActorBody()
+        : base()
     {
+        InputHandler = new DummyInputHandler();
         IFrameController = new(this);
     }
 
+    public override InputHandler InputHandler { get; set; }
     public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public HoldItemController HoldItemController { get; private set; } = null!;
     public IFrameController IFrameController { get; }
@@ -45,7 +50,7 @@ public abstract partial class ActorBody : AActorBody
     {
         DamageNumber damageNumber = new();
         AddChild(damageNumber);
-        _ = damageNumber.Start(damageResult.TotalDamage);
+        damageNumber.Start(damageResult.TotalDamage);
     }
 
     public override void SetActor(AActor? actor)

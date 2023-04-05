@@ -2,20 +2,12 @@
 
 namespace Arenbee.Input;
 
-public class ActorInputHandler : InputHandler
+public abstract class ActorInputHandler : InputHandler
 {
-    protected ActorInputHandler()
-    {
-        Jump = new InputAction(this);
-        Attack = new InputAction(this);
-        Run = new InputAction(this);
-        SubAction = new InputAction(this);
-    }
-
-    public InputAction Jump { get; protected set; }
-    public InputAction Attack { get; protected set; }
-    public InputAction SubAction { get; protected set; }
-    public InputAction Run { get; protected set; }
+    public abstract InputAction Jump { get; }
+    public abstract InputAction Attack { get; }
+    public abstract InputAction SubAction { get; }
+    public abstract InputAction Run { get; }
 
     public override void Update()
     {

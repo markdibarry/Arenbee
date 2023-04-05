@@ -46,7 +46,7 @@ public partial class GameSession : AGameSession
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel1);
+            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel2);
             AddAreaScene(demoAreaScene);
         }
     }
@@ -67,7 +67,8 @@ public partial class GameSession : AGameSession
 
         InitAreaScene();
         ActorBody actorBody = InitMainActor();
-        CurrentAreaScene!.AddActorBody(actorBody, CurrentAreaScene.GetSpawnPoint(0));
+        actorBody.GlobalPosition = CurrentAreaScene!.GetSpawnPoint(0);
+        CurrentAreaScene!.AddActorBody(actorBody);
     }
 
     private ActorBody InitMainActor()

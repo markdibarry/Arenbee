@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Arenbee.Input;
 using GameCore.Audio;
 using GameCore.Extensions;
 using GameCore.GUI;
@@ -21,11 +20,11 @@ public abstract partial class AGameRoot : Node
     public Node2D GameSessionContainer { get; set; } = null!;
     public GUIController GUIController { get; protected set; } = null!;
     public TransitionLayer Transition { get; protected set; } = null!;
-    public AGameSession? GameSession { get; set; }
+    public AGameSession? GameSession { get; private set; }
     public GameState GameState { get; } = new();
-    public GUIInputHandler MenuInput { get; protected set; } = null!;
-    public ActorInputHandler PlayerOneInput { get; protected set; } = null!;
-    public TransitionControllerBase TransitionController { get; protected set; } = null!;
+    public abstract GUIInputHandler MenuInput { get; }
+    public abstract InputHandler PlayerOneInput { get; }
+    public abstract TransitionControllerBase TransitionController { get; }
 
     public override void _Ready()
     {
@@ -54,7 +53,6 @@ public abstract partial class AGameRoot : Node
     protected virtual void ProvideLocatorReferences()
     {
         Locator.ProvideGameRoot(this);
-        Locator.ProvideAudioController(AudioController);
     }
 
     protected virtual void StartRoot()
@@ -113,6 +111,7 @@ public abstract partial class AGameRoot : Node
         {
             GC.Collect(GC.MaxGeneration);
             GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
         GUIController.HandleInput(MenuInput, delta);
         GameSession?.HandleInput(MenuInput, delta);

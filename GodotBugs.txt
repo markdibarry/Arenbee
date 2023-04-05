@@ -1,3 +1,4 @@
 Area2Ds break signal connections when paused
 threaded resource loading results in 0% every time.
 Pixel snap shifts everything visually (-1,-1)
+Custom Resources
