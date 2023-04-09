@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
+using Arenbee.AreaScenes;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.PartyMenus;
 using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
-using GameCore.Actors;
-using GameCore.AreaScenes;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
@@ -46,7 +45,7 @@ public partial class GameSession : AGameSession
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AAreaScene>(Paths.DemoLevel2);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Paths.DemoLevel2);
             AddAreaScene(demoAreaScene);
         }
     }
@@ -73,11 +72,11 @@ public partial class GameSession : AGameSession
 
     private ActorBody InitMainActor()
     {
-        AActor actor = MainParty!.Actors.First();
-        ActorBody actorBody = ((Actor)actor).CreateBody();
+        Actor actor = MainParty!.Actors.First();
+        ActorBody actorBody = actor.CreateBody();
         actorBody.ActorRole = (int)ActorRole.Player;
         Locator.Root.GameCamera.CurrentTarget = actorBody;
-        actorBody.InputHandler = Locator.Root.PlayerOneInput;
+        actorBody.SetInputHandler(Locator.Root.PlayerOneInput);
         return actorBody;
     }
 }

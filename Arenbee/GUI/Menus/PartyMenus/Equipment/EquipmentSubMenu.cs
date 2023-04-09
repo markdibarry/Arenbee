@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
-using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
@@ -18,7 +17,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     public EquipmentSubMenu()
     {
         GameSession? gameSession = Locator.Session as GameSession;
-        _partyActors = gameSession?.MainParty?.Actors ?? Array.Empty<AActor>();
+        _partyActors = gameSession?.MainParty?.Actors ?? Array.Empty<Actor>();
         _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
         _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     }
@@ -27,7 +26,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     private OptionContainer _partyOptions = null!;
     private OptionContainer _equipmentOptions = null!;
     private PackedScene _equipSelectOptionScene;
-    private readonly IReadOnlyCollection<AActor> _partyActors;
+    private readonly IReadOnlyCollection<Actor> _partyActors;
     private PackedScene _textOptionScene;
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)

@@ -3,6 +3,6 @@
 public enum LogicOp
 {
     None,
-    And,
-    Or
+    Or,
+    And
 }

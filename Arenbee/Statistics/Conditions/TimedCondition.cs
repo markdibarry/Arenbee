@@ -1,45 +1,74 @@
 ﻿using System;
+using GameCore.Enums;
 using GameCore.Statistics;
+using Godot;
 
 namespace Arenbee.Statistics;
 
-public class TimedCondition : ConditionEventFilter
+public partial class TimedCondition : Condition
 {
-    public TimedCondition(AStats stats, Condition condition)
-        : base(stats, condition)
+    public TimedCondition() { }
+
+    public TimedCondition(
+        ConditionResultType resultType,
+        LogicOp additionalLogicOp,
+        float startValue,
+        float targetValue,
+        float currentValue,
+        Condition? additionalCondition)
+            : base(resultType, additionalLogicOp, additionalCondition)
     {
+        StartValue = startValue;
+        CurrentValue = currentValue;
+        TargetValue = targetValue;
     }
 
-    public void OnProcessed(double amount)
+    public override int ConditionType => (int)Statistics.ConditionType.Timed;
+    [Export] public float StartValue { get; set; }
+    [Export] public float TargetValue { get; set; }
+    [Export] public float CurrentValue { get; set; }
+
+    public override TimedCondition Clone()
     {
-        if (Condition.CurrentValue != Condition.TargetValue)
+        return new TimedCondition(ResultType, AdditionalLogicOp, StartValue, TargetValue, CurrentValue, AdditionalCondition);
+    }
+
+    public override void Reset()
+    {
+        CurrentValue = StartValue;
+        base.Reset();
+    }
+
+    protected override bool CheckCondition()
+    {
+        return CurrentValue == TargetValue;
+    }
+
+    protected override void SubscribeEvents()
+    {
+        Stats.Processed += OnProcessed;
+    }
+
+    protected override void UnsubscribeEvents()
+    {
+        Stats.Processed -= OnProcessed;
+    }
+
+    private void OnProcessed(double amount)
+    {
+        if (CurrentValue != TargetValue)
         {
-            if (Condition.CurrentValue < Condition.TargetValue)
-                Condition.CurrentValue = Math.Min(Condition.CurrentValue + (float)amount, Condition.TargetValue);
+            if (CurrentValue < TargetValue)
+                CurrentValue = Math.Min(CurrentValue + (float)amount, TargetValue);
             else
-                Condition.CurrentValue = Math.Max(Condition.CurrentValue - (float)amount, Condition.TargetValue);
+                CurrentValue = Math.Max(CurrentValue - (float)amount, TargetValue);
         }
 
         bool result = CheckCondition();
         if (result != ConditionMet)
         {
             ConditionMet = result;
-            RaiseConditionChanged();
+            ConditionChangedCallback?.Invoke();
         }
-    }
-
-    public override bool CheckCondition()
-    {
-        return Condition.CurrentValue == Condition.TargetValue;
-    }
-
-    public override void SubscribeEvents()
-    {
-        Source.Processed += OnProcessed;
-    }
-
-    public override void UnsubscribeEvents()
-    {
-        Source.Processed -= OnProcessed;
     }
 }

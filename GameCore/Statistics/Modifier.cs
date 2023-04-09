@@ -36,7 +36,7 @@ public partial class Modifier : Resource
         IsHidden = mod.IsHidden;
         SourceType = mod.SourceType;
         Value = mod.Value;
-        Conditions = new(mod.Conditions?.Select(x => new Condition(x)));
+        Conditions = new(mod.Conditions?.Select(x => x.Clone()));
     }
 
     private int _statType;
@@ -61,10 +61,10 @@ public partial class Modifier : Resource
     // TODO Add special case handling i.e. +5% for every 100 enemies killed
     public int Apply(int baseValue) => MathI.Compute(Op, baseValue, Value);
 
-    public void InitConditions(AStats stats, IConditionEventFilterFactory factory)
+    public void InitConditions(AStats stats)
     {
         foreach (Condition condition in Conditions)
-            condition.EventFilter = factory.GetEventFilter(stats, condition);
+            condition.SetStats(stats);
     }
 
     public void ResetConditions()
@@ -88,7 +88,7 @@ public partial class Modifier : Resource
     public void UnsubscribeConditions()
     {
         foreach (Condition condition in Conditions)
-            condition.Unsubscribe(GetHandler(condition));
+            condition.Unsubscribe();
     }
 
     private bool CheckConditions(ConditionResultType resultType)
@@ -97,7 +97,7 @@ public partial class Modifier : Resource
         {
             if (condition.ResultType != ConditionResultType.RemoveOrDeactivate && condition.ResultType != resultType)
                 continue;
-            if (condition.CheckCondition())
+            if (condition.CheckConditions())
                 return true;
         }
         return false;

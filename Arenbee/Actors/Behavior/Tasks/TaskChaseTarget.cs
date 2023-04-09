@@ -1,5 +1,4 @@
 ﻿using Arenbee.Input;
-using GameCore.Actors.Behavior;
 using Godot;
 
 namespace Arenbee.Actors.Behavior;
@@ -14,8 +13,8 @@ public class TaskChaseTarget : BTNode
         if (!TryGetData("Target", out Node2D? target))
             return NodeState.Failure;
 
-        float distance = Actor.GlobalPosition.DistanceTo(target.GlobalPosition);
-        ActorInputHandler input = (ActorInputHandler)Actor.InputHandler;
+        float distance = ActorBody.GlobalPosition.DistanceTo(target.GlobalPosition);
+        ActorInputHandler input = ActorBody.InputHandler;
         if (distance > _attackDistance)
         {
             if (distance > _maxChaseDistance)
@@ -25,7 +24,7 @@ public class TaskChaseTarget : BTNode
                 RemoveData("Target");
                 return NodeState.Failure;
             }
-            Vector2 direction = Actor.GlobalPosition.DirectionTo(target.GlobalPosition);
+            Vector2 direction = ActorBody.GlobalPosition.DirectionTo(target.GlobalPosition);
             input.SetLeftAxis(direction);
             input.Run.IsActionPressed = true;
         }

@@ -1,5 +1,4 @@
-﻿using GameCore.Actors.Behavior;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.Actors.Behavior;
 
@@ -9,7 +8,7 @@ public class CheckTargetInRayCastRange : BTNode
 
     public override void Init()
     {
-        _rayCast2D = Actor.BodySprite.GetNode<RayCast2D>("RayCast2D");
+        _rayCast2D = ActorBody.BodySprite.GetNode<RayCast2D>("RayCast2D");
         if (_rayCast2D == null)
             GD.PrintErr("RayCast2D required for Patrol!");
     }

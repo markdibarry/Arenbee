@@ -28,9 +28,8 @@ public class StatusEffectDB : AStatusEffectDB
                 {
                     new Modifier((int)StatType.Attack, ModOp.Percent, 80)
                 },
-                TickCondition = new()
+                TickCondition = new TimedCondition()
                 {
-                    ConditionType = (int)ConditionType.Timed,
                     TargetValue = 3
                 },
                 TickEffect = StatusEffectMethods.BurnTick
@@ -58,9 +57,8 @@ public class StatusEffectDB : AStatusEffectDB
                 AbbrName = "Psn",
                 PastTenseName = "Poisoned",
                 Description = "Feel nauseous.",
-                TickCondition = new()
+                TickCondition = new TimedCondition()
                 {
-                    ConditionType = (int)ConditionType.Timed,
                     TargetValue = 3
                 },
                 TickEffect = StatusEffectMethods.PoisonTick

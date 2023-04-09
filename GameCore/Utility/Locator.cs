@@ -12,7 +12,7 @@ public static class Locator
 {
     private static AGameRoot s_gameRoot = null!;
     private static AActorDataDB s_actorDataDB = null!;
-    private static IConditionEventFilterFactory s_conditionEventFilterFactory = null!;
+    private static IConditionLookup s_conditionLookup = null!;
     private static AEquipmentSlotCategoryDB s_equipmentSlotCategoryDB = null!;
     private static AItemDB s_itemDB = null!;
     private static AItemCategoryDB s_itemCategoryDB = null!;
@@ -24,7 +24,7 @@ public static class Locator
     public static ActionEffectDBBase ActionEffectDB => s_actionEffectDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
     public static AAudioController Audio => s_gameRoot.AudioController;
-    public static IConditionEventFilterFactory ConditionEventFilterFactory => s_conditionEventFilterFactory;
+    public static IConditionLookup ConditionLookup => s_conditionLookup;
     public static AEquipmentSlotCategoryDB EquipmentSlotCategoryDB => s_equipmentSlotCategoryDB;
     public static AItemDB ItemDB => s_itemDB;
     public static AItemCategoryDB ItemCategoryDB => s_itemCategoryDB;
@@ -40,14 +40,11 @@ public static class Locator
         s_actionEffectDB = actionEffectDB;
     }
 
-    public static void ProvideActorDataDB(AActorDataDB actorDataDB)
-    {
-        s_actorDataDB = actorDataDB;
-    }
+    public static void ProvideActorDataDB(AActorDataDB actorDataDB) => s_actorDataDB = actorDataDB;
 
-    public static void ProvideConditionEventFilterFactory(IConditionEventFilterFactory factory)
+    public static void ProvideConditionLookup(IConditionLookup conditionLookup)
     {
-        s_conditionEventFilterFactory = factory;
+        s_conditionLookup = conditionLookup;
     }
 
     public static void ProvideEquipmentSlotCategoryDB(AEquipmentSlotCategoryDB equipmentSlotCategoryDB)
@@ -55,15 +52,9 @@ public static class Locator
         s_equipmentSlotCategoryDB = equipmentSlotCategoryDB;
     }
 
-    public static void ProvideItemDB(AItemDB itemDB)
-    {
-        s_itemDB = itemDB;
-    }
+    public static void ProvideItemDB(AItemDB itemDB) => s_itemDB = itemDB;
 
-    public static void ProvideItemCategoryDB(AItemCategoryDB itemCategoryDB)
-    {
-        s_itemCategoryDB = itemCategoryDB;
-    }
+    public static void ProvideItemCategoryDB(AItemCategoryDB itemCategoryDB) => s_itemCategoryDB = itemCategoryDB;
 
     public static void ProvideGameRoot(AGameRoot gameRoot)
     {
@@ -72,15 +63,9 @@ public static class Locator
         s_gameRoot = gameRoot;
     }
 
-    public static void ProvideStatTypeDB(AStatTypeDB statTypeDB)
-    {
-        s_statTypeDB = statTypeDB;
-    }
+    public static void ProvideStatTypeDB(AStatTypeDB statTypeDB) => s_statTypeDB = statTypeDB;
 
-    public static void ProvideStatusEffectDB(AStatusEffectDB statusEffectDB)
-    {
-        s_statusEffectDB = statusEffectDB;
-    }
+    public static void ProvideStatusEffectDB(AStatusEffectDB statusEffectDB) => s_statusEffectDB = statusEffectDB;
 
     public static void ProvideStatusEffectModifierFactory(IStatusEffectModifierFactory factory)
     {

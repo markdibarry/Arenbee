@@ -47,18 +47,17 @@ public partial class SelectSubMenu : OptionSubMenu
     {
         var options = GetEquippableOptions();
         _equipOptions.ReplaceChildren(options);
-        _actorStatsDisplay.UpdateBaseValues((Stats)_actor.Stats);
+        _actorStatsDisplay.UpdateBaseValues(_actor.Stats);
+    }
+
+    protected override void OnCloseSubMenu()
+    {
+        RemoveMockMods();
     }
 
     protected override void OnItemFocused()
     {
-        if (_currentItemStack != null)
-        {
-            foreach (Modifier mod in _mockMods)
-                _mockStats.RemoveMod(mod, false);
-        }
-
-        _mockMods.Clear();
+        RemoveMockMods();
 
         if (CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out _currentItemStack))
         {
@@ -96,7 +95,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     private void CreateMockStats()
     {
-        _mockStats = new((Stats)_actor.Stats);
+        _mockStats = new(_actor.Stats);
         foreach (var mod in _slot.Modifiers)
             _mockStats.RemoveMod(mod, false);
     }
@@ -135,5 +134,16 @@ public partial class SelectSubMenu : OptionSubMenu
         }
 
         return options;
+    }
+
+    private void RemoveMockMods()
+    {
+        if (_currentItemStack != null)
+        {
+            foreach (Modifier mod in _mockMods)
+                _mockStats.RemoveMod(mod);
+        }
+
+        _mockMods.Clear();
     }
 }

@@ -2,15 +2,15 @@
 
 namespace GameCore.Actors.Behavior;
 
-public class Sequence : BTNode
+public class Sequence : ABTNode
 {
-    public Sequence(List<BTNode> children)
+    public Sequence(List<ABTNode> children)
         : base(children)
     { }
 
     public override NodeState Evaluate(double delta)
     {
-        foreach (BTNode node in Children)
+        foreach (ABTNode node in Children)
         {
             switch (node.Evaluate(delta))
             {

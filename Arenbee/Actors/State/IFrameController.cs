@@ -1,19 +1,18 @@
 ﻿using Arenbee.Statistics;
-using GameCore.Actors;
 using Godot;
 
 namespace Arenbee.Actors;
 
 public class IFrameController
 {
-    public IFrameController(AActorBody actorBody)
+    public IFrameController(ActorBody actorBody)
     {
         _actorBody = actorBody;
         IFrameDuration = 1;
         FlashDuration = 0.1;
     }
 
-    private readonly AActorBody _actorBody;
+    private readonly ActorBody _actorBody;
     private ShaderMaterial _spriteShader = null!;
     private double _iframeTimer;
     private bool _iframeTimerEnabled;

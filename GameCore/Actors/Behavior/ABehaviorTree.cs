@@ -2,21 +2,21 @@
 
 namespace GameCore.Actors.Behavior;
 
-public abstract class BehaviorTree
+public abstract class ABehaviorTree
 {
-    protected BehaviorTree(AActorBody actor)
+    protected ABehaviorTree(AActorBody actorBody)
     {
         _blackBoard = new();
         _root = SetupTree();
-        _root.SetDependencies(actor, _blackBoard);
+        _root.SetDependencies(actorBody, _blackBoard);
     }
 
-    private readonly BTNode _root;
+    private readonly ABTNode _root;
     private readonly Dictionary<string, object> _blackBoard;
 
     public void Update(double delta) => _root?.Evaluate(delta);
 
     public void ClearBlackBoard() => _blackBoard.Clear();
 
-    protected abstract BTNode SetupTree();
+    protected abstract ABTNode SetupTree();
 }

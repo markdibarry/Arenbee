@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
-using Arenbee.Statistics;
-using GameCore.Actors;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
@@ -39,9 +38,9 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void OnItemFocused()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(AActor), out AActor? actor))
+        if (!CurrentContainer.FocusedItem.TryGetData(nameof(Actor), out Actor? actor))
             return;
-        _statsDisplay.UpdateStatsDisplay((Stats)actor.Stats, updateColor: false);
+        _statsDisplay.UpdateStatsDisplay(actor.Stats, updateColor: false);
     }
 
     private List<TextOption> GetPartyMemberOptions()
@@ -50,7 +49,7 @@ public partial class StatsSubMenu : OptionSubMenu
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData[nameof(AActor)] = actor;
+            textOption.OptionData[nameof(Actor)] = actor;
             textOption.LabelText = actor.Name;
             options.Add(textOption);
         }

@@ -9,7 +9,7 @@ public class CheckTargetInArea : BTNode
     {
         if (GetData("Area2D") != null)
             return;
-        Area2D area2D = Actor.GetNode<Area2D>("DetectTargetZone");
+        Area2D area2D = ActorBody.GetNode<Area2D>("DetectTargetZone");
         if (area2D == null)
             GD.PrintErr("Area2D required for Patrol!");
         else
@@ -23,7 +23,7 @@ public class CheckTargetInArea : BTNode
 
     public void OnBodyEntered(Node2D body)
     {
-        if (body == Actor || body is not ActorBody)
+        if (body == ActorBody || body is not Actors.ActorBody)
             return;
         if (GetData("Target") == null)
             SetData("Target", body);

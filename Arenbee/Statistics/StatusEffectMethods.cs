@@ -1,5 +1,4 @@
-﻿using Arenbee.Input;
-using GameCore.Actors;
+﻿using Arenbee.Actors;
 using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
@@ -9,9 +8,8 @@ public static class StatusEffectMethods
     public static void BurnTick(IStatusEffect statusEffect)
     {
         AStats stats = statusEffect.Stats;
-        IDamageable statsOwner = stats.StatsOwner;
-        if (statsOwner is AActor actor && actor.ActorBody != null)
-            ((ActorInputHandler)actor.ActorBody.InputHandler).Jump.IsActionJustPressed = true;
+        if (stats.StatsOwner is Actor actor && actor.ActorBody != null)
+            actor.ActorBody.InputHandler.Jump.IsActionJustPressed = true;
         DamageRequest damageRequest = new()
         {
             Value = (int)(stats.CalculateStat((int)StatType.MaxHP) * 0.05),

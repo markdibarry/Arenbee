@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Actors.Behavior;
 using Arenbee.Input;
 using Arenbee.Items;
 using GameCore.Actors;
-using GameCore.Actors.Behavior;
 using Godot;
 
 namespace Arenbee.Actors;
@@ -17,7 +17,7 @@ public class StateController : IStateController
         AirStateMachineBase airStateMachine,
         HealthStateMachineBase healthStateMachine,
         ActionStateMachineBase actionStateMachine,
-        Func<AActorBody, BehaviorTree>? behaviorTreeDelegate = null)
+        Func<ActorBody, BehaviorTree>? behaviorTreeDelegate = null)
     {
         _actorBody = actorBody;
         HealthStateMachine = healthStateMachine;
@@ -31,7 +31,7 @@ public class StateController : IStateController
     private readonly ActorBody _actorBody;
     private bool _baseActionDisabled;
     private readonly StateDisplayController _stateDisplayController;
-    private readonly Func<AActorBody, BehaviorTree>? _behaviorTreeDelegate;
+    private readonly Func<ActorBody, BehaviorTree>? _behaviorTreeDelegate;
     public BehaviorTree? BehaviorTree { get; set; }
     public ActorBodyStateMachine AirStateMachine { get; }
     public ActorBodyStateMachine MoveStateMachine { get; }

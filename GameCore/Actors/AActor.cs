@@ -6,7 +6,13 @@ namespace GameCore.Actors;
 
 public abstract class AActor : IDamageable
 {
-    protected AActor(string actorId, string actorBodyId, string actorName, string equipmentSlotPresetId, AEquipment equipment, AInventory inventory)
+    protected AActor(
+        string actorId,
+        string actorBodyId,
+        string actorName,
+        string equipmentSlotPresetId,
+        AEquipment equipment,
+        AInventory inventory)
     {
         ActorId = actorId;
         ActorBodyId = actorBodyId;
@@ -17,7 +23,9 @@ public abstract class AActor : IDamageable
         Equipment.EquipmentSet += OnEquipmentSet;
     }
 
-    public AActorBody? ActorBody { get; protected set; }
+    protected AActorBody? ActorBodyInternal { get; set; }
+    public virtual AActorBody? ActorBody => ActorBodyInternal;
+    public abstract AStats Stats { get; }
     public string ActorId { get; set; }
     public string ActorBodyId { get; set; }
     public int ActorRole { get; set; }
@@ -25,7 +33,6 @@ public abstract class AActor : IDamageable
     public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }
     public string Name { get; set; }
-    public abstract AStats Stats { get; protected set; }
     public event Action<AActor>? Defeated;
     public event Action<AActor, ADamageResult>? DamageReceived;
     public event Action<AActor, Modifier, ModChangeType>? ModChanged;

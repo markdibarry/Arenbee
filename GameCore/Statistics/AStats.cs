@@ -4,22 +4,32 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using GameCore.Extensions;
 using GameCore.Utility;
+using Godot;
 
 namespace GameCore.Statistics;
 
 public abstract class AStats
 {
-    protected AStats(IDamageable damageable)
+    protected AStats(IDamageable damageable, IEnumerable<Stat> statLookup, IEnumerable<Modifier> mods)
     {
         StatsOwner = damageable;
         DamageToProcess = new();
         Modifiers = new();
         StatusEffects = new();
         StatLookup = new();
+        foreach (var stat in statLookup)
+            StatLookup[stat.StatType] = new Stat(stat);
+        foreach (var modifier in mods)
+            AddMod(new Modifier(modifier));
+        GD.Print("Created!");
     }
 
+    /// <summary>
+    /// For menu stat mocking
+    /// </summary>
+    /// <param name="stats"></param>
     protected AStats(AStats stats)
-        : this(stats.StatsOwner)
+        : this(stats.StatsOwner, Array.Empty<Stat>(), Array.Empty<Modifier>())
     {
         foreach (var pair in stats.StatLookup)
             StatLookup[pair.Key] = pair.Value;
@@ -27,7 +37,6 @@ public abstract class AStats
             Modifiers[pair.Key] = pair.Value.ToList();
     }
 
-    protected static IConditionEventFilterFactory EventFilterFactory { get; } = Locator.ConditionEventFilterFactory;
     protected static IStatusEffectModifierFactory EffectModifierFactory { get; } = Locator.StatusEffectModifierFactory;
     protected static AStatusEffectDB StatusEffectDB { get; } = Locator.StatusEffectDB;
     [JsonIgnore]
@@ -47,7 +56,7 @@ public abstract class AStats
 
     public virtual void AddMod(Modifier mod)
     {
-        mod.InitConditions(this, EventFilterFactory);
+        mod.InitConditions(this);
         if (mod.ShouldRemove() && mod.SourceType == SourceType.Independent)
             return;
         List<Modifier> mods = Modifiers.GetOrAddNew(mod.StatType);
@@ -181,7 +190,7 @@ public abstract class AStats
         StatusEffectData? effectData = StatusEffectDB.GetEffectData(statusEffectType);
         if (effectData == null)
             return;
-        StatusEffect statusEffect = new(this, effectData, EventFilterFactory);
+        StatusEffect statusEffect = new(this, effectData);
         statusEffect.SubscribeCondition();
         StatusEffects.Add(statusEffect);
         statusEffect.EffectData.EnterEffect?.Invoke(statusEffect);

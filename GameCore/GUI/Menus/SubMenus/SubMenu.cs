@@ -123,14 +123,18 @@ public partial class SubMenu : Control
 
     protected virtual async Task CloseMenuAsync(bool preventAnimation = false, object? data = null)
     {
+        OnCloseSubMenu();
         await GUIController.CloseLayerAsync(preventAnimation, data);
     }
 
     protected virtual async Task CloseSubMenuAsync(Type? cascadeTo = null, bool preventAnimation = false, object? data = null)
     {
+        OnCloseSubMenu();
         Audio.PlaySoundFX(CloseSoundPath);
         await Menu.CloseSubMenuAsync(cascadeTo, preventAnimation, data);
     }
+
+    protected virtual void OnCloseSubMenu() { }
 
     protected virtual async Task OpenSubMenuAsync(string path, bool preventAnimation = false, object? data = null)
     {

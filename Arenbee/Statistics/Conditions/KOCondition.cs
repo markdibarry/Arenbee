@@ -1,36 +1,46 @@
-﻿using GameCore.Statistics;
+﻿using GameCore.Enums;
+using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class KOCondition : ConditionEventFilter
+public partial class KOCondition : Condition
 {
-    public KOCondition(AStats stats, Condition condition)
-        : base(stats, condition)
+    public KOCondition() { }
+
+    public KOCondition(ConditionResultType resultType, LogicOp additionalLogicOp, Condition? additionalCondition)
+            : base(resultType, additionalLogicOp, additionalCondition)
     {
     }
 
-    public void OnHPDepleted()
+    public override int ConditionType => (int)Statistics.ConditionType.KO;
+
+    protected override bool CheckCondition()
+    {
+        return ((Stats)Stats).CurrentHP <= 0;
+    }
+
+    protected override void SubscribeEvents()
+    {
+        ((Stats)Stats).HPDepleted += OnHPDepleted;
+    }
+
+    protected override void UnsubscribeEvents()
+    {
+        ((Stats)Stats).HPDepleted -= OnHPDepleted;
+    }
+
+    public override KOCondition Clone()
+    {
+        return new KOCondition(ResultType, AdditionalLogicOp, AdditionalCondition?.Clone());
+    }
+
+    private void OnHPDepleted()
     {
         bool result = CheckCondition();
         if (result != ConditionMet)
         {
             ConditionMet = result;
-            RaiseConditionChanged();
+            ConditionChangedCallback?.Invoke();
         }
-    }
-
-    public override bool CheckCondition()
-    {
-        return ((Stats)Source).CurrentHP <= 0;
-    }
-
-    public override void SubscribeEvents()
-    {
-        ((Stats)Source).HPDepleted += OnHPDepleted;
-    }
-
-    public override void UnsubscribeEvents()
-    {
-        ((Stats)Source).HPDepleted -= OnHPDepleted;
     }
 }

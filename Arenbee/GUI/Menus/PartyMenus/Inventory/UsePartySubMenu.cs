@@ -22,27 +22,26 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         GameSession? gameSession = Locator.Session as GameSession;
         _party = gameSession?.MainParty ?? new Party("temp");
-        _inventory = gameSession?.MainParty?.Inventory as Inventory ?? new Inventory();
+        _inventory = gameSession?.MainParty?.Inventory ?? new Inventory();
+        _actionEffect = _actionEffectDB.GetEffect(_item.UseData.ActionEffect)!;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly ActionEffectDBBase _actionEffectDB = Locator.ActionEffectDB;
     private readonly Inventory _inventory;
     private readonly Party _party;
+    private IActionEffect _actionEffect;
+    private ItemStack _itemStack = null!;
+    private AItem _item = null!;
     private PackedScene _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
     private OptionContainer _partyContainer = null!;
-
-    public ItemStack ItemStack { get; set; } = null!;
-    public AItem Item { get; set; } = null!;
-
-    public IActionEffect ActionEffect { get; set; }
 
     public override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
-        ItemStack = itemStack;
-        Item = ItemStack.Item;
+        _itemStack = itemStack;
+        _item = _itemStack.Item;
     }
 
     protected override void SetupOptions()
@@ -60,14 +59,14 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         base.SetNodeReferences();
         _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions")!;
-        if (ItemStack == null)
+        if (_itemStack == null)
             return;
-        if (Item.UseData.UseType == ItemUseType.PartyMemberAll)
+        if (_item.UseData.UseType == ItemUseType.PartyMemberAll)
         {
             _partyContainer.AllOptionEnabled = true;
             _partyContainer.SingleOptionsEnabled = false;
         }
-        ActionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
+        _actionEffect = _actionEffectDB.GetEffect(_item.UseData.ActionEffect)!;
     }
 
     private void DisplayOptions()
@@ -93,17 +92,17 @@ public partial class UsePartySubMenu : OptionSubMenu
         var request = new ActionEffectRequest()
         {
             ActionType = ActionType.Item,
-            Value1 = Item.UseData.Value1,
-            Value2 = Item.UseData.Value2
+            Value1 = _item.UseData.Value1,
+            Value2 = _item.UseData.Value2
         };
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
             if (!option.TryGetData("actor", out Actor? actor))
                 continue;
             var target = new AActor[] { actor };
-            bool canUse = ActionEffect.CanUse(request, target);
-            option.Disabled = !canUse || ItemStack.Count <= 0;
-            Stats stats = (Stats)actor.Stats;
+            bool canUse = _actionEffect.CanUse(request, target);
+            option.Disabled = !canUse || _itemStack.Count <= 0;
+            Stats stats = actor.Stats;
             option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
             option.HPContainer.StatMaxValueText = stats.MaxHP.ToString();
         }
@@ -121,16 +120,16 @@ public partial class UsePartySubMenu : OptionSubMenu
         var request = new ActionEffectRequest()
         {
             ActionType = ActionType.Item,
-            Value1 = Item.UseData.Value1,
-            Value2 = Item.UseData.Value2
+            Value1 = _item.UseData.Value1,
+            Value2 = _item.UseData.Value2
         };
         foreach (OptionItem item in selectedItems)
         {
             if (!item.TryGetData("actor", out Actor? actor))
                 return;
-            ActionEffect.Use(request, new Actor[] { actor });
+            _actionEffect.Use(request, new Actor[] { actor });
         }
-        _inventory.RemoveItem(ItemStack);
+        _inventory.RemoveItem(_itemStack);
 
         UpdatePartyDisplay();
     }

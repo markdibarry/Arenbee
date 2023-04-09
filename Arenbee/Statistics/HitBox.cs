@@ -19,11 +19,11 @@ public partial class HitBox : AHitBox
 
     public void SetBasicMeleeBox(AActorBody actorBody)
     {
-        if (actorBody.Actor == null)
+        if (actorBody.Actor is not Actor actor)
             return;
         GetDamageRequest = () =>
         {
-            Stats stats = (Stats)actorBody.Actor.Stats;
+            Stats stats = actor.Stats;
             return new DamageRequest()
             {
                 SourceName = actorBody.Name,

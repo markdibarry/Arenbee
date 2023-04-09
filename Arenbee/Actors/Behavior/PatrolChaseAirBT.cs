@@ -1,13 +1,12 @@
-﻿using GameCore.Actors;
-using GameCore.Actors.Behavior;
+﻿using GameCore.Actors.Behavior;
 
 namespace Arenbee.Actors.Behavior;
 
 public class PatrolChaseAirBT : BehaviorTree
 {
-    public PatrolChaseAirBT(AActorBody actor) : base(actor) { }
+    public PatrolChaseAirBT(ActorBody actor) : base(actor) { }
 
-    protected override BTNode SetupTree()
+    protected override ABTNode SetupTree()
     {
         return new Selector(new()
         {

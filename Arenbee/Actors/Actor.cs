@@ -21,15 +21,12 @@ public class Actor : AActor
         Godot.Collections.Array<Modifier> modifiers)
         : base(actorId, actorBodyId, actorName, equipmentSlotPresetId, equipment, inventory)
     {
-        Stats = new Stats(this);
+        Stats = new Stats(this, stats, modifiers);
         InitStats();
-        foreach (Stat stat in stats)
-            Stats.StatLookup[stat.StatType] = new Stat(stat);
-        foreach (Modifier mod in modifiers)
-            Stats.AddMod(new Modifier(mod));
     }
 
-    public override AStats Stats { get; protected set; }
+    public override ActorBody? ActorBody => ActorBodyInternal as ActorBody;
+    public override Stats Stats { get; }
 
     public ActorBody CreateBody()
     {
@@ -45,7 +42,7 @@ public class Actor : AActor
     public override void InitStats()
     {
         base.InitStats();
-        ((Stats)Stats).HPDepleted += OnHPDepleted;
+        Stats.HPDepleted += OnHPDepleted;
     }
 
     public override void SetActorBody(AActorBody? actorBody)
@@ -59,7 +56,7 @@ public class Actor : AActor
             //Defeated -= newActorBody.OnDefeated;
         }
 
-        ActorBody = actorBody;
+        ActorBodyInternal = actorBody;
 
         if (ActorBody is ActorBody newActorBody)
         {
@@ -72,7 +69,7 @@ public class Actor : AActor
 
     protected override void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem)
     {
-        (ActorBody as ActorBody)?.HoldItemController.SetHoldItem(oldItem, newItem);
+        ActorBody?.HoldItemController.SetHoldItem(oldItem, newItem);
     }
 
     private void OnHPDepleted() => RaiseDefeated();

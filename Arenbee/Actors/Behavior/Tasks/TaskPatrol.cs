@@ -1,5 +1,4 @@
-﻿using GameCore.Actors.Behavior;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.Actors.Behavior;
 
@@ -13,27 +12,27 @@ public class TaskPatrol : BTNode
     {
         if (_waiting)
         {
-            Actor.InputHandler.SetLeftAxis(Vector2.Zero);
+            ActorBody.InputHandler.SetLeftAxis(Vector2.Zero);
             _waitCounter -= delta;
             if (_waitCounter <= 0)
             {
                 _waiting = false;
-                Actor.ChangeDirectionX();
+                ActorBody.ChangeDirectionX();
             }
         }
         else
         {
-            if (Actor.IsOnWall())
+            if (ActorBody.IsOnWall())
             {
                 int direction = GetWallDirection();
-                if (direction == Actor.Direction.X)
+                if (direction == ActorBody.Direction.X)
                 {
                     _waitCounter = _waitTime;
                     _waiting = true;
                 }
             }
 
-            Actor.InputHandler.SetLeftAxis(Actor.Direction);
+            ActorBody.InputHandler.SetLeftAxis(ActorBody.Direction);
         }
 
         return NodeState.Running;
@@ -42,10 +41,10 @@ public class TaskPatrol : BTNode
     private int GetWallDirection()
     {
         int result = 0;
-        int count = Actor.GetSlideCollisionCount();
+        int count = ActorBody.GetSlideCollisionCount();
         for (int i = 0; i < count; i++)
         {
-            KinematicCollision2D collision = Actor.GetSlideCollision(i);
+            KinematicCollision2D collision = ActorBody.GetSlideCollision(i);
             if (collision.GetNormal().X > 0)
                 result = -1;
             else if (collision.GetNormal().X < 0)

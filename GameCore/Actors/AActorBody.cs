@@ -32,16 +32,18 @@ public abstract partial class AActorBody : CharacterBody2D
         WalkSpeed = 50;
     }
 
-    protected static AAudioController Audio { get; } = Locator.Audio;
-    protected Node2D Body { get; set; } = null!;
+
     public int ActorRole { get; set; }
-    public AActor? Actor { get; protected set; }
+    public virtual AActor? Actor => ActorInternal;
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
     public IStateController StateController { get; protected set; }
+    protected AActor? ActorInternal { get; set; }
+    protected static AAudioController Audio { get; } = Locator.Audio;
+    protected Node2D Body { get; set; } = null!;
     public event Action<AActorBody>? Freeing;
 
     public override void _Ready()
@@ -74,7 +76,7 @@ public abstract partial class AActorBody : CharacterBody2D
         Freeing?.Invoke(this);
         Actor?.Stats.CleanupStats();
         Actor?.SetActorBody(null);
-        Actor = null;
+        ActorInternal = null;
     }
 
     public void OnGameStateChanged(GameState gameState)

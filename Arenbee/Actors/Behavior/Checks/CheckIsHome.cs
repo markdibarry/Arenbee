@@ -1,5 +1,4 @@
-﻿using GameCore.Actors.Behavior;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.Actors.Behavior;
 
@@ -21,14 +20,14 @@ public class CheckIsHome : BTNode
     {
         if (!TryGetData("Home", out Vector2? home))
         {
-            home = Actor.GlobalPosition;
+            home = ActorBody.GlobalPosition;
             SetData("Home", home);
         }
 
-        float distance = Actor.GlobalPosition.DistanceTo((Vector2)home);
+        float distance = ActorBody.GlobalPosition.DistanceTo((Vector2)home);
         if (distance <= _minHomeDistance)
         {
-            Actor.InputHandler.SetLeftAxis(Vector2.Zero);
+            ActorBody.InputHandler.SetLeftAxis(Vector2.Zero);
             return NodeState.Success;
         }
 

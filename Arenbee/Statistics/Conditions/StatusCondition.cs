@@ -1,38 +1,59 @@
-﻿using GameCore.Statistics;
+﻿using GameCore.Enums;
+using GameCore.Statistics;
+using Godot;
 
 namespace Arenbee.Statistics;
 
-public class StatusCondition : ConditionEventFilter
+public partial class StatusCondition : Condition
 {
-    public StatusCondition(AStats stats, Condition condition)
-        : base(stats, condition)
+    public StatusCondition() { }
+
+    public StatusCondition(
+        ConditionResultType resultType,
+        LogicOp additionalLogicOp,
+        int targetValue,
+        Condition? additionalCondition)
+            : base(resultType, additionalLogicOp, additionalCondition)
     {
+        TargetValue = targetValue;
     }
 
-    public void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)
+    public override int ConditionType => (int)Statistics.ConditionType.Status;
+    [Export] public int TargetValue { get; set; }
+
+    public override StatusCondition Clone()
     {
-        if (Condition.TargetValue != statusEffectType)
+        return new StatusCondition(
+            ResultType,
+            AdditionalLogicOp,
+            TargetValue,
+            AdditionalCondition?.Clone());
+    }
+
+    protected override bool CheckCondition()
+    {
+        return Stats.HasStatusEffect(TargetValue);
+    }
+
+    protected override void SubscribeEvents()
+    {
+        Stats.StatusEffectChanged += OnStatusEffectChanged;
+    }
+
+    protected override void UnsubscribeEvents()
+    {
+        Stats.StatusEffectChanged -= OnStatusEffectChanged;
+    }
+
+    private void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)
+    {
+        if (TargetValue != statusEffectType)
             return;
         bool result = CheckCondition();
         if (result != ConditionMet)
         {
             ConditionMet = result;
-            RaiseConditionChanged();
+            ConditionChangedCallback?.Invoke();
         }
-    }
-
-    public override bool CheckCondition()
-    {
-        return Source.HasStatusEffect((int)Condition.TargetValue);
-    }
-
-    public override void SubscribeEvents()
-    {
-        Source.StatusEffectChanged += OnStatusEffectChanged;
-    }
-
-    public override void UnsubscribeEvents()
-    {
-        Source.StatusEffectChanged -= OnStatusEffectChanged;
     }
 }

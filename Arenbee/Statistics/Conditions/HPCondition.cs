@@ -1,38 +1,63 @@
-﻿using GameCore.Statistics;
+﻿using GameCore.Enums;
+using GameCore.Statistics;
 using GameCore.Utility;
+using Godot;
 
 namespace Arenbee.Statistics;
 
-public class HPCondition : ConditionEventFilter
+public partial class HPCondition : Condition
 {
-    public HPCondition(AStats stats, Condition condition)
-        : base(stats, condition)
+    public HPCondition() { }
+
+    public HPCondition(
+        ConditionResultType resultType,
+        LogicOp additionalLogicOp,
+        CompareOp compareOp,
+        int targetValue,
+        Condition? additionalCondition)
+            : base(resultType, additionalLogicOp, additionalCondition)
     {
+        CompareOp = compareOp;
+        TargetValue = targetValue;
     }
 
-    public void OnDamageReceived(ADamageResult damageResult)
+    public override int ConditionType => (int)Statistics.ConditionType.HPPercent;
+    [Export] public CompareOp CompareOp { get; set; }
+    [Export] public int TargetValue { get; set; }
+
+    protected override bool CheckCondition()
+    {
+        int percentMaxHP = (int)(((Stats)Stats).MaxHP * TargetValue * 0.01);
+        return MathI.Compare(CompareOp, ((Stats)Stats).CurrentHP, percentMaxHP);
+    }
+
+    protected override void SubscribeEvents()
+    {
+        ((Stats)Stats).DamageReceived += OnDamageReceived;
+    }
+
+    protected override void UnsubscribeEvents()
+    {
+        ((Stats)Stats).DamageReceived -= OnDamageReceived;
+    }
+
+    public override HPCondition Clone()
+    {
+        return new HPCondition(
+            ResultType,
+            AdditionalLogicOp,
+            CompareOp,
+            TargetValue,
+            AdditionalCondition?.Clone());
+    }
+
+    private void OnDamageReceived(ADamageResult damageResult)
     {
         bool result = CheckCondition();
         if (result != ConditionMet)
         {
             ConditionMet = result;
-            RaiseConditionChanged();
+            ConditionChangedCallback?.Invoke();
         }
-    }
-
-    public override bool CheckCondition()
-    {
-        int percentMaxHP = (int)(((Stats)Source).MaxHP * Condition.TargetValue * 0.01);
-        return MathI.Compare(Condition.CompareOp, ((Stats)Source).CurrentHP, percentMaxHP);
-    }
-
-    public override void SubscribeEvents()
-    {
-        ((Stats)Source).DamageReceived += OnDamageReceived;
-    }
-
-    public override void UnsubscribeEvents()
-    {
-        ((Stats)Source).DamageReceived -= OnDamageReceived;
     }
 }

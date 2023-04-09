@@ -20,23 +20,18 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {
-                    new Condition()
+                    new TimedCondition()
                     {
-                        ConditionType = (int)ConditionType.Timed,
                         TargetValue = 10,
                         ResultType = ConditionResultType.Remove
                     },
-                    new Condition()
+                    new HPCondition()
                     {
-                        ConditionType = (int)ConditionType.HPPercent,
                         CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
                         ResultType = ConditionResultType.RemoveOrDeactivate,
                         AdditionalLogicOp = LogicOp.Or,
-                        AdditionalCondition = new Condition()
-                        {
-                            ConditionType = (int)ConditionType.KO
-                        }
+                        AdditionalCondition = new KOCondition()
                     }
                 },
                 isHidden: false),
@@ -46,23 +41,18 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {
-                    new Condition()
+                    new TimedCondition()
                     {
-                        ConditionType = (int)ConditionType.Timed,
                         TargetValue = 10,
                         ResultType = ConditionResultType.Remove
                     },
-                    new Condition()
+                    new HPCondition()
                     {
-                        ConditionType = (int)ConditionType.HPPercent,
                         CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
                         ResultType = ConditionResultType.RemoveOrDeactivate,
                         AdditionalLogicOp = LogicOp.Or,
-                        AdditionalCondition = new Condition()
-                        {
-                            ConditionType = (int)ConditionType.KO
-                        }
+                        AdditionalCondition = new KOCondition()
                     }
                 },
                 isHidden: false),
@@ -72,15 +62,13 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 value: 1,
                 conditions: new Godot.Collections.Array<Condition>()
                 {
-                    new Condition()
+                    new TimedCondition()
                     {
-                        ConditionType = (int)ConditionType.Timed,
                         TargetValue = 10,
                         ResultType = ConditionResultType.Remove
                     },
-                    new Condition()
+                    new KOCondition()
                     {
-                        ConditionType = (int)ConditionType.KO,
                         ResultType = ConditionResultType.RemoveOrDeactivate
                     }
                 },

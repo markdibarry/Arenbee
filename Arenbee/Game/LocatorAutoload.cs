@@ -13,7 +13,7 @@ public partial class LocatorAutoload : Node
     public override void _Ready()
     {
         Locator.ProvideActorDataDB(new ActorDataDB());
-        Locator.ProvideConditionEventFilterFactory(new ConditionEventFilterFactory());
+        Locator.ProvideConditionLookup(new ConditionLookup());
         Locator.ProvideStatusEffectModifierFactory(new StatusEffectModifierFactory());
         Locator.ProvideItemCategoryDB(new ItemCategoryDB());
         Locator.ProvideItemDB(new ItemDB(Locator.ItemCategoryDB));

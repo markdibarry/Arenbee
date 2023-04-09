@@ -113,6 +113,7 @@ public abstract partial class AGameRoot : Node
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
+
         GUIController.HandleInput(MenuInput, delta);
         GameSession?.HandleInput(MenuInput, delta);
         MenuInput.Update();

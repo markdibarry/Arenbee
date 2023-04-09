@@ -16,11 +16,12 @@ public abstract partial class ActorBody : AActorBody
     public ActorBody()
         : base()
     {
-        InputHandler = new DummyInputHandler();
+        InputHandlerInternal = new DummyInputHandler();
         IFrameController = new(this);
     }
 
-    public override InputHandler InputHandler { get; set; }
+    public override Actor? Actor => ActorInternal as Actor;
+    public override ActorInputHandler InputHandler => (ActorInputHandler)InputHandlerInternal;
     public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public HoldItemController HoldItemController { get; private set; } = null!;
     public IFrameController IFrameController { get; }
@@ -39,6 +40,7 @@ public abstract partial class ActorBody : AActorBody
         get => (float)BodyShader.GetShaderParameter("speed");
         set => BodyShader.SetShaderParameter("speed", value);
     }
+    protected override InputHandler InputHandlerInternal { get; set; }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -55,7 +57,7 @@ public abstract partial class ActorBody : AActorBody
 
     public override void SetActor(AActor? actor)
     {
-        Actor = actor;
+        ActorInternal = actor;
     }
 
     public override void SetActorRole(int role)

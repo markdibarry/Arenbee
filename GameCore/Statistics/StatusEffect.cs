@@ -2,14 +2,14 @@
 
 public class StatusEffect : IStatusEffect
 {
-    public StatusEffect(AStats stats, StatusEffectData effectData, IConditionEventFilterFactory factory)
+    public StatusEffect(AStats stats, StatusEffectData effectData)
     {
         Stats = stats;
         EffectData = effectData;
         if (effectData.TickCondition != null)
         {
-            _tickCondition = new(effectData.TickCondition);
-            _tickCondition.EventFilter = factory.GetEventFilter(stats, _tickCondition);
+            _tickCondition = effectData.TickCondition.Clone();
+            _tickCondition.SetStats(stats);
         }
     }
 
@@ -20,9 +20,7 @@ public class StatusEffect : IStatusEffect
 
     public void CallEffectTick()
     {
-        if (_tickCondition?.EventFilter == null)
-            return;
-        if (!_tickCondition.EventFilter.CheckCondition())
+        if (_tickCondition == null || !_tickCondition.CheckConditions())
             return;
         EffectData.TickEffect?.Invoke(this);
         _tickCondition.Reset();
@@ -30,19 +28,11 @@ public class StatusEffect : IStatusEffect
 
     public void SubscribeCondition()
     {
-        if (_tickCondition?.EventFilter != null)
-        {
-            _tickCondition.EventFilter.SubscribeEvents();
-            _tickCondition.EventFilter.ConditionChanged += CallEffectTick;
-        }
+        _tickCondition?.Subscribe(CallEffectTick);
     }
 
     public void UnsubscribeCondition()
     {
-        if (_tickCondition?.EventFilter != null)
-        {
-            _tickCondition.EventFilter.UnsubscribeEvents();
-            _tickCondition.EventFilter.ConditionChanged -= CallEffectTick;
-        }
+        _tickCondition?.Unsubscribe();
     }
 }

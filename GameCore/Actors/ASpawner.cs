@@ -110,6 +110,8 @@ public abstract partial class ASpawner : Node2D
 
     public override void _ExitTree()
     {
+        if (SpawnedActorBody?.Actor != null)
+            SpawnedActorBody.Actor.Defeated -= OnActorDefeated;
         ActorBody?.QueueFree();
     }
 

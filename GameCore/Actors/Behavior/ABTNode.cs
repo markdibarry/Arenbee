@@ -3,39 +3,40 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GameCore.Actors.Behavior;
 
-public class BTNode
+public abstract class ABTNode
 {
     public enum NodeState { Running, Failure, Success };
 
-    public BTNode()
+    protected ABTNode()
     {
         Parent = null;
-        Children = new List<BTNode>();
+        Children = new List<ABTNode>();
     }
 
-    public BTNode(List<BTNode> children)
+    protected ABTNode(List<ABTNode> children)
         : this()
     {
-        foreach (BTNode child in children)
+        foreach (ABTNode child in children)
         {
             child.Parent = this;
             Children.Add(child);
         }
     }
 
-    public void SetDependencies(AActorBody actor, Dictionary<string, object> blackBoard)
+    public void SetDependencies(AActorBody actorBody, Dictionary<string, object> blackBoard)
     {
-        Actor = actor;
+        ActorBodyInternal = actorBody;
         _blackBoard = blackBoard;
         Init();
         foreach (var child in Children)
-            child.SetDependencies(actor, blackBoard);
+            child.SetDependencies(actorBody, blackBoard);
     }
 
     private Dictionary<string, object> _blackBoard = null!;
-    protected BTNode? Parent { get; set; }
-    protected AActorBody Actor { get; private set; } = null!;
-    protected List<BTNode> Children { get; }
+    protected ABTNode? Parent { get; set; }
+    protected virtual AActorBody ActorBody => ActorBodyInternal;
+    protected AActorBody ActorBodyInternal { get; private set; } = null!;
+    protected List<ABTNode> Children { get; }
 
     public virtual void Init() { }
 

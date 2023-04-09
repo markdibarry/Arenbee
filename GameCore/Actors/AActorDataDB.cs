@@ -6,15 +6,14 @@ public abstract class AActorDataDB
 {
     protected AActorDataDB()
     {
-        _actorData = BuildDB();
+        ActorData = BuildDB();
     }
 
-    private readonly Dictionary<string, AActorData> _actorData;
-    public IReadOnlyDictionary<string, AActorData> ActorData => _actorData;
+    public IReadOnlyDictionary<string, AActorData> ActorData { get; }
 
     public bool TryGetData<T>(string key, out T? value) where T : AActorData
     {
-        if (_actorData.TryGetValue(key, out AActorData? actorData) && actorData is T t)
+        if (ActorData.TryGetValue(key, out AActorData? actorData) && actorData is T t)
         {
             value = t;
             return true;
@@ -25,7 +24,7 @@ public abstract class AActorDataDB
 
     public T? GetData<T>(string id) where T : AActorData
     {
-        if (_actorData.TryGetValue(id, out AActorData? actorData) && actorData is T t)
+        if (ActorData.TryGetValue(id, out AActorData? actorData) && actorData is T t)
             return t;
         return null;
     }

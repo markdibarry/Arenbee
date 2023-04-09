@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore.Statistics;
+using Godot;
 
 namespace Arenbee.Statistics;
 
 public class Stats : AStats
 {
-    public Stats(IDamageable damageable)
-        : base(damageable)
+    public Stats(IDamageable damageable, IEnumerable<Stat> statLookup, IEnumerable<Modifier> mods)
+        : base(damageable, statLookup, mods)
     {
         AddStatIfMissing((int)StatType.Level, 1);
         AddStatIfMissing((int)StatType.HP, 1);
@@ -20,6 +21,11 @@ public class Stats : AStats
     public Stats(Stats stats)
         : base(stats)
     { }
+
+    ~Stats()
+    {
+        GD.Print("Disposed!");
+    }
 
     private static readonly Random s_random = new();
     private readonly Dictionary<StatusEffectType, int> _statusChanceCache = new();

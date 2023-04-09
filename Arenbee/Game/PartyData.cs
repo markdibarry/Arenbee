@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Arenbee.Actors;
 using Arenbee.Items;
-using GameCore.Actors;
 
 namespace Arenbee.Game;
 
@@ -35,7 +34,7 @@ public class PartyData
     public Party CreateParty(IEnumerable<Inventory> inventories)
     {
         Inventory inventory = inventories.ElementAt(InventoryIndex);
-        IEnumerable<AActor> actors = ActorData.Select(x => x.CreateActor(inventory));
+        IEnumerable<Actor> actors = ActorData.Select(x => x.CreateActor(inventory));
         return new(PartyId, actors, inventory);
     }
 }

@@ -35,7 +35,8 @@ public partial class AActorBody
     public double JumpVelocity { get; protected set; }
     public double JumpGravity { get; protected set; }
     public int RunSpeed { get; protected set; }
-    public abstract InputHandler InputHandler { get; set; }
+    public abstract InputHandler InputHandler { get; }
+    protected abstract InputHandler InputHandlerInternal { get; set; }
 
     public void ApplyFallGravity(double delta)
     {
@@ -64,6 +65,8 @@ public partial class AActorBody
     {
         _move = IsFloater ? InputHandler.GetLeftAxis() : Direction;
     }
+
+    public void SetInputHandler(InputHandler inputHandler) => InputHandlerInternal = inputHandler;
 
     public void UpdateDirection()
     {

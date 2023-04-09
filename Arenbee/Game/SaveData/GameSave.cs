@@ -15,7 +15,7 @@ public class GameSave : IGameSave
     {
         Id = id;
         LastModifiedUtc = DateTime.UtcNow;
-        List<AInventory> inventories = gameSession.Parties.Select(x => x.Inventory)
+        List<Inventory> inventories = gameSession.Parties.Select(x => x.Inventory)
             .Distinct()
             .ToList();
         MainPartyId = gameSession.MainParty?.Id ?? string.Empty;

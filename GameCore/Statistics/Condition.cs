@@ -1,101 +1,84 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using GameCore.Enums;
 using Godot;
 
 namespace GameCore.Statistics;
 
-public partial class Condition : Resource
+[JsonConverter(typeof(ConditionConverter))]
+public abstract partial class Condition : Resource
 {
-    public Condition()
+    protected Condition() { }
+
+    protected Condition(Condition condition)
+        : this(condition.ResultType, condition.AdditionalLogicOp, condition.AdditionalCondition)
     {
     }
 
-    public Condition(Condition condition)
-        : this(conditionType: condition.ConditionType,
-              target: condition.Target,
-              startValue: condition.StartValue,
-              currentValue: condition.CurrentValue,
-              targetValue: condition.TargetValue,
-              compareOp: condition.CompareOp,
-              resultType: condition.ResultType,
-              additionalLogicOp: condition.AdditionalLogicOp,
-              additionalCondition: condition.AdditionalCondition)
-    {
-    }
-
-    public Condition(
-        int conditionType,
-        int target,
-        float startValue,
-        float currentValue,
-        float targetValue,
-        CompareOp compareOp,
+    protected Condition(
         ConditionResultType resultType,
         LogicOp additionalLogicOp,
         Condition? additionalCondition)
     {
-        ConditionType = conditionType;
-        Target = target;
-        StartValue = startValue;
-        CurrentValue = currentValue;
-        TargetValue = targetValue;
-        CompareOp = compareOp;
         ResultType = resultType;
         AdditionalLogicOp = additionalLogicOp;
-        AdditionalCondition = additionalCondition == null ? null : new(additionalCondition);
+        AdditionalCondition = additionalCondition?.Clone();
     }
 
-    [Export] public int ConditionType { get; set; }
-    [Export] public int Target { get; set; }
-    [Export] public float StartValue { get; set; }
-    [Export] public float CurrentValue { get; set; }
-    [Export] public CompareOp CompareOp { get; set; }
-    [Export] public float TargetValue { get; set; }
+    public abstract int ConditionType { get; }
     [Export] public ConditionResultType ResultType { get; set; }
-    [Export] public Condition? AdditionalCondition { get; set; }
-    [Export] public LogicOp AdditionalLogicOp { get; set; }
-    public ConditionEventFilter? EventFilter { get; set; }
+    [Export, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault), JsonConverter(typeof(ConditionConverter))]
+    public Condition? AdditionalCondition { get; set; }
+    [Export, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public LogicOp AdditionalLogicOp { get; set; }
+    [JsonIgnore] public Action? ConditionChangedCallback { get; set; }
+    [JsonIgnore] protected bool ConditionMet { get; set; }
+    [JsonIgnore] protected AStats Stats { get; set; } = null!;
 
-    public bool CheckCondition()
+    public void SetStats(AStats stats)
     {
-        if (EventFilter == null)
-            return false;
-        EventFilter.ConditionMet = EventFilter.CheckCondition();
-        if (EventFilter.ConditionMet)
+        Stats = stats;
+        AdditionalCondition?.SetStats(stats);
+    }
+
+    public bool CheckConditions()
+    {
+        ConditionMet = CheckCondition();
+        if (ConditionMet)
         {
             if (AdditionalCondition?.AdditionalLogicOp == LogicOp.And)
-                return AdditionalCondition.CheckCondition();
+                return AdditionalCondition.CheckConditions();
             return true;
         }
         else
         {
             if (AdditionalCondition?.AdditionalLogicOp == LogicOp.Or)
-                return AdditionalCondition.CheckCondition();
+                return AdditionalCondition.CheckConditions();
             return false;
         }
     }
 
     public virtual void Reset()
     {
-        CurrentValue = StartValue;
         AdditionalCondition?.Reset();
     }
 
     public void Subscribe(Action handler)
     {
-        if (EventFilter == null)
-            return;
-        EventFilter.SubscribeEvents();
-        EventFilter.ConditionChanged += handler;
+        SubscribeEvents();
+        ConditionChangedCallback = handler;
         AdditionalCondition?.Subscribe(handler);
     }
 
-    public void Unsubscribe(Action handler)
+    public void Unsubscribe()
     {
-        if (EventFilter == null)
-            return;
-        EventFilter.UnsubscribeEvents();
-        EventFilter.ConditionChanged -= handler;
-        AdditionalCondition?.Unsubscribe(handler);
+        UnsubscribeEvents();
+        ConditionChangedCallback = null;
+        AdditionalCondition?.Unsubscribe();
     }
+
+    public abstract Condition Clone();
+    protected abstract bool CheckCondition();
+    protected abstract void SubscribeEvents();
+    protected abstract void UnsubscribeEvents();
 }

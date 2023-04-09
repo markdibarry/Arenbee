@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Godot;
 using System.Text.Json.Serialization.Metadata;
+using GameCore.Statistics;
 
 namespace GameCore.SaveData;
 
@@ -23,7 +24,8 @@ public abstract class ASaveService<T> where T : IGameSave
     {
         if (!typeInfo.Type.IsAssignableTo(typeof(Resource)))
             return;
-
+        if (typeInfo.Kind != JsonTypeInfoKind.Object)
+            return;
         var props = typeInfo.Properties.Where(x => !s_ignoredPropertyNames.Contains(x.Name)).ToList();
         typeInfo.Properties.Clear();
         foreach (JsonPropertyInfo prop in props)

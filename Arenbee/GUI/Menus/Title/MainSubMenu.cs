@@ -111,7 +111,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     private GameSave GetNewGame()
     {
-        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Whisp)!;
+        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)!;
         return new GameSave(
             id: 0,
             lastModifiedUtc: DateTime.UtcNow,
