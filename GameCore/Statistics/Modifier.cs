@@ -55,8 +55,8 @@ public partial class Modifier : Resource
     [Export] public SourceType SourceType { get; set; }
     [Export] public Godot.Collections.Array<Condition> Conditions { get; set; } = new();
     public bool IsActive { get; set; }
-    public event Action<Modifier>? RemovalConditionMet;
-    public event Action<Modifier>? ActivationConditionMet;
+    [JsonIgnore] public Action<Modifier>? RemovalConditionMetCallback { get; set; }
+    [JsonIgnore] public Action<Modifier>? ActivationConditionMetCallback { get; set; }
 
     // TODO Add special case handling i.e. +5% for every 100 enemies killed
     public int Apply(int baseValue) => MathI.Compute(Op, baseValue, Value);
@@ -79,14 +79,18 @@ public partial class Modifier : Resource
 
     public bool ShouldRemove() => CheckConditions(ConditionResultType.Remove);
 
-    public void SubscribeConditions()
+    public void SubscribeConditions(Action<Modifier> activationCallback, Action<Modifier> removalCallback)
     {
+        ActivationConditionMetCallback = activationCallback;
+        RemovalConditionMetCallback = removalCallback;
         foreach (Condition condition in Conditions)
             condition.Subscribe(GetHandler(condition));
     }
 
     public void UnsubscribeConditions()
     {
+        ActivationConditionMetCallback = null;
+        RemovalConditionMetCallback = null;
         foreach (Condition condition in Conditions)
             condition.Unsubscribe();
     }
@@ -109,14 +113,14 @@ public partial class Modifier : Resource
         if (IsActive != isActive)
         {
             IsActive = isActive;
-            ActivationConditionMet?.Invoke(this);
+            ActivationConditionMetCallback?.Invoke(this);
         }
     }
 
     private void ConditionRemovalHandler()
     {
         if (ShouldRemove())
-            RemovalConditionMet?.Invoke(this);
+            RemovalConditionMetCallback?.Invoke(this);
     }
 
     private Action GetHandler(Condition condition)

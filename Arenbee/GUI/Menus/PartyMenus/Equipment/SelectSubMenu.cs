@@ -96,8 +96,7 @@ public partial class SelectSubMenu : OptionSubMenu
     private void CreateMockStats()
     {
         _mockStats = new(_actor.Stats);
-        foreach (var mod in _slot.Modifiers)
-            _mockStats.RemoveMod(mod, false);
+        RemoveMockMods();
     }
 
     private bool TryEquip(ItemStack itemStack, EquipmentSlot slot)

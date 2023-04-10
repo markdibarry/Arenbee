@@ -1,5 +1,5 @@
 ﻿using System;
-using GameCore.Enums;
+using System.Diagnostics.CodeAnalysis;
 using GameCore.Statistics;
 using Godot;
 
@@ -9,29 +9,21 @@ public partial class TimedCondition : Condition
 {
     public TimedCondition() { }
 
-    public TimedCondition(
-        ConditionResultType resultType,
-        LogicOp additionalLogicOp,
-        float startValue,
-        float targetValue,
-        float currentValue,
-        Condition? additionalCondition)
-            : base(resultType, additionalLogicOp, additionalCondition)
+    [SetsRequiredMembers]
+    public TimedCondition(TimedCondition condition)
+            : base(condition)
     {
-        StartValue = startValue;
-        CurrentValue = currentValue;
-        TargetValue = targetValue;
+        StartValue = condition.StartValue;
+        CurrentValue = condition.CurrentValue;
+        TargetValue = condition.TargetValue;
     }
 
     public override int ConditionType => (int)Statistics.ConditionType.Timed;
     [Export] public float StartValue { get; set; }
-    [Export] public float TargetValue { get; set; }
+    [Export] public required float TargetValue { get; set; }
     [Export] public float CurrentValue { get; set; }
 
-    public override TimedCondition Clone()
-    {
-        return new TimedCondition(ResultType, AdditionalLogicOp, StartValue, TargetValue, CurrentValue, AdditionalCondition);
-    }
+    public override TimedCondition Clone() => new(this);
 
     public override void Reset()
     {
@@ -39,20 +31,11 @@ public partial class TimedCondition : Condition
         base.Reset();
     }
 
-    protected override bool CheckCondition()
-    {
-        return CurrentValue == TargetValue;
-    }
+    protected override bool CheckCondition() => CurrentValue == TargetValue;
 
-    protected override void SubscribeEvents()
-    {
-        Stats.Processed += OnProcessed;
-    }
+    protected override void SubscribeEvents() => Stats.Processed += OnProcessed;
 
-    protected override void UnsubscribeEvents()
-    {
-        Stats.Processed -= OnProcessed;
-    }
+    protected override void UnsubscribeEvents() => Stats.Processed -= OnProcessed;
 
     private void OnProcessed(double amount)
     {
@@ -64,11 +47,6 @@ public partial class TimedCondition : Condition
                 CurrentValue = Math.Max(CurrentValue - (float)amount, TargetValue);
         }
 
-        bool result = CheckCondition();
-        if (result != ConditionMet)
-        {
-            ConditionMet = result;
-            ConditionChangedCallback?.Invoke();
-        }
+        UpdateCondition();
     }
 }

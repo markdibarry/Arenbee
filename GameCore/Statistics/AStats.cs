@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using GameCore.Extensions;
 using GameCore.Utility;
-using Godot;
 
 namespace GameCore.Statistics;
 
@@ -21,7 +20,6 @@ public abstract class AStats
             StatLookup[stat.StatType] = new Stat(stat);
         foreach (var modifier in mods)
             AddMod(new Modifier(modifier));
-        GD.Print("Created!");
     }
 
     /// <summary>
@@ -29,7 +27,7 @@ public abstract class AStats
     /// </summary>
     /// <param name="stats"></param>
     protected AStats(AStats stats)
-        : this(stats.StatsOwner, Array.Empty<Stat>(), Array.Empty<Modifier>())
+        : this(null!, Array.Empty<Stat>(), Array.Empty<Modifier>())
     {
         foreach (var pair in stats.StatLookup)
             StatLookup[pair.Key] = pair.Value;
@@ -72,7 +70,7 @@ public abstract class AStats
         mod.IsActive = !mod.ShouldDeactivate();
 
         mods.Add(mod);
-        SubscribeModConditions(mod);
+        mod.SubscribeConditions(OnActivationConditionMet, OnRemovalConditionMet);
         UpdateSpecialCategory(mod.StatType);
         RaiseModChanged(mod, ModChangeType.Add);
     }
@@ -86,12 +84,12 @@ public abstract class AStats
     public void CleanupStats()
     {
         // TODO: Find out source of memory leak.
-        foreach (var effect in StatusEffects)
+        foreach (IStatusEffect effect in StatusEffects)
             effect.UnsubscribeCondition();
         StatusEffects.Clear();
         foreach (var kvp in Modifiers)
         {
-            foreach (var mod in kvp.Value)
+            foreach (Modifier mod in kvp.Value)
                 mod.UnsubscribeConditions();
         }
         Modifiers.Clear();
@@ -111,13 +109,13 @@ public abstract class AStats
 
         if (ignoreDependentMods)
         {
-            foreach (var pair in Modifiers)
+            foreach (KeyValuePair<int, List<Modifier>> pair in Modifiers)
                 mods.AddRange(pair.Value
                     .Where(x => x.SourceType != (int)SourceType.Dependent));
             return mods;
         }
 
-        foreach (var pair in Modifiers)
+        foreach (KeyValuePair<int, List<Modifier>> pair in Modifiers)
             mods.AddRange(pair.Value);
         return mods;
     }
@@ -147,14 +145,13 @@ public abstract class AStats
         DamageToProcess.Enqueue(damageRequest);
     }
 
-    public virtual void RemoveMod(Modifier mod, bool unsubscribe = true)
+    public virtual void RemoveMod(Modifier mod)
     {
         if (!Modifiers.TryGetValue(mod.StatType, out List<Modifier>? mods))
             return;
         if (!mods.Contains(mod))
             return;
-        if (unsubscribe)
-            UnsubscribeModConditions(mod);
+        mod.UnsubscribeConditions();
         mods.Remove(mod);
         if (mods.Count == 0)
             Modifiers.Remove(mod.StatType);
@@ -206,19 +203,5 @@ public abstract class AStats
         statusEffect.EffectData.ExitEffect?.Invoke(statusEffect);
         StatusEffects.Remove(statusEffect);
         StatusEffectChanged?.Invoke(statusEffectType, ModChangeType.Remove);
-    }
-
-    protected void SubscribeModConditions(Modifier mod)
-    {
-        mod.SubscribeConditions();
-        mod.ActivationConditionMet += OnActivationConditionMet;
-        mod.RemovalConditionMet += OnRemovalConditionMet;
-    }
-
-    protected void UnsubscribeModConditions(Modifier mod)
-    {
-        mod.UnsubscribeConditions();
-        mod.ActivationConditionMet -= OnActivationConditionMet;
-        mod.RemovalConditionMet -= OnRemovalConditionMet;
     }
 }

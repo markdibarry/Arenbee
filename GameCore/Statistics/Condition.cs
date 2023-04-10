@@ -26,18 +26,26 @@ public abstract partial class Condition : Resource
     }
 
     public abstract int ConditionType { get; }
-    [Export] public ConditionResultType ResultType { get; set; }
-    [Export, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault), JsonConverter(typeof(ConditionConverter))]
+    [Export]
+    public ConditionResultType ResultType { get; set; }
+    [Export]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [JsonConverter(typeof(ConditionConverter))]
     public Condition? AdditionalCondition { get; set; }
-    [Export, JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    [Export]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public LogicOp AdditionalLogicOp { get; set; }
-    [JsonIgnore] public Action? ConditionChangedCallback { get; set; }
-    [JsonIgnore] protected bool ConditionMet { get; set; }
-    [JsonIgnore] protected AStats Stats { get; set; } = null!;
+    [JsonIgnore]
+    public Action? ConditionChangedCallback { get; set; }
+    [JsonIgnore]
+    protected bool ConditionMet { get; set; }
+    [JsonIgnore]
+    protected virtual AStats StatsInternal { get; private set; } = null!;
+    protected virtual AStats Stats => StatsInternal;
 
     public void SetStats(AStats stats)
     {
-        Stats = stats;
+        StatsInternal = stats;
         AdditionalCondition?.SetStats(stats);
     }
 
@@ -75,6 +83,16 @@ public abstract partial class Condition : Resource
         UnsubscribeEvents();
         ConditionChangedCallback = null;
         AdditionalCondition?.Unsubscribe();
+    }
+
+    protected void UpdateCondition()
+    {
+        bool result = CheckCondition();
+        if (result != ConditionMet)
+        {
+            ConditionMet = result;
+            ConditionChangedCallback?.Invoke();
+        }
     }
 
     public abstract Condition Clone();

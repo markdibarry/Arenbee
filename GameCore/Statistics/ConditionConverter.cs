@@ -17,6 +17,7 @@ public class ConditionConverter : JsonConverter<Condition>
             {
                 readerClone.Read();
                 val = readerClone.GetInt32();
+                break;
             }
         }
         Type conditionType = Locator.ConditionLookup.GetConditionType(val);

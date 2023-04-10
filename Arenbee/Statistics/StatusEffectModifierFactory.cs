@@ -2,6 +2,7 @@
 using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
+
 public class StatusEffectModifierFactory : IStatusEffectModifierFactory
 {
     public Modifier GetStatusEffectModifier(int statusEffectType)
