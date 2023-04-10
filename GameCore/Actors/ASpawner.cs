@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Arenbee.Actors;
 using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
@@ -34,6 +33,7 @@ public abstract partial class ASpawner : Node2D
     public AActorBody? SpawnedActorBody { get; set; }
     public bool SpawnPending { get; set; }
     public VisibleOnScreenNotifier2D VisibleOnScreenNotifier2D { get; private set; } = null!;
+    protected abstract int DefaultActorRole { get; }
 
     public event Action<ASpawner>? SpawnRequested;
 
@@ -124,7 +124,7 @@ public abstract partial class ASpawner : Node2D
 
         AActor actor = ActorData.CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
-        actorBody.ActorRole = (int)ActorRole.Enemy;
+        actorBody.ActorRole = DefaultActorRole;
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;

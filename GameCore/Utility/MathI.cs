@@ -1,4 +1,4 @@
-﻿using GameCore.Enums;
+﻿using GameCore.Statistics;
 
 namespace GameCore.Utility;
 

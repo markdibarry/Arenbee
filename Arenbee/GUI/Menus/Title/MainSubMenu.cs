@@ -88,7 +88,7 @@ public partial class MainSubMenu : OptionSubMenu
     private void StartNewGame()
     {
         CurrentState = State.Busy;
-        TransitionControllerBase tController = Locator.TransitionController;
+        ATransitionController tController = Locator.TransitionController;
         TransitionRequest request = new(
             loadingScreenPath: BasicLoadingScreen.GetScenePath(),
             transitionType: TransitionType.Game,

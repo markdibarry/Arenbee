@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Arenbee.Statistics;
 using GameCore.ActionEffects;
-using GameCore.Enums;
 using GameCore.Items;
 using GameCore.Statistics;
 using GameCore.Utility;
@@ -12,13 +11,9 @@ public class ItemDB : AItemDB
 {
     private static readonly IStatusEffectModifierFactory s_effectModFactory = Locator.StatusEffectModifierFactory;
 
-    public ItemDB(AItemCategoryDB itemCategoryDB)
-        : base(itemCategoryDB)
+    protected override AItem[] BuildDB()
     {
-    }
-
-    protected override AItem[] BuildDB(AItemCategoryDB itemCategoryDB)
-    {
+        var itemCategoryDB = Locator.ItemCategoryDB;
         List<AItem> items = new();
         BuildWeapons(items, itemCategoryDB.GetCategory(ItemCategoryIds.Weapon)!);
         BuildHeadGear(items, itemCategoryDB.GetCategory(ItemCategoryIds.Headgear)!);

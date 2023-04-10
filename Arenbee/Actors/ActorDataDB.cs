@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
-using GameCore.Enums;
 using GameCore.Statistics;
 
 namespace Arenbee.Actors;

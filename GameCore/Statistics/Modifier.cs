@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using GameCore.Enums;
 using GameCore.Utility;
 using Godot;
 using Gictionary = Godot.Collections.Dictionary;

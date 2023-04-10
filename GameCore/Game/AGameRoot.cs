@@ -12,8 +12,14 @@ namespace GameCore;
 
 public abstract partial class AGameRoot : Node
 {
-    public string GameSessionScenePath { get; set; } = string.Empty;
-    public string TitleMenuScenePath { get; set; } = string.Empty;
+    protected AGameRoot(string gameSessionScenePath, string titleMenuScenePath)
+    {
+        GameSessionScenePath = gameSessionScenePath;
+        TitleMenuScenePath = titleMenuScenePath;
+    }
+
+    public string GameSessionScenePath { get; }
+    public string TitleMenuScenePath { get; }
     public AAudioController AudioController { get; protected set; } = null!;
     public GameCamera GameCamera { get; protected set; } = null!;
     public Node2D GameDisplay { get; set; } = null!;
@@ -24,12 +30,13 @@ public abstract partial class AGameRoot : Node
     public GameState GameState { get; } = new();
     public abstract GUIInputHandler MenuInput { get; }
     public abstract InputHandler PlayerOneInput { get; }
-    public abstract TransitionControllerBase TransitionController { get; }
+    public abstract ATransitionController TransitionController { get; }
 
     public override void _Ready()
     {
         SetNodeReferences();
         ProvideLocatorReferences();
+        Locator.CheckReferences();
         Init();
     }
 

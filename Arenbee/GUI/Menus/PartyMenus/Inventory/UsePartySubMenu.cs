@@ -91,7 +91,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         var request = new ActionEffectRequest()
         {
-            ActionType = ActionType.Item,
+            ActionType = (int)ActionType.Item,
             Value1 = _item.UseData.Value1,
             Value2 = _item.UseData.Value2
         };
@@ -119,7 +119,7 @@ public partial class UsePartySubMenu : OptionSubMenu
             selectedItems = new OptionItem[] { optionItem };
         var request = new ActionEffectRequest()
         {
-            ActionType = ActionType.Item,
+            ActionType = (int)ActionType.Item,
             Value1 = _item.UseData.Value1,
             Value2 = _item.UseData.Value2
         };

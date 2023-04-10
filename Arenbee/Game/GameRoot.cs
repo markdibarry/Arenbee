@@ -2,25 +2,22 @@
 using Arenbee.GUI.Menus;
 using Arenbee.Input;
 using GameCore;
-using GameCore.GUI;
-using GameCore.Input;
 
 namespace Arenbee;
 
 public partial class GameRoot : AGameRoot
 {
     public GameRoot()
+        : base(Arenbee.GameSession.GetScenePath(), TitleMenu.GetScenePath())
     {
-        GameSessionScenePath = Arenbee.GameSession.GetScenePath();
-        TitleMenuScenePath = TitleMenu.GetScenePath();
-        MenuInput = new MenuInputHandler();
-        PlayerOneInput = new Player1InputHandler();
-        TransitionController = new TransitionController();
+        MenuInput = new();
+        PlayerOneInput = new();
+        TransitionController = new();
     }
 
-    public override GUIInputHandler MenuInput { get; }
-    public override InputHandler PlayerOneInput { get; }
-    public override TransitionControllerBase TransitionController { get; }
+    public override MenuInputHandler MenuInput { get; }
+    public override Player1InputHandler PlayerOneInput { get; }
+    public override TransitionController TransitionController { get; }
 
     protected override void StartRoot()
     {

@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace GameCore.Items;
 
 public abstract class AItemDB
 {
-    protected AItemDB(AItemCategoryDB itemCategoryDB)
+    protected AItemDB()
     {
-        _items = BuildDB(itemCategoryDB);
+        _items = BuildDB();
     }
 
     private readonly AItem[] _items;
@@ -24,5 +24,5 @@ public abstract class AItemDB
         return _items.Where(item => item.ItemCategory.Id.Equals(itemCategoryId));
     }
 
-    protected abstract AItem[] BuildDB(AItemCategoryDB itemCategoryDB);
+    protected abstract AItem[] BuildDB();
 }

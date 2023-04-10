@@ -20,7 +20,7 @@ public class RestoreHP : IActionEffect
         var actionData = new DamageRequest()
         {
             SourceName = target.Name,
-            ActionType = request.ActionType,
+            ActionType = (ActionType)request.ActionType,
             Value = request.Value1 * -1,
             ElementType = ElementType.Healing
         };

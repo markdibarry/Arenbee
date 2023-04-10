@@ -5,7 +5,7 @@ using GameCore.Utility;
 
 namespace GameCore.GUI;
 
-public abstract class TransitionControllerBase
+public abstract class ATransitionController
 {
     private TransitionRequest? _pendingTransition;
 
@@ -46,13 +46,9 @@ public abstract class TransitionControllerBase
         transitionB?.QueueFree();
     }
 
-    private async Task LoadAsync(LoadingScreen? loadingScreen, Loader loader)
+    private static async Task LoadAsync(LoadingScreen? loadingScreen, Loader loader)
     {
-        loader.ProgressUpdate += OnProgressUpdate;
-        await loader.LoadAsync();
-        loader.ProgressUpdate -= OnProgressUpdate;
-
-        void OnProgressUpdate(int progress) => loadingScreen?.Update(progress);
+        await loader.LoadAsync((int progress) => loadingScreen?.Update(progress));
     }
 
     private static async Task TransitionInAsync(TransitionLayer transitionLayer, LoadingScreen? loadingScreen, Transition? transitionA)

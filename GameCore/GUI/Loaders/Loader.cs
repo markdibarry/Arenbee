@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Arenbee.GUI;
+using GameCore.Utility;
 
 namespace GameCore.GUI;
 
@@ -14,33 +14,30 @@ public class Loader
 
     public Loader(string[] paths)
     {
-        _objects = new();
+        _objectLoaders = new();
         foreach (string path in paths)
-        {
-            if (path.StartsWith(Config.SavePrefix))
-                _objects.Add(new ObjectLoaderGameSave(path, OnReport));
-            else
-                _objects.Add(new ObjectLoaderResource(path, OnReport));
-        }
+            _objectLoaders.Add(Locator.LoaderFactory.GetLoader(path, OnReport));
     }
 
-    private readonly List<IObjectLoader> _objects;
-    public event Action<int>? ProgressUpdate;
+    private readonly List<ObjectLoader> _objectLoaders;
+    private Action<int>? _progressUpdateCallback;
 
     public T? GetObject<T>(string path)
     {
-        object? result = _objects.FirstOrDefault(x => x.Path == path)?.LoadedObject;
+        object? result = _objectLoaders.FirstOrDefault(x => x.Path == path)?.LoadedObject;
         return result is T t ? t : default;
     }
 
-    public async Task LoadAsync()
+    public async Task LoadAsync(Action<int> callback)
     {
-        foreach (var obj in _objects)
-            await obj.LoadAsync();
+        _progressUpdateCallback = callback;
+        foreach (ObjectLoader objectLoader in _objectLoaders)
+            await objectLoader.LoadAsync();
+        _progressUpdateCallback = null;
     }
 
     public void OnReport()
     {
-        ProgressUpdate?.Invoke((int)_objects.Average(x => x.Progress));
+        _progressUpdateCallback?.Invoke((int)_objectLoaders.Average(x => x.Progress));
     }
 }

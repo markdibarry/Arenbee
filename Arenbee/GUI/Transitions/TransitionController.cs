@@ -2,6 +2,6 @@
 
 namespace Arenbee.GUI;
 
-public class TransitionController : TransitionControllerBase
+public class TransitionController : ATransitionController
 {
 }

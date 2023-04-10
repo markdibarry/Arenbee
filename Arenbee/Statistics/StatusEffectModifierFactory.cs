@@ -1,5 +1,4 @@
-﻿using GameCore.Enums;
-using GameCore.Statistics;
+﻿using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 

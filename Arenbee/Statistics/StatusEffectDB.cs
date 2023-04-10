@@ -1,5 +1,4 @@
-﻿using GameCore.Enums;
-using GameCore.Statistics;
+﻿using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
@@ -26,7 +25,7 @@ public class StatusEffectDB : AStatusEffectDB
                 Description = "Character takes fire damage and runs to put out the flames!",
                 EffectModifiers = new Modifier[]
                 {
-                    new Modifier((int)StatType.Attack, ModOp.Percent, 80)
+                    new((int)StatType.Attack, ModOp.Percent, 80)
                 },
                 TickCondition = new TimedCondition()
                 {

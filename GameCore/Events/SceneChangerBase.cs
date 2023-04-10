@@ -7,7 +7,7 @@ namespace GameCore.Events;
 
 public abstract partial class SceneChangerBase : Area2D
 {
-    protected TransitionControllerBase TController { get; } = Locator.TransitionController;
+    protected ATransitionController TController { get; } = Locator.TransitionController;
     protected GUIController GUIController { get; } = Locator.Root.GUIController;
     protected AGameSession? GameSession { get; } = Locator.Session;
     [Export]

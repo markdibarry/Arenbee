@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore.Statistics;
-using Godot;
 
 namespace Arenbee.Statistics;
 
@@ -21,11 +20,6 @@ public class Stats : AStats
     public Stats(Stats stats)
         : base(stats)
     { }
-
-    ~Stats()
-    {
-        GD.Print("Disposed!");
-    }
 
     private static readonly Random s_random = new();
     private readonly Dictionary<StatusEffectType, int> _statusChanceCache = new();

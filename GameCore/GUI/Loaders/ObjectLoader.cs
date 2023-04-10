@@ -4,16 +4,7 @@ using Godot;
 
 namespace GameCore.GUI;
 
-public interface IObjectLoader
-{
-    object? LoadedObject { get; set; }
-    int Progress { get; set; }
-    string Path { get; set; }
-    Action ReportProgress { get; set; }
-    Task<object?> LoadAsync();
-}
-
-public abstract class ObjectLoader : IObjectLoader
+public abstract class ObjectLoader
 {
     protected ObjectLoader(string path, Action reportProgress)
     {
