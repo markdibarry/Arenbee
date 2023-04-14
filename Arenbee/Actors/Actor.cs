@@ -22,7 +22,7 @@ public class Actor : AActor
     {
         Equipment = equipment;
         Stats = new Stats(this, stats, modifiers);
-        InitStats();
+        Init();
     }
 
     public override ActorBody? ActorBody => base.ActorBody as ActorBody;
