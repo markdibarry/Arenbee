@@ -11,6 +11,7 @@ namespace GameCore.Utility;
 
 public static class Locator
 {
+    private static AActorBodyDB s_actorBodyDB = null!;
     private static AActorDataDB s_actorDataDB = null!;
     private static IConditionLookup s_conditionLookup = null!;
     private static AEquipmentSlotCategoryDB s_equipmentSlotCategoryDB = null!;
@@ -24,6 +25,7 @@ public static class Locator
     private static ActionEffectDBBase s_actionEffectDB = null!;
 
     public static ActionEffectDBBase ActionEffectDB => s_actionEffectDB;
+    public static AActorBodyDB ActorBodyDB => s_actorBodyDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
     public static AAudioController Audio => s_gameRoot.AudioController;
     public static IConditionLookup ConditionLookup => s_conditionLookup;
@@ -42,6 +44,8 @@ public static class Locator
     {
         s_actionEffectDB = actionEffectDB;
     }
+
+    public static void ProvideActorBodyDB(AActorBodyDB actorBodyDB) => s_actorBodyDB = actorBodyDB;
 
     public static void ProvideActorDataDB(AActorDataDB actorDataDB) => s_actorDataDB = actorDataDB;
 
@@ -82,6 +86,8 @@ public static class Locator
         List<string> unsetRefs = new();
         if (s_actionEffectDB == null)
             unsetRefs.Add("ActionEffect DB");
+        if (s_actorBodyDB == null)
+            unsetRefs.Add("ActorBody DB");
         if (s_actorDataDB == null)
             unsetRefs.Add("ActorData DB");
         if (s_conditionLookup == null)

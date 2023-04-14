@@ -5,7 +5,7 @@ namespace Arenbee.Actors.ActorBodies;
 
 public partial class Twosen : ActorBody
 {
-    public Twosen()
+    public Twosen() : base()
     {
         WalkSpeed = 100;
         StateController = new StateController(

@@ -77,24 +77,6 @@ public abstract class AStats
 
     public abstract int CalculateStat(int statType, bool ignoreHidden = false);
 
-    /// <summary>
-    /// Unsubscribes and removes all StatusEffects and Modifiers.
-    /// Necessary to prevent memory leak.
-    /// </summary>
-    public void CleanupStats()
-    {
-        // TODO: Find out source of memory leak.
-        foreach (IStatusEffect effect in StatusEffects)
-            effect.UnsubscribeCondition();
-        StatusEffects.Clear();
-        foreach (var kvp in Modifiers)
-        {
-            foreach (Modifier mod in kvp.Value)
-                mod.UnsubscribeConditions();
-        }
-        Modifiers.Clear();
-    }
-
     public Dictionary<int, Stat> CloneStatLookup()
     {
         Dictionary<int, Stat> statLookup = new();

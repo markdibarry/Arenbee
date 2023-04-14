@@ -22,7 +22,7 @@ public class AEquipment
     private readonly AInventory _inventory;
     private readonly EquipmentSlot[] _slots;
     public IReadOnlyCollection<EquipmentSlot> Slots => _slots;
-    public event Action<EquipmentSlot, AItem?, AItem?>? EquipmentSet;
+    public Action<EquipmentSlot, AItem?, AItem?>? EquipmentSetCallback { get; set; }
 
     public IEnumerable<EquipmentSlot> GetSlotsByType(string itemCategoryId)
     {
@@ -48,7 +48,7 @@ public class AEquipment
         AItem? oldItem = slot.Item;
         if (!slot.TrySetItem(actor, newItemStack))
             return false;
-        EquipmentSet?.Invoke(slot, oldItem, newItemStack.Item);
+        EquipmentSetCallback?.Invoke(slot, oldItem, newItemStack.Item);
         return true;
     }
 
@@ -58,6 +58,6 @@ public class AEquipment
             return;
         AItem? oldItem = slot.Item;
         slot.RemoveItem(actor);
-        EquipmentSet?.Invoke(slot, oldItem, null);
+        EquipmentSetCallback?.Invoke(slot, oldItem, null);
     }
 }

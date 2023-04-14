@@ -4,7 +4,6 @@ using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Extensions;
-using GameCore.Input;
 using GameCore.Items;
 using GameCore.Statistics;
 using Godot;
@@ -13,18 +12,21 @@ namespace Arenbee.Actors;
 
 public abstract partial class ActorBody : AActorBody
 {
-    public ActorBody()
+    protected ActorBody()
         : base()
     {
-        InputHandlerInternal = new DummyInputHandler();
+        SetInputHandler(new DummyInputHandler());
         IFrameController = new(this);
+        JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1;
+        JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1;
     }
 
-    public override Actor? Actor => ActorInternal as Actor;
-    public override ActorInputHandler InputHandler => (ActorInputHandler)InputHandlerInternal;
+    public override Actor? Actor => base.Actor as Actor;
+    public override ActorInputHandler InputHandler => (ActorInputHandler)base.InputHandler;
     public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public HoldItemController HoldItemController { get; private set; } = null!;
     public IFrameController IFrameController { get; }
+
     public int ShaderCycleStart
     {
         get => (int)BodyShader.GetShaderParameter("cycle_start");
@@ -40,7 +42,6 @@ public abstract partial class ActorBody : AActorBody
         get => (float)BodyShader.GetShaderParameter("speed");
         set => BodyShader.SetShaderParameter("speed", value);
     }
-    protected override InputHandler InputHandlerInternal { get; set; }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -55,14 +56,14 @@ public abstract partial class ActorBody : AActorBody
         damageNumber.Start(damageResult.TotalDamage);
     }
 
-    public override void SetActor(AActor? actor)
-    {
-        ActorInternal = actor;
-    }
-
     public override void SetActorRole(int role)
     {
         SetCollisionLayerValue(1, (ActorRole)role == Actors.ActorRole.Player);
+        ActorRole = role;
+        if (Actor != null)
+            Actor.ActorRole = role;
+        if (HurtBoxes == null)
+            return;
         foreach (HurtBox child in HurtBoxes.GetChildren<HurtBox>())
             child.SetHurtboxRole(role);
         foreach (HitBox child in HitBoxes.GetChildren<HitBox>())
@@ -72,9 +73,6 @@ public abstract partial class ActorBody : AActorBody
             foreach (HitBox child in holdItem.GetChildren<HitBox>())
                 child.SetHitboxRole(role);
         }
-        ActorRole = role;
-        if (Actor != null)
-            Actor.ActorRole = role;
     }
 
     public void SetHoldItem(AItem? oldItem, AItem? newItem)

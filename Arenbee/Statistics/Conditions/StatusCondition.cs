@@ -8,7 +8,7 @@ public partial class StatusCondition : Condition
     public StatusCondition() { }
 
     public StatusCondition(StatusCondition condition)
-            : base(condition)
+        : base(condition)
     {
         TargetValue = condition.TargetValue;
     }

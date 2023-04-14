@@ -1,6 +1,8 @@
 ﻿using System;
+using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
+using GameCore.Utility;
 
 namespace GameCore.Actors;
 
@@ -11,7 +13,6 @@ public abstract class AActor : IDamageable
         string actorBodyId,
         string actorName,
         string equipmentSlotPresetId,
-        AEquipment equipment,
         AInventory inventory)
     {
         ActorId = actorId;
@@ -19,25 +20,41 @@ public abstract class AActor : IDamageable
         Inventory = inventory;
         Name = actorName;
         EquipmentSlotPresetId = equipmentSlotPresetId;
-        Equipment = equipment;
-        Equipment.EquipmentSet += OnEquipmentSet;
     }
 
-    protected AActorBody? ActorBodyInternal { get; set; }
-    public virtual AActorBody? ActorBody => ActorBodyInternal;
+    private AActorBody? _actorBodyInternal;
+    public virtual AActorBody? ActorBody => _actorBodyInternal;
+    public abstract AEquipment Equipment { get; }
     public abstract AStats Stats { get; }
     public string ActorId { get; set; }
     public string ActorBodyId { get; set; }
     public int ActorRole { get; set; }
     public string EquipmentSlotPresetId { get; }
-    public AEquipment Equipment { get; }
     public AInventory Inventory { get; set; }
     public string Name { get; set; }
+
     public event Action<AActor>? Defeated;
     public event Action<AActor, ADamageResult>? DamageReceived;
     public event Action<AActor, Modifier, ModChangeType>? ModChanged;
     public event Action<AActor>? StatsChanged;
     public event Action<AActor, int, ModChangeType>? StatusEffectChanged;
+
+    public virtual T CreateBody<T>() where T : AActorBody
+    {
+        string? bodyPath = Locator.ActorBodyDB.ById(ActorBodyId);
+        if (bodyPath == null)
+            throw new Exception($"No Body {ActorBodyId} found.");
+        T actorBody = GDEx.Instantiate<T>(bodyPath);
+        SetActorBody(actorBody);
+        actorBody.SetActor(this);
+        return actorBody;
+    }
+
+    public virtual void Init()
+    {
+        Equipment.EquipmentSetCallback = OnEquipmentSet;
+        InitStats();
+    }
 
     public virtual void InitStats()
     {
@@ -47,7 +64,7 @@ public abstract class AActor : IDamageable
         Stats.StatusEffectChanged += OnStatusEffectChanged;
     }
 
-    public abstract void SetActorBody(AActorBody? actorBody);
+    public virtual void SetActorBody(AActorBody? actorBody) => _actorBodyInternal = actorBody;
 
     protected void RaiseDefeated() => Defeated?.Invoke(this);
 

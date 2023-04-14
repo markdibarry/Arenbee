@@ -6,13 +6,10 @@ namespace GameCore.Actors;
 
 public partial class AActorBody
 {
+    private InputHandler _inputHandlerInternal = null!;
     private Vector2 _floatPosition;
     private Vector2 _move;
-    private readonly double _fallMultiplier = 2;
-    [Export]
-    private double _jumpHeight = 64;
-    [Export]
-    private double _timeToJumpPeak = 0.4;
+
     public int WalkSpeed { get; protected set; }
     public Vector2 Direction { get; private set; }
     protected double Acceleration { get; set; }
@@ -32,21 +29,8 @@ public partial class AActorBody
     public int IsHalfSpeed { get; set; }
     public bool IsFloater { get; protected set; }
     public int IsRunStuck { get; set; }
-    public double JumpVelocity { get; protected set; }
-    public double JumpGravity { get; protected set; }
-    public int RunSpeed { get; protected set; }
-    public abstract InputHandler InputHandler { get; }
-    protected abstract InputHandler InputHandlerInternal { get; set; }
-
-    public void ApplyFallGravity(double delta)
-    {
-        VelocityY = Velocity.Y.LerpClamp(JumpGravity * _fallMultiplier, JumpGravity * delta);
-    }
-
-    public void ApplyJumpGravity(double delta)
-    {
-        VelocityY = Velocity.Y + (float)(JumpGravity * delta);
-    }
+    public int RunSpeed => (int)(WalkSpeed * 1.5);
+    public virtual InputHandler InputHandler => _inputHandlerInternal;
 
     public void ChangeDirectionX()
     {
@@ -56,21 +40,16 @@ public partial class AActorBody
 
     public bool IsMovingDown() => Velocity.Dot(UpDirection) < 0;
 
-    public void Jump()
-    {
-        VelocityY = (float)JumpVelocity;
-    }
-
     public void Move()
     {
         _move = IsFloater ? InputHandler.GetLeftAxis() : Direction;
     }
 
-    public void SetInputHandler(InputHandler inputHandler) => InputHandlerInternal = inputHandler;
+    public void SetInputHandler(InputHandler inputHandler) => _inputHandlerInternal = inputHandler;
 
     public void UpdateDirection()
     {
-        var velocity = InputHandler.GetLeftAxis().GDExSign();
+        Vector2 velocity = InputHandler.GetLeftAxis().GDExSign();
         if (velocity.X != 0 && velocity.X != Direction.X)
         {
             Direction = Direction.SetX(velocity.X);
@@ -101,13 +80,5 @@ public partial class AActorBody
         _floatPosition = GlobalPosition;
         GlobalPosition = GlobalPosition.Round();
         InputHandler.Update();
-    }
-
-    private void InitMovement()
-    {
-        RunSpeed = (int)(WalkSpeed * 1.5);
-        MaxSpeed = WalkSpeed;
-        JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1;
-        JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1;
     }
 }

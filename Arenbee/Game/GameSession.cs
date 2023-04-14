@@ -73,8 +73,8 @@ public partial class GameSession : AGameSession
     private ActorBody InitMainActor()
     {
         Actor actor = MainParty!.Actors.First();
-        ActorBody actorBody = actor.CreateBody();
-        actorBody.ActorRole = (int)ActorRole.Player;
+        ActorBody actorBody = actor.CreateBody<ActorBody>();
+        actorBody.SetActorRole((int)ActorRole.Player);
         Locator.Root.GameCamera.CurrentTarget = actorBody;
         actorBody.SetInputHandler(Locator.Root.PlayerOneInput);
         return actorBody;

@@ -52,7 +52,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnCloseSubMenu()
     {
-        RemoveMockMods();
+        //RemoveMockMods();
     }
 
     protected override void OnItemFocused()

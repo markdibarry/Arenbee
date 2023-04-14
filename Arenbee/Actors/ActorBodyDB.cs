@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Arenbee.Actors.ActorBodies;
+using GameCore.Actors;
 
 namespace Arenbee.Actors;
 
-public static class ActorBodyDB
+public class ActorBodyDB : AActorBodyDB
 {
-    public static IReadOnlyDictionary<string, string> ActorBodies { get; } = new Dictionary<string, string>()
+    public override IReadOnlyDictionary<string, string> ActorBodies { get; } = new Dictionary<string, string>()
     {
         { ActorBodyIds.Twosen, Twosen.GetScenePath() },
         { ActorBodyIds.Ball, Ball.GetScenePath() },
@@ -13,11 +14,4 @@ public static class ActorBodyDB
         { ActorBodyIds.Orc, Orc.GetScenePath() },
         { ActorBodyIds.Plant, Plant.GetScenePath() }
     };
-
-    public static string? ById(string bodyId)
-    {
-        if (ActorBodies.TryGetValue(bodyId, out string? result))
-            return result;
-        return default;
-    }
 }

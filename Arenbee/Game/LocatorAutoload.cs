@@ -14,6 +14,7 @@ public partial class LocatorAutoload : Node
     public override void _Ready()
     {
         Locator.ProvideActionEffectDB(new ActionEffectDB());
+        Locator.ProvideActorBodyDB(new ActorBodyDB());
         Locator.ProvideActorDataDB(new ActorDataDB());
         Locator.ProvideConditionLookup(new ConditionLookup());
         Locator.ProvideStatusEffectModifierFactory(new StatusEffectModifierFactory());

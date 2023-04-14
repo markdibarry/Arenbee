@@ -30,18 +30,18 @@ public abstract partial class AActorBody : CharacterBody2D
         StateController = null!;
         UpDirection = Vector2.Up;
         WalkSpeed = 50;
+        MaxSpeed = WalkSpeed;
     }
 
-
-    public int ActorRole { get; set; }
-    public virtual AActor? Actor => ActorInternal;
+    private AActor? _actorInternal;
+    public int ActorRole { get; protected set; }
+    public virtual AActor? Actor => _actorInternal;
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
     public IStateController StateController { get; protected set; }
-    protected AActor? ActorInternal { get; set; }
     protected static AAudioController Audio { get; } = Locator.Audio;
     protected Node2D Body { get; set; } = null!;
     public event Action<AActorBody>? Freeing;
@@ -74,9 +74,7 @@ public abstract partial class AActorBody : CharacterBody2D
     public void CleanUpActorBody()
     {
         Freeing?.Invoke(this);
-        Actor?.Stats.CleanupStats();
         Actor?.SetActorBody(null);
-        ActorInternal = null;
     }
 
     public void OnGameStateChanged(GameState gameState)
@@ -103,7 +101,7 @@ public abstract partial class AActorBody : CharacterBody2D
         Audio.PlaySoundFX(this, sound);
     }
 
-    public abstract void SetActor(AActor? actor);
+    public virtual void SetActor(AActor? actor) => _actorInternal = actor;
 
     public abstract void SetActorRole(int role);
 
@@ -123,7 +121,6 @@ public abstract partial class AActorBody : CharacterBody2D
         _floatPosition = GlobalPosition;
         SetHitBoxes();
         SetActorRole(ActorRole);
-        InitMovement();
         InitState();
         InitActor();
     }

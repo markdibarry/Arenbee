@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
-using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 
@@ -15,29 +14,20 @@ public class Actor : AActor
         string actorBodyId,
         string actorName,
         string equipmentSlotPresetId,
-        AEquipment equipment,
-        AInventory inventory,
-        Godot.Collections.Array<Stat> stats,
-        Godot.Collections.Array<Modifier> modifiers)
-        : base(actorId, actorBodyId, actorName, equipmentSlotPresetId, equipment, inventory)
+        Equipment equipment,
+        Inventory inventory,
+        IEnumerable<Stat> stats,
+        IEnumerable<Modifier> modifiers)
+        : base(actorId, actorBodyId, actorName, equipmentSlotPresetId, inventory)
     {
+        Equipment = equipment;
         Stats = new Stats(this, stats, modifiers);
         InitStats();
     }
 
-    public override ActorBody? ActorBody => ActorBodyInternal as ActorBody;
+    public override ActorBody? ActorBody => base.ActorBody as ActorBody;
+    public override Equipment Equipment { get; }
     public override Stats Stats { get; }
-
-    public ActorBody CreateBody()
-    {
-        string? bodyPath = ActorBodyDB.ById(ActorBodyId);
-        if (bodyPath == null)
-            throw new Exception($"No Body {ActorBodyId} found.");
-        ActorBody actorBody = GDEx.Instantiate<ActorBody>(bodyPath);
-        SetActorBody(actorBody);
-        actorBody.SetActor(this);
-        return actorBody;
-    }
 
     public override void InitStats()
     {
@@ -53,17 +43,15 @@ public class Actor : AActor
             if (weapon != null)
                 oldActorBody.SetHoldItem(weapon, null);
             DamageReceived -= oldActorBody.OnDamageReceived;
-            //Defeated -= newActorBody.OnDefeated;
         }
 
-        ActorBodyInternal = actorBody;
+        base.SetActorBody(actorBody);
 
         if (ActorBody is ActorBody newActorBody)
         {
             if (weapon != null)
                 newActorBody.SetHoldItem(null, weapon);
             DamageReceived += newActorBody.OnDamageReceived;
-            //Defeated += newActorBody.OnDefeated;
         }
     }
 

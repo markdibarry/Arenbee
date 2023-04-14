@@ -5,9 +5,9 @@ using GameCore.GUI;
 
 namespace Arenbee.GUI;
 
-public class ObjectLoaderGameSave : ObjectLoader
+public class GameSaveLoader : ObjectLoader
 {
-    public ObjectLoaderGameSave(string path, Action reportProgress)
+    public GameSaveLoader(string path, Action reportProgress)
         : base(path, reportProgress) { }
 
     public override Task<object?> LoadAsync()

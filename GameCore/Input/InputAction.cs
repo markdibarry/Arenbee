@@ -8,6 +8,14 @@ public abstract class InputAction
     public abstract bool IsActionJustPressed { get; set; }
     public abstract bool IsActionJustReleased { get; }
     public bool UserInputDisabled { get; set; }
+    protected bool SimulatedJustPressed { get; set; }
+    protected bool SimulatedJustReleased { get; set; }
+    protected bool SimulatedPress { get; set; }
+    protected float SimulatedStrength { get; set; }
 
-    public virtual void ClearOneTimeActions() { }
+    public void ClearOneTimeActions()
+    {
+        SimulatedJustReleased = SimulatedJustPressed && !SimulatedPress;
+        SimulatedJustPressed = false;
+    }
 }

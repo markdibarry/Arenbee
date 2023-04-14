@@ -7,7 +7,7 @@ namespace Arenbee.Actors.ActorBodies;
 
 public partial class Orc : ActorBody
 {
-    public Orc()
+    public Orc() : base()
     {
         StateController = new StateController(
             this,

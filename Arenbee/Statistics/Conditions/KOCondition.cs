@@ -12,7 +12,7 @@ public partial class KOCondition : Condition
     }
 
     public override int ConditionType => (int)Statistics.ConditionType.KO;
-    protected override Stats Stats => (Stats)StatsInternal;
+    protected override Stats Stats => (Stats)base.Stats;
 
     public override KOCondition Clone() => new(this);
 

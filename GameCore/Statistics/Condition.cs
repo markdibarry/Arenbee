@@ -24,6 +24,7 @@ public abstract partial class Condition : Resource
         AdditionalCondition = additionalCondition?.Clone();
     }
 
+    private WeakReference _statsInternal = null!;
     public abstract int ConditionType { get; }
     [Export]
     public ConditionResultType ResultType { get; set; }
@@ -34,17 +35,13 @@ public abstract partial class Condition : Resource
     [Export]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public LogicOp AdditionalLogicOp { get; set; }
-    [JsonIgnore]
-    public Action? ConditionChangedCallback { get; set; }
-    [JsonIgnore]
     protected bool ConditionMet { get; set; }
-    [JsonIgnore]
-    protected virtual AStats StatsInternal { get; private set; } = null!;
-    protected virtual AStats Stats => StatsInternal;
+    protected virtual AStats Stats => (AStats)_statsInternal.Target!;
+    protected WeakReference? ConditionChangedCallback { get; set; }
 
     public void SetStats(AStats stats)
     {
-        StatsInternal = stats;
+        _statsInternal = new(stats);
         AdditionalCondition?.SetStats(stats);
     }
 
@@ -73,7 +70,7 @@ public abstract partial class Condition : Resource
     public void Subscribe(Action handler)
     {
         SubscribeEvents();
-        ConditionChangedCallback = handler;
+        ConditionChangedCallback = new(handler);
         AdditionalCondition?.Subscribe(handler);
     }
 
@@ -90,7 +87,7 @@ public abstract partial class Condition : Resource
         if (result != ConditionMet)
         {
             ConditionMet = result;
-            ConditionChangedCallback?.Invoke();
+            (ConditionChangedCallback?.Target as Action)?.Invoke();
         }
     }
 

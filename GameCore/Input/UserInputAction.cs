@@ -9,29 +9,25 @@ public sealed class UserInputAction : InputAction
     }
 
     private readonly InputHandler _inputHandler;
-    private bool _simulatedJustPressed;
-    private bool _simulatedJustReleased;
-    private bool _simulatedPress;
-    private float _simulatedStrength;
     public override float ActionStrength
     {
         get
         {
-            if (_simulatedStrength != 0)
-                return _simulatedStrength;
+            if (SimulatedStrength != 0)
+                return SimulatedStrength;
             if (IsActionPressed)
                 return 1;
             if (_inputHandler.UserInputDisabled || UserInputDisabled)
                 return 0;
             return Godot.Input.GetActionStrength(Alias);
         }
-        set => _simulatedStrength = value;
+        set => SimulatedStrength = value;
     }
     public override bool IsActionPressed
     {
         get
         {
-            if (_simulatedPress || _simulatedJustPressed)
+            if (SimulatedPress || SimulatedJustPressed)
                 return true;
             if (_inputHandler.UserInputDisabled || UserInputDisabled)
                 return false;
@@ -39,15 +35,15 @@ public sealed class UserInputAction : InputAction
         }
         set
         {
-            if (value && !_simulatedPress)
+            if (value && !SimulatedPress)
             {
-                _simulatedPress = true;
-                _simulatedJustPressed = true;
+                SimulatedPress = true;
+                SimulatedJustPressed = true;
             }
-            else if (!value && _simulatedPress)
+            else if (!value && SimulatedPress)
             {
-                _simulatedPress = false;
-                _simulatedJustReleased = true;
+                SimulatedPress = false;
+                SimulatedJustReleased = true;
             }
         }
     }
@@ -55,19 +51,19 @@ public sealed class UserInputAction : InputAction
     {
         get
         {
-            if (_simulatedJustPressed)
+            if (SimulatedJustPressed)
                 return true;
             if (_inputHandler.UserInputDisabled || UserInputDisabled)
                 return false;
             return Godot.Input.IsActionJustPressed(Alias);
         }
-        set => _simulatedJustPressed = value;
+        set => SimulatedJustPressed = value;
     }
     public override bool IsActionJustReleased
     {
         get
         {
-            if (_simulatedJustReleased)
+            if (SimulatedJustReleased)
                 return true;
             if (_inputHandler.UserInputDisabled || UserInputDisabled)
                 return false;

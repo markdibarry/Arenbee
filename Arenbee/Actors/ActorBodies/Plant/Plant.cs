@@ -6,7 +6,7 @@ namespace Arenbee.Actors.ActorBodies;
 
 public partial class Plant : ActorBody
 {
-    public Plant()
+    public Plant() : base()
     {
         StateController = new StateController(
             this,

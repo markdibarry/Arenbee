@@ -7,7 +7,7 @@ namespace Arenbee.Actors.ActorBodies;
 
 public partial class Whisp : ActorBody
 {
-    public Whisp()
+    public Whisp() : base()
     {
         IsFloater = true;
         StateController = new StateController(

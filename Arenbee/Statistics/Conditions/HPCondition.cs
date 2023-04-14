@@ -18,7 +18,7 @@ public partial class HPCondition : Condition
     public override int ConditionType => (int)Statistics.ConditionType.HPPercent;
     [Export] public CompareOp CompareOp { get; set; }
     [Export] public int TargetValue { get; set; }
-    protected override Stats Stats => (Stats)StatsInternal;
+    protected override Stats Stats => (Stats)base.Stats;
 
     public override HPCondition Clone() => new(this);
 
