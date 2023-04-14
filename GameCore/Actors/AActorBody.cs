@@ -34,8 +34,8 @@ public abstract partial class AActorBody : CharacterBody2D
     }
 
     private AActor? _actorInternal;
-    public int ActorRole { get; protected set; }
     public virtual AActor? Actor => _actorInternal;
+    public int Role { get; protected set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
@@ -103,7 +103,7 @@ public abstract partial class AActorBody : CharacterBody2D
 
     public virtual void SetActor(AActor? actor) => _actorInternal = actor;
 
-    public abstract void SetActorRole(int role);
+    public abstract void SetRole(int role, bool setActorRole = true);
 
     public virtual void SetNodeReferences()
     {
@@ -120,7 +120,7 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         _floatPosition = GlobalPosition;
         SetHitBoxes();
-        SetActorRole(ActorRole);
+        SetRole(Role);
         InitState();
         InitActor();
     }

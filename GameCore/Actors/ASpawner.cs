@@ -124,7 +124,7 @@ public abstract partial class ASpawner : Node2D
 
         AActor actor = ActorData.CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
-        actorBody.SetActorRole(DefaultActorRole);
+        actorBody.SetRole(DefaultActorRole);
         actor.SetActorBody(actorBody);
         actorBody.SetActor(actor);
         actorBody.GlobalPosition = GlobalPosition;

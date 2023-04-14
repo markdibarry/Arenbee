@@ -78,7 +78,7 @@ public partial class HUD : AHUD
         actor.Defeated += OnActorDefeated;
         actor.DamageReceived += OnActorDamaged;
         actor.StatusEffectChanged += OnActorStatusEffectChanged;
-        if (actorBody!.ActorRole == (int)ActorRole.Player)
+        if (actorBody!.Role == (int)ActorRole.Player)
         {
             actor.ModChanged += OnActorModChanged;
             actor.StatsChanged += OnActorStatsChanged;
@@ -94,7 +94,7 @@ public partial class HUD : AHUD
         actor.Defeated -= OnActorDefeated;
         actor.DamageReceived -= OnActorDamaged;
         actor.StatusEffectChanged -= OnActorStatusEffectChanged;
-        if (actorBody!.ActorRole == (int)ActorRole.Player)
+        if (actorBody!.Role == (int)ActorRole.Player)
         {
             actor.ModChanged -= OnActorModChanged;
             actor.StatsChanged -= OnActorStatsChanged;

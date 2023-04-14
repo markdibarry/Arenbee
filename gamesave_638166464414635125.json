@@ -1,0 +1,211 @@
+{
+  "Id": 0,
+  "LastModifiedUtc": "2023-04-09T14:14:01.4580042Z",
+  "SessionState": {
+    "TotalInGameTime": 4.980563666666654,
+    "TotalGameTime": 7.880538666666643,
+    "CurrentGameTime": 0,
+    "TimesReceivedDamaged": 0,
+    "TimesDealtDamage": 0,
+    "TimesDied": 0,
+    "EnemiesDefeated": 0
+  },
+  "MainPartyId": "default",
+  "Parties": [
+    {
+      "PartyId": "default",
+      "ActorData": [
+        {
+          "ActorName": "Twosen",
+          "StatsData": {
+            "StatLookup": [
+              {
+                "StatType": 3,
+                "Value": 12,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 2,
+                "Value": 8,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 6,
+                "Value": 0,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 7,
+                "Value": 0,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 1,
+                "Value": 1,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 4,
+                "Value": 1,
+                "MaxValue": 999
+              },
+              {
+                "StatType": 5,
+                "Value": 1,
+                "MaxValue": 999
+              }
+            ],
+            "Modifiers": [
+              {
+                "StatType": 38,
+                "Value": 1,
+                "IsHidden": false,
+                "Op": 11,
+                "SourceType": 1,
+                "Conditions": [
+                  {
+                    "ConditionType": 1,
+                    "StartValue": 0,
+                    "TargetValue": 10,
+                    "CurrentValue": 0.84999985,
+                    "ResultType": 0
+                  },
+                  {
+                    "ConditionType": 3,
+                    "CompareOp": 1,
+                    "TargetValue": 10,
+                    "ResultType": 2,
+                    "AdditionalCondition": {
+                      "ConditionType": 4,
+                      "ResultType": 0
+                    },
+                    "AdditionalLogicOp": 1
+                  }
+                ],
+                "IsActive": false
+              }
+            ]
+          },
+          "EquipmentSlotData": [
+            {
+              "ItemStackIndex": 0,
+              "SlotCategoryId": "Weapon"
+            }
+          ],
+          "ItemStackData": [],
+          "ActorId": "Twosen",
+          "ActorBodyId": "Twosen",
+          "EquipmentSlotPresetId": "BasicEquipment"
+        }
+      ],
+      "InventoryIndex": 0,
+      "Items": []
+    }
+  ],
+  "Inventories": [
+    {
+      "ItemStackData": [
+        {
+          "Count": 1,
+          "ItemId": "HockeyStick"
+        },
+        {
+          "Count": 1,
+          "ItemId": "Wand"
+        },
+        {
+          "Count": 1,
+          "ItemId": "Uggs"
+        },
+        {
+          "Count": 1,
+          "ItemId": "FingerlessGloves"
+        },
+        {
+          "Count": 1,
+          "ItemId": "MotleyCrueTee"
+        },
+        {
+          "Count": 1,
+          "ItemId": "Vibrams"
+        },
+        {
+          "Count": 1,
+          "ItemId": "MoodRing"
+        },
+        {
+          "Count": 1,
+          "ItemId": "MetalHockeyStick"
+        },
+        {
+          "Count": 1,
+          "ItemId": "FriendshipBracelet"
+        },
+        {
+          "Count": 1,
+          "ItemId": "OvenMitts"
+        },
+        {
+          "Count": 1,
+          "ItemId": "SunGlasses"
+        },
+        {
+          "Count": 1,
+          "ItemId": "JNCOJeans"
+        },
+        {
+          "Count": 1,
+          "ItemId": "ZubazPants"
+        },
+        {
+          "Count": 1,
+          "ItemId": "ClemsonHoodie"
+        },
+        {
+          "Count": 1,
+          "ItemId": "FaceMask"
+        },
+        {
+          "Count": 1,
+          "ItemId": "RamenBoushi"
+        },
+        {
+          "Count": 1,
+          "ItemId": "CheeseHat"
+        },
+        {
+          "Count": 1,
+          "ItemId": "SubwaySandwich"
+        },
+        {
+          "Count": 1,
+          "ItemId": "SuperDonut"
+        },
+        {
+          "Count": 1,
+          "ItemId": "Potion"
+        },
+        {
+          "Count": 1,
+          "ItemId": "FlavorAid"
+        },
+        {
+          "Count": 1,
+          "ItemId": "BunnyNugget"
+        },
+        {
+          "Count": 1,
+          "ItemId": "TurboEther"
+        },
+        {
+          "Count": 1,
+          "ItemId": "SnakeskinShoes"
+        },
+        {
+          "Count": 1,
+          "ItemId": "SnakeRing"
+        }
+      ]
+    }
+  ]
+}

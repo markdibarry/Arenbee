@@ -24,14 +24,14 @@ public abstract class AActor : IDamageable
 
     private AActorBody? _actorBodyInternal;
     public virtual AActorBody? ActorBody => _actorBodyInternal;
-    public abstract AEquipment Equipment { get; }
-    public abstract AStats Stats { get; }
-    public string ActorId { get; set; }
     public string ActorBodyId { get; set; }
-    public int ActorRole { get; set; }
+    public string ActorId { get; set; }
+    public int Role { get; protected set; }
+    public abstract AEquipment Equipment { get; }
     public string EquipmentSlotPresetId { get; }
     public AInventory Inventory { get; set; }
     public string Name { get; set; }
+    public abstract AStats Stats { get; }
 
     public event Action<AActor>? Defeated;
     public event Action<AActor, ADamageResult>? DamageReceived;
@@ -63,6 +63,8 @@ public abstract class AActor : IDamageable
         Stats.ModChanged += OnModChanged;
         Stats.StatusEffectChanged += OnStatusEffectChanged;
     }
+
+    public abstract void SetRole(int role, bool setActorBodyRole = true);
 
     public virtual void SetActorBody(AActorBody? actorBody) => _actorBodyInternal = actorBody;
 

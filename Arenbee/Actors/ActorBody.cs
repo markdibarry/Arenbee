@@ -56,14 +56,14 @@ public abstract partial class ActorBody : AActorBody
         damageNumber.Start(damageResult.TotalDamage);
     }
 
-    public override void SetActorRole(int role)
+    public override void SetRole(int role, bool setActorRole = true)
     {
-        SetCollisionLayerValue(1, (ActorRole)role == Actors.ActorRole.Player);
-        ActorRole = role;
-        if (Actor != null)
-            Actor.ActorRole = role;
-        if (HurtBoxes == null)
+        Role = role;
+        if (setActorRole)
+            Actor?.SetRole(role, false);
+        if (HurtBoxes == null || HitBoxes == null || HoldItemController == null)
             return;
+        SetCollisionLayerValue(1, (ActorRole)role == ActorRole.Player);
         foreach (HurtBox child in HurtBoxes.GetChildren<HurtBox>())
             child.SetHurtboxRole(role);
         foreach (HitBox child in HitBoxes.GetChildren<HitBox>())

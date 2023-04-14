@@ -35,6 +35,13 @@ public class Actor : AActor
         Stats.HPDepleted += OnHPDepleted;
     }
 
+    public override void SetRole(int role, bool setActorBodyRole = true)
+    {
+        Role = role;
+        if (setActorBodyRole)
+            ActorBody?.SetRole(role, false);
+    }
+
     public override void SetActorBody(AActorBody? actorBody)
     {
         AItem? weapon = Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
