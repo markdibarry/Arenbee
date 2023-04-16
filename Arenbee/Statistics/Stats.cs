@@ -66,6 +66,13 @@ public class Stats : AStats
         return result;
     }
 
+    public void RemoveModsByType(StatType statType)
+    {
+        IEnumerable<Modifier> mods = GetModifiersByType((int)statType).Where(x => x.SourceType == SourceType.Independent);
+        foreach (Modifier mod in mods)
+            RemoveMod(mod);
+    }
+
     protected override ADamageResult HandleDamage(ADamageRequest request)
     {
         DamageRequest damageRequest = (DamageRequest)request;
@@ -127,7 +134,7 @@ public class Stats : AStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (Modifier mod in GetModifiers(statType).OrderBy(x => x.Op))
+        foreach (Modifier mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -146,7 +153,7 @@ public class Stats : AStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (Modifier? mod in GetModifiers(statType).OrderBy(x => x.Op))
+        foreach (Modifier? mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -160,7 +167,7 @@ public class Stats : AStats
 
     private int CalculateAttackElement(int statType, bool ignoreHidden)
     {
-        Modifier? mod = GetModifiers(statType)
+        Modifier? mod = GetModifiersByType(statType)
             .Where(x => x.IsActive)
             .OrderBy(x => x.SourceType)
             .LastOrDefault();
@@ -175,7 +182,7 @@ public class Stats : AStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (var mod in GetModifiers(statType).OrderBy(x => x.Op))
+        foreach (var mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -192,7 +199,7 @@ public class Stats : AStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (var mod in GetModifiers(statType).OrderBy(x => x.Op))
+        foreach (var mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -208,7 +215,7 @@ public class Stats : AStats
     {
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
-        IReadOnlyCollection<Modifier> mods = GetModifiers(statType);
+        IReadOnlyCollection<Modifier> mods = GetModifiersByType(statType);
         // If any mods are present it should be active
         if (result > 0 || mods.Any(x => x.IsActive))
             result = 1;

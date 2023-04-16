@@ -102,7 +102,7 @@ public abstract class AStats
         return mods;
     }
 
-    public IReadOnlyCollection<Modifier> GetModifiers(int statType)
+    public IReadOnlyCollection<Modifier> GetModifiersByType(int statType)
     {
         return Modifiers.TryGetValue(statType, out List<Modifier>? mod) ? mod : Array.Empty<Modifier>();
     }

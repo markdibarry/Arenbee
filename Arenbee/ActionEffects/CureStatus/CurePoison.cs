@@ -6,7 +6,7 @@ using GameCore.Actors;
 
 namespace Arenbee.ActionEffects;
 
-public class RestoreHP : IActionEffect
+public class CurePoison : IActionEffect
 {
     public int TargetType => (int)ActionEffects.TargetType.PartyMember;
 
@@ -15,21 +15,13 @@ public class RestoreHP : IActionEffect
         if (targets.Count != 1)
             return false;
         Stats stats = (Stats)targets[0].Stats;
-        return !stats.HasFullHP && !stats.HasNoHP;
+        return stats.HasStatusEffect((int)StatusEffectType.Poison) && !stats.HasNoHP;
     }
 
     public Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
     {
-        AActor target = targets[0];
-        DamageRequest actionData = new()
-        {
-            SourceName = target.Name,
-            ActionType = (ActionType)actionType,
-            Value = value1 * -1,
-            ElementType = ElementType.Healing
-        };
-
-        target.Stats.ReceiveDamageRequest(actionData);
+        Stats stats = (Stats)targets[0].Stats;
+        stats.RemoveModsByType(StatType.Poison);
         return Task.CompletedTask;
     }
 }

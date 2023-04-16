@@ -1,16 +1,18 @@
-﻿using GameCore.ActionEffects;
+﻿using System.Collections.Generic;
+using GameCore.ActionEffects;
 
 namespace Arenbee.ActionEffects;
 
-public class ActionEffectDB : ActionEffectDBBase
+public class ActionEffectDB : AActionEffectDB
 {
-    public ActionEffectDB()
+    protected override IReadOnlyDictionary<int, IActionEffect> BuildDB()
     {
-        BuildDB();
-    }
-
-    public void BuildDB()
-    {
-        Effects[ActionEffectType.RestoreHP] = new RestoreHP();
+        Dictionary<int, IActionEffect> effects = new()
+        {
+            [(int)ActionEffectType.RestoreHP] = new RestoreHP(),
+            [(int)ActionEffectType.RestoreHPAll] = new RestoreHPAll(),
+            [(int)ActionEffectType.CurePoison] = new CurePoison()
+        };
+        return effects;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Arenbee.ActionEffects;
 using Arenbee.Statistics;
-using GameCore.ActionEffects;
 using GameCore.Items;
 using GameCore.Statistics;
 using GameCore.Utility;
@@ -333,8 +333,7 @@ public class ItemDB : AItemDB
             Price = 10,
             UseData = new()
             {
-                ActionEffect = ActionEffectType.RestoreHP,
-                UseType = ItemUseType.PartyMember,
+                ActionEffect = (int)ActionEffectType.RestoreHP,
                 Value1 = 5
             }
         });
@@ -349,8 +348,7 @@ public class ItemDB : AItemDB
             Price = 30,
             UseData = new()
             {
-                ActionEffect = ActionEffectType.RestoreHP,
-                UseType = ItemUseType.PartyMemberAll,
+                ActionEffect = (int)ActionEffectType.RestoreHPAll,
                 Value1 = 5
             }
         });
@@ -402,7 +400,11 @@ public class ItemDB : AItemDB
             MaxStack = 9,
             IsSellable = true,
             IsDroppable = true,
-            Price = 10
+            Price = 10,
+            UseData = new()
+            {
+                ActionEffect = (int)ActionEffectType.CurePoison
+            }
         });
 
         items.Add(new Item(ItemIds.Aloe, itemCategory)

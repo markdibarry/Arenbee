@@ -141,7 +141,8 @@ public partial class OptionSubMenu : SubMenu
 
     private void OnItemSelectedBase()
     {
-        if (CurrentContainer?.FocusedItem == null || CurrentContainer.FocusedItem.Disabled)
+        if (CurrentContainer == null || !CurrentContainer.AllSelected &&
+            (CurrentContainer.FocusedItem == null || CurrentContainer.FocusedItem.Disabled))
         {
             Audio.PlaySoundFX(FocusedSoundPath);
             return;

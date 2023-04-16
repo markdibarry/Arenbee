@@ -1,5 +1,5 @@
 ﻿namespace GameCore.ActionEffects;
 
-public class ActionEffectDBNull : ActionEffectDBBase
+public class ActionEffectDBNull : AActionEffectDB
 {
 }

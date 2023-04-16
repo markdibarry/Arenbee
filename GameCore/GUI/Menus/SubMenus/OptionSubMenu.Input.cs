@@ -23,7 +23,7 @@ public partial class OptionSubMenu : SubMenu
             return;
         }
 
-        var newDirection = Direction.None;
+        Direction newDirection = Direction.None;
 
         if (menuInput.Up.IsActionPressed)
             newDirection = Direction.Up;

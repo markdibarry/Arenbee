@@ -22,16 +22,16 @@ public static class Locator
     private static AStatTypeDB s_statTypeDB = null!;
     private static AStatusEffectDB s_statusEffectDB = null!;
     private static IStatusEffectModifierFactory s_statusEffectModifierFactory = null!;
-    private static ActionEffectDBBase s_actionEffectDB = null!;
+    private static AActionEffectDB s_actionEffectDB = null!;
 
-    public static ActionEffectDBBase ActionEffectDB => s_actionEffectDB;
+    public static AActionEffectDB ActionEffectDB => s_actionEffectDB;
     public static AActorBodyDB ActorBodyDB => s_actorBodyDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
     public static AAudioController Audio => s_gameRoot.AudioController;
     public static IConditionLookup ConditionLookup => s_conditionLookup;
     public static AEquipmentSlotCategoryDB EquipmentSlotCategoryDB => s_equipmentSlotCategoryDB;
     public static AGameRoot Root => s_gameRoot;
-    public static AGameSession? Session => s_gameRoot.GameSession;
+    public static AGameSession? Session => s_gameRoot?.GameSession;
     public static AItemDB ItemDB => s_itemDB;
     public static AItemCategoryDB ItemCategoryDB => s_itemCategoryDB;
     public static ILoaderFactory LoaderFactory => s_loaderFactory;
@@ -40,7 +40,7 @@ public static class Locator
     public static IStatusEffectModifierFactory StatusEffectModifierFactory => s_statusEffectModifierFactory;
     public static ATransitionController TransitionController => s_gameRoot.TransitionController;
 
-    public static void ProvideActionEffectDB(ActionEffectDBBase actionEffectDB)
+    public static void ProvideActionEffectDB(AActionEffectDB actionEffectDB)
     {
         s_actionEffectDB = actionEffectDB;
     }

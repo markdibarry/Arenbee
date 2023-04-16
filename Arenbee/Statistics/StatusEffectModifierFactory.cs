@@ -8,13 +8,13 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
     {
         return (StatusEffectType)statusEffectType switch
         {
-            StatusEffectType.KO => new Modifier(
+            StatusEffectType.KO => new(
                 statType: (int)StatType.KO,
                 op: ModOp.One,
                 value: 1,
                 conditions: null,
                 isHidden: false),
-            StatusEffectType.Poison => new Modifier(
+            StatusEffectType.Poison => new(
                 statType: (int)StatType.Poison,
                 op: ModOp.One,
                 value: 1,
@@ -35,7 +35,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     }
                 },
                 isHidden: false),
-            StatusEffectType.Burn => new Modifier(
+            StatusEffectType.Burn => new(
                 statType: (int)StatType.Burn,
                 op: ModOp.One,
                 value: 1,
@@ -56,7 +56,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     }
                 },
                 isHidden: false),
-            StatusEffectType.Paralysis => new Modifier(
+            StatusEffectType.Paralysis => new(
                 statType: (int)StatType.Burn,
                 op: ModOp.One,
                 value: 1,
@@ -73,9 +73,6 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     }
                 },
                 isHidden: false),
-            StatusEffectType.None or
-            StatusEffectType.Freeze or
-            StatusEffectType.Zombie or
             _ => throw new System.NotImplementedException()
         };
     }

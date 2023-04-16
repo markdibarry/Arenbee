@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c5pjiwtlxhl84"]
+[gd_scene load_steps=4 format=3 uid="uid://c5pjiwtlxhl84"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_d15qu"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UseSubMenu.cs" id="2_ne4ov"]
-[ext_resource type="PackedScene" uid="uid://befh8tsstjx2u" path="res://GameCore/GUI/Menus/OptionItems/TextOption.tscn" id="3_axmp3"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_os84m"]
 
 [node name="UseSubMenu" instance=ExtResource("1_d15qu")]
@@ -23,75 +22,14 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 196.0
 offset_top = 49.0
-offset_right = 232.0
-offset_bottom = 92.0
+offset_right = 214.0
+offset_bottom = 67.0
 FitXToContent = true
 FitYToContent = true
 
-[node name="ContentGrid" parent="Foreground/UseOptions" index="0"]
-offset_right = 32.0
-offset_bottom = 39.0
-
-[node name="OptionGrid" parent="Foreground/UseOptions/ContentGrid" index="0"]
-offset_right = 28.0
-offset_bottom = 35.0
-
-[node name="GridMargin" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 28.0
-offset_bottom = 35.0
-
 [node name="GridWindow" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-offset_right = 23.0
-offset_bottom = 30.0
 ClipX = false
 ClipY = false
-
-[node name="GridContainer" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
-offset_right = 18.0
-offset_bottom = 25.0
-
-[node name="TextOption" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("3_axmp3")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_right = 18.0
-offset_bottom = 12.0
-LabelText = "Use"
-
-[node name="TextOption2" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("3_axmp3")]
-modulate = Color(1, 1, 1, 1)
-layout_mode = 2
-offset_top = 13.0
-offset_right = 18.0
-offset_bottom = 25.0
-LabelText = "Dont"
-
-[node name="Arrows" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 28.0
-offset_bottom = 35.0
-
-[node name="ArrowUp" parent="Foreground/UseOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 10.0
-offset_right = 17.0
-
-[node name="ArrowLeft" parent="Foreground/UseOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 14.0
-offset_bottom = 21.0
-
-[node name="ArrowDown" parent="Foreground/UseOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 10.0
-offset_top = 29.0
-offset_right = 17.0
-offset_bottom = 35.0
-
-[node name="ArrowRight" parent="Foreground/UseOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 22.0
-offset_top = 14.0
-offset_right = 28.0
-offset_bottom = 21.0
-
-[node name="ScrollBars" parent="Foreground/UseOptions/ContentGrid/OptionGrid" index="2"]
-offset_right = 28.0
-offset_bottom = 35.0
 
 [editable path="Foreground/UseOptions"]
 [editable path="Foreground/UseOptions/ContentGrid/OptionGrid"]

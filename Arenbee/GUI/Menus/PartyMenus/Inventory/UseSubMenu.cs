@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using Arenbee.ActionEffects;
+using GameCore.ActionEffects;
 using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.PartyMenus;
@@ -10,10 +13,10 @@ namespace Arenbee.GUI.Menus.PartyMenus;
 public partial class UseSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private PackedScene _textOptionScene;
-    private OptionContainer _optionContainer;
-    public ItemStack ItemStack { get; set; }
-    public AItem Item { get; set; }
+    private ItemStack _itemStack = null!;
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+    private OptionContainer _optionContainer = null!;
+    private readonly ActionEffectDB _actionEffectDB = (ActionEffectDB)Locator.ActionEffectDB;
 
     protected override void SetupOptions()
     {
@@ -21,11 +24,11 @@ public partial class UseSubMenu : OptionSubMenu
         DisplayOptions();
     }
 
-    public override void SetupData(object data)
+    public override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
-        ItemStack = itemStack;
+        _itemStack = itemStack;
     }
 
     protected override void OnItemSelected()
@@ -41,31 +44,21 @@ public partial class UseSubMenu : OptionSubMenu
         }
     }
 
-    protected override void SetNodeReferences()
-    {
-        base.SetNodeReferences();
-        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-    }
-
     private void DisplayOptions()
     {
-        var options = new List<TextOption>();
-        var option = _textOptionScene.Instantiate<TextOption>();
+        List<TextOption> options = new();
+        TextOption option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Use;
         option.OptionData["value"] = UseOptions.Use;
         option.Disabled = true;
-        if (ItemStack.Item.UseData != null)
-        {
-            option.Disabled = false;
-            if (ItemStack.Count <= 0)
-                option.Disabled = true;
-        }
+        if (_itemStack.Item.UseData != null)
+            option.Disabled = _itemStack.Count <= 0;
         options.Add(option);
 
         option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Drop;
         option.OptionData["value"] = UseOptions.Drop;
-        option.Disabled = !ItemStack.Item.IsDroppable || ItemStack.Count <= 0;
+        option.Disabled = !_itemStack.Item.IsDroppable || _itemStack.Count <= 0;
         options.Add(option);
         _optionContainer.ReplaceChildren(options);
     }
@@ -77,17 +70,20 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void HandleUse()
     {
-        switch (ItemStack.Item.UseData.UseType)
+        IActionEffect? effect = _actionEffectDB.GetEffect(_itemStack.Item.UseData.ActionEffect);
+        if (effect == null)
+            return;
+        switch ((TargetType)effect.TargetType)
         {
-            case ItemUseType.Self:
-            case ItemUseType.PartyMember:
-            case ItemUseType.PartyMemberAll:
+            case TargetType.Self:
+            case TargetType.PartyMember:
+            case TargetType.PartyMemberAll:
                 OpenPartyUseSubMenu();
                 break;
-            case ItemUseType.Enemy:
-            case ItemUseType.EnemyAll:
-            case ItemUseType.EnemyCone:
-            case ItemUseType.EnemyRadius:
+            case TargetType.Enemy:
+            case TargetType.EnemyAll:
+            case TargetType.EnemyCone:
+            case TargetType.EnemyRadius:
                 OpenEnemyUseSubMenu();
                 break;
         }
@@ -95,7 +91,7 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void OpenPartyUseSubMenu()
     {
-        _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: ItemStack);
+        _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: _itemStack);
     }
 
     private static void OpenEnemyUseSubMenu()

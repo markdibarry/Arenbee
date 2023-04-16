@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using GameCore.Enums;
 using Godot;
@@ -116,7 +116,7 @@ public partial class OptionContainer : PanelContainer
             Init();
     }
 
-    public void AddGridChild(OptionItem optionItem) => OptionGrid.AddChild(optionItem);
+    public void AddGridChild(OptionItem optionItem) => OptionGrid.AddGridChild(optionItem);
 
     public void Clear() => OptionGrid.ClearOptionItems();
 

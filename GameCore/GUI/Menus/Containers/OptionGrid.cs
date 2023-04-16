@@ -69,7 +69,8 @@ public partial class OptionGrid : MarginContainer
             UpdateRows();
         }
     }
-    public bool AllSelected => FocusedIndex == -1;
+    public const int AllSelectedIndex = -1;
+    public bool AllSelected => FocusedIndex == AllSelectedIndex;
     public int FocusedIndex { get; private set; }
     public OptionItem? FocusedItem => OptionItems.ElementAtOrDefault(FocusedIndex);
     public GridContainer GridContainer { get; set; } = null!;
@@ -112,7 +113,7 @@ public partial class OptionGrid : MarginContainer
         if (SingleOptionsEnabled)
             FocusItem(index);
         else if (AllOptionEnabled)
-            FocusItem(-1);
+            FocusItem(AllSelectedIndex);
     }
 
     public void FocusItem(int index)
@@ -121,7 +122,7 @@ public partial class OptionGrid : MarginContainer
         {
             if (!AllOptionEnabled)
                 return;
-            index = -1;
+            index = AllSelectedIndex;
         }
         PreviousIndex = FocusedIndex;
         if (OptionItems.Count == 0)
@@ -155,10 +156,7 @@ public partial class OptionGrid : MarginContainer
         }
     }
 
-    public IEnumerable<OptionItem> GetSelectedItems()
-    {
-        return OptionItems.Where(x => x.Selected);
-    }
+    public IEnumerable<OptionItem> GetSelectedItems() => OptionItems.Where(x => x.Selected);
 
     public void HandleSelectAll()
     {
@@ -167,7 +165,7 @@ public partial class OptionGrid : MarginContainer
         if (AllSelected)
         {
             GridContainer.Position = Vector2.Zero;
-            foreach (var item in OptionItems)
+            foreach (OptionItem item in OptionItems)
             {
                 if (item.Disabled)
                     RemoveItemFromSelection(item);
@@ -175,9 +173,9 @@ public partial class OptionGrid : MarginContainer
                     AddItemToSelection(item);
             }
         }
-        else if (PreviousIndex == -1)
+        else if (PreviousIndex == AllSelectedIndex)
         {
-            foreach (var item in OptionItems)
+            foreach (OptionItem item in OptionItems)
                 RemoveItemFromSelection(item);
         }
     }
@@ -188,10 +186,7 @@ public partial class OptionGrid : MarginContainer
             RemoveItemFromSelection(item);
     }
 
-    public void RefocusItem()
-    {
-        FocusItem(FocusedIndex);
-    }
+    public void RefocusItem() => FocusItem(FocusedIndex);
 
     public virtual void ReplaceChildren(IEnumerable<OptionItem> optionItems)
     {
@@ -206,10 +201,7 @@ public partial class OptionGrid : MarginContainer
         GridContainer.Position = Vector2.Zero;
     }
 
-    public void SelectItem()
-    {
-        ItemSelected?.Invoke();
-    }
+    public void SelectItem() => ItemSelected?.Invoke();
 
     private void AddItemToSelection(OptionItem item)
     {
@@ -231,7 +223,7 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusUp()
     {
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = currentIndex - GridContainer.Columns;
         if (IsValidIndex(nextIndex))
             FocusItem(nextIndex);
@@ -241,7 +233,7 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusDown()
     {
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = currentIndex + GridContainer.Columns;
         if (IsValidIndex(nextIndex))
             FocusItem(nextIndex);
@@ -251,7 +243,7 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusLeft()
     {
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = FocusedIndex - 1;
         if (IsValidIndex(nextIndex) && currentIndex % GridContainer.Columns != 0)
             FocusItem(nextIndex);
@@ -261,7 +253,7 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusRight()
     {
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = FocusedIndex + 1;
         if (IsValidIndex(nextIndex) && (currentIndex + 1) % GridContainer.Columns != 0)
             FocusItem(nextIndex);
@@ -271,12 +263,12 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusTopEnd()
     {
-        if (AllOptionEnabled && !IsSingleRow && FocusedIndex != -1)
+        if (AllOptionEnabled && !IsSingleRow && FocusedIndex != AllSelectedIndex)
         {
-            FocusItem(-1);
+            FocusItem(AllSelectedIndex);
             return;
         }
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = currentIndex % GridContainer.Columns;
         if (nextIndex == currentIndex)
             return;
@@ -285,12 +277,12 @@ public partial class OptionGrid : MarginContainer
 
     private void FocusBottomEnd()
     {
-        if (AllOptionEnabled && !IsSingleRow && FocusedIndex != -1)
+        if (AllOptionEnabled && !IsSingleRow && FocusedIndex != AllSelectedIndex)
         {
-            FocusItem(-1);
+            FocusItem(AllSelectedIndex);
             return;
         }
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int firstRowAdjIndex = currentIndex % GridContainer.Columns;
         int lastIndex = OptionItems.Count - 1;
         int lastRowFirstIndex = lastIndex / GridContainer.Columns * GridContainer.Columns;
@@ -304,13 +296,13 @@ public partial class OptionGrid : MarginContainer
     {
         if (IsSingleRow)
         {
-            if (AllOptionEnabled && FocusedIndex != -1)
-                FocusItem(-1);
+            if (AllOptionEnabled && FocusedIndex != AllSelectedIndex)
+                FocusItem(AllSelectedIndex);
             else
                 FocusItem(0);
             return;
         }
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = currentIndex / GridContainer.Columns * GridContainer.Columns;
         if (nextIndex == currentIndex)
             return;
@@ -321,13 +313,13 @@ public partial class OptionGrid : MarginContainer
     {
         if (IsSingleRow)
         {
-            if (AllOptionEnabled && FocusedIndex != -1)
-                FocusItem(-1);
+            if (AllOptionEnabled && FocusedIndex != AllSelectedIndex)
+                FocusItem(AllSelectedIndex);
             else
                 FocusItem(OptionItems.Count - 1);
             return;
         }
-        int currentIndex = FocusedIndex == -1 ? PreviousIndex : FocusedIndex;
+        int currentIndex = FocusedIndex == AllSelectedIndex ? PreviousIndex : FocusedIndex;
         int nextIndex = (((currentIndex / GridContainer.Columns) + 1) * GridContainer.Columns) - 1;
         if (nextIndex == currentIndex)
             return;
@@ -336,7 +328,7 @@ public partial class OptionGrid : MarginContainer
 
     private int GetValidIndex(int index)
     {
-        int lowest = AllOptionEnabled ? -1 : 0;
+        int lowest = AllOptionEnabled ? AllSelectedIndex : 0;
         return Math.Clamp(index, lowest, OptionItems.Count - 1);
     }
 
@@ -360,10 +352,7 @@ public partial class OptionGrid : MarginContainer
         }
     }
 
-    private bool IsValidIndex(int index)
-    {
-        return -1 < index && index < OptionItems.Count;
-    }
+    private bool IsValidIndex(int index) => -1 < index && index < OptionItems.Count;
 
     private void LeaveItemFocus(Direction direction)
     {
@@ -392,10 +381,7 @@ public partial class OptionGrid : MarginContainer
         _sizeDirty = true;
     }
 
-    private void OnItemRectChanged()
-    {
-        _sizeDirty = true;
-    }
+    private void OnItemRectChanged() => _sizeDirty = true;
 
     private void OnScrollChanged(double value)
     {

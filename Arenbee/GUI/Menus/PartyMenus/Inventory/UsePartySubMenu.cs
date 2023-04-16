@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Arenbee.ActionEffects;
 using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
@@ -23,25 +25,24 @@ public partial class UsePartySubMenu : OptionSubMenu
         GameSession? gameSession = Locator.Session as GameSession;
         _party = gameSession?.MainParty ?? new Party("temp");
         _inventory = gameSession?.MainParty?.Inventory ?? new Inventory();
-        _actionEffect = _actionEffectDB.GetEffect(_item.UseData.ActionEffect)!;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly ActionEffectDBBase _actionEffectDB = Locator.ActionEffectDB;
+    private readonly AActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
     private readonly Inventory _inventory;
     private readonly Party _party;
-    private IActionEffect _actionEffect;
+    private IActionEffect _actionEffect = null!;
     private ItemStack _itemStack = null!;
-    private AItem _item = null!;
     private PackedScene _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
     private OptionContainer _partyContainer = null!;
+    private AItem Item => _itemStack.Item;
 
     public override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
         _itemStack = itemStack;
-        _item = _itemStack.Item;
+        _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
 
     protected override void SetupOptions()
@@ -52,7 +53,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        HandleUse(CurrentContainer.FocusedItem);
+        _ = HandleUse(CurrentContainer.FocusedItem);
     }
 
     protected override void SetNodeReferences()
@@ -61,12 +62,11 @@ public partial class UsePartySubMenu : OptionSubMenu
         _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions")!;
         if (_itemStack == null)
             return;
-        if (_item.UseData.UseType == ItemUseType.PartyMemberAll)
+        if (_actionEffect.TargetType == (int)TargetType.PartyMemberAll)
         {
             _partyContainer.AllOptionEnabled = true;
             _partyContainer.SingleOptionsEnabled = false;
         }
-        _actionEffect = _actionEffectDB.GetEffect(_item.UseData.ActionEffect)!;
     }
 
     private void DisplayOptions()
@@ -74,12 +74,12 @@ public partial class UsePartySubMenu : OptionSubMenu
         _partyContainer.Clear();
         if (_party == null)
             return;
-        foreach (var actor in _party.Actors.OrEmpty())
+        foreach (Actor? actor in _party.Actors.OrEmpty())
         {
             var option = _partyMemberOptionScene.Instantiate<PartyMemberOption>();
             _partyContainer.AddGridChild(option);
 
-            option.OptionData["actor"] = actor;
+            option.OptionData[nameof(Actor)] = actor;
             option.NameLabel.Text = actor.Name;
             option.HPContainer.StatNameText = "HP";
             option.MPContainer.StatNameText = "MP";
@@ -89,18 +89,20 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     private void UpdatePartyDisplay()
     {
-        var request = new ActionEffectRequest()
-        {
-            ActionType = (int)ActionType.Item,
-            Value1 = _item.UseData.Value1,
-            Value2 = _item.UseData.Value2
-        };
+        if (_actionEffect.TargetType == (int)TargetType.PartyMemberAll)
+            UpdatePartyAllDisplay();
+        else
+            UpdatePartySingleDisplay();
+    }
+
+    private void UpdatePartyAllDisplay()
+    {
+        bool canUse = _actionEffect.CanUse(null, _party.Actors.ToArray(), (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
+
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            if (!option.TryGetData("actor", out Actor? actor))
+            if (!option.TryGetData(nameof(Actor), out Actor? actor))
                 continue;
-            var target = new AActor[] { actor };
-            bool canUse = _actionEffect.CanUse(request, target);
             option.Disabled = !canUse || _itemStack.Count <= 0;
             Stats stats = actor.Stats;
             option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
@@ -108,29 +110,39 @@ public partial class UsePartySubMenu : OptionSubMenu
         }
     }
 
-    private void HandleUse(OptionItem optionItem)
+    private void UpdatePartySingleDisplay()
     {
-        if (optionItem?.Disabled == true)
+        foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
+        {
+            if (!option.TryGetData(nameof(Actor), out Actor? actor))
+                continue;
+            bool canUse = _actionEffect.CanUse(null, new[] { actor }, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
+            option.Disabled = !canUse || _itemStack.Count <= 0;
+            Stats stats = actor.Stats;
+            option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
+            option.HPContainer.StatMaxValueText = stats.MaxHP.ToString();
+        }
+    }
+
+    private async Task HandleUse(OptionItem? optionItem)
+    {
+        if ((optionItem == null || optionItem.Disabled) && !_partyContainer.AllOptionEnabled)
             return;
         IEnumerable<OptionItem> selectedItems;
-        if (optionItem == null && _partyContainer.AllOptionEnabled)
+        if (_partyContainer.AllOptionEnabled)
             selectedItems = _partyContainer.GetSelectedItems();
         else
             selectedItems = new OptionItem[] { optionItem };
-        var request = new ActionEffectRequest()
-        {
-            ActionType = (int)ActionType.Item,
-            Value1 = _item.UseData.Value1,
-            Value2 = _item.UseData.Value2
-        };
+        List<AActor> targets = new();
         foreach (OptionItem item in selectedItems)
         {
-            if (!item.TryGetData("actor", out Actor? actor))
+            if (!item.TryGetData(nameof(Actor), out Actor? actor))
                 return;
-            _actionEffect.Use(request, new Actor[] { actor });
+            targets.Add(actor);
         }
+        await CloseMenuAsync();
         _inventory.RemoveItem(_itemStack);
-
-        UpdatePartyDisplay();
+        _actionEffect.Use(null, targets, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
+        //UpdatePartyDisplay();
     }
 }

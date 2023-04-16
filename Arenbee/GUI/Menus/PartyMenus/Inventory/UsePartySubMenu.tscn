@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddg18v5jgkj37"]
+[gd_scene load_steps=4 format=3 uid="uid://ddg18v5jgkj37"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_kkqj0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UsePartySubMenu.cs" id="2_405mf"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/OptionItems/PartyMemberOption.tscn" id="3_5mj7i"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_5231r"]
 
 [node name="UsePartySubMenu" instance=ExtResource("1_kkqj0")]
@@ -23,71 +22,14 @@ grow_vertical = 2
 layout_mode = 0
 offset_left = 235.0
 offset_top = 49.0
-offset_right = 351.0
-offset_bottom = 116.0
+offset_right = 253.0
+offset_bottom = 67.0
 FitXToContent = true
 FitYToContent = true
 
-[node name="ContentGrid" parent="Foreground/PartyOptions" index="0"]
-offset_right = 112.0
-offset_bottom = 63.0
-
-[node name="OptionGrid" parent="Foreground/PartyOptions/ContentGrid" index="0"]
-offset_right = 108.0
-offset_bottom = 59.0
-
-[node name="GridMargin" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="0"]
-offset_right = 108.0
-offset_bottom = 59.0
-
 [node name="GridWindow" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-offset_right = 103.0
-offset_bottom = 54.0
 ClipX = false
 ClipY = false
-
-[node name="GridContainer" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow" index="0"]
-offset_right = 98.0
-offset_bottom = 49.0
-
-[node name="PartyMemberOption" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="0" instance=ExtResource("3_5mj7i")]
-layout_mode = 2
-offset_right = 98.0
-offset_bottom = 24.0
-
-[node name="PartyMemberOption2" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin/GridWindow/GridContainer" index="1" instance=ExtResource("3_5mj7i")]
-layout_mode = 2
-offset_top = 25.0
-offset_right = 98.0
-offset_bottom = 49.0
-
-[node name="Arrows" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="1"]
-offset_right = 108.0
-offset_bottom = 59.0
-
-[node name="ArrowUp" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="0"]
-offset_left = 50.0
-offset_right = 57.0
-
-[node name="ArrowLeft" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="1"]
-offset_top = 26.0
-offset_bottom = 33.0
-
-[node name="ArrowDown" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="2"]
-offset_left = 50.0
-offset_top = 53.0
-offset_right = 57.0
-offset_bottom = 59.0
-
-[node name="ArrowRight" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/Arrows" index="3"]
-offset_left = 102.0
-offset_top = 26.0
-offset_right = 108.0
-offset_bottom = 33.0
-
-[node name="ScrollBars" parent="Foreground/PartyOptions/ContentGrid/OptionGrid" index="2"]
-offset_right = 108.0
-offset_bottom = 59.0
 
 [editable path="Foreground/PartyOptions"]
 [editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]

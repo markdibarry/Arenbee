@@ -1,15 +1,12 @@
-﻿using GameCore.Actors;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using GameCore.Actors;
 
 namespace GameCore.ActionEffects;
 
 public interface IActionEffect
 {
-    bool CanUse(ActionEffectRequest request, AActor[] targets);
-    void Use(ActionEffectRequest request, AActor[] targets);
-}
-
-public enum ActionEffectType
-{
-    None,
-    RestoreHP
+    int TargetType { get; }
+    bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2);
+    Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2);
 }
