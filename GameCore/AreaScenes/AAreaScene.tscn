@@ -14,8 +14,10 @@
 
 [node name="Actors" type="Node2D" parent="."]
 
-[node name="Effects" type="Node2D" parent="."]
-
 [node name="ColorAdjustment" parent="." instance=ExtResource("2_rv66l")]
-layer = 20
+layer = 30
 TintColor = Color(1, 1, 1, 1)
+
+[node name="ActionSequence" type="CanvasLayer" parent="."]
+layer = 35
+follow_viewport_enabled = true

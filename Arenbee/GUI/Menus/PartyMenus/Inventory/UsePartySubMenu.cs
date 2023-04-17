@@ -121,6 +121,8 @@ public partial class UsePartySubMenu : OptionSubMenu
             Stats stats = actor.Stats;
             option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
             option.HPContainer.StatMaxValueText = stats.MaxHP.ToString();
+            option.MPContainer.StatCurrentValueText = "0";
+            option.MPContainer.StatMaxValueText = "0";
         }
     }
 

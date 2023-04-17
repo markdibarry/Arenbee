@@ -1,12 +1,13 @@
 -100 = MainBackground
 
 
-20 = Area Color Adjustment
-25 = Session Transition
-30 = Session Color Adjustment
-40 = HUD
-50 = Menus
-60 = Dialog
+30 = Area Color Adjustment
+35 = Area Action Sequence
+40 = Session Transition
+45 = Session Color Adjustment
+50 = HUD
+60 = GUI Controller
+70 = Dialog
 90 = Game Transition
 100 = Game Color Adjustment
 

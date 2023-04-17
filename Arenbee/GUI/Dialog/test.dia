@@ -1,12 +1,12 @@
 --AnotherOne--
 [Threena mood="annoyed"]
 [Stalone portrait="Unknown" name="Unknown"]
-Stalone: Hello, friend. You don't know me, but I come from a far away place.
+Stalone: Hello. You don't know me, but I come from a far away place.
 Threena: Is that you, Stalone?
 [Stalone portrait="Stalone" name="Stalone"]
-Stalone: I come from the bathroom! [speed = 10]...[/speed] of the future!!
-Twosen: Oh my GAWD. Did you clog the toilet... AGAIN?
+Stalone: I come from the kitchen!
+Twosen ["annoyed"]: Did you clog the sink again?
 Stalone ["happy"]: Why don't you go look?
 Threena: UGH. Why can't I have my own car, so I can drive away from this conversation?
 Twosen ["annoyed"]: It was the size of a house cat!
-Cat: Meow meow!
+Cat: Meow!

@@ -21,6 +21,7 @@ public abstract partial class AActorBody : CharacterBody2D
         AnimationPlayer = null!;
         Body = null!;
         BodySprite = null!;
+        CollisionShape2D = null!;
         ContextAreas = new();
         Direction = new(1, 1);
         Friction = 600;
@@ -33,16 +34,18 @@ public abstract partial class AActorBody : CharacterBody2D
         MaxSpeed = WalkSpeed;
     }
 
+    protected static AAudioController Audio { get; } = Locator.Audio;
     private AActor? _actorInternal;
     public virtual AActor? Actor => _actorInternal;
     public int Role { get; protected set; }
     public AnimationPlayer AnimationPlayer { get; private set; }
     public Sprite2D BodySprite { get; private set; }
+    public CollisionShape2D CollisionShape2D { get; private set; }
     public HashSet<IContextArea> ContextAreas { get; set; }
     public AreaBoxContainer HurtBoxes { get; private set; }
     public AreaBoxContainer HitBoxes { get; private set; }
+    public bool InActionSequence { get; private set; }
     public IStateController StateController { get; protected set; }
-    protected static AAudioController Audio { get; } = Locator.Audio;
     protected Node2D Body { get; set; } = null!;
     public event Action<AActorBody>? Freeing;
 
@@ -56,11 +59,14 @@ public abstract partial class AActorBody : CharacterBody2D
     {
         GlobalPosition = _floatPosition;
         _move = Vector2.Zero;
-        Actor?.Stats.Process(delta);
+        Actor?.Stats.Process(delta, !InActionSequence);
         foreach (IContextArea context in ContextAreas)
             context.TriggerContext(this);
-        StateController.UpdateStates(delta);
-        HandleMove(delta);
+        if (!InActionSequence)
+        {
+            StateController.UpdateStates(delta);
+            HandleMove(delta);
+        }
     }
 
     public override void _ExitTree()
@@ -103,12 +109,21 @@ public abstract partial class AActorBody : CharacterBody2D
 
     public virtual void SetActor(AActor? actor) => _actorInternal = actor;
 
+    public void SetForActionSequence(bool enable)
+    {
+        InActionSequence = enable;
+        CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, enable);
+        HurtBoxes.SetMonitoringDeferred(!enable);
+        HitBoxes.SetMonitoringDeferred(!enable);
+    }
+
     public abstract void SetRole(int role, bool setActorRole = true);
 
     public virtual void SetNodeReferences()
     {
         Body = GetNode<Node2D>("Body");
         BodySprite = Body.GetNode<Sprite2D>("BodySprite");
+        CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
         HurtBoxes = BodySprite.GetNode<AreaBoxContainer>("HurtBoxes");
         HitBoxes = BodySprite.GetNode<AreaBoxContainer>("HitBoxes");
         AnimationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");

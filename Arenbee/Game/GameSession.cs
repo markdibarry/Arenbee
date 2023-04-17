@@ -29,7 +29,8 @@ public partial class GameSession : AGameSession
 
     public override void _Process(double delta)
     {
-        SessionState.Update(delta, CurrentAreaScene == null || CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled);
+        bool paused = CurrentAreaScene == null || CurrentAreaScene.ProcessMode == ProcessModeEnum.Disabled;
+        SessionState.Update(delta, paused);
     }
 
     public Party? GetParty(string id) => Parties.FirstOrDefault(x => x.Id == id);

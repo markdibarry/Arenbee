@@ -1,4 +1,6 @@
-﻿using GameCore.AreaScenes;
+﻿using System.Collections.Generic;
+using GameCore.Actors;
+using GameCore.AreaScenes;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.SaveData;
@@ -13,6 +15,7 @@ public abstract partial class AGameSession : Node2D
     protected GUIController GUIController { get; set; } = null!;
     public AAreaScene? CurrentAreaScene { get; private set; }
     public TransitionLayer Transition { get; private set; } = null!;
+    public bool Paused { get; private set; }
 
     public override void _Ready()
     {
@@ -54,12 +57,14 @@ public abstract partial class AGameSession : Node2D
     {
         CurrentAreaScene?.Pause();
         HUD.Pause();
+        Paused = true;
     }
 
     public void Resume()
     {
         CurrentAreaScene?.Resume();
         HUD.Resume();
+        Paused = false;
     }
 
     public void RemoveAreaScene()
@@ -70,6 +75,16 @@ public abstract partial class AGameSession : Node2D
         AreaSceneContainer.RemoveChild(CurrentAreaScene);
         CurrentAreaScene.QueueFree();
         CurrentAreaScene = null;
+    }
+
+    public void StartActionSequence(IEnumerable<AActor> actors)
+    {
+        CurrentAreaScene?.StartActionSequence(actors);
+    }
+
+    public void StopActionSequence()
+    {
+        CurrentAreaScene?.StopActionSequence();
     }
 
     protected virtual void SetNodeReferences()

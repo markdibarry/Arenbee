@@ -30,7 +30,7 @@ script = ExtResource("4_j4llg")
 [node name="GameSessionContainer" type="Node2D" parent="GameDisplay"]
 
 [node name="GUIController" type="CanvasLayer" parent="GameDisplay"]
-layer = 50
+layer = 60
 script = ExtResource("5_ft6f4")
 
 [node name="Transition" parent="GameDisplay" instance=ExtResource("3_7ben1")]

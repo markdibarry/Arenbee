@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://dehf3qij7dep3"]
+
+[ext_resource type="Texture2D" uid="uid://c1vuguv7fqqu1" path="res://Arenbee/ActionEffects/RestoreHP/RestoreHP.png" id="1_hyah8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_34f55"]
+atlas = ExtResource("1_hyah8")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xq63"]
+atlas = ExtResource("1_hyah8")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nr102"]
+atlas = ExtResource("1_hyah8")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urrtt"]
+atlas = ExtResource("1_hyah8")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7w027"]
+atlas = ExtResource("1_hyah8")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_atjlt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_34f55")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xq63")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nr102")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urrtt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7w027")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="RestoreHPEffect" type="AnimatedSprite2D"]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_atjlt")
+frame_progress = 0.327097

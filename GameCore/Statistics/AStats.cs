@@ -116,9 +116,10 @@ public abstract class AStats
 
     public void OnDamageReceived(ADamageRequest damageRequest) => ReceiveDamageRequest(damageRequest);
 
-    public void Process(double delta)
+    public void Process(double delta, bool processEffects)
     {
-        Processed?.Invoke(delta);
+        if (processEffects)
+            Processed?.Invoke(delta);
         CurrentDamageResult = DamageToProcess.Count > 0 ? HandleDamage(DamageToProcess.Dequeue()) : null;
     }
 

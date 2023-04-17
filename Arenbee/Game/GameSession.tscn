@@ -11,8 +11,10 @@ script = ExtResource("1_wqoak")
 [node name="AreaSceneContainer" type="Node2D" parent="."]
 
 [node name="Transition" parent="." instance=ExtResource("2_inqdh")]
+layer = 40
 
 [node name="HUD" parent="." instance=ExtResource("2_ii0go")]
+layer = 50
 
 [node name="SkillController" type="CanvasLayer" parent="."]
 layer = 45
