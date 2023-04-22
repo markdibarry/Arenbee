@@ -74,16 +74,14 @@ public partial class EquipmentSubMenu : OptionSubMenu
     private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
     {
         List<EquipSelectOption> options = new();
-        if (optionItem == null)
+        if (optionItem?.OptionData is not Actor actor)
             return options;
-        if (!optionItem.TryGetData(nameof(Actor), out Actor? actorData))
-            return options;
-        foreach (var slot in actorData.Equipment.Slots)
+        foreach (EquipmentSlot slot in actor.Equipment.Slots)
         {
             var option = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
             option.KeyText = slot.SlotCategory.DisplayName + ":";
             option.ValueText = slot.ItemStack?.Item.DisplayName ?? "<None>";
-            option.OptionData[nameof(EquipmentSlot)] = slot;
+            option.OptionData = slot;
             options.Add(option);
         }
         return options;
@@ -94,11 +92,11 @@ public partial class EquipmentSubMenu : OptionSubMenu
         List<TextOption> options = new();
         if (_partyActors.Count == 0)
             return options;
-        _partyOptions.OptionGrid.Columns = _partyActors.Count;
+        ((GridOptionContainer)_partyOptions).OptionGrid.Columns = _partyActors.Count;
         foreach (Actor actorData in _partyActors.OfType<Actor>())
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData[nameof(Actor)] = actorData;
+            textOption.OptionData = actorData;
             textOption.LabelText = actorData.Name;
             options.Add(textOption);
         }
@@ -107,11 +105,9 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     private void OpenEquipSelectMenu(OptionItem? optionItem)
     {
-        if (_partyOptions.FocusedItem == null || optionItem == null)
+        if (_partyOptions.FocusedItem?.OptionData is not Actor actor)
             return;
-        if (!_partyOptions.FocusedItem.TryGetData(nameof(Actor), out Actor? actor))
-            return;
-        if (!optionItem.TryGetData(nameof(EquipmentSlot), out EquipmentSlot? slot))
+        if (optionItem?.OptionData is not EquipmentSlot slot)
             return;
 
         SelectSubMenuDataModel data = new(slot, actor);

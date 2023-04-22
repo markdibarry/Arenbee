@@ -15,7 +15,7 @@ public partial class SaveGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        CurrentContainer!.FocusedItem!.TryGetData("fileName", out string? fileName);
+        string? fileName = CurrentContainer?.FocusedItem?.OptionData as string;
         OpenSaveGameConfirmSubMenu(fileName);
     }
 

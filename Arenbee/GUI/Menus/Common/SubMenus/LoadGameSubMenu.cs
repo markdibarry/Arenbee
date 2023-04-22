@@ -18,7 +18,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (CurrentContainer?.FocusedItem == null || !CurrentContainer.FocusedItem.TryGetData("fileName", out string? fileName))
+        if (CurrentContainer?.FocusedItem?.OptionData is not string fileName)
             return;
         ContinueSavedGame(fileName);
     }
@@ -33,7 +33,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
     protected override void SetupOptions()
     {
         _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions")!;
-        var options = GetSaveGameOptions();
+        List<SaveGameOption> options = GetSaveGameOptions();
         _loadOptions.ReplaceChildren(options);
     }
 
@@ -47,8 +47,8 @@ public partial class LoadGameSubMenu : OptionSubMenu
             await _gameRoot.StartNewSession(gameSave!);
         };
 
-        var tController = Locator.TransitionController;
-        var request = new TransitionRequest(
+        ATransitionController tController = Locator.TransitionController;
+        TransitionRequest request = new(
             BasicLoadingScreen.GetScenePath(),
             TransitionType.Game,
             FadeTransition.GetScenePath(),

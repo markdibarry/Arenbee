@@ -77,8 +77,5 @@ public partial class AActorBody
         }
         Velocity = newVelocity;
         MoveAndSlide();
-        _floatPosition = GlobalPosition;
-        GlobalPosition = GlobalPosition.Round();
-        InputHandler.Update();
     }
 }

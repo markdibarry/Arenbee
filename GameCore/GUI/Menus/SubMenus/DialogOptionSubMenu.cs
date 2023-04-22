@@ -24,9 +24,9 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (CurrentContainer?.FocusedItem == null || !CurrentContainer.FocusedItem.TryGetData("index", out int selectedIndex))
+        if (CurrentContainer?.FocusedItem?.OptionData is not int selectedIndex)
             return;
-        var data = new List<Choice>(1) { DialogChoices[selectedIndex] };
+        List<Choice> data = new(1) { DialogChoices[selectedIndex] };
         _ = CloseSubMenuAsync(data: data);
     }
 
@@ -41,7 +41,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
                 continue;
             var textOption = _textOptionScene.Instantiate<TextOption>();
             textOption.LabelText = DialogChoices[i].Text;
-            textOption.OptionData["index"] = i;
+            textOption.OptionData = i;
             options.Add(textOption);
         }
         _options.ReplaceChildren(options);

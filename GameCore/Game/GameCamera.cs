@@ -1,4 +1,6 @@
-﻿using GameCore.Extensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GameCore.Extensions;
 using GameCore.Utility;
 using Godot;
 
@@ -32,6 +34,20 @@ public partial class GameCamera : Camera2D
 
         if (_limitsDirty)
             UpdateLimits();
+    }
+
+    public Rect2 GetRect()
+    {
+        Vector2 center = GetScreenCenterPosition();
+        return new(new(center.X - (_viewSize.X * 0.5f), center.Y - (_viewSize.Y * 0.5f)), _viewSize);
+    }
+
+    public bool IsInView(Vector2 position) => GetRect().HasPoint(position);
+
+    public IEnumerable<T> FilterInView<T>(IEnumerable<T> node) where T : Node2D
+    {
+        Rect2 rect = GetRect();
+        return node.Where(x => rect.HasPoint(x.GlobalPosition));
     }
 
     public void UpdateLimits()

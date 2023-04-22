@@ -476,6 +476,21 @@ public class ItemDB : AItemDB
             IsDroppable = true,
             Price = 10
         });
+
+        items.Add(new Item(ItemIds.Darts, itemCategory)
+        {
+            DisplayName = "Darts",
+            Description = "Aim carefully.",
+            MaxStack = 9,
+            IsSellable = true,
+            IsDroppable = true,
+            Price = 10,
+            UseData = new()
+            {
+                ActionEffect = (int)ActionEffectType.Darts,
+                Value1 = 5
+            }
+        });
     }
 
     private static void BuildKey(List<AItem> items, ItemCategory itemCategory)

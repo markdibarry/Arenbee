@@ -111,6 +111,7 @@ public partial class SubMenu : Control
     public async Task TransitionCloseAsync(bool preventAnimation = false)
     {
         CurrentState = State.Closing;
+        OnCloseSubMenu();
         Audio.PlaySoundFX(CloseSoundPath);
         if (!preventAnimation)
             await AnimateCloseAsync();
@@ -123,14 +124,12 @@ public partial class SubMenu : Control
 
     protected virtual async Task CloseMenuAsync(bool preventAnimation = false, object? data = null)
     {
-        OnCloseSubMenu();
         await GUIController.CloseLayerAsync(preventAnimation, data);
     }
 
     protected virtual async Task CloseSubMenuAsync(Type? cascadeTo = null, bool preventAnimation = false, object? data = null)
     {
-        OnCloseSubMenu();
-        Audio.PlaySoundFX(CloseSoundPath);
+        //Audio.PlaySoundFX(CloseSoundPath);
         await Menu.CloseSubMenuAsync(cascadeTo, preventAnimation, data);
     }
 

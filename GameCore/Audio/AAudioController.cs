@@ -36,13 +36,13 @@ public abstract partial class AAudioController : Node2D
     {
         if (string.IsNullOrEmpty(soundName))
             return;
-        var stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
+        AudioStream stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
         PlaySoundFX(stream);
     }
 
     public virtual void PlaySoundFX(AudioStream sound)
     {
-        var audioPlayer = Array.Find(_menuFXPlayers, x => x.Stream == sound);
+        AudioStreamPlayer? audioPlayer = Array.Find(_menuFXPlayers, x => x.Stream == sound);
         if (audioPlayer != null)
         {
             audioPlayer.Play();
@@ -59,13 +59,13 @@ public abstract partial class AAudioController : Node2D
     {
         if (string.IsNullOrEmpty(soundName))
             return;
-        var stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
+        AudioStream stream = GD.Load<AudioStream>($"{Config.AudioPath}{soundName}");
         PlaySoundFX(node2D, stream);
     }
 
     public virtual void PlaySoundFX(Node2D node2D, AudioStream sound)
     {
-        var audioPlayer = Array.Find(_sceneFXPlayers, x => x.Stream == sound);
+        AudioPlayer2D? audioPlayer = Array.Find(_sceneFXPlayers, x => x.Stream == sound);
         if (audioPlayer != null)
         {
             audioPlayer.SoundSource = node2D;
@@ -120,15 +120,13 @@ public abstract partial class AAudioController : Node2D
 
     private AudioStreamPlayer GetNextMenuPlayer()
     {
-        var audioPlayer = Array.Find(_menuFXPlayers, x => !x.Playing);
-        if (audioPlayer != null)
-            return audioPlayer;
-        return _menuFXPlayers[0];
+        AudioStreamPlayer? audioPlayer = Array.Find(_menuFXPlayers, x => !x.Playing);
+        return audioPlayer ?? _menuFXPlayers[0];
     }
 
     private AudioPlayer2D? GetNextScenePlayer()
     {
-        var audioPlayer = Array.Find(_sceneFXPlayers, x => !x.Playing);
+        AudioPlayer2D? audioPlayer = Array.Find(_sceneFXPlayers, x => !x.Playing);
         if (audioPlayer != null)
             return audioPlayer;
         audioPlayer = _sceneFXPlayers[0];

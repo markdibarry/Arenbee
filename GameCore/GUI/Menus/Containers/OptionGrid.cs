@@ -17,6 +17,7 @@ public partial class OptionGrid : MarginContainer
         OptionItems = new List<OptionItem>();
     }
 
+    private const int AllSelectedIndex = -1;
     private MarginContainer _arrows = null!;
     private TextureRect _arrowUp = null!;
     private TextureRect _arrowDown = null!;
@@ -32,7 +33,6 @@ public partial class OptionGrid : MarginContainer
     [Export] public PackedScene CursorScene { get; set; } = null!;
     [Export] public bool DimItems { get; set; }
     [Export] public bool FocusWrap { get; set; }
-    [Export] public bool KeepHighlightPosition { get; set; }
     [Export] public bool AllOptionEnabled { get; set; }
     [Export] public bool SingleOptionsEnabled { get; set; }
     [ExportGroup("Sizing")]
@@ -69,7 +69,6 @@ public partial class OptionGrid : MarginContainer
             UpdateRows();
         }
     }
-    public const int AllSelectedIndex = -1;
     public bool AllSelected => FocusedIndex == AllSelectedIndex;
     public int FocusedIndex { get; private set; }
     public OptionItem? FocusedItem => OptionItems.ElementAtOrDefault(FocusedIndex);
@@ -80,7 +79,6 @@ public partial class OptionGrid : MarginContainer
     public int PreviousIndex { get; private set; }
     public List<OptionItem> OptionItems { get; set; }
     public Vector2 Padding { get; set; }
-    //private bool IsSingleColumn => GridContainer.Columns == 1;
     public event Action<OptionGrid, Direction>? FocusOOB;
     public event Action? ItemFocused;
     public event Action? ItemSelected;
@@ -144,41 +142,19 @@ public partial class OptionGrid : MarginContainer
             case Direction.Up:
                 FocusUp();
                 break;
+            case Direction.Right:
+                FocusRight();
+                break;
             case Direction.Down:
                 FocusDown();
                 break;
             case Direction.Left:
                 FocusLeft();
                 break;
-            case Direction.Right:
-                FocusRight();
-                break;
         }
     }
 
     public IEnumerable<OptionItem> GetSelectedItems() => OptionItems.Where(x => x.Selected);
-
-    public void HandleSelectAll()
-    {
-        if (!AllOptionEnabled)
-            return;
-        if (AllSelected)
-        {
-            GridContainer.Position = Vector2.Zero;
-            foreach (OptionItem item in OptionItems)
-            {
-                if (item.Disabled)
-                    RemoveItemFromSelection(item);
-                else
-                    AddItemToSelection(item);
-            }
-        }
-        else if (PreviousIndex == AllSelectedIndex)
-        {
-            foreach (OptionItem item in OptionItems)
-                RemoveItemFromSelection(item);
-        }
-    }
 
     public void LeaveContainerFocus()
     {
@@ -332,6 +308,28 @@ public partial class OptionGrid : MarginContainer
         return Math.Clamp(index, lowest, OptionItems.Count - 1);
     }
 
+    private void HandleSelectAll()
+    {
+        if (!AllOptionEnabled)
+            return;
+        if (AllSelected)
+        {
+            GridContainer.Position = Vector2.Zero;
+            foreach (OptionItem item in OptionItems)
+            {
+                if (item.Disabled)
+                    RemoveItemFromSelection(item);
+                else
+                    AddItemToSelection(item);
+            }
+        }
+        else if (PreviousIndex == AllSelectedIndex)
+        {
+            foreach (OptionItem item in OptionItems)
+                RemoveItemFromSelection(item);
+        }
+    }
+
     private void HandleSizeDirty()
     {
         _sizeDirty = false;
@@ -385,8 +383,8 @@ public partial class OptionGrid : MarginContainer
 
     private void OnScrollChanged(double value)
     {
-        var x = -GridContainer.Size.X * (float)(_hScrollBar.Value * 0.01);
-        var y = -GridContainer.Size.Y * (float)(_vScrollBar.Value * 0.01);
+        float x = -GridContainer.Size.X * (float)(_hScrollBar.Value * 0.01);
+        float y = -GridContainer.Size.Y * (float)(_vScrollBar.Value * 0.01);
         GridContainer.Position = new Vector2(x, y);
     }
 

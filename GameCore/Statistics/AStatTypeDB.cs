@@ -26,27 +26,19 @@ public abstract class AStatTypeDB
             { "hint", (int)PropertyHint.Enum },
             { "hint_string", GetTypeNames().Join(",") }
         });
-
+        Gictionary valueProp = new()
+        {
+            { "name", "Value" },
+            { "type", (int)Variant.Type.Int },
+            { "usage", (int)PropertyUsageFlags.Default }
+        };
         if (valueOptions != null)
         {
-            properties.Add(new()
-            {
-                { "name", "Value" },
-                { "type", (int)Variant.Type.Int },
-                { "usage", (int)PropertyUsageFlags.Default },
-                { "hint", (int)PropertyHint.Enum },
-                { "hint_string", valueOptions.Join(",") }
-            });
+            valueProp.Add("hint", (int)PropertyHint.Enum);
+            valueProp.Add("hint_string", valueOptions.Join(","));
         }
-        else
-        {
-            properties.Add(new()
-            {
-                { "name", "Value" },
-                { "type", (int)Variant.Type.Int },
-                { "usage", (int)PropertyUsageFlags.Default }
-            });
-        }
+        properties.Add(valueProp);
+
         return properties;
     }
 }

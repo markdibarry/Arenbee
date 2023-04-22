@@ -12,6 +12,7 @@ public abstract partial class ASpawner : Node2D
 {
     protected static AActorDataDB ActorDataDB { get; set; } = Locator.ActorDataDB;
     private string _actorDataId = string.Empty;
+    private bool _ready;
     public bool Respawn { get; set; }
     public bool OffScreen { get; set; }
     public bool CreateUnique
@@ -19,7 +20,7 @@ public abstract partial class ASpawner : Node2D
         get => false;
         set => OnCreateUnique();
     }
-    public AActorData? ActorData { get; set; }
+    public Resource? ActorData { get; set; }
     public string ActorDataId
     {
         get => _actorDataId;
@@ -94,6 +95,7 @@ public abstract partial class ASpawner : Node2D
 
     public override void _Ready()
     {
+        _ready = true;
         if (Engine.IsEditorHint())
         {
             ChildEnteredTree += OnChildEnteredTree;
@@ -122,7 +124,7 @@ public abstract partial class ASpawner : Node2D
         if (ActorData == null || ActorBody == null)
             return null;
 
-        AActor actor = ActorData.CreateActor();
+        AActor actor = ((AActorData)ActorData).CreateActor();
         AActorBody actorBody = (AActorBody)ActorBody.Duplicate();
         actorBody.SetRole(DefaultActorRole);
         actor.SetActorBody(actorBody);
@@ -137,7 +139,7 @@ public abstract partial class ASpawner : Node2D
 
     public void OnCreateUnique()
     {
-        if (!Engine.IsEditorHint())
+        if (!Engine.IsEditorHint() || !_ready)
             return;
         ActorData = ActorDataDB.GetData<AActorData>(ActorDataId)?.Clone();
         NotifyPropertyListChanged();

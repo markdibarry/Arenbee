@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvpvehj1at1kg"]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_wj7wx"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UseEnemySubMenu.cs" id="2_vv8vg"]
+[ext_resource type="PackedScene" uid="uid://blptr2bw6mu7c" path="res://GameCore/GUI/Menus/Containers/FreeOptionContainer.tscn" id="3_ra60n"]
+
+[node name="UseEnemySubMenu" instance=ExtResource("1_wj7wx")]
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_vv8vg")
+NodePaths = [NodePath("Foreground/EnemyOptions")]
+
+[node name="Background" parent="." index="0"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EnemyOptions" parent="Foreground" index="0" instance=ExtResource("3_ra60n")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 14.0
+offset_bottom = 14.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="MessageContainer" type="MarginContainer" parent="Foreground" index="1"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/MessageContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="MessageLabel" type="Label" parent="Foreground/MessageContainer/PanelContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No enemies found!"

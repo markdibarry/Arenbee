@@ -8,6 +8,7 @@ namespace Arenbee.ActionEffects;
 
 public class CurePoison : IActionEffect
 {
+    public bool IsActionSequence => false;
     public int TargetType => (int)ActionEffects.TargetType.PartyMember;
 
     public bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)

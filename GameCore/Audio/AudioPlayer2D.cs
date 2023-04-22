@@ -30,8 +30,5 @@ public partial class AudioPlayer2D : AudioStreamPlayer2D
         Stop();
     }
 
-    public void OnFinished()
-    {
-        SoundSource = null;
-    }
+    private void OnFinished() => SoundSource = null;
 }

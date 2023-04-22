@@ -33,15 +33,14 @@ public partial class UseSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? optionValue))
+        if (CurrentContainer?.FocusedItem?.OptionData is not string optionValue)
             return;
-        if (!CurrentContainer.FocusedItem.Disabled)
-        {
-            if (optionValue == UseOptions.Use)
-                HandleUse();
-            else if (optionValue == UseOptions.Drop)
-                HandleDrop();
-        }
+        if (CurrentContainer.FocusedItem.Disabled)
+            return;
+        if (optionValue == UseOptions.Use)
+            HandleUse();
+        else if (optionValue == UseOptions.Drop)
+            HandleDrop();
     }
 
     private void DisplayOptions()
@@ -49,7 +48,7 @@ public partial class UseSubMenu : OptionSubMenu
         List<TextOption> options = new();
         TextOption option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Use;
-        option.OptionData["value"] = UseOptions.Use;
+        option.OptionData = UseOptions.Use;
         option.Disabled = true;
         if (_itemStack.Item.UseData != null)
             option.Disabled = _itemStack.Count <= 0;
@@ -57,7 +56,7 @@ public partial class UseSubMenu : OptionSubMenu
 
         option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Drop;
-        option.OptionData["value"] = UseOptions.Drop;
+        option.OptionData = UseOptions.Drop;
         option.Disabled = !_itemStack.Item.IsDroppable || _itemStack.Count <= 0;
         options.Add(option);
         _optionContainer.ReplaceChildren(options);
@@ -94,9 +93,9 @@ public partial class UseSubMenu : OptionSubMenu
         _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: _itemStack);
     }
 
-    private static void OpenEnemyUseSubMenu()
+    private void OpenEnemyUseSubMenu()
     {
-        // TODO
+        _ = OpenSubMenuAsync(path: UseEnemySubMenu.GetScenePath(), data: _itemStack);
     }
 
     private static class UseOptions

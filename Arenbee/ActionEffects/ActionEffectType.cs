@@ -5,5 +5,6 @@ public enum ActionEffectType
     None,
     RestoreHP,
     RestoreHPAll,
-    CurePoison
+    CurePoison,
+    Darts
 }

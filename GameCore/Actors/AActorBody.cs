@@ -67,6 +67,9 @@ public abstract partial class AActorBody : CharacterBody2D
             StateController.UpdateStates(delta);
             HandleMove(delta);
         }
+        _floatPosition = GlobalPosition;
+        GlobalPosition = GlobalPosition.Round();
+        InputHandler.Update();
     }
 
     public override void _ExitTree()

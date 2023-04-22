@@ -13,14 +13,14 @@ public partial class TitleMenu : Menu
     public override async Task AnimateOpenAsync()
     {
         ContentGroup.SelfModulate = new Color(ContentGroup.SelfModulate, 0);
-        var tween = CreateTween();
+        Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 1, 1);
         await ToSignal(tween, Tween.SignalName.Finished);
     }
 
     public override async Task AnimateCloseAsync()
     {
-        var tween = CreateTween();
+        Tween tween = CreateTween();
         tween.TweenProperty(ContentGroup, "self_modulate:a", 0, 1);
         await ToSignal(tween, Tween.SignalName.Finished);
     }

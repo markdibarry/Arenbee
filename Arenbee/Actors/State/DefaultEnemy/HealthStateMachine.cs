@@ -113,7 +113,7 @@ public class HealthStateMachine : HealthStateMachineBase
         private void CreateDeathEffect()
         {
             var enemyDeathEffectScene = GD.Load<PackedScene>(EnemyDeathEffect.GetScenePath());
-            Node2D parent = ActorBody.GetParentOrNull<Node2D>();
+            Node parent = ActorBody.GetParentOrNull<Node>();
             if (parent != null)
             {
                 var enemyDeathEffect = enemyDeathEffectScene.Instantiate<EnemyDeathEffect>();

@@ -35,7 +35,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? saveChoice))
+        if (CurrentContainer?.FocusedItem?.OptionData is not string saveChoice)
             return;
         switch (saveChoice)
         {
@@ -64,7 +64,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         {
             TextOption option = textOptionScene.Instantiate<TextOption>();
             option.LabelText = Tr(menuKey);
-            option.OptionData["value"] = menuKey;
+            option.OptionData = menuKey;
             options.Add(option);
         }
         return options;

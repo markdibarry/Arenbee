@@ -30,7 +30,7 @@ public partial class MainSubMenu : OptionSubMenu
     {
         Vector2 pos = (Size - _startOptions.Size) * 0.5f;
         _startOptions.Position = new Vector2(pos.X, -_startOptions.Size.Y);
-        var tween = _startOptions.CreateTween();
+        var tween = CreateTween();
         tween.TweenProperty(_startOptions, "position:y", pos.Y, 0.4f);
         await ToSignal(tween, Tween.SignalName.Finished);
     }
@@ -43,7 +43,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? titleChoice))
+        if (CurrentContainer?.FocusedItem?.OptionData is not string titleChoice)
             return;
         switch (titleChoice)
         {
@@ -77,7 +77,7 @@ public partial class MainSubMenu : OptionSubMenu
         {
             var option = textOptionScene.Instantiate<TextOption>();
             option.LabelText = Tr(menuKey);
-            option.OptionData["value"] = menuKey;
+            option.OptionData = menuKey;
             if (menuKey == Localization.Menus.Menus_Title_Continue && gameSaves.Count == 0)
                 option.Disabled = true;
             options.Add(option);

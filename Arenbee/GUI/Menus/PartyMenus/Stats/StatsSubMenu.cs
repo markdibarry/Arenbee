@@ -38,7 +38,7 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void OnItemFocused()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(Actor), out Actor? actor))
+        if (CurrentContainer?.FocusedItem?.OptionData is not Actor actor)
             return;
         _statsDisplay.UpdateStatsDisplay(actor.Stats, updateColor: false);
     }
@@ -49,7 +49,7 @@ public partial class StatsSubMenu : OptionSubMenu
         foreach (var actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
-            textOption.OptionData[nameof(Actor)] = actor;
+            textOption.OptionData = actor;
             textOption.LabelText = actor.Name;
             options.Add(textOption);
         }

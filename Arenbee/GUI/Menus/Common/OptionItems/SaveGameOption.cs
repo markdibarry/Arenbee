@@ -72,6 +72,6 @@ public partial class SaveGameOption : OptionItem
         LevelText = "Lv. " + level;
         TimeSpan timeSpan = TimeSpan.FromSeconds(gameSave.SessionState.TotalGameTime);
         GameTimeText = timeSpan.ToString(@"hh\:mm\:ss");
-        OptionData["fileName"] = fileName;
+        OptionData = fileName;
     }
 }

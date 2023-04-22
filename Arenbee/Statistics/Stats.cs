@@ -82,7 +82,7 @@ public class Stats : AStats
         int elementMultiplier = CalculateElementResist((int)elementResistType, false);
         totalDamage = GetDamageFromElement(totalDamage, elementMultiplier);
         ApplyDamageStatusEffects(damageRequest);
-        ModifyHP(totalDamage);
+        bool modified = ModifyHP(totalDamage);
         DamageResult damageResult = new()
         {
             ActionType = damageRequest.ActionType,
@@ -94,7 +94,7 @@ public class Stats : AStats
         };
         RaiseDamageReceived(damageResult);
         RaiseStatChanged();
-        if (HasNoHP)
+        if (HasNoHP && modified)
             HPDepleted?.Invoke();
         return damageResult;
     }
@@ -226,17 +226,23 @@ public class Stats : AStats
         return result;
     }
 
-    private void ModifyHP(int amount)
+    /// <summary>
+    /// Attempts to modify HP. Returns the success or failure.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    private bool ModifyHP(int amount)
     {
         Stat? hpStat = GetStat(StatType.HP);
         if (hpStat == null)
-            return;
+            return false;
         int maxHP = CalculateStat(StatType.MaxHP);
         int oldHP = hpStat.Value;
         int newHP = Math.Clamp(oldHP - amount, 0, maxHP);
         if (oldHP == newHP)
-            return;
+            return false;
         hpStat.Value = newHP;
+        return true;
     }
 
     protected override void UpdateSpecialCategory(int statType) => UpdateSpecialCategory((StatType)statType);

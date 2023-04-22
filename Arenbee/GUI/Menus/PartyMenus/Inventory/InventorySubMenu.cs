@@ -89,13 +89,13 @@ public partial class InventorySubMenu : OptionSubMenu
         List<TextOption> options = new(_itemCategoryDB.Categories.Count + 1);
         var allOption = _textOptionScene.Instantiate<TextOption>();
         allOption.LabelText = "All";
-        allOption.OptionData[nameof(Item.ItemCategory.Id)] = "all";
+        allOption.OptionData = "all";
         options.Add(allOption);
         foreach (ItemCategory category in _itemCategoryDB.Categories)
         {
             var option = _textOptionScene.Instantiate<TextOption>();
             option.LabelText = category.DisplayName;
-            option.OptionData[nameof(Item.ItemCategory.Id)] = category.Id;
+            option.OptionData = category.Id;
             options.Add(option);
         }
         return options;
@@ -116,7 +116,7 @@ public partial class InventorySubMenu : OptionSubMenu
             var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
             option.KeyText = itemStack.Item.DisplayName;
             option.ValueText = "x" + itemStack.Count.ToString();
-            option.OptionData[nameof(ItemStack)] = itemStack;
+            option.OptionData = itemStack;
             options.Add(option);
         }
         return options;
@@ -124,7 +124,7 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void OpenUseSubMenu(OptionItem optionItem)
     {
-        if (!optionItem.TryGetData(nameof(ItemStack), out ItemStack? itemStack))
+        if (optionItem.OptionData is not ItemStack itemStack)
             return;
         _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: itemStack);
     }
@@ -139,7 +139,7 @@ public partial class InventorySubMenu : OptionSubMenu
         }
         else
         {
-            if (!optionItem.TryGetData(nameof(ItemStack), out ItemStack? itemStack))
+            if (optionItem.OptionData is not ItemStack itemStack)
                 return;
             _itemStatsDisplay.UpdateStatsDisplay(itemStack.Item);
             _ = _itemInfo.UpdateTextAsync(itemStack.Item.Description);
@@ -149,11 +149,9 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private void UpdateItemList(OptionItem optionItem, bool resetFocus)
     {
-        if (optionItem == null)
-            return;
         if (resetFocus)
             _inventoryList.ResetContainerFocus();
-        if (!optionItem.TryGetData(nameof(Item.ItemCategory.Id), out string? itemCategoryId))
+        if (optionItem?.OptionData is not string itemCategoryId)
             return;
         IEnumerable<KeyValueOption> options = GetItemOptions(itemCategoryId);
         _inventoryList.ReplaceChildren(options);

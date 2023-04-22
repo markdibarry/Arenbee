@@ -50,16 +50,12 @@ public partial class SelectSubMenu : OptionSubMenu
         _actorStatsDisplay.UpdateBaseValues(_actor.Stats);
     }
 
-    protected override void OnCloseSubMenu()
-    {
-        //RemoveMockMods();
-    }
-
     protected override void OnItemFocused()
     {
         RemoveMockMods();
 
-        if (CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out _currentItemStack))
+        _currentItemStack = CurrentContainer?.FocusedItem?.OptionData as ItemStack;
+        if (_currentItemStack != null)
         {
             foreach (Modifier mod in _currentItemStack.Item.Modifiers)
             {
@@ -75,7 +71,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData(nameof(ItemStack), out ItemStack? itemStack))
+        if (CurrentContainer?.FocusedItem?.OptionData is not ItemStack itemStack)
             _actor.Equipment.RemoveItem(_actor, _slot);
         else
             _actor.Equipment.TrySetItem(_actor, _slot, itemStack);
@@ -99,18 +95,13 @@ public partial class SelectSubMenu : OptionSubMenu
         RemoveMockMods();
     }
 
-    private bool TryEquip(ItemStack itemStack, EquipmentSlot slot)
-    {
-        return _actor.Equipment.TrySetItem(_actor, slot, itemStack);
-    }
-
     private List<KeyValueOption> GetEquippableOptions()
     {
         List<KeyValueOption> options = new();
         var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
         unequipOption.KeyText = "<Unequip>";
         unequipOption.ValueText = string.Empty;
-        unequipOption.OptionData[nameof(ItemStack)] = null;
+        unequipOption.OptionData = null;
         options.Add(unequipOption);
         if (_slot == null)
             return options;
@@ -123,7 +114,7 @@ public partial class SelectSubMenu : OptionSubMenu
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;
                 option.ValueText = "x" + itemStack.Count.ToString();
-                option.OptionData[nameof(ItemStack)] = itemStack;
+                option.OptionData = itemStack;
                 if (!itemStack.CanReserve())
                     option.Disabled = true;
                 if (itemStack.Item == _slot.Item)

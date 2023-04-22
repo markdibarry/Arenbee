@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://3xuwb2mw2i4q"]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_o3wks"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/LoadGameSubMenu.cs" id="2_75x6o"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_csiji"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_csiji"]
 
 [node name="LoadSaveSubMenu" instance=ExtResource("1_o3wks")]
 grow_horizontal = 2

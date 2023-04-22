@@ -9,6 +9,7 @@ namespace Arenbee.ActionEffects;
 
 public class RestoreHPAll : IActionEffect
 {
+    public bool IsActionSequence => true;
     public int TargetType => (int)ActionEffects.TargetType.PartyMemberAll;
     private static readonly IActionEffect _restoreHP = Locator.ActionEffectDB.GetEffect((int)ActionEffectType.RestoreHP)!;
 
@@ -20,7 +21,7 @@ public class RestoreHPAll : IActionEffect
     public async Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
     {
         List<Task> tasks = new();
-        foreach (var target in targets)
+        foreach (AActor target in targets)
             tasks.Add(_restoreHP.Use(user, new[] { target }, actionType, value1, value2));
         await Task.WhenAll(tasks);
     }

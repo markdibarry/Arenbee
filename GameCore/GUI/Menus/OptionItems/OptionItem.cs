@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Godot;
 
 namespace GameCore.GUI;
@@ -9,7 +8,6 @@ public partial class OptionItem : MarginContainer
     public OptionItem()
     {
         DimWhenUnfocused = true;
-        OptionData = new();
     }
 
     private bool _dimWhenUnfocused;
@@ -48,7 +46,7 @@ public partial class OptionItem : MarginContainer
         }
     }
 
-    public Dictionary<string, object?> OptionData { get; set; }
+    public object? OptionData { get; set; }
     public bool Selected
     {
         get => _selected;
@@ -62,17 +60,6 @@ public partial class OptionItem : MarginContainer
     public override void _Ready()
     {
         HandleStateChange();
-    }
-
-    public bool TryGetData<T>(string key, [NotNullWhen(returnValue: true)] out T? value)
-    {
-        if (OptionData.TryGetValue(key, out object? result) && result is T t)
-        {
-            value = t;
-            return true;
-        }
-        value = default;
-        return false;
     }
 
     public void HandleStateChange()

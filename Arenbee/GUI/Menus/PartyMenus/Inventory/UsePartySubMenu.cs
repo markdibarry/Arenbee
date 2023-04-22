@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.ActionEffects;
@@ -25,10 +26,12 @@ public partial class UsePartySubMenu : OptionSubMenu
         GameSession? gameSession = Locator.Session as GameSession;
         _party = gameSession?.MainParty ?? new Party("temp");
         _inventory = gameSession?.MainParty?.Inventory ?? new Inventory();
+        _gameSession = gameSession!;
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly AActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
+    private readonly GameSession _gameSession;
     private readonly Inventory _inventory;
     private readonly Party _party;
     private IActionEffect _actionEffect = null!;
@@ -77,9 +80,9 @@ public partial class UsePartySubMenu : OptionSubMenu
         foreach (Actor? actor in _party.Actors.OrEmpty())
         {
             var option = _partyMemberOptionScene.Instantiate<PartyMemberOption>();
-            _partyContainer.AddGridChild(option);
+            _partyContainer.AddOption(option);
 
-            option.OptionData[nameof(Actor)] = actor;
+            option.OptionData = actor;
             option.NameLabel.Text = actor.Name;
             option.HPContainer.StatNameText = "HP";
             option.MPContainer.StatNameText = "MP";
@@ -101,7 +104,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            if (!option.TryGetData(nameof(Actor), out Actor? actor))
+            if (option.OptionData is not Actor actor)
                 continue;
             option.Disabled = !canUse || _itemStack.Count <= 0;
             Stats stats = actor.Stats;
@@ -114,7 +117,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         foreach (PartyMemberOption option in _partyContainer.OptionItems.Cast<PartyMemberOption>())
         {
-            if (!option.TryGetData(nameof(Actor), out Actor? actor))
+            if (option.OptionData is not Actor actor)
                 continue;
             bool canUse = _actionEffect.CanUse(null, new[] { actor }, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
             option.Disabled = !canUse || _itemStack.Count <= 0;
@@ -128,23 +131,31 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     private async Task HandleUse(OptionItem? optionItem)
     {
-        if ((optionItem == null || optionItem.Disabled) && !_partyContainer.AllOptionEnabled)
-            return;
         IEnumerable<OptionItem> selectedItems;
         if (_partyContainer.AllOptionEnabled)
             selectedItems = _partyContainer.GetSelectedItems();
-        else
+        else if (optionItem != null)
             selectedItems = new OptionItem[] { optionItem };
+        else
+            selectedItems = Array.Empty<OptionItem>();
+
+        if (selectedItems.All(x => x.Disabled))
+            return;
+
         List<AActor> targets = new();
-        foreach (OptionItem item in selectedItems)
+        foreach (OptionItem option in selectedItems)
         {
-            if (!item.TryGetData(nameof(Actor), out Actor? actor))
+            if (option.OptionData is not Actor actor)
                 return;
             targets.Add(actor);
         }
+
         await CloseMenuAsync();
         _inventory.RemoveItem(_itemStack);
-        _actionEffect.Use(null, targets, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
-        //UpdatePartyDisplay();
+        if (_actionEffect.IsActionSequence)
+            _gameSession.StartActionSequence(targets);
+        await _actionEffect.Use(null, targets, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
+        if (_actionEffect.IsActionSequence)
+            _gameSession.StopActionSequence(); ;
     }
 }

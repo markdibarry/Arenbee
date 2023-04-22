@@ -11,7 +11,8 @@ public class ActionEffectDB : AActionEffectDB
         {
             [(int)ActionEffectType.RestoreHP] = new RestoreHP(),
             [(int)ActionEffectType.RestoreHPAll] = new RestoreHPAll(),
-            [(int)ActionEffectType.CurePoison] = new CurePoison()
+            [(int)ActionEffectType.CurePoison] = new CurePoison(),
+            [(int)ActionEffectType.Darts] = new Darts()
         };
         return effects;
     }

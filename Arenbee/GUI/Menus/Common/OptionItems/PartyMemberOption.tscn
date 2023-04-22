@@ -1,50 +1,43 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://bi8vtuqr6ri6s"]
 
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/PartyMemberOption.cs" id="2_3tesp"]
 [ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7i0tc"]
 
 [node name="PartyMemberOption" type="MarginContainer"]
-script = ExtResource( "2_3tesp" )
+modulate = Color(0.7, 0.7, 0.7, 1)
+theme_override_constants/margin_left = 1
+script = ExtResource("2_3tesp")
+DimWhenUnfocused = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." index="0"]
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 95.0
-offset_bottom = 25.0
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
 
-[node name="NameContainer" type="MarginContainer" parent="HBoxContainer" index="0"]
-offset_right = 34.0
-offset_bottom = 24.0
+[node name="NameContainer" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Name" type="Label" parent="HBoxContainer/NameContainer" index="0"]
+[node name="Name" type="Label" parent="HBoxContainer/NameContainer"]
 unique_name_in_owner = true
-offset_right = 34.0
-offset_bottom = 10.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "NameHere"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" index="1"]
-offset_left = 38.0
-offset_right = 94.0
-offset_bottom = 24.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
 
-[node name="HPContainer" parent="HBoxContainer/VBoxContainer" index="0" instance=ExtResource( "3_7i0tc" )]
+[node name="HPContainer" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_7i0tc")]
 unique_name_in_owner = true
-minimum_size = Vector2(56, 0)
-offset_right = 56.0
-offset_bottom = 10.0
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
 StatNameText = "HP:"
 StatCurrentValueText = "999"
 StatMaxValueText = "999"
 
-[node name="MPContainer" parent="HBoxContainer/VBoxContainer" index="1" instance=ExtResource( "3_7i0tc" )]
+[node name="MPContainer" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_7i0tc")]
 unique_name_in_owner = true
-minimum_size = Vector2(56, 0)
-offset_top = 14.0
-offset_right = 56.0
-offset_bottom = 24.0
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
 StatNameText = "MP:"
 StatCurrentValueText = "999"
 StatMaxValueText = "999"

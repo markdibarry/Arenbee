@@ -9,8 +9,8 @@ namespace GameCore.AreaScenes;
 
 public partial class AAreaScene : Node2D
 {
-    public CanvasLayer ActionSequenceLayer { get; private set; } = null!;
-    public Node2D ActorsContainer { get; private set; } = null!;
+    public CanvasLayer FocusLayer { get; private set; } = null!;
+    public CanvasLayer ActorsContainer { get; private set; } = null!;
     public ColorAdjustment ColorAdjustment { get; private set; } = null!;
     public Node2D EventContainer { get; private set; } = null!;
     public AHUD HUD { get; private set; } = null!;
@@ -31,6 +31,29 @@ public partial class AAreaScene : Node2D
     {
         HUD.SubscribeActorBodyEvents(actorBody);
         ActorsContainer.AddChild(actorBody);
+    }
+
+    public void MoveToActorContainer(AActorBody actorBody)
+    {
+        FocusLayer.RemoveChild(actorBody);
+        ActorsContainer.AddChild(actorBody);
+    }
+
+    public void MoveToFocusLayer(AActorBody actorBody)
+    {
+        ActorsContainer.RemoveChild(actorBody);
+        FocusLayer.AddChild(actorBody);
+    }
+
+    public IEnumerable<AActorBody> GetAllActorBodies()
+    {
+        return ActorsContainer.GetChildren<AActorBody>();
+    }
+
+    public IEnumerable<AActorBody> GetAllActorBodiesWithinView()
+    {
+        GameCamera gameCamera = Locator.Root.GameCamera;
+        return gameCamera.FilterInView(GetAllActorBodies());
     }
 
     public Vector2 GetSpawnPoint(int spawnPointIndex)
@@ -69,23 +92,21 @@ public partial class AAreaScene : Node2D
         {
             if (actor.ActorBody is not AActorBody actorBody)
                 continue;
-            ActorsContainer.RemoveChild(actorBody);
-            ActionSequenceLayer.AddChild(actorBody);
+            MoveToFocusLayer(actorBody);
             actorBody.SetForActionSequence(true);
         }
 
-        ActionSequenceLayer.SetDeferred(PropertyName.ProcessMode, (long)ProcessModeEnum.Always);
+        FocusLayer.SetDeferred(PropertyName.ProcessMode, (long)ProcessModeEnum.Always);
     }
 
     public void StopActionSequence()
     {
-        foreach (AActorBody actorBody in ActionSequenceLayer.GetChildren<AActorBody>())
+        foreach (AActorBody actorBody in FocusLayer.GetChildren<AActorBody>())
         {
-            ActionSequenceLayer.RemoveChild(actorBody);
-            ActorsContainer.AddChild(actorBody);
+            MoveToActorContainer(actorBody);
             actorBody.SetForActionSequence(false);
         }
-        ActionSequenceLayer.SetDeferred(PropertyName.ProcessMode, (long)ProcessModeEnum.Inherit);
+        FocusLayer.SetDeferred(PropertyName.ProcessMode, (long)ProcessModeEnum.Inherit);
         Resume();
     }
 
@@ -115,8 +136,8 @@ public partial class AAreaScene : Node2D
 
     private void SetNodeReferences()
     {
-        ActionSequenceLayer = GetNode<CanvasLayer>("ActionSequence");
-        ActorsContainer = GetNode<Node2D>("Actors");
+        FocusLayer = GetNode<CanvasLayer>("ActionSequence");
+        ActorsContainer = GetNode<CanvasLayer>("Actors");
         ColorAdjustment = GetNode<ColorAdjustment>("ColorAdjustment");
         SpawnPointContainer = GetNode<Node2D>("SpawnPoints");
         EventContainer = GetNode<Node2D>("Events");

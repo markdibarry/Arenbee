@@ -36,4 +36,5 @@ public static class ItemIds
     public const string SubwaySandwich = "SubwaySandwich";
     public const string IPA = "IPA";
     public const string BunnyNugget = "BunnyNugget";
+    public const string Darts = "Darts";
 }

@@ -1,3 +1,4 @@
+﻿using System;
 using Godot;
 
 namespace GameCore.Utility;
@@ -28,6 +29,10 @@ public partial class ColorAdjustment : CanvasLayer
         }
         set => _colorShader?.SetShaderParameter("_contrast", value);
     }
+    /// <summary>
+    /// Controls staturation level of the display lower than the current layer.
+    /// Range is from -1 for fully desaturated to 2 for more saturated.
+    /// </summary>
     [Export(PropertyHint.Range, "-1,2")]
     public float Saturation
     {
@@ -37,7 +42,7 @@ public partial class ColorAdjustment : CanvasLayer
                 return (float)_colorShader.GetShaderParameter("_saturation");
             return 1;
         }
-        set => _colorShader?.SetShaderParameter("_saturation", value);
+        set => _colorShader?.SetShaderParameter("_saturation", Math.Clamp(value, -1, 2));
     }
     [Export(PropertyHint.ColorNoAlpha)]
     public Color TintColor
@@ -66,5 +71,14 @@ public partial class ColorAdjustment : CanvasLayer
     {
         var rect = GetNodeOrNull<ColorRect>("ColorRect");
         _colorShader = (ShaderMaterial)rect.Material;
+    }
+
+    public void Reset()
+    {
+        Brightness = 0;
+        Contrast = 0;
+        Saturation = 0;
+        TintColor = Godot.Colors.White;
+        TintAmount = 0;
     }
 }

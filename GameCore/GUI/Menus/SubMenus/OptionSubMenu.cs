@@ -37,7 +37,7 @@ public partial class OptionSubMenu : SubMenu
     {
         if (OptionContainers.Count == 0)
             return;
-        OptionContainers.ForEach(x => SubscribeToEvents(x));
+        OptionContainers.ForEach(SubscribeToEvents);
         FocusContainer(OptionContainers.First());
     }
 
@@ -131,7 +131,7 @@ public partial class OptionSubMenu : SubMenu
         _cursor.Visible = CurrentContainer != null && !CurrentContainer.AllSelected;
         if (CurrentContainer != null)
         {
-            if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex)
+            if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex && CurrentState != State.Opening)
                 Audio.PlaySoundFX(FocusedSoundPath);
             if (CurrentContainer.FocusedItem != null)
                 MoveCursorToItem(CurrentContainer.FocusedItem);

@@ -1,6 +1,6 @@
 -100 = MainBackground
 
-
+10 = Actor Layer
 30 = Area Color Adjustment
 35 = Area Action Sequence
 40 = Session Transition

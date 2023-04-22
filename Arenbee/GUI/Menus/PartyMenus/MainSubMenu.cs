@@ -27,7 +27,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void OnItemSelected()
     {
-        if (!CurrentContainer.FocusedItem.TryGetData("value", out string? subMenuName))
+        if (CurrentContainer?.FocusedItem?.OptionData is not string subMenuName)
             return;
 
         switch (subMenuName)
@@ -64,12 +64,12 @@ public partial class MainSubMenu : OptionSubMenu
     private IEnumerable<TextOption> GetMenuOptions()
     {
         var textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
-        var options = new List<TextOption>();
+        List<TextOption> options = new();
         foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
             option.LabelText = Tr(menuKey);
-            option.OptionData["value"] = menuKey;
+            option.OptionData = menuKey;
             if (menuKey == Localization.Menus.Menus_Party_Options)
                 option.Disabled = true;
             options.Add(option);

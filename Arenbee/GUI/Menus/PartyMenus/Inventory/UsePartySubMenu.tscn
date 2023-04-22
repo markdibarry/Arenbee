@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddg18v5jgkj37"]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_kkqj0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UsePartySubMenu.cs" id="2_405mf"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/OptionContainer.tscn" id="3_5231r"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_5231r"]
 
 [node name="UsePartySubMenu" instance=ExtResource("1_kkqj0")]
 grow_horizontal = 2
