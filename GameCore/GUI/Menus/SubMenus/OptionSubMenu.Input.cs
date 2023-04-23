@@ -23,6 +23,11 @@ public partial class OptionSubMenu : SubMenu
             return;
         }
 
+        HandleRapidScroll(delta, GetDirection(menuInput));
+    }
+
+    protected static Direction GetDirection(GUIInputHandler menuInput)
+    {
         Direction newDirection = Direction.None;
 
         if (menuInput.Up.IsActionPressed)
@@ -33,8 +38,7 @@ public partial class OptionSubMenu : SubMenu
             newDirection = Direction.Left;
         else if (menuInput.Right.IsActionPressed)
             newDirection = Direction.Right;
-
-        HandleRapidScroll(delta, newDirection);
+        return newDirection;
     }
 
     private void HandleRapidScroll(double delta, Direction newDirection)

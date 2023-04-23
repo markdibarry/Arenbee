@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Arenbee.ActionEffects;
+using Arenbee.Items;
 using GameCore.ActionEffects;
 using GameCore.Extensions;
 using GameCore.GUI;
@@ -12,6 +13,11 @@ namespace Arenbee.GUI.Menus.PartyMenus;
 [Tool]
 public partial class UseSubMenu : OptionSubMenu
 {
+    public UseSubMenu()
+    {
+        GameSession? gameSession = Locator.Session as GameSession;
+    }
+
     public static string GetScenePath() => GDEx.GetScenePath();
     private ItemStack _itemStack = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
@@ -62,9 +68,9 @@ public partial class UseSubMenu : OptionSubMenu
         _optionContainer.ReplaceChildren(options);
     }
 
-    private static void HandleDrop()
+    private void HandleDrop()
     {
-        // TODO
+        _ = OpenSubMenuAsync(path: DropSubMenu.GetScenePath(), data: _itemStack);
     }
 
     private void HandleUse()

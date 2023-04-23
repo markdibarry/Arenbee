@@ -74,7 +74,7 @@ public partial class GridOptionContainer : OptionContainer
         get => OptionGrid.CursorScene;
         set => OptionGrid.CursorScene = value;
     }
-    public override bool DimItems
+    public bool DimItems
     {
         get => OptionGrid.DimItems;
         set => OptionGrid.DimItems = value;
@@ -94,8 +94,16 @@ public partial class GridOptionContainer : OptionContainer
         get => OptionGrid.SingleOptionsEnabled;
         set => OptionGrid.SingleOptionsEnabled = value;
     }
-    public override int PreviousIndex => OptionGrid.PreviousIndex;
-    public override int FocusedIndex => OptionGrid.FocusedIndex;
+    public override int PreviousIndex
+    {
+        get => OptionGrid.PreviousIndex;
+        protected set { }
+    }
+    public override int FocusedIndex
+    {
+        get => OptionGrid.FocusedIndex;
+        protected set { }
+    }
     public override bool AllSelected => OptionGrid.AllSelected;
     public override IList<OptionItem> OptionItems => OptionGrid.OptionItems;
 
@@ -126,8 +134,6 @@ public partial class GridOptionContainer : OptionContainer
     public override void ReplaceChildren(IEnumerable<OptionItem> optionItems) => OptionGrid.ReplaceChildren(optionItems);
 
     public override void ResetContainerFocus() => OptionGrid.ResetContainerFocus();
-
-    public override void SelectItem() => OptionGrid.SelectItem();
 
     private void CalculateMaxSize()
     {
@@ -223,7 +229,6 @@ public partial class GridOptionContainer : OptionContainer
     {
         ContentGrid.SortChildren += OnSorted;
         Resized += OnResized;
-        OptionGrid.ItemSelected += OnItemSelected;
         OptionGrid.ItemFocused += OnItemFocused;
         OptionGrid.FocusOOB += OnFocusOOB;
     }

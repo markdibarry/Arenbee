@@ -8,14 +8,14 @@ namespace GameCore.GUI;
 [Tool]
 public abstract partial class OptionContainer : PanelContainer
 {
-    public abstract OptionItem? FocusedItem { get; }
+    protected const int AllSelectedIndex = -1;
+    public virtual bool AllSelected => FocusedIndex == AllSelectedIndex;
+    public virtual bool AllOptionEnabled { get; set; }
+    public virtual bool SingleOptionsEnabled { get; set; }
+    public virtual int PreviousIndex { get; protected set; }
+    public virtual int FocusedIndex { get; protected set; }
     public abstract PackedScene CursorScene { get; set; }
-    public abstract bool DimItems { get; set; }
-    public abstract bool AllOptionEnabled { get; set; }
-    public abstract bool SingleOptionsEnabled { get; set; }
-    public abstract int PreviousIndex { get; }
-    public abstract int FocusedIndex { get; }
-    public abstract bool AllSelected { get; }
+    public abstract OptionItem? FocusedItem { get; }
     public abstract IList<OptionItem> OptionItems { get; }
     public event Action<OptionContainer>? ContainerUpdated;
     public event Action<OptionContainer, Direction>? FocusOOB;
@@ -32,7 +32,7 @@ public abstract partial class OptionContainer : PanelContainer
     public abstract void RefocusItem();
     public abstract void ReplaceChildren(IEnumerable<OptionItem> optionItems);
     public abstract void ResetContainerFocus();
-    public abstract void SelectItem();
+    public virtual void SelectItem() => ItemSelected?.Invoke();
     protected void RaiseContainerUpdated() => ContainerUpdated?.Invoke(this);
     protected void RaiseFocusOOB(Direction direction) => FocusOOB?.Invoke(this, direction);
     protected void RaiseItemFocused() => ItemFocused?.Invoke();

@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3nhril5u8qfu"]
+
+[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_rqed4"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/DropSubMenu.cs" id="2_ain42"]
+[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_88skw"]
+
+[node name="DropSubMenu" instance=ExtResource("1_rqed4")]
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_ain42")
+NodePaths = [NodePath("Foreground/DropOptions")]
+
+[node name="Background" parent="." index="0"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Foreground" parent="." index="1"]
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DropOptions" parent="Foreground" index="0" instance=ExtResource("4_88skw")]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 35.0
+offset_right = 350.0
+offset_bottom = 67.0
+Columns = 1
+FitXToContent = true
+FitYToContent = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/DropOptions/ContentGrid" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 1
+
+[node name="Label" type="Label" parent="Foreground/DropOptions/ContentGrid/MarginContainer" index="0"]
+layout_mode = 2
+text = "How many?"
+
+[node name="GridWindow" parent="Foreground/DropOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
+ClipX = false
+ClipY = false
+
+[editable path="Foreground/DropOptions"]
+[editable path="Foreground/DropOptions/ContentGrid/OptionGrid"]

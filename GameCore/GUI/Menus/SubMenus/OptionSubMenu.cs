@@ -10,7 +10,7 @@ namespace GameCore.GUI;
 [Tool]
 public partial class OptionSubMenu : SubMenu
 {
-    private PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
+    private readonly PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
     private OptionCursor _cursor = null!;
     [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; } = new();
     public OptionContainer? CurrentContainer { get; private set; }
@@ -113,28 +113,27 @@ public partial class OptionSubMenu : SubMenu
         optionContainer.ContainerUpdated += OnContainerChanged;
     }
 
-    private void MoveCursorToItem(OptionItem optionItem)
+    private void MoveCursorToItem(OptionItem? optionItem)
     {
-        if (CurrentContainer == null || CurrentContainer.AllSelected)
+        if (optionItem == null)
             return;
         _cursor.MoveToTarget(optionItem);
     }
 
     private void OnContainerChanged(OptionContainer optionContainer)
     {
-        if (optionContainer == CurrentContainer && optionContainer.FocusedItem != null)
+        if (optionContainer == CurrentContainer)
             MoveCursorToItem(optionContainer.FocusedItem);
     }
 
     private void OnItemFocusedBase()
     {
-        _cursor.Visible = CurrentContainer != null && !CurrentContainer.AllSelected;
+        _cursor.Visible = CurrentContainer?.FocusedItem != null;
         if (CurrentContainer != null)
         {
-            if (CurrentContainer.PreviousIndex != CurrentContainer.FocusedIndex && CurrentState != State.Opening)
+            if (CurrentState != State.Opening)
                 Audio.PlaySoundFX(FocusedSoundPath);
-            if (CurrentContainer.FocusedItem != null)
-                MoveCursorToItem(CurrentContainer.FocusedItem);
+            MoveCursorToItem(CurrentContainer.FocusedItem);
         }
         OnItemFocused();
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.ActionEffects;
@@ -117,13 +118,17 @@ public partial class UseEnemySubMenu : OptionSubMenu
 
     private async Task HandleUse(OptionItem? optionItem)
     {
-        if ((optionItem == null || optionItem.Disabled) && !_enemyContainer.AllOptionEnabled)
-            return;
         IEnumerable<OptionItem> selectedItems;
         if (_enemyContainer.AllOptionEnabled)
             selectedItems = _enemyContainer.GetSelectedItems();
-        else
+        else if (optionItem != null)
             selectedItems = new OptionItem[] { optionItem };
+        else
+            selectedItems = Array.Empty<OptionItem>();
+
+        if (selectedItems.All(x => x.Disabled))
+            return;
+
         List<AActor> targets = new();
         foreach (OptionItem item in selectedItems)
         {
@@ -133,6 +138,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
                 continue;
             targets.Add(actorBody.Actor);
         }
+        AActor? user = _gameSession.MainParty?.Actors.First();
 
         _areaScene?.ColorAdjustment.Reset();
         foreach (AActorBody enemy in _enemies)
@@ -142,7 +148,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
         _inventory.RemoveItem(_itemStack);
         if (_actionEffect.IsActionSequence)
             _gameSession.StartActionSequence(targets);
-        await _actionEffect.Use(_gameSession.MainParty.Actors.First(), targets, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
+        await _actionEffect.Use(user, targets, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
         if (_actionEffect.IsActionSequence)
             _gameSession.StopActionSequence();
     }

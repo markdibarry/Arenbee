@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.ActionEffects;
@@ -25,26 +24,15 @@ public class Darts : IActionEffect
     public async Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
     {
         Random random = new();
-        GameSession? session = (GameSession)Locator.Session!;
-        ColorAdjustment colorAdjustment = session.CurrentAreaScene?.ColorAdjustment!;
-
-        Tween tweenStart = session.CreateTween();
-        tweenStart.TweenProperty(colorAdjustment, nameof(colorAdjustment.Saturation), -1f, 0.5f);
-        await session.ToSignal(tweenStart, Tween.SignalName.Finished);
-
         var dartTexture = GD.Load<Texture2D>("Arenbee/ActionEffects/Darts/Dart.png");
         for (int i = 0; i < 8; i++)
         {
             AActor target = targets[random.Next(0, targets.Count)];
             await ShootDart(dartTexture, user, target, value1);
         }
-
-        Tween tweenEnd = session.CreateTween();
-        tweenEnd.TweenProperty(colorAdjustment, nameof(colorAdjustment.Saturation), 0f, 0.5f);
-        await session.ToSignal(tweenEnd, Tween.SignalName.Finished);
     }
 
-    private async Task ShootDart(Texture2D dartTexture, AActor user, AActor target, int value1)
+    private static async Task ShootDart(Texture2D dartTexture, AActor user, AActor target, int value1)
     {
         Sprite2D sprite = new()
         {

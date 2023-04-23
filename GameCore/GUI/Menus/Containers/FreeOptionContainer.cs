@@ -10,21 +10,11 @@ namespace GameCore.GUI;
 [Tool]
 public partial class FreeOptionContainer : OptionContainer
 {
-    private const int AllSelectedIndex = -1;
     private Control _cursors = null!;
-    private int _focusedIndex;
     private Control _optionItemContainer = null!;
-    private int _previousIndex;
     [Export] public override PackedScene CursorScene { get; set; } = GD.Load<PackedScene>(HandCursor.GetScenePath());
-    [Export] public override bool DimItems { get; set; }
-    [Export] public override bool AllOptionEnabled { get; set; }
-    [Export] public override bool SingleOptionsEnabled { get; set; }
-    public override OptionItem? FocusedItem => OptionItems.ElementAtOrDefault(_focusedIndex);
-    public override bool AllSelected => _focusedIndex == AllSelectedIndex;
-    public override int FocusedIndex => _focusedIndex;
+    public override OptionItem? FocusedItem => OptionItems.ElementAtOrDefault(FocusedIndex);
     public override IList<OptionItem> OptionItems { get; } = new List<OptionItem>();
-    public override int PreviousIndex => _previousIndex;
-
 
     public override void _Ready()
     {
@@ -69,12 +59,12 @@ public partial class FreeOptionContainer : OptionContainer
                 return;
             index = AllSelectedIndex;
         }
-        _previousIndex = _focusedIndex;
+        PreviousIndex = FocusedIndex;
         if (OptionItems.Count == 0)
             return;
         if (FocusedItem != null)
             FocusedItem.Focused = false;
-        _focusedIndex = GetValidIndex(index);
+        FocusedIndex = GetValidIndex(index);
         HandleSelectAll();
         if (FocusedItem != null)
             FocusedItem.Focused = true;
@@ -98,9 +88,7 @@ public partial class FreeOptionContainer : OptionContainer
             AddOption(item);
     }
 
-    public override void ResetContainerFocus() => _focusedIndex = 0;
-
-    public override void SelectItem() => RaiseItemSelected();
+    public override void ResetContainerFocus() => FocusedIndex = 0;
 
     private void AddItemToSelection(OptionItem item)
     {

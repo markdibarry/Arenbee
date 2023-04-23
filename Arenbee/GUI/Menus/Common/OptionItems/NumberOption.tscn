@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cb7jtcx7ip2j8"]
+
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/NumberOption.cs" id="1_2md8u"]
+[ext_resource type="Texture2D" uid="uid://dvtn3l1ldd2k5" path="res://GameCore/GUI/Cursors/arrowLeftSmall.png" id="1_ld3l1"]
+
+[node name="NumberOption" type="MarginContainer"]
+modulate = Color(0.7, 0.7, 0.7, 1)
+script = ExtResource("1_2md8u")
+LabelText = "asd"
+DimWhenUnfocused = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ArrowLeft" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("1_ld3l1")
+stretch_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArrowRight" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("1_ld3l1")
+stretch_mode = 2
+flip_h = true

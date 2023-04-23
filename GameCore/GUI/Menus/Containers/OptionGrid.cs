@@ -30,7 +30,7 @@ public partial class OptionGrid : MarginContainer
     private VScrollBar _vScrollBar = null!;
     private Control _scrollBars = null!;
     [ExportGroup("Selecting")]
-    [Export] public PackedScene CursorScene { get; set; } = null!;
+    [Export] public PackedScene CursorScene { get; set; } = GD.Load<PackedScene>(HandCursor.GetScenePath());
     [Export] public bool DimItems { get; set; }
     [Export] public bool FocusWrap { get; set; }
     [Export] public bool AllOptionEnabled { get; set; }
@@ -176,8 +176,6 @@ public partial class OptionGrid : MarginContainer
         FocusedIndex = 0;
         GridContainer.Position = Vector2.Zero;
     }
-
-    public void SelectItem() => ItemSelected?.Invoke();
 
     private void AddItemToSelection(OptionItem item)
     {
@@ -422,7 +420,6 @@ public partial class OptionGrid : MarginContainer
         _hScrollBar = GetNode<HScrollBar>("%HScrollBar");
         _vScrollBar = GetNode<VScrollBar>("%VScrollBar");
         _cursors = GetNode<Control>("Cursors");
-        CursorScene ??= GD.Load<PackedScene>(HandCursor.GetScenePath());
     }
 
     private void SubscribeEvents()
