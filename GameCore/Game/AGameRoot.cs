@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GameCore.Audio;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.SaveData;

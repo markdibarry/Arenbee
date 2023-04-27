@@ -91,6 +91,9 @@ public partial class ActorData : AActorData
             stats: StatsData.StatLookup,
             modifiers: StatsData.Modifiers);
 
+        if (inventory.Items.Count == 0)
+            return actor;
+
         foreach (EquipmentSlotData slotData in EquipmentSlotData)
         {
             EquipmentSlot? slot = equipment.GetSlot(slotData.SlotCategoryId);

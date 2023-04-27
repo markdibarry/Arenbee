@@ -7,7 +7,6 @@ using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -39,6 +38,8 @@ public partial class MainSubMenu : OptionSubMenu
     {
         PreventCancel = true;
         PreventCloseAll = true;
+        var options = GetMenuOptions();
+        _startOptions.ReplaceChildren(options);
     }
 
     protected override void OnItemSelected()
@@ -62,12 +63,6 @@ public partial class MainSubMenu : OptionSubMenu
         _startOptions = OptionContainers.Find(x => x.Name == "MainOptions");
     }
 
-    protected override void SetupOptions()
-    {
-        var options = GetMenuOptions();
-        _startOptions.ReplaceChildren(options);
-    }
-
     private List<TextOption> GetMenuOptions()
     {
         PackedScene textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
@@ -76,7 +71,7 @@ public partial class MainSubMenu : OptionSubMenu
         foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = Tr(menuKey);
+            option.LabelText = this.TrS(menuKey);
             option.OptionData = menuKey;
             if (menuKey == Localization.Menus.Menus_Title_Continue && gameSaves.Count == 0)
                 option.Disabled = true;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;

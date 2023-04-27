@@ -1,5 +1,4 @@
 ﻿using Arenbee.Items;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -19,19 +18,25 @@ public partial class DropSubMenu : OptionSubMenu
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private ItemStack _itemStack = null!;
-    private Inventory _inventory;
+    private readonly Inventory _inventory;
     private PackedScene _numberOptionScene = GD.Load<PackedScene>(NumberOption.GetScenePath());
     private OptionContainer _optionContainer = null!;
     private NumberOption _numberOption = null!;
     private int _count = 1;
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         _optionContainer = OptionContainers.Find(x => x.Name == "DropOptions");
         DisplayOptions();
     }
 
-    public override void SetupData(object? data)
+    protected override void MockData()
+    {
+        AItem item = Locator.ItemDB.GetItem(ItemIds.Potion)!;
+        _itemStack = new ItemStack(item, 3);
+    }
+
+    protected override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -60,8 +65,11 @@ public partial class DropSubMenu : OptionSubMenu
     private void DisplayOptions()
     {
         _numberOption = _numberOptionScene.Instantiate<NumberOption>();
-        _numberOption.LabelText = $"{_count}/{_itemStack.Count}";
-        _numberOption.Disabled = _itemStack.Count <= 0;
+        if (_itemStack != null)
+        {
+            _numberOption.LabelText = $"{_count}/{_itemStack.Count}";
+            _numberOption.Disabled = _itemStack.Count <= 0;
+        }
         _optionContainer.AddOption(_numberOption);
     }
 
@@ -73,5 +81,6 @@ public partial class DropSubMenu : OptionSubMenu
         else if (_count > _itemStack.Count)
             _count = 1;
         _numberOption.LabelText = $"{_count}/{_itemStack.Count}";
+        Audio.PlaySoundFX(FocusedSoundPath);
     }
 }

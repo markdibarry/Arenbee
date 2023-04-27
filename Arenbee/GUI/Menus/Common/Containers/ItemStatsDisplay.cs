@@ -10,6 +10,7 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ItemStatsDisplay : PanelContainer
 {
+    private GridContainer _gridContainer = null!;
     private StatContainer _hpContainer = null!;
     private StatContainer _mpContainer = null!;
     private StatContainer _attackContainer = null!;
@@ -21,17 +22,28 @@ public partial class ItemStatsDisplay : PanelContainer
 
     public override void _Ready()
     {
-        base._Ready();
-        GridContainer gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
-        _hpContainer = gridContainer.GetNode<StatContainer>("HP");
-        _mpContainer = gridContainer.GetNode<StatContainer>("MP");
-        _attackContainer = gridContainer.GetNode<StatContainer>("Attack");
-        _defenseContainer = gridContainer.GetNode<StatContainer>("Defense");
-        _mAttackContainer = gridContainer.GetNode<StatContainer>("M Attack");
-        _mDefenseContainer = gridContainer.GetNode<StatContainer>("M Defense");
+        _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
+        _hpContainer = _gridContainer.GetNode<StatContainer>("HP");
+        _mpContainer = _gridContainer.GetNode<StatContainer>("MP");
+        _attackContainer = _gridContainer.GetNode<StatContainer>("Attack");
+        _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
+        _mAttackContainer = _gridContainer.GetNode<StatContainer>("MAttack");
+        _mDefenseContainer = _gridContainer.GetNode<StatContainer>("MDefense");
         _elementAtkContainer = GetNode<ElementContainer>("VBoxContainer/EAtk");
         _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
+        SetLabelContainer(_hpContainer);
+        SetLabelContainer(_mpContainer);
+        SetLabelContainer(_attackContainer);
+        SetLabelContainer(_defenseContainer);
+        SetLabelContainer(_mAttackContainer);
+        SetLabelContainer(_mDefenseContainer);
         UpdateTypes();
+    }
+
+    private void SetLabelContainer(StatContainer statContainer)
+    {
+        LabelContainer label = _gridContainer.GetNode<LabelContainer>(statContainer.Name + "Label");
+        statContainer.SetLabelContainer(label);
     }
 
     public void UpdateTypes()

@@ -16,6 +16,12 @@
     <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Arenbee\GUI\Localization\StatTypes.csv">
+      <Generator>CSVConstants</Generator>
+      <LastGenOutput>StatTypes.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="GameCore\GUI\Dialogs\dialog_schema.json" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +35,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Menus.csv</DependentUpon>
+    </Compile>
+    <Compile Update="Arenbee\GUI\Localization\StatTypes.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StatTypes.csv</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

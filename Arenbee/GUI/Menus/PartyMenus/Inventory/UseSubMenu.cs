@@ -2,7 +2,6 @@
 using Arenbee.ActionEffects;
 using Arenbee.Items;
 using GameCore.ActionEffects;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;
@@ -24,13 +23,13 @@ public partial class UseSubMenu : OptionSubMenu
     private OptionContainer _optionContainer = null!;
     private readonly ActionEffectDB _actionEffectDB = (ActionEffectDB)Locator.ActionEffectDB;
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
         DisplayOptions();
     }
 
-    public override void SetupData(object? data)
+    protected override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -56,14 +55,15 @@ public partial class UseSubMenu : OptionSubMenu
         option.LabelText = UseOptions.Use;
         option.OptionData = UseOptions.Use;
         option.Disabled = true;
-        if (_itemStack.Item.UseData != null)
+        if (_itemStack?.Item.UseData != null)
             option.Disabled = _itemStack.Count <= 0;
         options.Add(option);
 
         option = _textOptionScene.Instantiate<TextOption>();
         option.LabelText = UseOptions.Drop;
         option.OptionData = UseOptions.Drop;
-        option.Disabled = !_itemStack.Item.IsDroppable || _itemStack.Count <= 0;
+        if (_itemStack != null)
+            option.Disabled = !_itemStack.Item.IsDroppable || _itemStack.Count <= 0;
         options.Add(option);
         _optionContainer.ReplaceChildren(options);
     }

@@ -2,7 +2,6 @@
 using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -19,7 +18,7 @@ public partial class StatsSubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly Party _playerParty;
+    private Party _playerParty;
     private ActorStatsDisplay _statsDisplay = null!;
     private OptionContainer _partyOptions = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
@@ -28,12 +27,28 @@ public partial class StatsSubMenu : OptionSubMenu
     {
         base.SetNodeReferences();
         _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
-        _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("StatsDisplay");
+        _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("%StatsDisplay");
     }
 
-    protected override void SetupOptions()
+    protected override void MockData()
     {
-        UpdatePartyMemberOptions();
+        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _playerParty = new Party("temp", new List<Actor> { actor }, new());
+    }
+
+    protected override void SetupData(object? data)
+    {
+        if (data is not int margin)
+            return;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.RemoveThemeConstantOverride("margin_left");
+        marginContainer.AddThemeConstantOverride("margin_left", margin);
+    }
+
+    protected override void CustomSetup()
+    {
+        List<TextOption> options = GetPartyMemberOptions();
+        _partyOptions.ReplaceChildren(options);
     }
 
     protected override void OnItemFocused()
@@ -45,8 +60,8 @@ public partial class StatsSubMenu : OptionSubMenu
 
     private List<TextOption> GetPartyMemberOptions()
     {
-        var options = new List<TextOption>();
-        foreach (var actor in _playerParty.Actors)
+        List<TextOption> options = new();
+        foreach (Actor actor in _playerParty.Actors)
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
             textOption.OptionData = actor;
@@ -54,11 +69,5 @@ public partial class StatsSubMenu : OptionSubMenu
             options.Add(textOption);
         }
         return options;
-    }
-
-    private void UpdatePartyMemberOptions()
-    {
-        List<TextOption> options = GetPartyMemberOptions();
-        _partyOptions.ReplaceChildren(options);
     }
 }

@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://r1eeg7bylukl"
+
+[deps]
+
+files=["res://Arenbee/GUI/Localization/StatTypes.en.translation", "res://Arenbee/GUI/Localization/StatTypes.es.translation"]
+
+source_file="res://Arenbee/GUI/Localization/StatTypes.csv"
+dest_files=["res://Arenbee/GUI/Localization/StatTypes.en.translation", "res://Arenbee/GUI/Localization/StatTypes.es.translation"]
+
+[params]
+
+compress=true
+delimiter=0

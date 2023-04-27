@@ -10,7 +10,6 @@ using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;
@@ -25,7 +24,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         GameSession? gameSession = Locator.Session as GameSession;
         _party = gameSession?.MainParty ?? new Party("temp");
-        _inventory = gameSession?.MainParty?.Inventory ?? new Inventory();
+        _inventory = _party.Inventory;
         _gameSession = gameSession!;
     }
 
@@ -33,14 +32,23 @@ public partial class UsePartySubMenu : OptionSubMenu
     private readonly AActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
     private readonly GameSession _gameSession;
     private readonly Inventory _inventory;
-    private readonly Party _party;
-    private IActionEffect _actionEffect = null!;
+    private Party _party;
+    private IActionEffect? _actionEffect;
     private ItemStack _itemStack = null!;
     private PackedScene _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
     private OptionContainer _partyContainer = null!;
     private AItem Item => _itemStack.Item;
 
-    public override void SetupData(object? data)
+    protected override void MockData()
+    {
+        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor(_inventory)!;
+        _party = new Party("temp", new List<Actor> { actor }, _inventory);
+        AItem item = Locator.ItemDB.GetItem(ItemIds.Potion)!;
+        _itemStack = new ItemStack(item, 2);
+        _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
+    }
+
+    protected override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -48,10 +56,9 @@ public partial class UsePartySubMenu : OptionSubMenu
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         DisplayOptions();
-        base.SetupOptions();
     }
 
     protected override void OnItemSelected()
@@ -63,7 +70,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         base.SetNodeReferences();
         _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions")!;
-        if (_itemStack == null)
+        if (_itemStack == null || _actionEffect == null)
             return;
         if (_actionEffect.TargetType == (int)TargetType.PartyMemberAll)
         {
@@ -84,8 +91,8 @@ public partial class UsePartySubMenu : OptionSubMenu
 
             option.OptionData = actor;
             option.NameLabel.Text = actor.Name;
-            option.HPContainer.StatNameText = "HP";
-            option.MPContainer.StatNameText = "MP";
+            //option.HPContainer.StatNameText = "HP";
+            //option.MPContainer.StatNameText = "MP";
         }
         UpdatePartyDisplay();
     }
@@ -108,8 +115,8 @@ public partial class UsePartySubMenu : OptionSubMenu
                 continue;
             option.Disabled = !canUse || _itemStack.Count <= 0;
             Stats stats = actor.Stats;
-            option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
-            option.HPContainer.StatMaxValueText = stats.MaxHP.ToString();
+            option.HPContainer.Text = stats.CurrentHP.ToString();
+            option.HPContainer.MaxText = stats.MaxHP.ToString();
         }
     }
 
@@ -122,10 +129,10 @@ public partial class UsePartySubMenu : OptionSubMenu
             bool canUse = _actionEffect.CanUse(null, new[] { actor }, (int)ActionType.Item, Item.UseData.Value1, Item.UseData.Value2);
             option.Disabled = !canUse || _itemStack.Count <= 0;
             Stats stats = actor.Stats;
-            option.HPContainer.StatCurrentValueText = stats.CurrentHP.ToString();
-            option.HPContainer.StatMaxValueText = stats.MaxHP.ToString();
-            option.MPContainer.StatCurrentValueText = "0";
-            option.MPContainer.StatMaxValueText = "0";
+            option.HPContainer.Text = stats.CurrentHP.ToString();
+            option.HPContainer.MaxText = stats.MaxHP.ToString();
+            option.MPContainer.Text = "0";
+            option.MPContainer.MaxText = "0";
         }
     }
 

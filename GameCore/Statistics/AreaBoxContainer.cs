@@ -1,4 +1,4 @@
-﻿using GameCore.Extensions;
+﻿using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Statistics;

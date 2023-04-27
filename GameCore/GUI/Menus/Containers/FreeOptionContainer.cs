@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore.Enums;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -33,14 +33,6 @@ public partial class FreeOptionContainer : OptionContainer
         _optionItemContainer.QueueFreeAllChildren();
     }
 
-    public override void FocusContainer(int index)
-    {
-        if (SingleOptionsEnabled)
-            FocusItem(index);
-        else if (AllOptionEnabled)
-            FocusItem(AllSelectedIndex);
-    }
-
     public override void FocusDirection(Direction direction)
     {
         int nextIndex = FocusedIndex;
@@ -51,6 +43,16 @@ public partial class FreeOptionContainer : OptionContainer
         FocusItem(nextIndex);
     }
 
+    /// <summary>
+    /// Focuses the item with the index specified.
+    /// <para>If only able to select all options, the index for "all" will be selected.<br/>
+    /// Updates the previous index. Removes focus from previous item.<br/>
+    /// If "all" is to be focused, all selectable items will be flagged as "selected".<br/>
+    /// If the previous item was "all", all selectable items have their "selected" flag removed.<br/>
+    /// Invokes the "ItemFocused" event.
+    /// </para>
+    /// </summary>
+    /// <param name="index"></param>
     public override void FocusItem(int index)
     {
         if (!SingleOptionsEnabled)

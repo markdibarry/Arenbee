@@ -2,7 +2,6 @@
 using Arenbee.Actors;
 using Arenbee.Statistics;
 using GameCore.Actors;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Statistics;
 using GameCore.Utility;

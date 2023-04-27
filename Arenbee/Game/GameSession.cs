@@ -7,7 +7,6 @@ using Arenbee.GUI.Menus.PartyMenus;
 using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.SaveData;
@@ -46,7 +45,7 @@ public partial class GameSession : AGameSession
         // TODO: Make game
         if (CurrentAreaScene == null)
         {
-            var demoAreaScene = GDEx.Instantiate<AreaScene>(Paths.DemoLevel2);
+            var demoAreaScene = GDEx.Instantiate<AreaScene>(Paths.DemoLevel1);
             AddAreaScene(demoAreaScene);
         }
     }

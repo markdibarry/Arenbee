@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -18,16 +17,14 @@ public partial class EquipmentSubMenu : OptionSubMenu
     {
         GameSession? gameSession = Locator.Session as GameSession;
         _partyActors = gameSession?.MainParty?.Actors ?? Array.Empty<Actor>();
-        _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
-        _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private OptionContainer _partyOptions = null!;
     private OptionContainer _equipmentOptions = null!;
-    private PackedScene _equipSelectOptionScene;
-    private readonly IReadOnlyCollection<Actor> _partyActors;
-    private PackedScene _textOptionScene;
+    private PackedScene _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
+    private IReadOnlyCollection<Actor> _partyActors;
+    private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -43,7 +40,13 @@ public partial class EquipmentSubMenu : OptionSubMenu
         base.ResumeSubMenu();
     }
 
-    protected override void SetupOptions()
+    protected override void MockData()
+    {
+        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _partyActors = new List<Actor> { actor };
+    }
+
+    protected override void CustomSetup()
     {
         UpdatePartyMemberOptions();
     }

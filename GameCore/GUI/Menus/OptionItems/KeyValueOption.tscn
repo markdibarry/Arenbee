@@ -14,27 +14,19 @@ theme_override_constants/margin_bottom = 1
 script = ExtResource("3_f7kpw")
 KeyText = "Orange"
 ValueText = "x5"
+DimWhenUnfocused = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 37.0
-offset_bottom = 11.0
 size_flags_horizontal = 3
 
 [node name="Key" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_right = 24.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
 text = "Orange"
 
 [node name="Value" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_left = 28.0
-offset_right = 36.0
-offset_bottom = 10.0
 text = "x5"

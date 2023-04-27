@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
 using GameCore;
-using GameCore.Extensions;
 using GameCore.Items;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Items;

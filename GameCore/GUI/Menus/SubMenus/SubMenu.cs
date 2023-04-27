@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GameCore.Audio;
-using GameCore.Extensions;
 using GameCore.Input;
 using GameCore.Utility;
 using Godot;
@@ -20,11 +19,10 @@ public partial class SubMenu : Control
         get => _dim;
         set
         {
-            if (Foreground != null)
-            {
-                Foreground.Modulate = value ? Godot.Colors.White.Darkened(0.3f) : Godot.Colors.White;
-                _dim = value;
-            }
+            if (Foreground == null)
+                return;
+            Foreground.Modulate = value ? Godot.Colors.White.Darkened(0.3f) : Godot.Colors.White;
+            _dim = value;
         }
     }
     public State CurrentState { get; protected set; }
@@ -51,15 +49,20 @@ public partial class SubMenu : Control
     {
         TempColor = Modulate;
         Modulate = Godot.Colors.Transparent;
-        if (this.IsSceneRoot())
+        if (this.IsToolDebugMode())
             _ = InitAsync(null!, null!);
     }
+
+    /// <summary>
+    /// A method for logic pertaining to mocking data for debugging purposes
+    /// </summary>
+    protected virtual void MockData() { }
 
     /// <summary>
     /// Receives custom data from previous layer upon opening.
     /// </summary>
     /// <param name="data"></param>
-    public virtual void SetupData(object? data) { }
+    protected virtual void SetupData(object? data) { }
 
     /// <summary>
     /// Receives custom data from previous layer upon closing.
@@ -79,10 +82,12 @@ public partial class SubMenu : Control
     {
         GUIController = guiController;
         Menu = menu;
-        SetupData(data);
+        if (this.IsToolDebugMode())
+            MockData();
+        else
+            SetupData(data);
         SetNodeReferences();
         CustomSetup();
-        PreWaitFrameSetup();
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         Modulate = TempColor;
         await AnimateOpenAsync();
@@ -146,12 +151,6 @@ public partial class SubMenu : Control
     }
 
     protected virtual void CustomSetup() { }
-
-    /// <summary>
-    /// Logic used for setup before needing to wait a frame to adjust.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual void PreWaitFrameSetup() { }
 
     /// <summary>
     /// Logic used for setup after the Controls have adjusted.

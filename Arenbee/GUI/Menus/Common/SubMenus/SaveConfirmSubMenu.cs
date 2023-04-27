@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.SaveData;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -20,14 +19,14 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         Localization.Menus.Menus_SaveConfirm_No
     };
 
-    public override void SetupData(object? data)
+    protected override void SetupData(object? data)
     {
         if (data is not string fileName)
             return;
         _fileName = fileName;
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         OptionContainer? saveOptions = OptionContainers.First(x => x.Name == "SaveOptions");
         saveOptions.ReplaceChildren(GetMenuOptions());
@@ -63,7 +62,7 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         foreach (string menuKey in _menuKeys)
         {
             TextOption option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = Tr(menuKey);
+            option.LabelText = this.TrS(menuKey);
             option.OptionData = menuKey;
             options.Add(option);
         }

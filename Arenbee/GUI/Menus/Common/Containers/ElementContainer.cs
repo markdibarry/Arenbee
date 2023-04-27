@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Statistics;
-using GameCore.Extensions;
+using GameCore.GUI;
 using GameCore.Statistics;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -49,7 +50,7 @@ public partial class ElementContainer : HBoxContainer
     public void UpdateType(StatCategory category)
     {
         Elements.QueueFreeAllChildren();
-        StatNameText = Tr(StatTypeDB.GetStatCategoryData(category).Abbreviation) + ":";
+        StatNameText = this.TrS(StatTypeDB.GetStatCategoryData(category).Abbreviation) + ":";
         _statCategory = category;
         if (category == StatCategory.AttackElement)
         {

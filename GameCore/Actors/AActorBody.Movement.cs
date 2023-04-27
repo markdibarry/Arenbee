@@ -1,5 +1,5 @@
-﻿using GameCore.Extensions;
-using GameCore.Input;
+﻿using GameCore.Input;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Actors;

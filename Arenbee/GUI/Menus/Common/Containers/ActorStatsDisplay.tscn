@@ -1,127 +1,105 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://ctnon04epm3od"]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.cs" id="1_qpsjs"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.tscn" id="2_y2ynj"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_k2ed3"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ElementContainer.tscn" id="4_1eepv"]
+[ext_resource type="PackedScene" uid="uid://cjyghisxxgemr" path="res://Arenbee/GUI/Menus/Common/Containers/LabelContainer.tscn" id="1_0yp8p"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.cs" id="1_8vqha"]
+[ext_resource type="PackedScene" uid="uid://cy3ykmrt2ywha" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.tscn" id="2_vs65o"]
+[ext_resource type="PackedScene" uid="uid://dcwfbr5idp3fx" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7l17g"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ElementContainer.tscn" id="4_rau1c"]
 
-[node name="StatsDisplay" type="PanelContainer"]
-offset_right = 130.0
-offset_bottom = 74.0
-script = ExtResource("1_qpsjs")
+[node name="ActorStatsDisplay" type="PanelContainer"]
+offset_right = 14.0
+offset_bottom = 14.0
+script = ExtResource("1_8vqha")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 131.0
-offset_bottom = 67.0
 theme_override_constants/separation = 0
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
-offset_right = 124.0
-offset_bottom = 40.0
 theme_override_constants/v_separation = 0
-columns = 2
+columns = 4
 
-[node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource("2_y2ynj")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 0)
+[node name="LevelLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
-offset_right = 60.0
-offset_bottom = 10.0
-StatNameText = "Stat:"
-StatValueText = "999"
-
-[node name="Spacer" type="MarginContainer" parent="VBoxContainer/GridContainer"]
-layout_mode = 2
-offset_left = 64.0
-offset_right = 124.0
-offset_bottom = 10.0
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+Text = "Level"
 
-[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_k2ed3")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
+[node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
-offset_top = 10.0
-offset_right = 60.0
-offset_bottom = 20.0
-StatNameText = "HP:"
-StatCurrentValueText = "999"
-StatMaxValueText = "999"
+size_flags_horizontal = 8
+Text = "1"
 
-[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_k2ed3")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
+[node name="Spacer1" type="MarginContainer" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
-offset_left = 64.0
-offset_top = 10.0
-offset_right = 124.0
-offset_bottom = 20.0
-StatNameText = "MP:"
-StatCurrentValueText = "999"
-StatMaxValueText = "999"
 
-[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_y2ynj")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 0)
+[node name="Spacer2" type="MarginContainer" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
-offset_top = 20.0
-offset_right = 60.0
-offset_bottom = 30.0
-StatNameText = "Stat:"
-StatValueText = "999"
 
-[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_y2ynj")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 0)
+[node name="HPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
-offset_left = 64.0
-offset_top = 20.0
-offset_right = 124.0
-offset_bottom = 30.0
-StatNameText = "Stat:"
-StatValueText = "999"
+Text = "HP"
 
-[node name="M Attack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_y2ynj")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 0)
+[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
 layout_mode = 2
-offset_top = 30.0
-offset_right = 60.0
-offset_bottom = 40.0
-StatNameText = "Stat:"
-StatValueText = "999"
+size_flags_horizontal = 8
+MaxText = "999"
+Text = "100"
 
-[node name="M Defense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_y2ynj")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(36, 0)
+[node name="MPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
-offset_left = 64.0
-offset_top = 30.0
-offset_right = 124.0
-offset_bottom = 40.0
-StatNameText = "Stat:"
-StatValueText = "999"
+Text = "MP"
 
-[node name="EAtk" parent="VBoxContainer" instance=ExtResource("4_1eepv")]
-unique_name_in_owner = true
+[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
 layout_mode = 2
-offset_top = 40.0
-offset_right = 124.0
-offset_bottom = 50.0
-StatNameText = "EAtk:"
+size_flags_horizontal = 8
+MaxText = "999"
+Text = "100"
 
-[node name="EDef" parent="VBoxContainer" instance=ExtResource("4_1eepv")]
+[node name="AttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+layout_mode = 2
+size_flags_horizontal = 3
+Text = "Atk"
+
+[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+layout_mode = 2
+size_flags_horizontal = 8
+Text = "1"
+
+[node name="DefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+layout_mode = 2
+size_flags_horizontal = 3
+Text = "Def"
+
+[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+layout_mode = 2
+size_flags_horizontal = 8
+Text = "1"
+
+[node name="MAttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+layout_mode = 2
+size_flags_horizontal = 3
+Text = "M.Atk"
+
+[node name="MAttack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+layout_mode = 2
+size_flags_horizontal = 8
+Text = "1"
+
+[node name="MDefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+layout_mode = 2
+size_flags_horizontal = 3
+Text = "M.Def"
+
+[node name="MDefense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+layout_mode = 2
+size_flags_horizontal = 8
+Text = "1"
+
+[node name="EAtk" parent="VBoxContainer" instance=ExtResource("4_rau1c")]
 unique_name_in_owner = true
 layout_mode = 2
-offset_top = 50.0
-offset_right = 124.0
-offset_bottom = 60.0
-StatNameText = "EDef:"
+
+[node name="EDef" parent="VBoxContainer" instance=ExtResource("4_rau1c")]
+unique_name_in_owner = true
+layout_mode = 2

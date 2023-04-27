@@ -1,45 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cy3ykmrt2ywha"]
 
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.cs" id="1_1xg6c"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/Containers/StatContainer.cs" id="1_lgggj"]
 
 [node name="StatContainer" type="MarginContainer"]
-minimum_size = Vector2(36, 0)
-offset_right = 72.0
-offset_bottom = 26.0
-size_flags_horizontal = 3
-size_flags_vertical = 0
-script = ExtResource( "1_1xg6c" )
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 10
+script = ExtResource("1_lgggj")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_right = 72.0
-offset_bottom = 10.0
-size_flags_vertical = 0
-
-[node name="KeyContainer" type="MarginContainer" parent="HBoxContainer"]
-offset_right = 18.0
-offset_bottom = 10.0
-size_flags_vertical = 0
-
-[node name="Key" type="Label" parent="HBoxContainer/KeyContainer"]
+[node name="Label" type="Label" parent="."]
 unique_name_in_owner = true
-offset_right = 18.0
-offset_bottom = 10.0
-size_flags_horizontal = 3
-size_flags_vertical = 0
-text = "Stat:"
-
-[node name="ValueContainer" type="MarginContainer" parent="HBoxContainer"]
-offset_left = 22.0
-offset_right = 72.0
-offset_bottom = 10.0
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="Value" type="Label" parent="HBoxContainer/ValueContainer"]
-unique_name_in_owner = true
-offset_left = 38.0
-offset_right = 50.0
-offset_bottom = 10.0
-size_flags_horizontal = 8
-size_flags_vertical = 0
-text = "999"
+layout_mode = 2

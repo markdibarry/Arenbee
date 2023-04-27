@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore.Enums;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -25,12 +25,6 @@ public partial class OptionSubMenu : SubMenu
             throw new Exception("Current container is null!");
         FocusContainer(CurrentContainer);
         base.ResumeSubMenu();
-    }
-
-    protected sealed override void PreWaitFrameSetup()
-    {
-        SetupOptions();
-        base.PreWaitFrameSetup();
     }
 
     protected sealed override void PostWaitFrameSetup()
@@ -71,11 +65,6 @@ public partial class OptionSubMenu : SubMenu
     protected virtual void OnItemFocused() { }
 
     protected virtual void OnItemSelected() { }
-
-    /// <summary>
-    /// Overrides the items that should display
-    /// </summary>
-    protected virtual void SetupOptions() { }
 
     protected override void SetNodeReferences()
     {
@@ -131,7 +120,7 @@ public partial class OptionSubMenu : SubMenu
         _cursor.Visible = CurrentContainer?.FocusedItem != null;
         if (CurrentContainer != null)
         {
-            if (CurrentState != State.Opening)
+            if (CurrentContainer.FocusedIndex != CurrentContainer.PreviousIndex)
                 Audio.PlaySoundFX(FocusedSoundPath);
             MoveCursorToItem(CurrentContainer.FocusedItem);
         }

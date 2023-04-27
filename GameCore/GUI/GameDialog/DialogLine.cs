@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using GameCore.Utility;
 
 namespace GameCore.GUI.GameDialog;
 
@@ -13,7 +14,7 @@ public class DialogLine : IStatement
         _interpreter = interpreter;
         _script = script;
         _lineData = lineData;
-        Text = dialog.Tr(lineData.Text);
+        Text = dialog.TrS(lineData.Text);
 
         var lineSpeakers = new Speaker[_lineData.SpeakerIndices.Length];
         for (int i = 0; i < _lineData.SpeakerIndices.Length; i++)
@@ -88,6 +89,8 @@ public class DialogLine : IStatement
         bool TryAddTextEvent(string tagContent)
         {
             if (!int.TryParse(tagContent, out int intValue))
+                return false;
+            if (_lineData.InstructionIndices.Length == 0)
                 return false;
             sb.Append(Text[appendStart..i]);
             ushort[] instructions = _script.Instructions[_lineData.InstructionIndices[intValue]];

@@ -97,12 +97,12 @@ public partial class GridOptionContainer : OptionContainer
     public override int PreviousIndex
     {
         get => OptionGrid.PreviousIndex;
-        protected set { }
+        protected set => OptionGrid.PreviousIndex = value;
     }
     public override int FocusedIndex
     {
         get => OptionGrid.FocusedIndex;
-        protected set { }
+        protected set => OptionGrid.FocusedIndex = value;
     }
     public override bool AllSelected => OptionGrid.AllSelected;
     public override IList<OptionItem> OptionItems => OptionGrid.OptionItems;
@@ -118,8 +118,6 @@ public partial class GridOptionContainer : OptionContainer
     public override void AddOption(OptionItem optionItem) => OptionGrid.AddGridChild(optionItem);
 
     public override void Clear() => OptionGrid.ClearOptionItems();
-
-    public override void FocusContainer(int index) => OptionGrid.FocusContainer(index);
 
     public override void FocusItem(int index) => OptionGrid.FocusItem(index);
 
@@ -183,6 +181,8 @@ public partial class GridOptionContainer : OptionContainer
         OptionGrid.Columns = Columns;
         RefreshMaxSize();
         SubscribeEvents();
+        if (AllSelected)
+            PreviousIndex = -1;
     }
 
     private void OnItemSelected() => RaiseItemSelected();

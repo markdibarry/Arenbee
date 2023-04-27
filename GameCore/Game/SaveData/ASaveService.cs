@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using Godot;
 using System.Text.Json.Serialization.Metadata;
-using GameCore.Statistics;
 
 namespace GameCore.SaveData;
 

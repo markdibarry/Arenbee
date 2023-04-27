@@ -9,7 +9,6 @@ using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
 using GameCore.AreaScenes;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;
@@ -41,7 +40,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     private MarginContainer _messageContainer = null!;
     private Label _messageLabel = null!;
 
-    public override void SetupData(object? data)
+    protected override void SetupData(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -52,10 +51,9 @@ public partial class UseEnemySubMenu : OptionSubMenu
             .ToList() ?? new();
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         DisplayOptions();
-        base.SetupOptions();
     }
 
     protected override async Task AnimateOpenAsync()

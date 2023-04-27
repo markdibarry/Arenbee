@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GameCore.Enums;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -70,13 +70,13 @@ public partial class OptionGrid : MarginContainer
         }
     }
     public bool AllSelected => FocusedIndex == AllSelectedIndex;
-    public int FocusedIndex { get; private set; }
+    public int FocusedIndex { get; set; }
     public OptionItem? FocusedItem => OptionItems.ElementAtOrDefault(FocusedIndex);
     public GridContainer GridContainer { get; set; } = null!;
     public ClipContainer GridWindow { get; set; } = null!;
     public MarginContainer GridMargin { get; set; } = null!;
     private bool IsSingleRow => OptionItems.Count <= GridContainer.Columns;
-    public int PreviousIndex { get; private set; }
+    public int PreviousIndex { get; set; }
     public List<OptionItem> OptionItems { get; set; }
     public Vector2 Padding { get; set; }
     public event Action<OptionGrid, Direction>? FocusOOB;
@@ -109,11 +109,27 @@ public partial class OptionGrid : MarginContainer
     public void FocusContainer(int index)
     {
         if (SingleOptionsEnabled)
+        {
             FocusItem(index);
+        }
         else if (AllOptionEnabled)
+        {
+            FocusedIndex = AllSelectedIndex;
             FocusItem(AllSelectedIndex);
+        }
     }
 
+    /// <summary>
+    /// Focuses the item with the index specified.
+    /// <para>If only able to select all options, the index for "all" will be selected.<br/>
+    /// Updates the previous index. Removes focus from previous item.<br/>
+    /// Updates the scroll position. <br/>
+    /// If "all" is to be focused, all selectable items will be flagged as "selected".<br/>
+    /// If the previous item was "all", all selectable items have their "selected" flag removed.<br/>
+    /// Invokes the "ItemFocused" event.
+    /// </para>
+    /// </summary>
+    /// <param name="index"></param>
     public void FocusItem(int index)
     {
         if (!SingleOptionsEnabled)

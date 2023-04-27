@@ -1,5 +1,5 @@
 ﻿using System;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Arenbee.SaveData;
-using GameCore.Extensions;
 using GameCore.GUI;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
@@ -21,17 +21,12 @@ public partial class SaveGameSubMenu : OptionSubMenu
 
     public override void UpdateData(object? data)
     {
-        SetupOptions();
     }
 
     protected override void CustomSetup()
     {
         var header = GetNode<Label>("%Header");
-        header.Text = Tr(Localization.Menus.Menus_Save_SavedGames);
-    }
-
-    protected override void SetupOptions()
-    {
+        header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
         OptionContainer? saveOptions = OptionContainers.Find(x => x.Name == "SaveOptions");
         List<SaveGameOption> options = GetSaveGameOptions();
         saveOptions?.ReplaceChildren(options);

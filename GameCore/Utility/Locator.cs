@@ -11,6 +11,7 @@ namespace GameCore.Utility;
 
 public static class Locator
 {
+    private static bool s_initialized;
     private static AActorBodyDB s_actorBodyDB = null!;
     private static AActorDataDB s_actorDataDB = null!;
     private static IConditionLookup s_conditionLookup = null!;
@@ -24,6 +25,7 @@ public static class Locator
     private static IStatusEffectModifierFactory s_statusEffectModifierFactory = null!;
     private static AActionEffectDB s_actionEffectDB = null!;
 
+    public static bool Initialized => s_initialized;
     public static AActionEffectDB ActionEffectDB => s_actionEffectDB;
     public static AActorBodyDB ActorBodyDB => s_actorBodyDB;
     public static AActorDataDB ActorDataDB => s_actorDataDB;
@@ -39,6 +41,8 @@ public static class Locator
     public static AStatusEffectDB StatusEffectDB => s_statusEffectDB;
     public static IStatusEffectModifierFactory StatusEffectModifierFactory => s_statusEffectModifierFactory;
     public static ATransitionController TransitionController => s_gameRoot.TransitionController;
+
+    public static void SetInitialized() => s_initialized = true;
 
     public static void ProvideActionEffectDB(AActionEffectDB actionEffectDB)
     {

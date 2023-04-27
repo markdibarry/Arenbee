@@ -2,7 +2,6 @@
 using System.Linq;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -21,7 +20,7 @@ public partial class InventorySubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly AInventory _inventory;
+    private AInventory _inventory;
     private readonly AItemCategoryDB _itemCategoryDB = Locator.ItemCategoryDB;
     private OptionContainer _inventoryList = null!;
     private DynamicTextContainer _itemInfo = null!;
@@ -29,6 +28,21 @@ public partial class InventorySubMenu : OptionSubMenu
     private OptionContainer _typeList = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
+
+    protected override void MockData()
+    {
+        AItem item = Locator.ItemDB.GetItem(ItemIds.Potion)!;
+        _inventory = new Inventory(new ItemStack[] { new(item, 2) });
+    }
+
+    protected override void SetupData(object? data)
+    {
+        if (data is not int margin)
+            return;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.RemoveThemeConstantOverride("margin_left");
+        marginContainer.AddThemeConstantOverride("margin_left", margin);
+    }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -42,7 +56,7 @@ public partial class InventorySubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         List<TextOption> typeOptions = GetItemTypeOptions();
         _typeList.ReplaceChildren(typeOptions);
@@ -80,8 +94,8 @@ public partial class InventorySubMenu : OptionSubMenu
         base.SetNodeReferences();
         _typeList = OptionContainers.First(x => x.Name == "ItemTypeOptions");
         _inventoryList = OptionContainers.First(x => x.Name == "InventoryOptions");
-        _itemInfo = Foreground.GetNode<DynamicTextContainer>("ItemInfo");
-        _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
+        _itemInfo = GetNode<DynamicTextContainer>("%ItemInfo");
+        _itemStatsDisplay = GetNode<ItemStatsDisplay>("%ItemStatsDisplay");
     }
 
     private List<TextOption> GetItemTypeOptions()

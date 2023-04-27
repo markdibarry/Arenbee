@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using GameCore.Audio;
 using GameCore.Events;
-using GameCore.Extensions;
 using GameCore.Input;
 using GameCore.Statistics;
 using GameCore.Utility;

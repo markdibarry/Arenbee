@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using GameCore.Extensions;
 using GameCore.GUI;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.PartyMenus;

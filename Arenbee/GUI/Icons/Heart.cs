@@ -1,5 +1,5 @@
-﻿using GameCore.Extensions;
-using GameCore.GUI;
+﻿using GameCore.GUI;
+using GameCore.Utility;
 
 namespace Arenbee.GUI;
 

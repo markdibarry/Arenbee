@@ -1,8 +1,8 @@
 ﻿using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Enums;
-using GameCore.Extensions;
 using GameCore.Statistics;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Projectiles;

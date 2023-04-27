@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Arenbee.GUI.Localization;
 using GameCore.Statistics;
 using Godot;
 
@@ -48,117 +49,117 @@ public class StatTypeDB : AStatTypeDB
             StatType.None,
             new()
             {
-                Name = "None",
-                Abbreviation = "None",
-                Description = "None"
+                Name = StatTypes.StatTypes_None_Name,
+                Abbreviation = StatTypes.StatTypes_None_Abbreviation,
+                Description = StatTypes.StatTypes_None_Description
             }
         },
         {
             StatType.Level,
             new()
             {
-                Name = "Level",
-                Abbreviation = "Lv",
-                Description = "Each increase in level is a milestone of your progress!"
+                Name = StatTypes.StatTypes_Level_Name,
+                Abbreviation = StatTypes.StatTypes_Level_Abbreviation,
+                Description = StatTypes.StatTypes_Level_Description
             }
         },
         {
             StatType.HP,
             new()
             {
-                Name = "HP",
-                Abbreviation = "HP",
-                Description = "Health Points."
+                Name = StatTypes.StatTypes_HP_Name,
+                Abbreviation = StatTypes.StatTypes_HP_Abbreviation,
+                Description = StatTypes.StatTypes_HP_Description
             }
         },
         {
             StatType.MaxHP,
             new()
             {
-                Name = "MaxHP",
-                Abbreviation = "MaxHP",
-                Description = "The upper bounds on your Health Points."
+                Name = StatTypes.StatTypes_MaxHP_Name,
+                Abbreviation = StatTypes.StatTypes_MaxHP_Abbreviation,
+                Description = StatTypes.StatTypes_MaxHP_Description
             }
         },
         {
             StatType.MP,
             new()
             {
-                Name = "MP",
-                Abbreviation = "MP",
-                Description = "Magic Points"
+                Name = StatTypes.StatTypes_MP_Name,
+                Abbreviation = StatTypes.StatTypes_MP_Abbreviation,
+                Description = StatTypes.StatTypes_MP_Description
             }
         },
         {
             StatType.MaxMP,
             new()
             {
-                Name = "MaxMP",
-                Abbreviation = "MaxMP",
-                Description = "The upper bounds on your Magic Points."
+                Name = StatTypes.StatTypes_MaxMP_Name,
+                Abbreviation = StatTypes.StatTypes_MaxMP_Abbreviation,
+                Description = StatTypes.StatTypes_MaxMP_Description
             }
         },
         {
             StatType.Attack,
             new()
             {
-                Name = "Attack",
-                Abbreviation = "Atk",
-                Description = "The base damage a character can deal."
+                Name = StatTypes.StatTypes_Attack_Name,
+                Abbreviation = StatTypes.StatTypes_Attack_Abbreviation,
+                Description = StatTypes.StatTypes_Attack_Description
             }
         },
         {
             StatType.Defense,
             new()
             {
-                Name = "Defense",
-                Abbreviation = "Def",
-                Description = "This makes getting hurt hurt less."
+                Name = StatTypes.StatTypes_Defense_Name,
+                Abbreviation = StatTypes.StatTypes_Defense_Abbreviation,
+                Description = StatTypes.StatTypes_Defense_Description
             }
         },
         {
             StatType.MagicAttack,
             new()
             {
-                Name = "MagicAttack",
-                Abbreviation = "M.Atk",
-                Description = "Like Attack, but M A G I C."
+                Name = StatTypes.StatTypes_MagicAttack_Name,
+                Abbreviation = StatTypes.StatTypes_MagicAttack_Abbreviation,
+                Description = StatTypes.StatTypes_MagicAttack_Description
             }
         },
         {
             StatType.MagicDefense,
             new()
             {
-                Name = "MagicDefense",
-                Abbreviation = "M.Def",
-                Description = "Magic Defense."
+                Name = StatTypes.StatTypes_MagicDefense_Name,
+                Abbreviation = StatTypes.StatTypes_MagicDefense_Abbreviation,
+                Description = StatTypes.StatTypes_MagicDefense_Description
             }
         },
         {
             StatType.Luck,
             new()
             {
-                Name = "Luck",
-                Abbreviation = "Lck",
-                Description = "Luck."
+                Name = StatTypes.StatTypes_Luck_Name,
+                Abbreviation = StatTypes.StatTypes_Luck_Abbreviation,
+                Description = StatTypes.StatTypes_Luck_Description
             }
         },
         {
             StatType.Evade,
             new()
             {
-                Name = "Evade",
-                Abbreviation = "Evd",
-                Description = "Evasion."
+                Name = StatTypes.StatTypes_Evade_Name,
+                Abbreviation = StatTypes.StatTypes_Evade_Abbreviation,
+                Description = StatTypes.StatTypes_Evade_Description
             }
         },
         {
             StatType.Speed,
             new()
             {
-                Name = "Speed",
-                Abbreviation = "Spd",
-                Description = "How fast you move around, but not like Evade."
+                Name = StatTypes.StatTypes_Speed_Name,
+                Abbreviation = StatTypes.StatTypes_Speed_Abbreviation,
+                Description = StatTypes.StatTypes_Speed_Description
             }
         },
     };
@@ -169,63 +170,63 @@ public class StatTypeDB : AStatTypeDB
             StatCategory.None,
             new()
             {
-                Name = "None",
-                Abbreviation = "None",
-                Description = "None"
+                Name = StatTypes.StatTypes_None_Abbreviation,
+                Abbreviation = StatTypes.StatTypes_None_Abbreviation,
+                Description = StatTypes.StatTypes_None_Description
             }
         },
         {
             StatCategory.Attribute,
             new()
             {
-                Name = "Attribute",
-                Abbreviation = "Attr",
-                Description = "Main stats"
+                Name = StatTypes.StatTypes_Attribute_Name,
+                Abbreviation = StatTypes.StatTypes_Attribute_Abbreviation,
+                Description = StatTypes.StatTypes_Attribute_Description
             }
         },
         {
             StatCategory.AttackElement,
             new()
             {
-                Name = "Attack Element",
-                Abbreviation = "E.Atk",
-                Description = "The element physical attacks are imbued with."
+                Name = StatTypes.StatTypes_AttackElement_Name,
+                Abbreviation = StatTypes.StatTypes_AttackElement_Abbreviation,
+                Description = StatTypes.StatTypes_AttackElement_Description
             }
         },
         {
             StatCategory.ElementResist,
             new()
             {
-                Name = "Element Resistance",
-                Abbreviation = "E.Def",
-                Description = "Elemental resistences and weaknesses."
+                Name = StatTypes.StatTypes_ElementResist_Name,
+                Abbreviation = StatTypes.StatTypes_ElementResist_Abbreviation,
+                Description = StatTypes.StatTypes_ElementResist_Description
             }
         },
         {
             StatCategory.StatusAttack,
             new()
             {
-                Name = "Status Attacks",
-                Abbreviation = "S.Atk",
-                Description = "Chance for physical attacks to cause status effects."
+                Name = StatTypes.StatTypes_StatusAttack_Name,
+                Abbreviation = StatTypes.StatTypes_StatusAttack_Abbreviation,
+                Description = StatTypes.StatTypes_StatusAttack_Description
             }
         },
         {
             StatCategory.StatusResist,
             new()
             {
-                Name = "Status Resistance",
-                Abbreviation = "S.Def",
-                Description = "Chance to resist status effects."
+                Name = StatTypes.StatTypes_StatusResist_Name,
+                Abbreviation = StatTypes.StatTypes_StatusResist_Abbreviation,
+                Description = StatTypes.StatTypes_StatusResist_Description
             }
         },
         {
             StatCategory.StatusEffect,
             new()
             {
-                Name = "Status Effect",
-                Abbreviation = "S.Eff",
-                Description = "Status effects... I dunno."
+                Name = StatTypes.StatTypes_StatusEffect_Name,
+                Abbreviation = StatTypes.StatTypes_StatusEffect_Abbreviation,
+                Description = StatTypes.StatTypes_StatusEffect_Description
             }
         },
     };

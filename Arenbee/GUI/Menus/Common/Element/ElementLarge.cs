@@ -1,5 +1,5 @@
 ﻿using Arenbee.Statistics;
-using GameCore.Extensions;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;

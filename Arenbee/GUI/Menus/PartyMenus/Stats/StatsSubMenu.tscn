@@ -1,15 +1,15 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://cl502bp7yma0g"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_0awv0"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Stats/StatsSubMenu.cs" id="2_ah025"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_ietj2"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_mp18g"]
+[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_mp18g"]
 
 [node name="StatsSubMenu" instance=ExtResource("1_0awv0")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_ah025")
-NodePaths = [NodePath("Foreground/PartyOptions")]
+NodePaths = [NodePath("Foreground/HBoxContainer/MarginContainer2/VBoxContainer/PartyOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -19,31 +19,47 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PartyOptions" parent="Foreground" index="0" instance=ExtResource("3_ietj2")]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 18.0
-offset_right = 98.0
-offset_bottom = 36.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 566.0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 122
+
+[node name="MarginContainer2" type="MarginContainer" parent="Foreground/HBoxContainer" index="1"]
+layout_mode = 2
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer/MarginContainer2" index="0"]
+layout_mode = 2
+
+[node name="PartyOptions" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="0" instance=ExtResource("3_ietj2")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+Columns = 1
 FitXToContent = true
 FitYToContent = true
 MaxSize = Vector2(138, -1)
 SingleRow = true
 
-[node name="OptionGrid" parent="Foreground/PartyOptions/ContentGrid" index="0"]
+[node name="OptionGrid" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer/PartyOptions/ContentGrid" index="0"]
 SingleRow = true
 
-[node name="GridWindow" parent="Foreground/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
+[node name="GridWindow" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer/PartyOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
 ClipX = false
 ClipY = false
 MaxSize = Vector2(120, -1)
 
-[node name="StatsDisplay" parent="Foreground" index="1" instance=ExtResource("5_mp18g")]
-layout_mode = 0
-offset_left = 80.0
-offset_top = 50.0
-offset_right = 210.0
-offset_bottom = 104.0
+[node name="StatsDisplay" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="1" instance=ExtResource("5_mp18g")]
+unique_name_in_owner = true
+layout_mode = 2
 
-[editable path="Foreground/PartyOptions"]
-[editable path="Foreground/PartyOptions/ContentGrid/OptionGrid"]
+[editable path="Foreground/HBoxContainer/MarginContainer2/VBoxContainer/PartyOptions"]
+[editable path="Foreground/HBoxContainer/MarginContainer2/VBoxContainer/PartyOptions/ContentGrid/OptionGrid"]

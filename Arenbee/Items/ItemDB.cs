@@ -22,6 +22,7 @@ public class ItemDB : AItemDB
         BuildFootwear(items, itemCategoryDB.GetCategory(ItemCategoryIds.Footwear)!);
         BuildAccessories(items, itemCategoryDB.GetCategory(ItemCategoryIds.Accessory)!);
         BuildRestorative(items, itemCategoryDB.GetCategory(ItemCategoryIds.Restorative)!);
+        BuildField(items, itemCategoryDB.GetCategory(ItemCategoryIds.Field)!);
         BuildKey(items, itemCategoryDB.GetCategory(ItemCategoryIds.Key)!);
         return items.ToArray();
     }
@@ -427,16 +428,6 @@ public class ItemDB : AItemDB
             Price = 10
         });
 
-        items.Add(new Item(ItemIds.EscapeRope, itemCategory)
-        {
-            DisplayName = "Escape Rope",
-            Description = "Returns you to the entrance of a dungeon.",
-            MaxStack = 9,
-            IsSellable = true,
-            IsDroppable = true,
-            Price = 10
-        });
-
         items.Add(new Item(ItemIds.EyeDrops, itemCategory)
         {
             DisplayName = "Eye Drops",
@@ -476,6 +467,19 @@ public class ItemDB : AItemDB
             IsDroppable = true,
             Price = 10
         });
+    }
+
+    private static void BuildField(List<AItem> items, ItemCategory itemCategory)
+    {
+        items.Add(new Item(ItemIds.EscapeRope, itemCategory)
+        {
+            DisplayName = "Escape Rope",
+            Description = "Returns you to the entrance of a dungeon.",
+            MaxStack = 9,
+            IsSellable = true,
+            IsDroppable = true,
+            Price = 10
+        });
 
         items.Add(new Item(ItemIds.Darts, itemCategory)
         {
@@ -488,7 +492,7 @@ public class ItemDB : AItemDB
             UseData = new()
             {
                 ActionEffect = (int)ActionEffectType.Darts,
-                Value1 = 5
+                Value1 = 1
             }
         });
     }

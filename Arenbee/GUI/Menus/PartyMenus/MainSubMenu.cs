@@ -2,7 +2,6 @@
 using System.Linq;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.PartyMenus.Equipment;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -29,14 +28,14 @@ public partial class MainSubMenu : OptionSubMenu
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string subMenuName)
             return;
-
+        int marginSize = (int)(_optionList.Position.X + _optionList.Size.X);
         switch (subMenuName)
         {
             case Localization.Menus.Menus_Party_Stats:
-                _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath());
+                _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath(), data: marginSize);
                 break;
             case Localization.Menus.Menus_Party_Inventory:
-                _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath());
+                _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath(), data: marginSize);
                 break;
             case Localization.Menus.Menus_Party_Equipment:
                 _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath());
@@ -50,7 +49,7 @@ public partial class MainSubMenu : OptionSubMenu
         }
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         _optionList.ReplaceChildren(GetMenuOptions());
     }
@@ -68,7 +67,7 @@ public partial class MainSubMenu : OptionSubMenu
         foreach (string menuKey in _menuKeys)
         {
             var option = textOptionScene.Instantiate<TextOption>();
-            option.LabelText = Tr(menuKey);
+            option.LabelText = this.TrS(menuKey);
             option.OptionData = menuKey;
             if (menuKey == Localization.Menus.Menus_Party_Options)
                 option.Disabled = true;

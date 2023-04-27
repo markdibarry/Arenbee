@@ -1,10 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://cd706qhex0pcr"]
 
 [ext_resource type="PackedScene" uid="uid://qbivbh8nuiuw" path="res://GameCore/GUI/Menus/Menu.tscn" id="1_h1eqx"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/PartyMenu.cs" id="2_uav68"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Scroll.gdshader" id="3_c8k6s"]
 [ext_resource type="Texture2D" uid="uid://y7d102tn61hb" path="res://Arenbee/GUI/Backgrounds/star.png" id="4_7v3px"]
-[ext_resource type="PackedScene" uid="uid://b5tsh6y5ba8tx" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.tscn" id="5_3yu3w"]
+[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.tscn" id="5_3yu3w"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1f80b"]
 shader = ExtResource("3_c8k6s")
@@ -37,11 +37,18 @@ grow_vertical = 2
 [node name="MainSubMenu" parent="ContentGroup/Content/SubMenus" index="0" instance=ExtResource("5_3yu3w")]
 layout_mode = 1
 
+[node name="OptionContainer" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground" index="0"]
+offset_right = 122.0
+Columns = 1
+
+[node name="GridWindow" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid/GridMargin" index="0"]
+ClipX = false
+ClipY = false
+
 [node name="HScrollBar" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="0"]
 page = 92.4051
 
 [node name="VScrollBar" parent="ContentGroup/Content/SubMenus/MainSubMenu/Foreground/OptionContainer/ContentGrid/OptionGrid/ScrollBars" index="1"]
-visible = false
 page = 89.4737
 
 [editable path="ContentGroup/Content/SubMenus/MainSubMenu"]

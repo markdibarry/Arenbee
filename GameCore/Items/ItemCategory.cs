@@ -4,7 +4,7 @@ namespace GameCore.Items;
 
 public class ItemCategory : IEquatable<ItemCategory>
 {
-    public ItemCategory(string id, string displayName, string? abbreviation)
+    public ItemCategory(string id, string displayName, string? abbreviation = null)
     {
         Id = id;
         DisplayName = displayName;
@@ -22,13 +22,7 @@ public class ItemCategory : IEquatable<ItemCategory>
         return other.Id == Id;
     }
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as ItemCategory);
-    }
+    public override bool Equals(object? obj) => Equals(obj as ItemCategory);
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Id);
-    }
+    public override int GetHashCode() => HashCode.Combine(Id);
 }

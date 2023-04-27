@@ -1,5 +1,4 @@
 ﻿using GameCore.Actors;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Utility;

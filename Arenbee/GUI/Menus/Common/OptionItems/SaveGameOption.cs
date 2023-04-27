@@ -3,8 +3,8 @@ using System.Linq;
 using Arenbee.Game;
 using Arenbee.SaveData;
 using Arenbee.Statistics;
-using GameCore.Extensions;
 using GameCore.GUI;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;

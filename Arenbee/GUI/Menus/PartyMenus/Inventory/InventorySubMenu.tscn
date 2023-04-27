@@ -1,16 +1,16 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=6 format=3 uid="uid://ciqqmoodypfpx"]
 
 [ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_imt36"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_funy4"]
 [ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_sn8u5"]
 [ext_resource type="PackedScene" uid="uid://p0afcetfn4ef" path="res://GameCore/GUI/Menus/Containers/DynamicTextContainer.tscn" id="7_8v57d"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
+[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
 
 [node name="InventorySubMenu" instance=ExtResource("1_imt36")]
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_funy4")
-NodePaths = [NodePath("Foreground/ItemTypeOptions"), NodePath("Foreground/InventoryOptions")]
+NodePaths = [NodePath("Foreground/HBoxContainer/MarginContainer2/VBoxContainer/ItemTypeOptions"), NodePath("Foreground/HBoxContainer/MarginContainer2/VBoxContainer/InventoryOptions")]
 
 [node name="Background" parent="." index="0"]
 grow_horizontal = 2
@@ -20,37 +20,57 @@ grow_vertical = 2
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ItemTypeOptions" parent="Foreground" index="0" instance=ExtResource("3_sn8u5")]
-layout_mode = 0
-offset_left = 75.0
-offset_top = 16.0
-offset_right = 105.0
-offset_bottom = 46.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 122
+
+[node name="MarginContainer2" type="MarginContainer" parent="Foreground/HBoxContainer" index="1"]
+layout_mode = 2
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer/MarginContainer2" index="0"]
+layout_mode = 2
+
+[node name="ItemTypeOptions" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="0" instance=ExtResource("3_sn8u5")]
+layout_mode = 2
+Columns = 10
 FitXToContent = true
 FitYToContent = true
 MaxSize = Vector2(119, -1)
 SingleRow = true
 
-[node name="InventoryOptions" parent="Foreground" index="1" instance=ExtResource("3_sn8u5")]
-layout_mode = 0
-offset_left = 75.0
-offset_top = 49.0
-offset_right = 193.0
-offset_bottom = 249.0
+[node name="InventoryOptions" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="1" instance=ExtResource("3_sn8u5")]
+layout_mode = 2
+size_flags_vertical = 3
+Columns = 1
 
-[node name="ItemInfo" parent="Foreground" index="2" instance=ExtResource("7_8v57d")]
+[node name="MarginContainer3" type="MarginContainer" parent="Foreground/HBoxContainer" index="2"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/HBoxContainer/MarginContainer3" index="0"]
+layout_mode = 2
+alignment = 2
+
+[node name="ItemStatsDisplay" parent="Foreground/HBoxContainer/MarginContainer3/VBoxContainer2" index="0" instance=ExtResource("8_c8not")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+
+[node name="ItemInfo" parent="Foreground/HBoxContainer/MarginContainer3/VBoxContainer2" index="1" instance=ExtResource("7_8v57d")]
+unique_name_in_owner = true
 process_mode = 3
-layout_mode = 1
-offset_left = 196.0
-offset_top = 186.0
-offset_right = -166.0
-offset_bottom = -21.0
-CustomText = ""
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+SpeedMultiplier = 1.0
 metadata/_edit_layout_mode = 1
-
-[node name="ItemStatsDisplay" parent="Foreground" index="3" instance=ExtResource("8_c8not")]
-layout_mode = 0
-offset_left = 196.0
-offset_top = 119.0
-offset_right = 314.0
-offset_bottom = 183.0

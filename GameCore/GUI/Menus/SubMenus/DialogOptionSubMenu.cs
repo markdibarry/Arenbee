@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameCore.Extensions;
 using GameCore.GUI.GameDialog;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -15,7 +15,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private OptionContainer _options = null!;
 
-    public override void SetupData(object? data)
+    protected override void SetupData(object? data)
     {
         if (data is not IEnumerable<Choice> choices)
             return;
@@ -30,7 +30,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
         _ = CloseSubMenuAsync(data: data);
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         if (DialogChoices.Length == 0)
             return;

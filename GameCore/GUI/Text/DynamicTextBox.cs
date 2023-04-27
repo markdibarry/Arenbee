@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using GameCore.Extensions;
 using GameCore.GUI.GameDialog;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameCore.Exceptions;
-using GameCore.Extensions;
 using GameCore.GUI.GameDialog;
 using GameCore.Input;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;

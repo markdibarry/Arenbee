@@ -11,7 +11,15 @@ namespace Arenbee.Game;
 [Tool]
 public partial class LocatorAutoload : Node
 {
-    public override void _Ready()
+    public override void _Process(double delta)
+    {
+        if (!Locator.Initialized)
+            Initialize();
+    }
+
+    public override void _Ready() => Initialize();
+
+    private static void Initialize()
     {
         Locator.ProvideActionEffectDB(new ActionEffectDB());
         Locator.ProvideActorBodyDB(new ActorBodyDB());
@@ -24,5 +32,6 @@ public partial class LocatorAutoload : Node
         Locator.ProvideEquipmentSlotCategoryDB(new EquipmentSlotCategoryDB());
         Locator.ProvideStatTypeDB(new StatTypeDB());
         Locator.ProvideStatusEffectDB(new StatusEffectDB());
+        Locator.SetInitialized();
     }
 }

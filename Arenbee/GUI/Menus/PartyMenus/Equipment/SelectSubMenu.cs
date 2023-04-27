@@ -3,7 +3,6 @@ using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Statistics;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;
@@ -35,7 +34,7 @@ public partial class SelectSubMenu : OptionSubMenu
     private ActorStatsDisplay _actorStatsDisplay = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
 
-    public override void SetupData(object? data)
+    protected override void SetupData(object? data)
     {
         if (data is not SelectSubMenuDataModel dataModel)
             return;
@@ -43,7 +42,7 @@ public partial class SelectSubMenu : OptionSubMenu
         _slot = dataModel.Slot;
     }
 
-    protected override void SetupOptions()
+    protected override void CustomSetup()
     {
         var options = GetEquippableOptions();
         _equipOptions.ReplaceChildren(options);

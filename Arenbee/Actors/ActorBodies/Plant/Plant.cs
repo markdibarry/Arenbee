@@ -1,6 +1,6 @@
 ﻿using Arenbee.Actors.State.DefaultEnemy;
 using Arenbee.Statistics;
-using GameCore.Extensions;
+using GameCore.Utility;
 
 namespace Arenbee.Actors.ActorBodies;
 

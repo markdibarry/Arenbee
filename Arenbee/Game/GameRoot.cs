@@ -1,4 +1,4 @@
-﻿using Arenbee.GUI;
+using Arenbee.GUI;
 using Arenbee.GUI.Menus;
 using Arenbee.Input;
 using GameCore;

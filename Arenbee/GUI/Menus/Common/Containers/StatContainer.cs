@@ -1,80 +1,49 @@
 ﻿using System.Collections.Generic;
 using Arenbee.Statistics;
-using GameCore.Extensions;
 using GameCore.Statistics;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.GUI.Menus.Common;
 
 [Tool]
-public partial class StatContainer : EqualContainer
+public partial class StatContainer : LabelContainer
 {
-    public static new string GetScenePath() => GDEx.GetScenePath();
-    private bool _dim;
-    private int _baseValue;
-    private StatType _statType;
-    private string _statNameText = string.Empty;
-    private string _statValueText = string.Empty;
-    [Export]
-    public string StatNameText
-    {
-        get => _statNameText;
-        set
-        {
-            _statNameText = value;
-            if (StatNameLabel != null)
-                StatNameLabel.Text = _statNameText;
-        }
-    }
-    [Export]
-    public string StatValueText
-    {
-        get => _statValueText;
-        set
-        {
-            _statValueText = value;
-            if (StatValueLabel != null)
-                StatValueLabel.Text = _statValueText;
-        }
-    }
-    public Label StatNameLabel { get; private set; } = null!;
-    public Label StatValueLabel { get; private set; } = null!;
-    [Export]
-    public bool Dim
+    public override bool Dim
     {
         get => _dim;
         set
         {
             _dim = value;
             Modulate = _dim ? GameCore.Colors.DimGrey : Colors.White;
+            if (NameContainer != null)
+                NameContainer.Dim = _dim;
         }
     }
+    protected int BaseValue { get; set; }
+    protected StatType StatType { get; set; }
+    protected LabelContainer? NameContainer { get; private set; }
 
-    public override void _Ready()
+    public void SetLabelContainer(LabelContainer textContainer)
     {
-        base._Ready();
-        StatNameLabel = GetNode<Label>("%Key");
-        StatValueLabel = GetNode<Label>("%Value");
-        StatNameLabel.Text = _statNameText;
-        StatValueLabel.Text = _statValueText;
-        StatNameLabel.Resized += OnResize;
-        StatValueLabel.Resized += OnResize;
+        NameContainer = textContainer;
     }
 
-    public override void OnResize()
+    public void UpdateNameLabel()
     {
-        ResizeItems(StatNameLabel, StatValueLabel);
+        if (NameContainer != null)
+            NameContainer.Text = this.TrS(StatTypeDB.GetStatTypeData(StatType).Abbreviation) + ":";
     }
 
-    public void UpdateType(AttributeType attributeType)
+    public virtual void UpdateType(AttributeType attributeType)
     {
-        _statType = StatTypeHelpers.GetStatType(attributeType);
-        StatNameText = Tr(StatTypeDB.GetStatTypeData(_statType).Abbreviation) + ":";
+        StatType = StatTypeHelpers.GetStatType(attributeType);
+        UpdateNameLabel();
     }
 
-    public void UpdateBaseValue(Stats stats)
+    public virtual void UpdateBaseValue(Stats stats)
     {
-        _baseValue = stats.CalculateStat(_statType);
+        BaseValue = stats.CalculateStat(StatType);
     }
 
     public void UpdateValue(List<Modifier> mods)
@@ -82,38 +51,38 @@ public partial class StatContainer : EqualContainer
         int value = 0;
         foreach (Modifier mod in mods)
         {
-            if (mod.StatType != (int)_statType)
+            if (mod.StatType != (int)StatType)
                 continue;
             if (mod.Op == ModOp.Add)
                 value += mod.Value;
             else if (mod.Op == ModOp.Subtract)
                 value -= mod.Value;
         }
-        StatValueText = value.ToString();
+        Text = value.ToString();
         Dim = value == 0;
-        DisplayValueColor(value);
+        DisplayValueColor(Label, value);
     }
 
-    public void UpdateValue(Stats stats, bool updateColor)
+    public virtual void UpdateValue(Stats stats, bool updateColor)
     {
-        int newValue = stats.CalculateStat(_statType);
-        StatValueText = newValue.ToString();
+        int newValue = stats.CalculateStat(StatType);
+        Text = newValue.ToString();
         if (updateColor)
         {
-            Dim = _baseValue == newValue;
-            DisplayValueColor(newValue);
+            Dim = BaseValue == newValue;
+            DisplayValueColor(Label, newValue);
             return;
         }
         Dim = false;
     }
 
-    private void DisplayValueColor(int newValue)
+    private void DisplayValueColor(Label label, int newValue)
     {
-        if (newValue > _baseValue)
-            StatValueLabel.Modulate = GameCore.Colors.TextGreen;
-        else if (newValue < _baseValue)
-            StatValueLabel.Modulate = GameCore.Colors.TextRed;
+        if (newValue > BaseValue)
+            label.Modulate = GameCore.Colors.TextGreen;
+        else if (newValue < BaseValue)
+            label.Modulate = GameCore.Colors.TextRed;
         else
-            StatValueLabel.Modulate = Colors.White;
+            label.Modulate = Colors.White;
     }
 }

@@ -6,6 +6,7 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ActorStatsDisplay : PanelContainer
 {
+    private GridContainer _gridContainer = null!;
     private StatContainer _levelContainer = null!;
     private PointContainer _hpContainer = null!;
     private PointContainer _mpContainer = null!;
@@ -18,17 +19,30 @@ public partial class ActorStatsDisplay : PanelContainer
 
     public override void _Ready()
     {
-        base._Ready();
-        _levelContainer = GetNode<StatContainer>("%Level");
-        _hpContainer = GetNode<PointContainer>("%HP");
-        _mpContainer = GetNode<PointContainer>("%MP");
-        _attackContainer = GetNode<StatContainer>("%Attack");
-        _defenseContainer = GetNode<StatContainer>("%Defense");
-        _mAttackContainer = GetNode<StatContainer>("%M Attack");
-        _mDefenseContainer = GetNode<StatContainer>("%M Defense");
+        _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
+        _levelContainer = _gridContainer.GetNode<StatContainer>("Level");
+        _hpContainer = _gridContainer.GetNode<PointContainer>("HP");
+        _mpContainer = _gridContainer.GetNode<PointContainer>("MP");
+        _attackContainer = _gridContainer.GetNode<StatContainer>("Attack");
+        _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
+        _mAttackContainer = _gridContainer.GetNode<StatContainer>("MAttack");
+        _mDefenseContainer = _gridContainer.GetNode<StatContainer>("MDefense");
         _elAttackContainer = GetNode<ElementContainer>("%EAtk");
         _elResistContainer = GetNode<ElementContainer>("%EDef");
+        SetLabelContainer(_levelContainer);
+        SetLabelContainer(_hpContainer);
+        SetLabelContainer(_mpContainer);
+        SetLabelContainer(_attackContainer);
+        SetLabelContainer(_defenseContainer);
+        SetLabelContainer(_mAttackContainer);
+        SetLabelContainer(_mDefenseContainer);
         UpdateTypes();
+    }
+
+    private void SetLabelContainer(StatContainer statContainer)
+    {
+        LabelContainer label = _gridContainer.GetNode<LabelContainer>(statContainer.Name + "Label");
+        statContainer.SetLabelContainer(label);
     }
 
     public void UpdateTypes()
@@ -60,8 +74,8 @@ public partial class ActorStatsDisplay : PanelContainer
     public void UpdateStatsDisplay(Stats stats, bool updateColor)
     {
         _levelContainer.UpdateValue(stats, updateColor);
-        _hpContainer.UpdateDisplay(stats, updateColor);
-        _mpContainer.UpdateDisplay(stats, updateColor);
+        _hpContainer.UpdateValue(stats, updateColor);
+        _mpContainer.UpdateValue(stats, updateColor);
         _attackContainer.UpdateValue(stats, updateColor);
         _defenseContainer.UpdateValue(stats, updateColor);
         _mAttackContainer.UpdateValue(stats, updateColor);

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Arenbee.SaveData;
-using GameCore.Extensions;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -27,11 +26,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
     {
         PreventCloseAll = true;
         var header = GetNode<Label>("%Header");
-        header.Text = Tr(Localization.Menus.Menus_Save_SavedGames);
-    }
-
-    protected override void SetupOptions()
-    {
+        header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
         _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions")!;
         List<SaveGameOption> options = GetSaveGameOptions();
         _loadOptions.ReplaceChildren(options);

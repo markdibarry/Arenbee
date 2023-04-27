@@ -20,17 +20,19 @@ grow_vertical = 2
 
 [node name="DropOptions" parent="Foreground" index="0" instance=ExtResource("4_88skw")]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 35.0
-offset_right = 350.0
-offset_bottom = 67.0
+offset_left = 236.0
+offset_top = 49.0
+offset_right = 290.0
+offset_bottom = 89.0
 Columns = 1
 FitXToContent = true
 FitYToContent = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Foreground/DropOptions/ContentGrid" index="0"]
 layout_mode = 2
-theme_override_constants/margin_left = 1
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 2
 
 [node name="Label" type="Label" parent="Foreground/DropOptions/ContentGrid/MarginContainer" index="0"]
 layout_mode = 2

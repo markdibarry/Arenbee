@@ -3,9 +3,9 @@ using Arenbee.Input;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
-using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
+using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Actors;

@@ -1,5 +1,5 @@
 ﻿using Arenbee.Actors.State.DefaultPlayer;
-using GameCore.Extensions;
+using GameCore.Utility;
 
 namespace Arenbee.Actors.ActorBodies;
 

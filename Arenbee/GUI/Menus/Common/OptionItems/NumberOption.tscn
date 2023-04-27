@@ -5,12 +5,15 @@
 
 [node name="NumberOption" type="MarginContainer"]
 modulate = Color(0.7, 0.7, 0.7, 1)
+offset_right = 21.0
+offset_bottom = 7.0
+size_flags_horizontal = 6
 script = ExtResource("1_2md8u")
-LabelText = "asd"
 DimWhenUnfocused = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="ArrowLeft" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2

@@ -8,7 +8,7 @@ namespace GameCore.GUI;
 [Tool]
 public abstract partial class OptionContainer : PanelContainer
 {
-    protected const int AllSelectedIndex = -1;
+    public const int AllSelectedIndex = -1;
     public virtual bool AllSelected => FocusedIndex == AllSelectedIndex;
     public virtual bool AllOptionEnabled { get; set; }
     public virtual bool SingleOptionsEnabled { get; set; }
@@ -22,9 +22,28 @@ public abstract partial class OptionContainer : PanelContainer
     public event Action? ItemFocused;
     public event Action? ItemSelected;
 
+    /// <summary>
+    /// Focuses the container with the item index specified.<br/>
+    /// If only able to select all options, the index for "all" will be selected.
+    /// </summary>
+    /// <param name="index"></param>
+    public virtual void FocusContainer(int index)
+    {
+        if (SingleOptionsEnabled)
+        {
+            FocusItem(index);
+        }
+        else if (AllOptionEnabled)
+        {
+            FocusedIndex = AllSelectedIndex;
+            FocusItem(AllSelectedIndex);
+        }
+    }
+
+    public virtual void SelectItem() => ItemSelected?.Invoke();
+
     public abstract void AddOption(OptionItem optionItem);
     public abstract void Clear();
-    public abstract void FocusContainer(int index);
     public abstract void FocusItem(int index);
     public abstract void FocusDirection(Direction direction);
     public abstract IEnumerable<OptionItem> GetSelectedItems();
@@ -32,7 +51,6 @@ public abstract partial class OptionContainer : PanelContainer
     public abstract void RefocusItem();
     public abstract void ReplaceChildren(IEnumerable<OptionItem> optionItems);
     public abstract void ResetContainerFocus();
-    public virtual void SelectItem() => ItemSelected?.Invoke();
     protected void RaiseContainerUpdated() => ContainerUpdated?.Invoke(this);
     protected void RaiseFocusOOB(Direction direction) => FocusOOB?.Invoke(this, direction);
     protected void RaiseItemFocused() => ItemFocused?.Invoke();

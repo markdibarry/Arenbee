@@ -1,5 +1,4 @@
 ﻿using System;
-using GameCore.Extensions;
 using GameCore.Items;
 using GameCore.Statistics;
 using GameCore.Utility;

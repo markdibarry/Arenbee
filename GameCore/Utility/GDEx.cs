@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Godot;
 
-namespace GameCore.Extensions;
+namespace GameCore.Utility;
 
 public static class GDEx
 {
@@ -119,10 +119,7 @@ public static class GDEx
     /// <returns></returns>
     public static bool IsToolDebugMode(this Node node)
     {
-        if (Engine.IsEditorHint())
-            return true;
-        else
-            return node == node.GetTree().CurrentScene;
+        return Engine.IsEditorHint() || node == node.GetTree().CurrentScene;
     }
 
     public static float MoveToward(this float from, double to, double delta)
@@ -132,7 +129,7 @@ public static class GDEx
 
     public static float LerpClamp(this float val, double target, double maxMove)
     {
-        return LerpClamp(val, (float)target, (float)maxMove);
+        return val.LerpClamp((float)target, (float)maxMove);
     }
 
     public static float LerpClamp(this float val, float target, float maxMove)
@@ -159,7 +156,7 @@ public static class GDEx
 
     public static void QueueFreeAllChildren(this Node node)
     {
-        var children = node.GetChildren();
+        Godot.Collections.Array<Node> children = node.GetChildren();
         foreach (Node child in children)
         {
             node.RemoveChild(child);
@@ -169,8 +166,8 @@ public static class GDEx
 
     public static void QueueFreeAllChildren<T>(this Node node) where T : Node
     {
-        var children = node.GetChildren<T>();
-        foreach (var child in children)
+        IEnumerable<T> children = node.GetChildren<T>();
+        foreach (T child in children)
         {
             node.RemoveChild(child);
             child.QueueFree();
@@ -180,4 +177,29 @@ public static class GDEx
     public static Vector2 SetX(this Vector2 vec, float x) => new(x, vec.Y);
 
     public static Vector2 SetY(this Vector2 vec, float y) => new(vec.X, y);
+
+    /// <summary>
+    /// Translates with a shortened id if in the editor context.<br/>
+    /// The TranslationServer doesn't run in the Godot editor context.
+    /// Useful for when translation ids are very long.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="message"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public static string TrS(this GodotObject obj, string message, StringName? context = null)
+    {
+#if TOOLS
+        if (Engine.IsEditorHint())
+        {
+            string[] strArr = message.Split("_");
+            strArr = strArr.Select(x => x.Length > 2 ? x[..3] : x).ToArray();
+            if (strArr.Length > 2)
+                message = strArr[1] + strArr[2];
+            else if (strArr.Length == 2)
+                message = strArr[0] + strArr[1];
+        }
+#endif
+        return obj.Tr(message, context);
+    }
 }
