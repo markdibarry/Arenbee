@@ -9,11 +9,12 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicTextBox : Control
 {
+    public static string GetScenePath() => GDEx.GetScenePath();
     private int _currentPage;
     private float _displayHeight;
-    private DynamicText _dynamicText = null!;
+    private DynamicText _dynamicText = GDEx.Instantiate<DynamicText>(DynamicText.GetScenePath());
     private IList<int> _pageBreakLineIndices = new[] { 0 };
-    private Control _textWindow = null!;
+    private Control _textWindow = new();
     [Export]
     public int CurrentPage
     {
@@ -28,12 +29,7 @@ public partial class DynamicTextBox : Control
     public string CustomText
     {
         get => _dynamicText.CustomText;
-        set
-        {
-            if (CustomTextExportDisabled)
-                return;
-            _dynamicText.CustomText = value;
-        }
+        set => _dynamicText.CustomText = value;
     }
     [Export]
     public bool ShowToEndCharEnabled
@@ -61,11 +57,6 @@ public partial class DynamicTextBox : Control
     }
     public double Speed => _dynamicText.Speed;
     public State CurrentState { get; private set; }
-    public bool CustomTextExportDisabled
-    {
-        get => _dynamicText.CustomTextExportDisabled;
-        set => _dynamicText.CustomTextExportDisabled = value;
-    }
     public bool SpeedUpEnabled
     {
         get => _dynamicText.SpeedUpEnabled;
@@ -82,16 +73,7 @@ public partial class DynamicTextBox : Control
         Writing
     }
 
-    public override void _Notification(int what)
-    {
-        if (what == NotificationSceneInstantiated)
-            Init();
-    }
-
-    public override void _Ready()
-    {
-        SetDefault();
-    }
+    public override void _Ready() => Init();
 
     public bool IsAtLastPage() => CurrentPage == _pageBreakLineIndices.Count - 1;
 
@@ -165,7 +147,9 @@ public partial class DynamicTextBox : Control
 
     private void Init()
     {
-        SetNodeReferences();
+        AddChild(_textWindow);
+        _textWindow.AddChild(_dynamicText);
+        _dynamicText.AnchorsPreset = (int)LayoutPreset.FullRect;
         SubscribeEvents();
         CurrentState = State.Idle;
     }
@@ -207,22 +191,6 @@ public partial class DynamicTextBox : Control
     {
         if (!textEvent.TryHandleEvent(this))
             TextEventTriggered?.Invoke(textEvent);
-    }
-
-    private void SetDefault()
-    {
-        if (!this.IsSceneRoot())
-            return;
-        CustomText = "[speed=0.03]Life isn't about [wave]suffering![/wave]\n" +
-        "(pause)[pause=2]\n" +
-        "[speed=0.5]...[/speed]It's about eating!.\n" +
-        "[speed=0.3]...[/speed]and suffering.";
-    }
-
-    private void SetNodeReferences()
-    {
-        _textWindow = GetNode<Control>("TextWindow");
-        _dynamicText = _textWindow.GetNode<DynamicText>("DynamicText");
     }
 
     private void SubscribeEvents()

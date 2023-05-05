@@ -16,7 +16,7 @@ public partial class Sprite2DContainer : Container
 
     private void SetNewChild()
     {
-        var childCount = GetChildCount();
+        int childCount = GetChildCount();
         if (childCount > 0)
         {
             Sprite2D ??= GetChildOrNull<Sprite2D>(0);
@@ -35,12 +35,12 @@ public partial class Sprite2DContainer : Container
         float v = 0;
         float h = 0;
         Rect2 rect = Sprite2D.GetRect();
-        var spritePos = Sprite2D.Position + rect.Size;
+        Vector2 spritePos = Sprite2D.Position + rect.Size;
         if (spritePos.X > h)
             h = spritePos.X;
         if (spritePos.Y > v)
             v = spritePos.Y;
-        return new Vector2I((int)h, (int)v);
+        return new((int)h, (int)v);
     }
 
     private void OnChildEntered(Node node)
@@ -50,11 +50,8 @@ public partial class Sprite2DContainer : Container
 
     private void OnChildExiting(Node node)
     {
-        if (Sprite2D == node)
-        {
-            Sprite2D.ItemRectChanged -= UpdateSize;
+        if (node == Sprite2D)
             Sprite2D = null;
-        }
         SetNewChild();
     }
 

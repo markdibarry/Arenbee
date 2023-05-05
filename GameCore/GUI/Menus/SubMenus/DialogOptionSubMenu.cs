@@ -22,7 +22,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
         DialogChoices = choices.ToArray();
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not int selectedIndex)
             return;
@@ -49,7 +49,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _options = OptionContainers.First(x => x.Name == "OptionContainer");
+        _options = GetNode<OptionContainer>("%OptionContainer");
+        AddContainer(_options);
     }
 }

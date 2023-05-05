@@ -28,11 +28,14 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
-        OptionContainer? saveOptions = OptionContainers.First(x => x.Name == "SaveOptions");
+        var message = GetNode<Label>("%Message");
+        message.Text = this.TrS(Localization.Menus.Menus_SaveConfirm_Message);
+        OptionContainer? saveOptions = GetNode<OptionContainer>("%SaveOptions");
+        AddContainer(saveOptions);
         saveOptions.ReplaceChildren(GetMenuOptions());
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string saveChoice)
             return;

@@ -1,40 +1,78 @@
-[gd_scene load_steps=4 format=3 uid="uid://21nu4wm7loql"]
+[gd_scene load_steps=5 format=3 uid="uid://21nu4wm7loql"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_qqjb6"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_wyy0h"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_eomiq"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_tktbi"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_jx6af"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_7yf4f"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_ykdlq"]
 
-[node name="EquipmentSubMenu" instance=ExtResource("1_qqjb6")]
+[node name="EquipmentSubMenu" instance=ExtResource("1_tktbi")]
+script = ExtResource("2_jx6af")
+
+[node name="MainMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_wyy0h")
-NodePaths = [NodePath("Foreground/PartyOptions"), NodePath("Foreground/EquipmentOptions")]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MainMarginContainer" index="0"]
+layout_mode = 2
 
-[node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 44
 
-[node name="PartyOptions" parent="Foreground" index="0" instance=ExtResource("3_eomiq")]
-layout_mode = 0
-offset_left = 75.0
-offset_top = 16.0
-offset_right = 121.0
-offset_bottom = 46.0
-Columns = 1
-FitXToContent = true
-FitYToContent = true
-MaxSize = Vector2(137, -1)
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PartyContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer" index="0" instance=ExtResource("3_ykdlq")]
+layout_mode = 2
+
+[node name="ClipContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer" index="0"]
+MaxSize = Vector2(110, -1)
+
+[node name="PartyOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_7yf4f")]
+unique_name_in_owner = true
+layout_mode = 2
 SingleRow = true
 
-[node name="EquipmentOptions" parent="Foreground" index="1" instance=ExtResource("3_eomiq")]
-layout_mode = 0
-offset_left = 75.0
-offset_top = 49.0
-offset_right = 212.0
-offset_bottom = 157.0
-Columns = 1
-ScrollBarEnabled = true
+[node name="Arrows" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer" index="1"]
+visible = false
+
+[node name="HScrollBar" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer/ScrollBars" index="0"]
+page = 90.3614
+
+[node name="EquipmentContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="EquipmentOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer/HBoxContainer" index="0" instance=ExtResource("3_7yf4f")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EquipmentNameList" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[editable path="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer"]

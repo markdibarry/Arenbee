@@ -20,11 +20,34 @@ public partial class EquipmentSubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private OptionContainer _partyOptions = null!;
+    private Control _contentContainer = null!;
+    private int _contentMargin;
+    private OptionGrid _partyOptions = null!;
     private OptionContainer _equipmentOptions = null!;
-    private PackedScene _equipSelectOptionScene = GD.Load<PackedScene>(EquipSelectOption.GetScenePath());
-    private IReadOnlyCollection<Actor> _partyActors;
+    private VBoxContainer _equipmentNameList = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+    private IReadOnlyCollection<Actor> _partyActors;
+
+    protected override void SetupData(object? data)
+    {
+        if (data is not int margin)
+            return;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.AddThemeConstantOverride("margin_left", margin);
+    }
+
+    protected override void MockData()
+    {
+        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _partyActors = new List<Actor> { actor };
+    }
+
+    protected override void CustomSetup()
+    {
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
+        _contentContainer.Resized += OnResized;
+        UpdatePartyMemberOptions();
+    }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
     {
@@ -40,15 +63,9 @@ public partial class EquipmentSubMenu : OptionSubMenu
         base.ResumeSubMenu();
     }
 
-    protected override void MockData()
+    protected void OnResized()
     {
-        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
-        _partyActors = new List<Actor> { actor };
-    }
-
-    protected override void CustomSetup()
-    {
-        UpdatePartyMemberOptions();
+        _contentMargin = (int)(_contentContainer.Position.X + _contentContainer.Size.X);
     }
 
     protected override void OnItemFocused()
@@ -57,7 +74,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
             UpdateEquipmentDisplay(CurrentContainer.FocusedItem);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer == null)
             return;
@@ -69,25 +86,12 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _partyOptions = OptionContainers.First(x => x.Name == "PartyOptions");
-        _equipmentOptions = OptionContainers.First(x => x.Name == "EquipmentOptions");
-    }
-
-    private List<EquipSelectOption> GetEquipmentOptions(OptionItem optionItem)
-    {
-        List<EquipSelectOption> options = new();
-        if (optionItem?.OptionData is not Actor actor)
-            return options;
-        foreach (EquipmentSlot slot in actor.Equipment.Slots)
-        {
-            var option = _equipSelectOptionScene.Instantiate<EquipSelectOption>();
-            option.KeyText = slot.SlotCategory.DisplayName + ":";
-            option.ValueText = slot.ItemStack?.Item.DisplayName ?? "<None>";
-            option.OptionData = slot;
-            options.Add(option);
-        }
-        return options;
+        _contentContainer = GetNode<Control>("%VBoxContainer");
+        _partyOptions = GetNode<OptionGrid>("%PartyOptions");
+        _equipmentOptions = GetNode<OptionContainer>("%EquipmentOptions");
+        _equipmentNameList = GetNode<VBoxContainer>("%EquipmentNameList");
+        AddContainer(_partyOptions);
+        AddContainer(_equipmentOptions);
     }
 
     private List<TextOption> GetPartyMemberOptions()
@@ -95,7 +99,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
         List<TextOption> options = new();
         if (_partyActors.Count == 0)
             return options;
-        ((GridOptionContainer)_partyOptions).OptionGrid.Columns = _partyActors.Count;
+        _partyOptions.Columns = _partyActors.Count;
         foreach (Actor actorData in _partyActors.OfType<Actor>())
         {
             var textOption = _textOptionScene.Instantiate<TextOption>();
@@ -113,16 +117,27 @@ public partial class EquipmentSubMenu : OptionSubMenu
         if (optionItem?.OptionData is not EquipmentSlot slot)
             return;
 
-        SelectSubMenuDataModel data = new(slot, actor);
+        SelectSubMenuDataModel data = new(slot, actor, _contentMargin);
         _ = OpenSubMenuAsync(path: SelectSubMenu.GetScenePath(), data: data);
     }
 
     private void UpdateEquipmentDisplay(OptionItem? optionItem)
     {
-        if (optionItem == null)
+        if (optionItem?.OptionData is not Actor actor)
             return;
-        List<EquipSelectOption> options = GetEquipmentOptions(optionItem);
-        _equipmentOptions.ReplaceChildren(options);
+        _equipmentOptions.ClearOptionItems();
+        _equipmentNameList.QueueFreeAllChildren();
+        foreach (EquipmentSlot slot in actor.Equipment.Slots)
+        {
+            var option = _textOptionScene.Instantiate<TextOption>();
+            option.LabelText = slot.SlotCategory.DisplayName + ":";
+            Label name = new();
+            name.Text = slot.ItemStack?.Item.DisplayName ?? "<None>";
+            name.HorizontalAlignment = HorizontalAlignment.Right;
+            option.OptionData = slot;
+            _equipmentOptions.AddOption(option);
+            _equipmentNameList.AddChild(name);
+        }
     }
 
     private void UpdatePartyMemberOptions()

@@ -8,6 +8,7 @@ namespace Arenbee.GUI.Menus.PartyMenus;
 [Tool]
 public partial class PartyMenu : Menu
 {
+    public const int ForegroundMargin = 8;
     public static string GetScenePath() => GDEx.GetScenePath();
 
     public override async Task AnimateOpenAsync()

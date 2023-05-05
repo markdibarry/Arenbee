@@ -11,25 +11,28 @@ public partial class SaveGameSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
     private List<(string, GameSave)> _gameSaves = new();
+    private OptionContainer _saveOptions = null!;
     private PackedScene _saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         string? fileName = CurrentContainer?.FocusedItem?.OptionData as string;
         OpenSaveGameConfirmSubMenu(fileName);
-    }
-
-    public override void UpdateData(object? data)
-    {
     }
 
     protected override void CustomSetup()
     {
         var header = GetNode<Label>("%Header");
         header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
-        OptionContainer? saveOptions = OptionContainers.Find(x => x.Name == "SaveOptions");
+
         List<SaveGameOption> options = GetSaveGameOptions();
-        saveOptions?.ReplaceChildren(options);
+        _saveOptions?.ReplaceChildren(options);
+    }
+
+    protected override void SetNodeReferences()
+    {
+        _saveOptions = GetNode<OptionContainer>("%SaveOptions");
+        AddContainer(_saveOptions);
     }
 
     private void OpenSaveGameConfirmSubMenu(string? fileName)

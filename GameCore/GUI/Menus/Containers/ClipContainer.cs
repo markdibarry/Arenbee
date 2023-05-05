@@ -1,4 +1,5 @@
 ﻿using System;
+using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;
@@ -6,8 +7,36 @@ namespace GameCore.GUI;
 [Tool]
 public partial class ClipContainer : Container
 {
-    [Export] public bool ClipX { get; set; }
-    [Export] public bool ClipY { get; set; }
+    public ClipContainer()
+    {
+        ClipContents = true;
+        AnchorsPreset = (int)LayoutPreset.FullRect;
+        GrowHorizontal = GrowDirection.Both;
+        GrowVertical = GrowDirection.Both;
+    }
+
+    private bool _clipX;
+    private bool _clipY;
+    [Export]
+    public bool ClipX
+    {
+        get => _clipX;
+        set
+        {
+            RepositionChildren();
+            _clipX = value;
+        }
+    }
+    [Export]
+    public bool ClipY
+    {
+        get => _clipY;
+        set
+        {
+            RepositionChildren();
+            _clipY = value;
+        }
+    }
     [Export] public Vector2 MaxSize { get; set; } = new Vector2(-1, -1);
 
     public override Vector2 _GetMinimumSize()
@@ -23,7 +52,7 @@ public partial class ClipContainer : Container
     public Vector2 GetBaseMinimumSize()
     {
         Vector2 max = Vector2.Zero;
-        foreach (Control control in GetChildren())
+        foreach (Control control in this.GetChildren<Control>())
         {
             Vector2 size = control.GetCombinedMinimumSize();
             if (!ClipX && size.X > max.X)
@@ -43,8 +72,8 @@ public partial class ClipContainer : Container
     public void RepositionChildren()
     {
         UpdateMinimumSize();
-        var rect = new Rect2(Vector2.Zero, Size.X, Size.Y);
-        foreach (Control child in GetChildren())
+        Rect2 rect = new(Vector2.Zero, Size.X, Size.Y);
+        foreach (Control child in this.GetChildren<Control>())
             FitChildInRect(child, rect);
     }
 }

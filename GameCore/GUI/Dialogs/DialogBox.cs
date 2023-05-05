@@ -16,7 +16,7 @@ public partial class DialogBox : Control
     private MarginContainer _dialogMargin = null!;
     private PanelContainer _dialogPanel = null!;
     private bool _dim;
-    private DynamicTextBox _dynamicTextBox = null!;
+    private DynamicTextBox _dynamicTextBox = GDEx.Instantiate<DynamicTextBox>(DynamicTextBox.GetScenePath());
     private Label _nameLabel = null!;
     private PanelContainer _namePanel = null!;
     private Control _portraitContainer = null!;
@@ -79,31 +79,15 @@ public partial class DialogBox : Control
         Writing
     }
 
-    public override void _Notification(int what)
-    {
-        if (what == NotificationSceneInstantiated)
-            Init();
-    }
-
-    public override void _Ready()
-    {
-        if (this.IsSceneRoot())
-        {
-        }
-    }
+    public override void _Ready() => Init();
 
     public void HandleInput(GUIInputHandler menuInput, double delta)
     {
         SpeedUpEnabled = false;
         if (CurrentState == State.Idle && menuInput.Accept.IsActionJustPressed)
-        {
             HandleNext();
-            return;
-        }
         else if (CurrentState == State.Writing && menuInput.Accept.IsActionPressed)
-        {
             SpeedUpEnabled = true;
-        }
     }
 
     public bool HasSpeaker(string speakerId) => _portraitContainer.HasNode(speakerId);
@@ -121,7 +105,7 @@ public partial class DialogBox : Control
 
     public void StartWriting()
     {
-        if (CurrentState != State.Idle)
+        if (CurrentState != State.Idle || DialogLine == null)
             return;
         _dynamicTextBox.StartWriting();
     }
@@ -202,7 +186,6 @@ public partial class DialogBox : Control
     {
         SetNodeReferences();
         SubscribeEvents();
-        _dynamicTextBox.CustomTextExportDisabled = true;
         CurrentState = State.Idle;
     }
 
@@ -229,13 +212,13 @@ public partial class DialogBox : Control
 
     private void SetNodeReferences()
     {
-        _portraitContainer = GetNodeOrNull<Control>("PortraitContainer");
-        _dialogPanel = GetNodeOrNull<PanelContainer>("DialogPanel");
-        _dialogMargin = _dialogPanel.GetNodeOrNull<MarginContainer>("DialogMargin");
-        _dynamicTextBox = _dialogMargin.GetNodeOrNull<DynamicTextBox>("DynamicTextBox");
-        _namePanel = GetNodeOrNull<PanelContainer>("NamePanel");
-        _nameLabel = _namePanel.GetNodeOrNull<Label>("NameLabel");
-        NextArrow = _dialogPanel.GetNodeOrNull<TextureRect>("ArrowMargin/NextArrow");
+        _portraitContainer = GetNode<Control>("PortraitContainer");
+        _dialogPanel = GetNode<PanelContainer>("DialogPanel");
+        _dialogMargin = _dialogPanel.GetNode<MarginContainer>("DialogMargin");
+        _namePanel = GetNode<PanelContainer>("NamePanel");
+        _nameLabel = GetNode<Label>("%NameLabel");
+        NextArrow = _dialogPanel.GetNode<TextureRect>("ArrowMargin/NextArrow");
+        _dialogMargin.AddChild(_dynamicTextBox);
     }
 
     private void SubscribeEvents()

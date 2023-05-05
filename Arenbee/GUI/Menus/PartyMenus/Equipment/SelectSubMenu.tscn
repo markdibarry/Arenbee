@@ -1,42 +1,66 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://cdk0jmlpilef2"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_uvd47"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_kopb2"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_a8so6"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="6_dccvk"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="7_qosjr"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_togn2"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_70n7x"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_86551"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_jig2i"]
+[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="4_wtgju"]
+[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_qom7v"]
 
-[node name="SelectSubMenu" instance=ExtResource("1_uvd47")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_kopb2")
-NodePaths = [NodePath("Foreground/EquipOptions")]
-
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="SelectSubMenu" instance=ExtResource("1_togn2")]
+script = ExtResource("2_70n7x")
 
 [node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="EquipOptions" parent="Foreground" index="0" instance=ExtResource("3_a8so6")]
-layout_mode = 0
-offset_left = 215.0
-offset_top = 45.0
-offset_right = 327.0
-offset_bottom = 153.0
+[node name="MainMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="ActorStatsDisplay" parent="Foreground" index="1" instance=ExtResource("6_dccvk")]
-layout_mode = 0
-offset_left = 330.0
-offset_top = 83.0
-offset_right = 468.0
-offset_bottom = 157.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MainMarginContainer" index="0"]
+layout_mode = 2
 
-[node name="ItemStatsDisplay" parent="Foreground" index="2" instance=ExtResource("7_qosjr")]
-layout_mode = 0
-offset_left = 330.0
-offset_top = 16.0
-offset_right = 448.0
-offset_bottom = 80.0
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 164
+
+[node name="VBoxContainer1" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="1"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1" index="0"]
+custom_minimum_size = Vector2(0, 146)
+layout_mode = 2
+
+[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer" index="0" instance=ExtResource("3_86551")]
+layout_mode = 2
+
+[node name="ClipContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer" index="0"]
+ClipY = true
+
+[node name="EquipOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_jig2i")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VScrollBar" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer/ScrollBars" index="1"]
+page = 0.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="ItemStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("4_wtgju")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ActorStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="1" instance=ExtResource("5_qom7v")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[editable path="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer"]

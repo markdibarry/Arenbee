@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://csbncf5x8i8pd"]
+[gd_scene load_steps=2 format=3 uid="uid://csbncf5x8i8pd"]
 
 [ext_resource type="Script" path="res://GameCore/GUI/Text/DynamicTextBox.cs" id="2_4qnl8"]
-[ext_resource type="Script" path="res://GameCore/GUI/Text/DynamicText.cs" id="3_2ehhg"]
 
 [node name="DynamicTextBox" type="MarginContainer"]
 clip_contents = true
@@ -11,31 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 1
-theme_override_constants/margin_top = 0
+theme_override_constants/margin_top = 1
 theme_override_constants/margin_right = 1
-theme_override_constants/margin_bottom = 1
 script = ExtResource("2_4qnl8")
-
-[node name="TextWindow" type="Control" parent="."]
-layout_mode = 2
-anchors_preset = 0
-offset_left = 1.0
-offset_right = 479.0
-offset_bottom = 269.0
-
-[node name="DynamicText" type="RichTextLabel" parent="TextWindow"]
-clip_contents = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-bbcode_enabled = true
-fit_content_height = true
-scroll_active = false
-visible_characters = 0
-visible_characters_behavior = 1
-visible_ratio = 0.0
-script = ExtResource("3_2ehhg")
-Speed = 0.05
+SpeedMultiplier = 1.0

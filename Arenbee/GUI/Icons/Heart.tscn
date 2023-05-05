@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://c000pnlx17lxe"]
 
-[ext_resource type="Texture2D" path="res://Arenbee/GUI/Icons/Heart.png" id="1_343ba"]
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Containers/Sprite2DContainer.tscn" id="1_ax7c5"]
+[ext_resource type="Texture2D" uid="uid://lc4bpjq7024u" path="res://Arenbee/GUI/Icons/Heart.png" id="1_343ba"]
+[ext_resource type="Script" path="res://GameCore/GUI/Containers/Sprite2DContainer.cs" id="1_y2n5b"]
 
-[node name="Heart" instance=ExtResource( "1_ax7c5" )]
-minimum_size = Vector2(10, 10)
+[node name="Heart" type="Container"]
+custom_minimum_size = Vector2(10, 10)
 offset_right = 10.0
 offset_bottom = 10.0
+script = ExtResource("1_y2n5b")
 
-[node name="Sprite2D" type="Sprite2D" parent="." index="0"]
-texture = ExtResource( "1_343ba" )
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_343ba")
 centered = false
 hframes = 3

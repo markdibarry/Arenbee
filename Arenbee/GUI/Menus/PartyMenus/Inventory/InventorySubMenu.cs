@@ -20,19 +20,22 @@ public partial class InventorySubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
+    private int _contentMargin;
     private AInventory _inventory;
     private readonly AItemCategoryDB _itemCategoryDB = Locator.ItemCategoryDB;
     private OptionContainer _inventoryList = null!;
-    private DynamicTextContainer _itemInfo = null!;
+    private DynamicTextBox _itemInfo = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
+    private Control _referenceContainer = null!;
     private OptionContainer _typeList = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
 
     protected override void MockData()
     {
-        AItem item = Locator.ItemDB.GetItem(ItemIds.Potion)!;
-        _inventory = new Inventory(new ItemStack[] { new(item, 2) });
+        AItem potion = Locator.ItemDB.GetItem(ItemIds.Potion)!;
+        AItem metalStick = Locator.ItemDB.GetItem(ItemIds.GeneSupreme)!;
+        _inventory = new Inventory(new ItemStack[] { new(potion, 2), new(metalStick, 1) });
     }
 
     protected override void SetupData(object? data)
@@ -40,7 +43,6 @@ public partial class InventorySubMenu : OptionSubMenu
         if (data is not int margin)
             return;
         var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.RemoveThemeConstantOverride("margin_left");
         marginContainer.AddThemeConstantOverride("margin_left", margin);
     }
 
@@ -58,11 +60,18 @@ public partial class InventorySubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
+        _referenceContainer.Resized += OnResized;
         List<TextOption> typeOptions = GetItemTypeOptions();
         _typeList.ReplaceChildren(typeOptions);
         _typeList.FocusItem(1);
-        _inventoryList.Clear();
+        _inventoryList.ClearOptionItems();
         UpdateItemDescription(null);
+    }
+
+    protected void OnResized()
+    {
+        _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
     protected override void OnItemFocused()
@@ -75,7 +84,7 @@ public partial class InventorySubMenu : OptionSubMenu
             UpdateItemDescription(CurrentContainer.FocusedItem);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer == _typeList)
             FocusContainer(_inventoryList);
@@ -91,10 +100,12 @@ public partial class InventorySubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _typeList = OptionContainers.First(x => x.Name == "ItemTypeOptions");
-        _inventoryList = OptionContainers.First(x => x.Name == "InventoryOptions");
-        _itemInfo = GetNode<DynamicTextContainer>("%ItemInfo");
+        _referenceContainer = GetNode<Control>("%VBoxContainer");
+        _typeList = GetNode<OptionContainer>("%ItemTypeOptions");
+        _inventoryList = GetNode<OptionContainer>("%InventoryOptions");
+        AddContainer(_typeList);
+        AddContainer(_inventoryList);
+        _itemInfo = GetNode<DynamicTextBox>("%ItemInfo");
         _itemStatsDisplay = GetNode<ItemStatsDisplay>("%ItemStatsDisplay");
     }
 
@@ -140,7 +151,7 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         if (optionItem.OptionData is not ItemStack itemStack)
             return;
-        _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: itemStack);
+        _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: (_contentMargin, itemStack));
     }
 
     private void UpdateItemDescription(OptionItem? optionItem)
@@ -148,16 +159,16 @@ public partial class InventorySubMenu : OptionSubMenu
         if (optionItem == null)
         {
             _itemStatsDisplay.UpdateStatsDisplay(null);
-            _ = _itemInfo.UpdateTextAsync(string.Empty);
-            _itemInfo.WriteTextEnabled = true;
+            _itemInfo.CustomText = string.Empty;
+            _itemInfo.Writing = true;
         }
         else
         {
             if (optionItem.OptionData is not ItemStack itemStack)
                 return;
             _itemStatsDisplay.UpdateStatsDisplay(itemStack.Item);
-            _ = _itemInfo.UpdateTextAsync(itemStack.Item.Description);
-            _itemInfo.WriteTextEnabled = true;
+            _ = _itemInfo.CustomText = itemStack.Item.Description;
+            _itemInfo.Writing = true;
         }
     }
 

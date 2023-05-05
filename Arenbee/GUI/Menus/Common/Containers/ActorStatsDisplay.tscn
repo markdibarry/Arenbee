@@ -11,95 +11,105 @@ offset_right = 14.0
 offset_bottom = 14.0
 script = ExtResource("1_8vqha")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/v_separation = 0
 columns = 4
 
-[node name="LevelLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="LevelLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
 size_flags_horizontal = 3
-Text = "Level"
+Text = "LevAbb:"
 
-[node name="Level" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+[node name="Level" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
 size_flags_horizontal = 8
 Text = "1"
 
-[node name="Spacer1" type="MarginContainer" parent="VBoxContainer/GridContainer"]
+[node name="Spacer1" type="MarginContainer" parent="MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Spacer2" type="MarginContainer" parent="VBoxContainer/GridContainer"]
+[node name="Spacer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="HPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="HPLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
-Text = "HP"
+Text = "HPAbb:"
 
-[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
+[node name="HP" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
 layout_mode = 2
 size_flags_horizontal = 8
 MaxText = "999"
 Text = "100"
 
-[node name="MPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="MPLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
-Text = "MP"
+Text = "MPAbb:"
 
-[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
+[node name="MP" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("3_7l17g")]
 layout_mode = 2
 size_flags_horizontal = 8
 MaxText = "999"
 Text = "100"
 
-[node name="AttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="AttackLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
 size_flags_horizontal = 3
-Text = "Atk"
+Text = "AttAbb:"
 
-[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+[node name="Attack" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
 size_flags_horizontal = 8
 Text = "1"
 
-[node name="DefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="DefenseLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
 size_flags_horizontal = 3
-Text = "Def"
+Text = "DefAbb:"
 
-[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+[node name="Defense" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
 size_flags_horizontal = 8
 Text = "1"
 
-[node name="MAttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="MAttackLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
 size_flags_horizontal = 3
-Text = "M.Atk"
+Text = "MagAbb:"
 
-[node name="MAttack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+[node name="MAttack" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
 size_flags_horizontal = 8
 Text = "1"
 
-[node name="MDefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
+[node name="MDefenseLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("1_0yp8p")]
 layout_mode = 2
 size_flags_horizontal = 3
-Text = "M.Def"
+Text = "MagAbb:"
 
-[node name="MDefense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
+[node name="MDefense" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_vs65o")]
 layout_mode = 2
 size_flags_horizontal = 8
 Text = "1"
 
-[node name="EAtk" parent="VBoxContainer" instance=ExtResource("4_rau1c")]
+[node name="EAtk" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_rau1c")]
 unique_name_in_owner = true
 layout_mode = 2
+StatNameText = "AttAbb:"
 
-[node name="EDef" parent="VBoxContainer" instance=ExtResource("4_rau1c")]
+[node name="EDef" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_rau1c")]
 unique_name_in_owner = true
 layout_mode = 2
+StatNameText = "EleAbb:"

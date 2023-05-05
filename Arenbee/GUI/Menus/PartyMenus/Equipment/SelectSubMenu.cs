@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
+using Arenbee.Items;
 using Arenbee.Statistics;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;
@@ -14,16 +17,8 @@ namespace Arenbee.GUI.Menus.PartyMenus.Equipment;
 [Tool]
 public partial class SelectSubMenu : OptionSubMenu
 {
-    public SelectSubMenu()
-    {
-        _itemDB = Locator.ItemDB;
-        GameSession? gameSession = Locator.Session as GameSession;
-        _playerParty = gameSession?.MainParty ?? new Party("temp");
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly AItemDB _itemDB;
-    private readonly Party _playerParty;
+    private Inventory _inventory = null!;
     private Actor _actor = null!;
     private EquipmentSlot _slot = null!;
     private ItemStack? _currentItemStack;
@@ -40,10 +35,25 @@ public partial class SelectSubMenu : OptionSubMenu
             return;
         _actor = dataModel.Actor;
         _slot = dataModel.Slot;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.AddThemeConstantOverride("margin_left", dataModel.Margin);
+        GameSession? gameSession = Locator.Session as GameSession;
+        _inventory = gameSession?.MainParty?.Inventory!;
+    }
+
+    protected override void MockData()
+    {
+        _actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        EquipmentSlotCategory category = Locator.EquipmentSlotCategoryDB.GetCategory(EquipmentSlotCategoryIds.Weapon)!;
+        ItemStack metalStick = new(Locator.ItemDB.GetItem(ItemIds.MetalHockeyStick)!, 1);
+        ItemStack magicWand = new(Locator.ItemDB.GetItem(ItemIds.Wand)!, 1);
+        _slot = new EquipmentSlot(category, metalStick);
+        _inventory = new Inventory(new ItemStack[] { metalStick, magicWand });
     }
 
     protected override void CustomSetup()
     {
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
         var options = GetEquippableOptions();
         _equipOptions.ReplaceChildren(options);
         _actorStatsDisplay.UpdateBaseValues(_actor.Stats);
@@ -68,7 +78,7 @@ public partial class SelectSubMenu : OptionSubMenu
         _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack?.Item);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not ItemStack itemStack)
             _actor.Equipment.RemoveItem(_actor, _slot);
@@ -80,12 +90,12 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
         CreateMockStats();
         _currentItemStack = _slot.ItemStack;
-        _equipOptions = OptionContainers.Find(x => x.Name == "EquipOptions");
-        _actorStatsDisplay = Foreground.GetNode<ActorStatsDisplay>("ActorStatsDisplay");
-        _itemStatsDisplay = Foreground.GetNode<ItemStatsDisplay>("ItemStatsDisplay");
+        _equipOptions = GetNode<OptionContainer>("%EquipOptions");
+        AddContainer(_equipOptions);
+        _actorStatsDisplay = GetNode<ActorStatsDisplay>("%ActorStatsDisplay");
+        _itemStatsDisplay = GetNode<ItemStatsDisplay>("%ItemStatsDisplay");
     }
 
     private void CreateMockStats()
@@ -102,13 +112,11 @@ public partial class SelectSubMenu : OptionSubMenu
         unequipOption.ValueText = string.Empty;
         unequipOption.OptionData = null;
         options.Add(unequipOption);
-        if (_slot == null)
-            return options;
-        if (_playerParty.Inventory == null)
+        if (_slot == null || _inventory == null)
             return options;
         foreach (string itemCategoryId in _slot.SlotCategory.ItemCategoryIds)
         {
-            foreach (ItemStack itemStack in _playerParty.Inventory.GetItemsByType(itemCategoryId))
+            foreach (ItemStack itemStack in _inventory.GetItemsByType(itemCategoryId))
             {
                 var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
                 option.KeyText = itemStack.Item.DisplayName;

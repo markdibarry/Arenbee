@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.PartyMenus.Equipment;
 using GameCore.GUI;
@@ -13,7 +12,9 @@ public partial class MainSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
     private GameRoot _gameRoot = (GameRoot)Locator.Root;
-    private OptionContainer _optionList = null!;
+    private Control _referenceContainer = null!;
+    private OptionContainer _mainOptions = null!;
+    private int _contentMargin;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_Party_Stats,
@@ -24,21 +25,21 @@ public partial class MainSubMenu : OptionSubMenu
         Localization.Menus.Menus_Party_Quit
     };
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string subMenuName)
             return;
-        int marginSize = (int)(_optionList.Position.X + _optionList.Size.X);
+
         switch (subMenuName)
         {
             case Localization.Menus.Menus_Party_Stats:
-                _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath(), data: marginSize);
+                _ = OpenSubMenuAsync(StatsSubMenu.GetScenePath(), data: _contentMargin);
                 break;
             case Localization.Menus.Menus_Party_Inventory:
-                _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath(), data: marginSize);
+                _ = OpenSubMenuAsync(InventorySubMenu.GetScenePath(), data: _contentMargin);
                 break;
             case Localization.Menus.Menus_Party_Equipment:
-                _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath());
+                _ = OpenSubMenuAsync(EquipmentSubMenu.GetScenePath(), data: _contentMargin);
                 break;
             case Localization.Menus.Menus_Party_Save:
                 _ = OpenSubMenuAsync(SaveGameSubMenu.GetScenePath());
@@ -51,13 +52,21 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
-        _optionList.ReplaceChildren(GetMenuOptions());
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
+        _referenceContainer.Resized += OnResized;
+        _mainOptions.ReplaceChildren(GetMenuOptions());
+    }
+
+    protected void OnResized()
+    {
+        _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _optionList = OptionContainers.First(x => x.Name == "OptionContainer");
+        _referenceContainer = GetNode<Control>("%MainContainer");
+        _mainOptions = GetNode<OptionContainer>("%MainOptions");
+        AddContainer(_mainOptions);
     }
 
     private IEnumerable<TextOption> GetMenuOptions()

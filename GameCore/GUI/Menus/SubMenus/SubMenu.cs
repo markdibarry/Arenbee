@@ -27,7 +27,7 @@ public partial class SubMenu : Control
     }
     public State CurrentState { get; protected set; }
     protected Control Background { get; private set; } = null!;
-    protected Control Foreground { get; private set; } = null!;
+    protected MarginContainer Foreground { get; private set; } = null!;
     [Export] protected bool PreventCancel { get; set; }
     [Export] protected bool PreventCloseAll { get; set; }
     protected Color TempColor { get; set; }
@@ -86,12 +86,12 @@ public partial class SubMenu : Control
             MockData();
         else
             SetupData(data);
-        SetNodeReferences();
+        SetNodeReferencesBase();
         CustomSetup();
         await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         Modulate = TempColor;
         await AnimateOpenAsync();
-        PostWaitFrameSetup();
+        PostWaitFrameSetupBase();
         CurrentState = State.Available;
     }
 
@@ -158,9 +158,17 @@ public partial class SubMenu : Control
     /// <returns></returns>
     protected virtual void PostWaitFrameSetup() { }
 
-    protected virtual void SetNodeReferences()
+    /// <summary>
+    /// Logic used for setup after the Controls have adjusted base method.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual void PostWaitFrameSetupBase() => PostWaitFrameSetup();
+
+    protected virtual void SetNodeReferences() { }
+
+    protected virtual void SetNodeReferencesBase()
     {
-        Foreground = GetNode<Control>("Foreground");
+        Foreground = GetNode<MarginContainer>("Foreground");
         Background = GetNode<Control>("Background");
     }
 }

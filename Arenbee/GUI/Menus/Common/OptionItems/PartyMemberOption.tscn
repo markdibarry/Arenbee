@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bi8vtuqr6ri6s"]
 
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/OptionItems/PartyMemberOption.cs" id="2_3tesp"]
-[ext_resource type="PackedScene" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7i0tc"]
+[ext_resource type="PackedScene" uid="uid://dcwfbr5idp3fx" path="res://Arenbee/GUI/Menus/Common/Containers/PointContainer.tscn" id="3_7i0tc"]
 
 [node name="PartyMemberOption" type="MarginContainer"]
 modulate = Color(0.7, 0.7, 0.7, 1)
@@ -28,16 +28,8 @@ layout_mode = 2
 
 [node name="HPContainer" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_7i0tc")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-StatNameText = "HP:"
-StatCurrentValueText = "999"
-StatMaxValueText = "999"
 
 [node name="MPContainer" parent="HBoxContainer/VBoxContainer" instance=ExtResource("3_7i0tc")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-StatNameText = "MP:"
-StatCurrentValueText = "999"
-StatMaxValueText = "999"

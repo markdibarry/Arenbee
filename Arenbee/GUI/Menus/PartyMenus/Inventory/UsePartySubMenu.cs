@@ -50,7 +50,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     protected override void SetupData(object? data)
     {
-        if (data is not ItemStack itemStack)
+        if (data is not (int margin, ItemStack itemStack))
             return;
         _itemStack = itemStack;
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
@@ -58,18 +58,20 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
         DisplayOptions();
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         _ = HandleUse(CurrentContainer.FocusedItem);
     }
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _partyContainer = OptionContainers.Find(x => x.Name == "PartyOptions")!;
+        _partyContainer = GetNode<OptionContainer>("%PartyOptions");
+        AddContainer(_partyContainer);
+
         if (_itemStack == null || _actionEffect == null)
             return;
         if (_actionEffect.TargetType == (int)TargetType.PartyMemberAll)
@@ -81,7 +83,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     private void DisplayOptions()
     {
-        _partyContainer.Clear();
+        _partyContainer.ClearOptionItems();
         if (_party == null)
             return;
         foreach (Actor? actor in _party.Actors.OrEmpty())

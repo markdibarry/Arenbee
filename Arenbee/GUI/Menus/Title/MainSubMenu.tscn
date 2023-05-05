@@ -1,37 +1,34 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://bnn1x2csi7l1j"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_g7lyy"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.cs" id="2_cyvws"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_jffcr"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_uuie0"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.cs" id="2_b8kc2"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="2_oprqe"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_2v0vs"]
 
-[node name="MainSubMenu" instance=ExtResource("1_g7lyy")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_cyvws")
-NodePaths = [NodePath("Foreground/MainOptions")]
+[node name="MainSubMenu" instance=ExtResource("1_uuie0")]
+script = ExtResource("2_b8kc2")
 PreventCancel = true
 PreventCloseAll = true
 
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MainContainer" type="PanelContainer" parent="Foreground" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"OptionContainer"
 
-[node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="WindowContainer" parent="Foreground/MainContainer" index="0" instance=ExtResource("2_oprqe")]
+layout_mode = 2
 
-[node name="MainOptions" parent="Foreground" index="0" instance=ExtResource("3_jffcr")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -49.5
-offset_top = -21.5
-offset_right = 49.5
-offset_bottom = 21.5
-grow_horizontal = 2
-grow_vertical = 2
-FitXToContent = true
-FitYToContent = true
+[node name="MainOptions" parent="Foreground/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_2v0vs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HScrollBar" parent="Foreground/MainContainer/WindowContainer/ScrollBars" index="0"]
+page = 0.0
+
+[node name="VScrollBar" parent="Foreground/MainContainer/WindowContainer/ScrollBars" index="1"]
+page = 0.0
+value = 50.0
+
+[editable path="Foreground/MainContainer/WindowContainer"]

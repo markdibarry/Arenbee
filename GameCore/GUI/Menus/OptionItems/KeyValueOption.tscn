@@ -18,7 +18,6 @@ DimWhenUnfocused = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Key" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true

@@ -19,7 +19,7 @@ public partial class OptionSubMenu : SubMenu
             return;
         if (menuInput.Accept.IsActionJustPressed)
         {
-            CurrentContainer.SelectItem();
+            OnSelectPressedBase();
             return;
         }
 

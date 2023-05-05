@@ -15,7 +15,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
     private GameRoot _gameRoot = (GameRoot)Locator.Root;
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string fileName)
             return;
@@ -27,9 +27,14 @@ public partial class LoadGameSubMenu : OptionSubMenu
         PreventCloseAll = true;
         var header = GetNode<Label>("%Header");
         header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
-        _loadOptions = OptionContainers.Find(x => x.Name == "LoadOptions")!;
         List<SaveGameOption> options = GetSaveGameOptions();
         _loadOptions.ReplaceChildren(options);
+    }
+
+    protected override void SetNodeReferences()
+    {
+        _loadOptions = GetNode<OptionContainer>("%LoadOptions");
+        AddContainer(_loadOptions);
     }
 
     private void ContinueSavedGame(string fileName)

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Arenbee.ActionEffects;
-using Arenbee.Items;
 using GameCore.ActionEffects;
 using GameCore.GUI;
 using GameCore.Items;
@@ -12,39 +11,49 @@ namespace Arenbee.GUI.Menus.PartyMenus;
 [Tool]
 public partial class UseSubMenu : OptionSubMenu
 {
-    public UseSubMenu()
-    {
-        GameSession? gameSession = Locator.Session as GameSession;
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
+
     private ItemStack _itemStack = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private OptionContainer _optionContainer = null!;
+    private Control _referenceContainer = null!;
+    private int _referenceMargin;
     private readonly ActionEffectDB _actionEffectDB = (ActionEffectDB)Locator.ActionEffectDB;
 
     protected override void CustomSetup()
     {
-        _optionContainer = OptionContainers.Find(x => x.Name == "UseOptions");
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
+        _referenceContainer = GetNode<Control>("%VBoxContainer");
+        _referenceContainer.Resized += OnResized;
+        _optionContainer = GetNode<OptionContainer>("%UseOptions");
+        AddContainer(_optionContainer);
+
         DisplayOptions();
     }
 
     protected override void SetupData(object? data)
     {
-        if (data is not ItemStack itemStack)
+        if (data is not (int margin, ItemStack itemStack))
             return;
         _itemStack = itemStack;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.AddThemeConstantOverride("margin_left", margin);
     }
 
-    protected override void OnItemSelected()
+    protected void OnResized()
+    {
+        _referenceMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
+    }
+
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string optionValue)
             return;
         if (CurrentContainer.FocusedItem.Disabled)
             return;
-        if (optionValue == UseOptions.Use)
+        if (optionValue == Localization.Menus.Menus_Inventory_Use_Use)
             HandleUse();
-        else if (optionValue == UseOptions.Drop)
+        else if (optionValue == Localization.Menus.Menus_Inventory_Use_Drop)
             HandleDrop();
     }
 
@@ -52,16 +61,16 @@ public partial class UseSubMenu : OptionSubMenu
     {
         List<TextOption> options = new();
         TextOption option = _textOptionScene.Instantiate<TextOption>();
-        option.LabelText = UseOptions.Use;
-        option.OptionData = UseOptions.Use;
+        option.LabelText = this.TrS(Localization.Menus.Menus_Inventory_Use_Use);
+        option.OptionData = Localization.Menus.Menus_Inventory_Use_Use;
         option.Disabled = true;
         if (_itemStack?.Item.UseData != null)
             option.Disabled = _itemStack.Count <= 0;
         options.Add(option);
 
         option = _textOptionScene.Instantiate<TextOption>();
-        option.LabelText = UseOptions.Drop;
-        option.OptionData = UseOptions.Drop;
+        option.LabelText = this.TrS(Localization.Menus.Menus_Inventory_Use_Drop);
+        option.OptionData = Localization.Menus.Menus_Inventory_Use_Drop;
         if (_itemStack != null)
             option.Disabled = !_itemStack.Item.IsDroppable || _itemStack.Count <= 0;
         options.Add(option);
@@ -70,7 +79,7 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void HandleDrop()
     {
-        _ = OpenSubMenuAsync(path: DropSubMenu.GetScenePath(), data: _itemStack);
+        _ = OpenSubMenuAsync(path: DropSubMenu.GetScenePath(), data: (_referenceMargin, _itemStack));
     }
 
     private void HandleUse()
@@ -96,25 +105,11 @@ public partial class UseSubMenu : OptionSubMenu
 
     private void OpenPartyUseSubMenu()
     {
-        _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: _itemStack);
+        _ = OpenSubMenuAsync(path: UsePartySubMenu.GetScenePath(), data: (_referenceMargin, _itemStack));
     }
 
     private void OpenEnemyUseSubMenu()
     {
         _ = OpenSubMenuAsync(path: UseEnemySubMenu.GetScenePath(), data: _itemStack);
-    }
-
-    private static class UseOptions
-    {
-        public static List<string> GetAll()
-        {
-            return new List<string>()
-            {
-                Use,
-                Drop
-            };
-        }
-        public const string Use = "Use";
-        public const string Drop = "Drop";
     }
 }

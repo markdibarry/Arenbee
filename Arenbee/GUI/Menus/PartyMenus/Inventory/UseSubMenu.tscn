@@ -1,35 +1,40 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://ogils4tveate"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_d15qu"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UseSubMenu.cs" id="2_ne4ov"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_os84m"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_7tlq2"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/UseSubMenu.cs" id="2_6i5td"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_mt8jc"]
 
-[node name="UseSubMenu" instance=ExtResource("1_d15qu")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_ne4ov")
-NodePaths = [NodePath("Foreground/UseOptions")]
-
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="UseSubMenu" instance=ExtResource("1_7tlq2")]
+script = ExtResource("2_6i5td")
 
 [node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="UseOptions" parent="Foreground" index="0" instance=ExtResource("3_os84m")]
-layout_mode = 0
-offset_left = 196.0
-offset_top = 49.0
-offset_right = 214.0
-offset_bottom = 67.0
-FitXToContent = true
-FitYToContent = true
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
+layout_mode = 2
 
-[node name="GridWindow" parent="Foreground/UseOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-ClipX = false
-ClipY = false
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 158
 
-[editable path="Foreground/UseOptions"]
-[editable path="Foreground/UseOptions/ContentGrid/OptionGrid"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer" index="1"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="UseOptions" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0" instance=ExtResource("3_mt8jc")]
+unique_name_in_owner = true
+layout_mode = 2

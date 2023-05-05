@@ -16,8 +16,9 @@ namespace Arenbee.GUI.Menus.Title;
 [Tool]
 public partial class MainSubMenu : OptionSubMenu
 {
-    private OptionContainer _startOptions = null!;
+    private OptionContainer _mainOptions = null!;
     private AGameRoot _gameRoot = Locator.Root;
+    private Control _mainContainer = null!;
     private readonly List<string> _menuKeys = new()
     {
         Localization.Menus.Menus_Title_Continue,
@@ -27,10 +28,10 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override async Task AnimateOpenAsync()
     {
-        Vector2 pos = (Size - _startOptions.Size) * 0.5f;
-        _startOptions.Position = new Vector2(pos.X, -_startOptions.Size.Y);
-        var tween = CreateTween();
-        tween.TweenProperty(_startOptions, "position:y", pos.Y, 0.4f);
+        Vector2 pos = (Size - _mainContainer.Size) * 0.5f;
+        _mainContainer.Position = new Vector2(pos.X, -_mainContainer.Size.Y);
+        Tween tween = CreateTween();
+        tween.TweenProperty(_mainContainer, "position:y", pos.Y, 0.4f);
         await ToSignal(tween, Tween.SignalName.Finished);
     }
 
@@ -38,11 +39,11 @@ public partial class MainSubMenu : OptionSubMenu
     {
         PreventCancel = true;
         PreventCloseAll = true;
-        var options = GetMenuOptions();
-        _startOptions.ReplaceChildren(options);
+        List<TextOption> options = GetMenuOptions();
+        _mainOptions.ReplaceChildren(options);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         if (CurrentContainer?.FocusedItem?.OptionData is not string titleChoice)
             return;
@@ -59,8 +60,9 @@ public partial class MainSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _startOptions = OptionContainers.Find(x => x.Name == "MainOptions");
+        _mainContainer = GetNode<Control>("%MainContainer");
+        _mainOptions = GetNode<OptionContainer>("%MainOptions");
+        AddContainer(_mainOptions);
     }
 
     private List<TextOption> GetMenuOptions()
@@ -104,7 +106,7 @@ public partial class MainSubMenu : OptionSubMenu
         _ = OpenSubMenuAsync(LoadGameSubMenu.GetScenePath());
     }
 
-    private GameSave GetNewGame()
+    private static GameSave GetNewGame()
     {
         ActorData actorData = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)!;
         return new GameSave(

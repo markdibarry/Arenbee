@@ -37,7 +37,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     private PackedScene _noDisplayOptionScene = GD.Load<PackedScene>(NoDisplayOption.GetScenePath());
     private OptionContainer _enemyContainer = null!;
     private AItem Item => _itemStack.Item;
-    private MarginContainer _messageContainer = null!;
+    private Control _messageContainer = null!;
     private Label _messageLabel = null!;
 
     protected override void SetupData(object? data)
@@ -58,7 +58,8 @@ public partial class UseEnemySubMenu : OptionSubMenu
 
     protected override async Task AnimateOpenAsync()
     {
-        await Menu.HideInactiveSubMenus();
+        if (Menu != null)
+            await Menu.HideInactiveSubMenus();
 
         if (_areaScene == null)
             return;
@@ -76,17 +77,18 @@ public partial class UseEnemySubMenu : OptionSubMenu
             _areaScene?.MoveToActorContainer(enemy);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         _ = HandleUse(CurrentContainer.FocusedItem);
     }
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _messageContainer = GetNode<MarginContainer>("%MessageContainer");
+        _messageContainer = GetNode<Control>("%MessageContainer");
         _messageLabel = GetNode<Label>("%MessageLabel");
-        _enemyContainer = OptionContainers.Find(x => x.Name == "EnemyOptions")!;
+        _enemyContainer = GetNode<OptionContainer>("%EnemyOptions");
+        AddContainer(_enemyContainer);
+
         if (_itemStack == null)
             return;
         if (_actionEffect.TargetType == (int)TargetType.EnemyAll)
@@ -98,20 +100,19 @@ public partial class UseEnemySubMenu : OptionSubMenu
 
     private void DisplayOptions()
     {
-        _enemyContainer.Clear();
+        _enemyContainer.ClearOptionItems();
         foreach (AActorBody actorBody in _enemies)
         {
             var option = _noDisplayOptionScene.Instantiate<NoDisplayOption>();
             _enemyContainer.AddOption(option);
             option.OptionData = actorBody;
-            option.GlobalPosition = actorBody.GetGlobalTransformWithCanvas().Origin;
+            Vector2 bodyPos = actorBody.GetGlobalTransformWithCanvas().Origin;
+            bodyPos.X -= 5;
+            option.GlobalPosition = bodyPos;
         }
 
-        if (_enemies.Count == 0)
-        {
-            _messageContainer.Visible = true;
-            _messageLabel.Text = "No enemies found!";
-        }
+        _messageContainer.Visible = _enemies.Count == 0;
+        _messageLabel.Text = "No enemies found!";
     }
 
     private async Task HandleUse(OptionItem? optionItem)

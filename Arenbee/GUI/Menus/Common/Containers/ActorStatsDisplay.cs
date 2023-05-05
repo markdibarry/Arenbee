@@ -19,7 +19,7 @@ public partial class ActorStatsDisplay : PanelContainer
 
     public override void _Ready()
     {
-        _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
+        _gridContainer = GetNode<GridContainer>("%GridContainer");
         _levelContainer = _gridContainer.GetNode<StatContainer>("Level");
         _hpContainer = _gridContainer.GetNode<PointContainer>("HP");
         _mpContainer = _gridContainer.GetNode<PointContainer>("MP");

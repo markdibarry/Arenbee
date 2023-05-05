@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Arenbee.Items;
 using GameCore.Enums;
+using GameCore.Items;
 using GameCore.Utility;
 using Godot;
 
@@ -11,10 +13,12 @@ namespace GameCore.GUI;
 public partial class OptionSubMenu : SubMenu
 {
     private readonly PackedScene _cursorScene = GD.Load<PackedScene>(HandCursor.GetScenePath());
+    private readonly List<OptionContainer> _optionContainers = new();
     private OptionCursor _cursor = null!;
-    [Export] public Godot.Collections.Array<NodePath> NodePaths { get; set; } = new();
+    private Control _cursorsContainer = null!;
+
     public OptionContainer? CurrentContainer { get; private set; }
-    public List<OptionContainer> OptionContainers { get; } = new();
+    public IReadOnlyCollection<OptionContainer> OptionContainers => _optionContainers;
     protected string SelectedSoundPath { get; set; } = "menu_select1.wav";
     protected string FocusedSoundPath { get; set; } = "menu_bip1.wav";
 
@@ -27,20 +31,10 @@ public partial class OptionSubMenu : SubMenu
         base.ResumeSubMenu();
     }
 
-    protected sealed override void PostWaitFrameSetup()
+    protected void AddContainer(OptionContainer container)
     {
-        if (OptionContainers.Count == 0)
-            return;
-        OptionContainers.ForEach(SubscribeToEvents);
-        FocusContainer(OptionContainers.First());
-    }
-
-    protected void FocusContainerClosestItem(OptionContainer optionContainer)
-    {
-        if (CurrentContainer?.FocusedItem == null)
-            return;
-        int index = optionContainer.OptionItems.GetClosestIndex(CurrentContainer.FocusedItem);
-        FocusContainer(optionContainer, index);
+        _optionContainers.Add(container);
+        SubscribeToEvents(container);
     }
 
     protected void FocusContainer(OptionContainer optionContainer)
@@ -58,37 +52,45 @@ public partial class OptionSubMenu : SubMenu
         optionContainer.FocusContainer(index);
     }
 
+    protected void FocusContainerClosestItem(OptionContainer optionContainer)
+    {
+        if (CurrentContainer?.FocusedItem == null)
+            return;
+        int index = optionContainer.OptionItems.GetClosestIndex(CurrentContainer.FocusedItem);
+        FocusContainer(optionContainer, index);
+    }
+
     protected virtual void OnFocusContainer(OptionContainer optionContainer) { }
 
     protected virtual void OnFocusOOB(OptionContainer container, Direction direction) { }
 
     protected virtual void OnItemFocused() { }
 
-    protected virtual void OnItemSelected() { }
+    protected virtual void OnSelectPressed() { }
 
-    protected override void SetNodeReferences()
+    protected sealed override void PostWaitFrameSetupBase()
     {
-        base.SetNodeReferences();
-        foreach (var nodePath in NodePaths)
-        {
-            var container = GetNode<OptionContainer>(nodePath);
-            if (container == null)
-            {
-                GD.PrintErr($"{nodePath} not found!");
-                continue;
-            }
-            OptionContainers.Add(container);
-        }
+        if (_optionContainers.Count == 0)
+            return;
+        FocusContainer(_optionContainers.First());
+        base.PostWaitFrameSetupBase();
+    }
+
+    protected sealed override void SetNodeReferencesBase()
+    {
+        base.SetNodeReferencesBase();
+        _cursorsContainer = Foreground.GetNode<Control>("Cursors");
         AddCursor();
+        SetNodeReferences();
     }
 
     protected void AddCursor()
     {
-        OptionCursor? cursor = Foreground.GetChildren<OptionCursor>().FirstOrDefault();
+        OptionCursor? cursor = _cursorsContainer.GetChildren<OptionCursor>().FirstOrDefault();
         if (cursor == null)
         {
             cursor = _cursorScene.Instantiate<OptionCursor>();
-            Foreground.AddChild(cursor);
+            _cursorsContainer.AddChild(cursor);
         }
         _cursor = cursor;
         _cursor.Visible = false;
@@ -96,8 +98,8 @@ public partial class OptionSubMenu : SubMenu
 
     protected void SubscribeToEvents(OptionContainer optionContainer)
     {
-        optionContainer.ItemSelected += OnItemSelectedBase;
         optionContainer.ItemFocused += OnItemFocusedBase;
+        optionContainer.ItemSelectionChanged += OnItemSelectionChanged;
         optionContainer.FocusOOB += OnFocusOOB;
         optionContainer.ContainerUpdated += OnContainerChanged;
     }
@@ -127,7 +129,25 @@ public partial class OptionSubMenu : SubMenu
         OnItemFocused();
     }
 
-    private void OnItemSelectedBase()
+    private void OnItemSelectionChanged(OptionItem optionItem)
+    {
+        if (optionItem.Selected)
+        {
+            if (optionItem.SelectionCursor != null)
+                return;
+            var cursor = _cursorScene.Instantiate<OptionCursor>();
+            cursor.EnableSelectionMode();
+            optionItem.SelectionCursor = cursor;
+            _cursorsContainer.AddChild(cursor);
+            cursor.MoveToTarget(optionItem);
+        }
+        else
+        {
+            optionItem.SelectionCursor?.DisableSelectionMode();
+        }
+    }
+
+    private void OnSelectPressedBase()
     {
         if (CurrentContainer == null || !CurrentContainer.AllSelected &&
             (CurrentContainer.FocusedItem == null || CurrentContainer.FocusedItem.Disabled))
@@ -137,6 +157,6 @@ public partial class OptionSubMenu : SubMenu
         }
 
         Audio.PlaySoundFX(SelectedSoundPath);
-        OnItemSelected();
+        OnSelectPressed();
     }
 }

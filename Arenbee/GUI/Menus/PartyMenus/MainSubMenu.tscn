@@ -1,28 +1,40 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://sab4tl1mtdau"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_el5n0"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.cs" id="2_21jpy"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_1y2q6"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_p5vh8"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="2_3bj4y"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.cs" id="2_8jabe"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_lq8um"]
 
-[node name="MainSubMenu" instance=ExtResource("1_el5n0")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_21jpy")
-NodePaths = [NodePath("Foreground/OptionContainer")]
-
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MainSubMenu" instance=ExtResource("1_p5vh8")]
+script = ExtResource("2_8jabe")
 
 [node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="OptionContainer" parent="Foreground" index="0" instance=ExtResource("3_1y2q6")]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 72.0
-offset_bottom = 111.0
-FitXToContent = true
-FitYToContent = true
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
+layout_mode = 2
+
+[node name="MainContainer" type="PanelContainer" parent="Foreground/HBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="WindowContainer" parent="Foreground/HBoxContainer/MainContainer" index="0" instance=ExtResource("2_3bj4y")]
+layout_mode = 2
+
+[node name="MainOptions" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_lq8um")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HScrollBar" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ScrollBars" index="0"]
+page = 76.9231
+value = 11.5385
+
+[node name="VScrollBar" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ScrollBars" index="1"]
+page = 96.1039
+value = 3.8961
+
+[editable path="Foreground/HBoxContainer/MainContainer/WindowContainer"]

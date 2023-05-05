@@ -1,76 +1,105 @@
-[gd_scene load_steps=6 format=3 uid="uid://ciqqmoodypfpx"]
+[gd_scene load_steps=7 format=3 uid="uid://ciqqmoodypfpx"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_imt36"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_funy4"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_sn8u5"]
-[ext_resource type="PackedScene" uid="uid://p0afcetfn4ef" path="res://GameCore/GUI/Menus/Containers/DynamicTextContainer.tscn" id="7_8v57d"]
-[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="8_c8not"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_uak7s"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_kvegx"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_e2c41"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="4_cv8q8"]
+[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="5_a0w2l"]
+[ext_resource type="PackedScene" uid="uid://csbncf5x8i8pd" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="6_aahyi"]
 
-[node name="InventorySubMenu" instance=ExtResource("1_imt36")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_funy4")
-NodePaths = [NodePath("Foreground/HBoxContainer/MarginContainer2/VBoxContainer/ItemTypeOptions"), NodePath("Foreground/HBoxContainer/MarginContainer2/VBoxContainer/InventoryOptions")]
-
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
+[node name="InventorySubMenu" instance=ExtResource("1_uak7s")]
+script = ExtResource("2_kvegx")
 
 [node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/margin_left = 122
+theme_override_constants/margin_left = 44
 
-[node name="MarginContainer2" type="MarginContainer" parent="Foreground/HBoxContainer" index="1"]
-layout_mode = 2
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_bottom = 16
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer/MarginContainer2" index="0"]
-layout_mode = 2
-
-[node name="ItemTypeOptions" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="0" instance=ExtResource("3_sn8u5")]
-layout_mode = 2
-Columns = 10
-FitXToContent = true
-FitYToContent = true
-MaxSize = Vector2(119, -1)
-SingleRow = true
-
-[node name="InventoryOptions" parent="Foreground/HBoxContainer/MarginContainer2/VBoxContainer" index="1" instance=ExtResource("3_sn8u5")]
-layout_mode = 2
-size_flags_vertical = 3
-Columns = 1
-
-[node name="MarginContainer3" type="MarginContainer" parent="Foreground/HBoxContainer" index="2"]
-layout_mode = 2
-theme_override_constants/margin_bottom = 16
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/HBoxContainer/MarginContainer3" index="0"]
-layout_mode = 2
-alignment = 2
-
-[node name="ItemStatsDisplay" parent="Foreground/HBoxContainer/MarginContainer3/VBoxContainer2" index="0" instance=ExtResource("8_c8not")]
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer" index="1"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 
-[node name="ItemInfo" parent="Foreground/HBoxContainer/MarginContainer3/VBoxContainer2" index="1" instance=ExtResource("7_8v57d")]
-unique_name_in_owner = true
-process_mode = 3
-custom_minimum_size = Vector2(0, 70)
+[node name="ItemTypeContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
 layout_mode = 2
-SpeedMultiplier = 1.0
-metadata/_edit_layout_mode = 1
+
+[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer" index="0" instance=ExtResource("3_e2c41")]
+layout_mode = 2
+ScrollBarEnabled = false
+
+[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer" index="0"]
+ClipX = true
+
+[node name="ItemTypeOptions" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_cv8q8")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+Columns = 10
+SingleRow = true
+
+[node name="ArrowRight" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/Arrows" index="3"]
+visible = true
+
+[node name="ScrollBars" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer" index="2"]
+visible = false
+
+[node name="HScrollBar" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/ScrollBars" index="0"]
+visible = true
+page = 51.0204
+value = 48.9796
+
+[node name="InventoryContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer" index="0" instance=ExtResource("3_e2c41")]
+layout_mode = 2
+ScrollBarEnabled = false
+
+[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer" index="0"]
+ClipX = true
+ClipY = true
+
+[node name="InventoryOptions" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_cv8q8")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ScrollBars" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer" index="2"]
+visible = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/HBoxContainer" index="2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="ItemStatsDisplay" parent="Foreground/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("5_a0w2l")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer2" index="1"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer/VBoxContainer2/PanelContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ItemInfo" parent="Foreground/HBoxContainer/VBoxContainer2/PanelContainer/MarginContainer" index="0" instance=ExtResource("6_aahyi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[editable path="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer"]
+[editable path="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer"]

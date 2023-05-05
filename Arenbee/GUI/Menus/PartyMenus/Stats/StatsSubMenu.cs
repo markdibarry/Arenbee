@@ -25,9 +25,9 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        base.SetNodeReferences();
-        _partyOptions = OptionContainers.Find(x => x.Name == "PartyOptions");
-        _statsDisplay = Foreground.GetNode<ActorStatsDisplay>("%StatsDisplay");
+        _partyOptions = GetNode<OptionContainer>("%PartyOptions");
+        AddContainer(_partyOptions);
+        _statsDisplay = GetNode<ActorStatsDisplay>("%StatsDisplay");
     }
 
     protected override void MockData()
@@ -47,6 +47,7 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
         List<TextOption> options = GetPartyMemberOptions();
         _partyOptions.ReplaceChildren(options);
     }

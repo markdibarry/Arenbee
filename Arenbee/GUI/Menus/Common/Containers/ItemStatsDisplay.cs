@@ -22,15 +22,15 @@ public partial class ItemStatsDisplay : PanelContainer
 
     public override void _Ready()
     {
-        _gridContainer = GetNode<GridContainer>("VBoxContainer/GridContainer");
+        _gridContainer = GetNode<GridContainer>("%GridContainer");
         _hpContainer = _gridContainer.GetNode<StatContainer>("HP");
         _mpContainer = _gridContainer.GetNode<StatContainer>("MP");
         _attackContainer = _gridContainer.GetNode<StatContainer>("Attack");
         _defenseContainer = _gridContainer.GetNode<StatContainer>("Defense");
         _mAttackContainer = _gridContainer.GetNode<StatContainer>("MAttack");
         _mDefenseContainer = _gridContainer.GetNode<StatContainer>("MDefense");
-        _elementAtkContainer = GetNode<ElementContainer>("VBoxContainer/EAtk");
-        _elementDefContainer = GetNode<ElementContainer>("VBoxContainer/EDef");
+        _elementAtkContainer = GetNode<ElementContainer>("%EAtk");
+        _elementDefContainer = GetNode<ElementContainer>("%EDef");
         SetLabelContainer(_hpContainer);
         SetLabelContainer(_mpContainer);
         SetLabelContainer(_attackContainer);

@@ -1,24 +1,12 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://bfc0bh051ig0h"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_yh25b"]
-[ext_resource type="Script" path="res://GameCore/GUI/Menus/SubMenus/DialogOptionSubMenu.cs" id="2_rm6dj"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_rtqbm"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_mk25s"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="2_lpcas"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_g77a6"]
 
-[node name="DialogOptionSubMenu" instance=ExtResource("1_yh25b")]
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_rm6dj")
-NodePaths = [NodePath("Foreground/OptionContainer")]
+[node name="DialogOptionSubMenu" instance=ExtResource("1_mk25s")]
 
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="OptionContainer" parent="Foreground" index="0" instance=ExtResource("3_rtqbm")]
+[node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,6 +19,17 @@ offset_right = 9.0
 offset_bottom = 9.0
 grow_horizontal = 2
 grow_vertical = 2
-FitXToContent = true
-FitYToContent = true
+
+[node name="WindowContainer" parent="Foreground/PanelContainer" index="0" instance=ExtResource("2_lpcas")]
+layout_mode = 2
+
+[node name="ClipContainer" parent="Foreground/PanelContainer/WindowContainer" index="0"]
+ClipX = false
+ClipY = false
 MaxSize = Vector2(200, 200)
+
+[node name="DialogOptions" parent="Foreground/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_g77a6")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[editable path="Foreground/PanelContainer/WindowContainer"]

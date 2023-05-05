@@ -1,46 +1,54 @@
 [gd_scene load_steps=4 format=3 uid="uid://d3nhril5u8qfu"]
 
-[ext_resource type="PackedScene" path="res://GameCore/GUI/Menus/SubMenus/SubMenu.tscn" id="1_rqed4"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/DropSubMenu.cs" id="2_ain42"]
-[ext_resource type="PackedScene" uid="uid://bdetoklfcxoov" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_88skw"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_d0xaj"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/DropSubMenu.cs" id="2_daqun"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_50myv"]
 
-[node name="DropSubMenu" instance=ExtResource("1_rqed4")]
+[node name="DropSubMenu" instance=ExtResource("1_d0xaj")]
+script = ExtResource("2_daqun")
+
+[node name="MenuMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_ain42")
-NodePaths = [NodePath("Foreground/DropOptions")]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="Background" parent="." index="0"]
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Foreground" parent="." index="1"]
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="DropOptions" parent="Foreground" index="0" instance=ExtResource("4_88skw")]
-layout_mode = 0
-offset_left = 236.0
-offset_top = 49.0
-offset_right = 290.0
-offset_bottom = 89.0
-Columns = 1
-FitXToContent = true
-FitYToContent = true
-
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/DropOptions/ContentGrid" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MenuMarginContainer" index="0"]
 layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 2
 
-[node name="Label" type="Label" parent="Foreground/DropOptions/ContentGrid/MarginContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MenuMarginContainer/HBoxContainer" index="0"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "How many?"
+theme_override_constants/margin_left = 262
 
-[node name="GridWindow" parent="Foreground/DropOptions/ContentGrid/OptionGrid/GridMargin" index="0"]
-ClipX = false
-ClipY = false
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MenuMarginContainer/HBoxContainer" index="1"]
+layout_mode = 2
 
-[editable path="Foreground/DropOptions"]
-[editable path="Foreground/DropOptions/ContentGrid/OptionGrid"]
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="Message" type="Label" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="0"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "InvDro"
+
+[node name="DropOptions" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="1" instance=ExtResource("3_50myv")]
+unique_name_in_owner = true
+layout_mode = 2

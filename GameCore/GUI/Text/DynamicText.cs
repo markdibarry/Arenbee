@@ -10,15 +10,24 @@ namespace GameCore.GUI;
 [Tool]
 public partial class DynamicText : RichTextLabel
 {
+    public DynamicText()
+    {
+        BbcodeEnabled = true;
+        FitContent = true;
+        VisibleCharacters = 0;
+        VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
+    }
+
+    public static string GetScenePath() => GDEx.GetScenePath();
     private double _counter;
     private int _currentLine;
     private string _customText = string.Empty;
-    private int _endChar;
+    private int _endChar = -1;
     private List<int> _lineBreakCharIndices = new();
     private bool _showToEndCharEnabled;
     private bool _sizeDirty;
     private double _speed = 0.02;
-    private double _speedMultiplier;
+    private double _speedMultiplier = 1;
     private bool _textDirty;
     private List<TextEvent> _textEvents = new();
     private bool _writeTextEnabled;
@@ -42,8 +51,6 @@ public partial class DynamicText : RichTextLabel
         get => _customText;
         set
         {
-            if (CustomTextExportDisabled)
-                return;
             _customText = value;
             _textDirty = true;
         }
@@ -89,7 +96,6 @@ public partial class DynamicText : RichTextLabel
     }
 
     public State CurrentState { get; private set; }
-    public bool CustomTextExportDisabled { get; set; }
     public int ContentHeight { get; private set; }
     public int EndChar
     {
@@ -120,6 +126,8 @@ public partial class DynamicText : RichTextLabel
         Writing
     }
 
+    public override void _Ready() => Init();
+
     public override void _Process(double delta)
     {
         if (CurrentState == State.Loading)
@@ -137,11 +145,6 @@ public partial class DynamicText : RichTextLabel
         }
     }
 
-    public override void _Ready()
-    {
-        Init();
-    }
-
     public int GetFirstCharIndexByLine(int line)
     {
         line = Math.Clamp(line, 0, _lineBreakCharIndices.Count - 1);
@@ -157,10 +160,7 @@ public partial class DynamicText : RichTextLabel
 
     public void RefreshText() => HandleTextDirty();
 
-    public void ResetSpeed()
-    {
-        SpeedMultiplier = 1;
-    }
+    public void ResetSpeed() => SpeedMultiplier = 1;
 
     public void SetPause(double time) => Counter += time;
 
@@ -248,17 +248,11 @@ public partial class DynamicText : RichTextLabel
 
     private void Init()
     {
-        BbcodeEnabled = true;
-        FitContent = true;
-        EndChar = -1;
-        VisibleCharacters = 0;
-        VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
-        ResetSpeed();
+        //ResetSpeed();
         Counter = Speed;
         UpdateTextData();
         Resized += OnResized;
         ThemeChanged += OnResized;
-        SetDefault();
         CurrentState = State.Idle;
     }
 
@@ -288,13 +282,6 @@ public partial class DynamicText : RichTextLabel
     private void ResetVisibleCharacters()
     {
         VisibleCharacters = _showToEndCharEnabled ? EndChar : _lineBreakCharIndices[_currentLine];
-    }
-
-    private void SetDefault()
-    {
-        if (!this.IsSceneRoot())
-            return;
-        CustomText = "Once[speed=0.3]... [speed]there was a toad that ate the [wave]moon[/wave][pause=3].";
     }
 
     private void UpdateTextData()

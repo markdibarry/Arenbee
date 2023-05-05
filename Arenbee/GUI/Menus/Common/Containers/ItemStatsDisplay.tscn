@@ -10,55 +10,71 @@ offset_right = 118.0
 offset_bottom = 64.0
 script = ExtResource("1_8k7s8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/v_separation = 0
 columns = 4
 
-[node name="HPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+[node name="HPLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "MaxAbb:"
+
+[node name="HP" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="HP" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
+[node name="MPLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "MaxAbb:"
+
+[node name="MP" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="MPLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+[node name="AttackLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "AttAbb:"
+
+[node name="Attack" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="MP" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
+[node name="DefenseLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "DefAbb:"
+
+[node name="Defense" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="AttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+[node name="MAttackLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "MagAbb:"
+
+[node name="MAttack" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="Attack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
+[node name="MDefenseLabel" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
+layout_mode = 2
+Text = "MagAbb:"
+
+[node name="MDefense" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
 layout_mode = 2
 
-[node name="DefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
-layout_mode = 2
-
-[node name="Defense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
-layout_mode = 2
-
-[node name="MAttackLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
-layout_mode = 2
-
-[node name="MAttack" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
-layout_mode = 2
-
-[node name="MDefenseLabel" parent="VBoxContainer/GridContainer" instance=ExtResource("2_t5shi")]
-layout_mode = 2
-
-[node name="MDefense" parent="VBoxContainer/GridContainer" instance=ExtResource("2_l6yob")]
-layout_mode = 2
-
-[node name="EAtk" parent="VBoxContainer" instance=ExtResource("3_npw6o")]
+[node name="EAtk" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_npw6o")]
+unique_name_in_owner = true
 layout_mode = 2
 StatNameText = "AttAbb:"
 
-[node name="EDef" parent="VBoxContainer" instance=ExtResource("3_npw6o")]
+[node name="EDef" parent="MarginContainer/VBoxContainer" instance=ExtResource("3_npw6o")]
+unique_name_in_owner = true
 layout_mode = 2
 StatNameText = "EleAbb:"

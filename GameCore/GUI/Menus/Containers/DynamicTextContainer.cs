@@ -43,12 +43,6 @@ public partial class DynamicTextContainer : PanelContainer
 
     public event Action? StoppedWriting;
 
-    public override void _Notification(int what)
-    {
-        if (what == NotificationSceneInstantiated)
-            Init();
-    }
-
     public override void _Ready()
     {
         SetDefault();

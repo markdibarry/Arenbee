@@ -26,8 +26,16 @@ public partial class DropSubMenu : OptionSubMenu
 
     protected override void CustomSetup()
     {
-        _optionContainer = OptionContainers.Find(x => x.Name == "DropOptions");
+        Foreground.SetMargin(PartyMenu.ForegroundMargin);
         DisplayOptions();
+    }
+
+    protected override void SetNodeReferences()
+    {
+        var label = GetNode<Label>("%Message");
+        label.Text = this.TrS(Localization.Menus.Menus_Inventory_DropMessage);
+        _optionContainer = GetNode<OptionContainer>("%DropOptions");
+        AddContainer(_optionContainer);
     }
 
     protected override void MockData()
@@ -38,9 +46,11 @@ public partial class DropSubMenu : OptionSubMenu
 
     protected override void SetupData(object? data)
     {
-        if (data is not ItemStack itemStack)
+        if (data is not (int margin, ItemStack itemStack))
             return;
         _itemStack = itemStack;
+        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
+        marginContainer.AddThemeConstantOverride("margin_left", margin);
     }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)
@@ -52,7 +62,7 @@ public partial class DropSubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void OnItemSelected()
+    protected override void OnSelectPressed()
     {
         int total = _itemStack.Count;
         _inventory.RemoveItem(_itemStack, _count);
