@@ -27,17 +27,18 @@ public class RestoreHP : IActionEffect
         if (target.ActorBody == null)
             return;
         GameSession? session = (GameSession)Locator.Session!;
+        SceneTree tree = session.GetTree();
         ColorAdjustment colorAdjustment = session.CurrentAreaScene?.ColorAdjustment!;
-        Tween tweenStart = session.CreateTween();
+        Tween tweenStart = tree.CreateTween();
         tweenStart.TweenProperty(colorAdjustment, nameof(colorAdjustment.Saturation), -1f, 0.5f);
-        await session.ToSignal(tweenStart, Tween.SignalName.Finished);
+        await tree.ToSignal(tweenStart, Tween.SignalName.Finished);
 
         PackedScene packedScene = GD.Load<PackedScene>("res://Arenbee/ActionEffects/RestoreHP/RestoreHPEffect.tscn");
         AnimatedSprite2D restoreHPEffect = packedScene.Instantiate<AnimatedSprite2D>();
         target.ActorBody.AddChild(restoreHPEffect);
         restoreHPEffect.Play();
         target.ActorBody.PlaySoundFX("magic_heal.wav");
-        await session.ToSignal(session.GetTree().CreateTimer(1f), SceneTreeTimer.SignalName.Timeout);
+        await tree.ToSignal(tree.CreateTimer(1f), SceneTreeTimer.SignalName.Timeout);
 
         DamageRequest actionData = new()
         {
@@ -48,11 +49,11 @@ public class RestoreHP : IActionEffect
         };
 
         target.Stats.ReceiveDamageRequest(actionData);
-        await session.ToSignal(session.GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
+        await tree.ToSignal(tree.CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
 
         restoreHPEffect.QueueFree();
-        Tween tweenEnd = session.CreateTween();
+        Tween tweenEnd = tree.CreateTween();
         tweenEnd.TweenProperty(colorAdjustment, nameof(colorAdjustment.Saturation), 0f, 0.5f);
-        await session.ToSignal(tweenEnd, Tween.SignalName.Finished);
+        await tree.ToSignal(tweenEnd, Tween.SignalName.Finished);
     }
 }

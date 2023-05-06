@@ -2,19 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_tktbi"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_jx6af"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_7yf4f"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_7yf4f"]
 [ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_ykdlq"]
 
 [node name="EquipmentSubMenu" instance=ExtResource("1_tktbi")]
 script = ExtResource("2_jx6af")
 
+[node name="Foreground" parent="." index="1"]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
 [node name="MainMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
@@ -30,6 +31,7 @@ theme_override_constants/margin_left = 44
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="1"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 
 [node name="PartyContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer" index="0"]

@@ -9,7 +9,7 @@ namespace Arenbee.Items;
 
 public class ItemDB : AItemDB
 {
-    private static readonly IStatusEffectModifierFactory s_effectModFactory = Locator.StatusEffectModifierFactory;
+    private static readonly IStatusEffectModifierFactory s_effectModFactory = StatsLocator.StatusEffectModifierFactory;
 
     protected override AItem[] BuildDB()
     {

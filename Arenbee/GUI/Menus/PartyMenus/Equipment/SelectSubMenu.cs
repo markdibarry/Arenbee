@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arenbee.Actors;
-using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using Arenbee.Statistics;
-using GameCore;
+using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Statistics;
@@ -43,7 +41,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void MockData()
     {
-        _actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         EquipmentSlotCategory category = Locator.EquipmentSlotCategoryDB.GetCategory(EquipmentSlotCategoryIds.Weapon)!;
         ItemStack metalStick = new(Locator.ItemDB.GetItem(ItemIds.MetalHockeyStick)!, 1);
         ItemStack magicWand = new(Locator.ItemDB.GetItem(ItemIds.Wand)!, 1);

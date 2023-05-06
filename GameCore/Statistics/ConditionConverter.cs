@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using GameCore.Utility;
 
 namespace GameCore.Statistics;
 
@@ -20,7 +19,7 @@ public class ConditionConverter : JsonConverter<Condition>
                 break;
             }
         }
-        Type conditionType = Locator.ConditionLookup.GetConditionType(val);
+        Type conditionType = StatsLocator.ConditionLookup.GetConditionType(val);
         return JsonSerializer.Deserialize(ref reader, conditionType) as Condition;
     }
 

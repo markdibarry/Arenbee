@@ -14,7 +14,7 @@ public partial class Portrait : AnimatedSprite2D
 
     public void SetPortraitFrames(string newPortraitName)
     {
-        string path = $"{Config.PortraitsPath}/{newPortraitName.ToLower()}/portraits.tres";
+        string path = $"{Config.PortraitsFullPath}/{newPortraitName.ToLower()}/portraits.tres";
         SpriteFrames = GD.Load<SpriteFrames>(path);
     }
 }

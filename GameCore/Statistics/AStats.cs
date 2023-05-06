@@ -34,8 +34,6 @@ public abstract class AStats
             Modifiers[pair.Key] = pair.Value.ToList();
     }
 
-    protected static IStatusEffectModifierFactory EffectModifierFactory { get; } = Locator.StatusEffectModifierFactory;
-    protected static AStatusEffectDB StatusEffectDB { get; } = Locator.StatusEffectDB;
     [JsonIgnore]
     public Queue<ADamageRequest> DamageToProcess { get; }
     public ADamageResult? CurrentDamageResult { get; private set; }
@@ -166,7 +164,7 @@ public abstract class AStats
     {
         if (StatusEffects.Any(x => x.EffectType == statusEffectType))
             return;
-        StatusEffectData? effectData = StatusEffectDB.GetEffectData(statusEffectType);
+        StatusEffectData? effectData = StatsLocator.StatusEffectDB.GetEffectData(statusEffectType);
         if (effectData == null)
             return;
         StatusEffect statusEffect = new(this, effectData);

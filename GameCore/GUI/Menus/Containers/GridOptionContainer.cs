@@ -6,9 +6,9 @@ using Godot;
 namespace GameCore.GUI;
 
 [Tool]
-public partial class OptionGrid : OptionContainer
+public partial class GridOptionContainer : OptionContainer
 {
-    public OptionGrid()
+    public GridOptionContainer()
     {
         SingleOptionsEnabled = true;
         FocusWrap = true;

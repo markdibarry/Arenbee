@@ -61,7 +61,7 @@ public partial class HoldItemController : Node2D
         ActorBody.StateController.BaseActionDisabled = newItem?.ItemCategory.Id == ItemCategoryIds.Weapon;
         if (newItem == null)
             return;
-        var holdItem = GDEx.Instantiate<HoldItem>($"{Config.ItemPath}{newItem.Id}/{newItem.Id}.tscn");
+        var holdItem = GDEx.Instantiate<HoldItem>($"{Config.ItemFullPath}{newItem.Id}/{newItem.Id}.tscn");
         AttachHoldItem(holdItem);
     }
 }

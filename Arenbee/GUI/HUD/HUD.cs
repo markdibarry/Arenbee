@@ -5,6 +5,7 @@ using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Statistics;
 using GameCore.Utility;
+using Godot;
 
 namespace Arenbee.GUI;
 
@@ -12,13 +13,19 @@ public partial class HUD : AHUD
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private static readonly AStatusEffectDB s_statusEffectDB = Locator.StatusEffectDB;
+    private static readonly AStatusEffectDB s_statusEffectDB = GameCore.Statistics.StatsLocator.StatusEffectDB;
     private PlayerStatsDisplay _playerStatsDisplay = null!;
 
     public override void _Ready()
     {
         base._Ready();
-        _playerStatsDisplay = GetNode<PlayerStatsDisplay>("PlayerStatsDisplay");
+        _playerStatsDisplay = GetNode<PlayerStatsDisplay>("%PlayerStatsDisplay");
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        GetNode<Label>("%FPSDisplay").Text = Engine.GetFramesPerSecond().ToString();
     }
 
     public void OnActorDamaged(AActor actor, ADamageResult aDamageResult)
@@ -61,7 +68,7 @@ public partial class HUD : AHUD
 
     public void OnActorStatsChanged(AActor actor)
     {
-        _playerStatsDisplay.Update((Stats)actor.Stats);
+        _playerStatsDisplay.Update();
     }
 
     public void OnActorBodyFreeing(AActorBody actorBody)
@@ -74,6 +81,7 @@ public partial class HUD : AHUD
         actorBody.Freeing += OnActorBodyFreeing;
         if (actorBody.Actor is not Actor actor)
             return;
+
         actor.Defeated += OnActorDefeated;
         actor.DamageReceived += OnActorDamaged;
         actor.StatusEffectChanged += OnActorStatusEffectChanged;
@@ -81,7 +89,7 @@ public partial class HUD : AHUD
         {
             actor.ModChanged += OnActorModChanged;
             actor.StatsChanged += OnActorStatsChanged;
-            OnActorStatsChanged(actor);
+            _playerStatsDisplay.SetActor(actor);
         }
     }
 
@@ -97,7 +105,14 @@ public partial class HUD : AHUD
         {
             actor.ModChanged -= OnActorModChanged;
             actor.StatsChanged -= OnActorStatsChanged;
+            _playerStatsDisplay.SetActor(null);
         }
+    }
+
+    public override void Resume()
+    {
+        base.Resume();
+        _playerStatsDisplay.Update();
     }
 
     private void DisplayMeleeMessage(DamageResult damageResult)

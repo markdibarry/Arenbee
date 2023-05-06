@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cj6fqcmijxtdd"]
 
 [ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_s7dov"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="2_165gi"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="2_165gi"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/SaveConfirmSubMenu.cs" id="2_e7qqd"]
 
 [node name="SaveConfirmSubMenu" instance=ExtResource("1_s7dov")]
@@ -33,3 +33,4 @@ text = "SavMes"
 [node name="SaveOptions" parent="Foreground/PanelContainer/MarginContainer/VBoxContainer" index="1" instance=ExtResource("2_165gi")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4

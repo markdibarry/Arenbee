@@ -25,63 +25,38 @@ texture_filter = 1
 offset_right = 126.0
 offset_bottom = 17.0
 script = ExtResource("1")
-MessageText = ""
 
-[node name="BoxWrapper" type="MarginContainer" parent="."]
+[node name="BackgroundMargin" type="MarginContainer" parent="."]
 layout_mode = 2
-offset_right = 9.0
-offset_bottom = 17.0
-size_flags_horizontal = 0
-
-[node name="BackgroundMargin" type="MarginContainer" parent="BoxWrapper"]
-layout_mode = 2
-offset_right = 9.0
-offset_bottom = 17.0
 theme_override_constants/margin_left = 1
 theme_override_constants/margin_top = 1
 theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 1
 
-[node name="BackgroundColor" type="Panel" parent="BoxWrapper/BackgroundMargin"]
+[node name="BackgroundColor" type="Panel" parent="BackgroundMargin"]
 layout_mode = 2
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 8.0
-offset_bottom = 16.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_av8k5")
 
-[node name="BackgroundPattern" type="Panel" parent="BoxWrapper/BackgroundMargin"]
+[node name="BackgroundPattern" type="Panel" parent="BackgroundMargin"]
 layout_mode = 2
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 8.0
-offset_bottom = 16.0
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("2")
 
-[node name="Border" type="Panel" parent="BoxWrapper"]
+[node name="Border" type="Panel" parent="."]
 layout_mode = 2
-offset_right = 9.0
-offset_bottom = 17.0
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("1")
 
-[node name="MessageMargin" type="MarginContainer" parent="BoxWrapper"]
+[node name="MessageMargin" type="MarginContainer" parent="."]
 layout_mode = 2
-offset_right = 9.0
-offset_bottom = 17.0
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Message" type="Label" parent="BoxWrapper/MessageMargin"]
+[node name="Message" type="Label" parent="MessageMargin"]
 texture_filter = 1
 layout_mode = 2
-offset_left = 4.0
-offset_top = 5.0
-offset_right = 5.0
-offset_bottom = 12.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_constants/line_spacing = 0

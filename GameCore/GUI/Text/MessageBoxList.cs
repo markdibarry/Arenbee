@@ -7,16 +7,15 @@ namespace GameCore.GUI;
 public partial class MessageBoxList : VBoxContainer
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    public Vector2 MaxSize { get; set; }
     public bool IsReady { get; set; }
     private PackedScene _timedMessageBoxScene = GD.Load<PackedScene>(TimedMessageBox.GetScenePath());
 
     public override void _Ready()
     {
+        Resized += OnResized;
         ChildEnteredTree += OnChildEnteredTree;
-        MaxSize = GetParentOrNull<Control>().Size;
         foreach (MessageBox messageBox in this.GetChildren<MessageBox>())
-            messageBox.SetMessage(MaxSize);
+            messageBox.SetMaxWidth(Size);
     }
 
     public void AddMessageToTop(string message)
@@ -36,6 +35,12 @@ public partial class MessageBoxList : VBoxContainer
     {
         if (node is not MessageBox messageBox)
             return;
-        messageBox.SetMessage(MaxSize);
+        messageBox.SetMaxWidth(Size);
+    }
+
+    private void OnResized()
+    {
+        foreach (MessageBox messageBox in this.GetChildren<MessageBox>())
+            messageBox.SetMaxWidth(Size);
     }
 }

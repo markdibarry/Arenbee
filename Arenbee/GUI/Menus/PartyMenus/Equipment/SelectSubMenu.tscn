@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_togn2"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_70n7x"]
 [ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_86551"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_jig2i"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_jig2i"]
 [ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="4_wtgju"]
 [ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_qom7v"]
 

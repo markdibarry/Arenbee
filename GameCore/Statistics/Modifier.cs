@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using GameCore.Utility;
 using Godot;
 using Gictionary = Godot.Collections.Dictionary;
 
@@ -59,7 +58,7 @@ public partial class Modifier : Resource
     [JsonIgnore] public Action<Modifier>? ActivationConditionMetCallback { get; set; }
 
     // TODO Add special case handling i.e. +5% for every 100 enemies killed
-    public int Apply(int baseValue) => MathI.Compute(Op, baseValue, Value);
+    public int Apply(int baseValue) => Op.Compute(baseValue, Value);
 
     public void InitConditions(AStats stats)
     {
@@ -135,6 +134,6 @@ public partial class Modifier : Resource
 
     public override Godot.Collections.Array<Gictionary> _GetPropertyList()
     {
-        return Locator.StatTypeDB.GetStatPropertyList(_statType);
+        return StatsLocator.StatTypeDB.GetStatPropertyList(_statType);
     }
 }

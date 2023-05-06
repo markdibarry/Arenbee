@@ -31,7 +31,7 @@ public class Stats : AStats
 
     public void AddKOStatus()
     {
-        AddMod(EffectModifierFactory.GetStatusEffectModifier((int)StatusEffectType.KO));
+        base.AddMod(GameCore.Statistics.StatsLocator.StatusEffectModifierFactory.GetStatusEffectModifier((int)StatusEffectType.KO));
     }
 
     public override int CalculateStat(int statType, bool ignoreHidden = false)
@@ -261,7 +261,7 @@ public class Stats : AStats
 
             if (100 - effectChance <= s_random.Next(100))
             {
-                Modifier effectMod = EffectModifierFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
+                Modifier effectMod = StatsLocator.StatusEffectModifierFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
                 effectMod.SourceType = SourceType.Independent;
                 AddMod(effectMod);
             }

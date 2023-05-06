@@ -2,6 +2,7 @@
 using Arenbee.Actors;
 using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
+using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -32,7 +33,7 @@ public partial class StatsSubMenu : OptionSubMenu
 
     protected override void MockData()
     {
-        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         _playerParty = new Party("temp", new List<Actor> { actor }, new());
     }
 

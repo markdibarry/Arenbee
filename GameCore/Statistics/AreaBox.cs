@@ -4,6 +4,18 @@ namespace GameCore.Statistics;
 
 public partial class AreaBox : Area2D
 {
+    public bool MonitorableLocal
+    {
+        get => Monitorable;
+        set => SetMonitorableDeferred(value);
+    }
+
+    public bool MonitoringLocal
+    {
+        get => Monitoring;
+        set => SetMonitoringDeferred(value);
+    }
+
     private bool _monitorableLocal;
     private bool _monitoringLocal;
 

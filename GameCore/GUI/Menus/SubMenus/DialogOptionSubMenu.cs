@@ -49,7 +49,7 @@ public partial class DialogOptionSubMenu : OptionSubMenu
 
     protected override void SetNodeReferences()
     {
-        _options = GetNode<OptionContainer>("%OptionContainer");
+        _options = GetNode<OptionContainer>("%DialogOptions");
         AddContainer(_options);
     }
 }

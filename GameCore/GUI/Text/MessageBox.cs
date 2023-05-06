@@ -6,17 +6,10 @@ namespace GameCore.GUI;
 [Tool]
 public partial class MessageBox : MarginContainer
 {
-    public MessageBox()
-    {
-        BoxAlign = SizeFlags.ShrinkBegin;
-        _messageText = string.Empty;
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
-    private string _messageText;
+    private string _messageText = string.Empty;
     private HorizontalAlignment _messageAlign;
     private SizeFlags _boxAlign;
-    private MarginContainer _boxWrapper = null!;
     private MarginContainer _messageMargin = null!;
     private Label _message = null!;
     [Export(PropertyHint.MultilineText)]
@@ -49,39 +42,28 @@ public partial class MessageBox : MarginContainer
         {
             _boxAlign = value;
             if (_message?.AutowrapMode == TextServer.AutowrapMode.Off)
-                _boxWrapper.SizeFlagsHorizontal = _boxAlign;
+                SizeFlagsHorizontal = _boxAlign;
         }
     }
-    public float MaxWidth { get; set; }
+    private float _maxWidth;
 
     public override void _Ready()
     {
-        _boxWrapper = GetNode<MarginContainer>("BoxWrapper");
-        _messageMargin = _boxWrapper.GetNode<MarginContainer>("MessageMargin");
+        Size = Vector2.Zero;
+        SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        _messageMargin = GetNode<MarginContainer>("MessageMargin");
         _message = _messageMargin.GetNode<Label>("Message");
         _message.Text = MessageText;
-        _boxWrapper.Resized += OnResized;
-        TransitionIn();
+        Resized += OnResized;
     }
 
-    public async void TransitionIn()
-    {
-        await ToSignal(GetTree(), "process_frame");
-    }
+    public void SetMaxWidth(Vector2 maxSize) => _maxWidth = maxSize.X;
 
-    public void SetMessage(Vector2 maxSize)
-    {
-        MaxWidth = maxSize.X;
-    }
-
-    private void OnResized()
-    {
-        HandleResize();
-    }
+    private void OnResized() => HandleResize();
 
     private void HandleResize()
     {
-        if (MaxWidth <= 0)
+        if (_maxWidth <= 0)
             return;
         if (ShouldEnableAutoWrap())
             EnableAutoWrap();
@@ -91,20 +73,17 @@ public partial class MessageBox : MarginContainer
 
     private bool ShouldEnableAutoWrap()
     {
-        return _boxWrapper.Size.X > MaxWidth || _messageMargin.Size.X > MaxWidth;
+        return Size.X > _maxWidth || _messageMargin.Size.X > _maxWidth;
     }
 
-    private bool ShouldDisableAutoWrap()
-    {
-        return _message.GetLineCount() <= 1;
-    }
+    private bool ShouldDisableAutoWrap() => _message.GetLineCount() <= 1;
 
     private void EnableAutoWrap()
     {
         if (_message.AutowrapMode != TextServer.AutowrapMode.Off)
             return;
         _message.AutowrapMode = TextServer.AutowrapMode.Word;
-        _boxWrapper.SizeFlagsHorizontal = SizeFlags.Fill;
+        SizeFlagsHorizontal = SizeFlags.Fill;
     }
 
     private void DisableAutoWrap()
@@ -112,6 +91,6 @@ public partial class MessageBox : MarginContainer
         if (_message.AutowrapMode == TextServer.AutowrapMode.Off)
             return;
         _message.AutowrapMode = TextServer.AutowrapMode.Off;
-        _boxWrapper.SizeFlagsHorizontal = BoxAlign;
+        SizeFlagsHorizontal = BoxAlign;
     }
 }

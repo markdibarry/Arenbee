@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using GameCore.Utility;
 using Godot;
 using Gictionary = Godot.Collections.Dictionary;
 
@@ -37,6 +36,6 @@ public partial class Stat : Resource
 
     public override Godot.Collections.Array<Gictionary> _GetPropertyList()
     {
-        return Locator.StatTypeDB.GetStatPropertyList(_statType);
+        return StatsLocator.StatTypeDB.GetStatPropertyList(_statType);
     }
 }

@@ -7,20 +7,18 @@ namespace GameCore.GUI;
 public partial class TimedMessageBox : MessageBox
 {
     public static new string GetScenePath() => GDEx.GetScenePath();
-    [Export]
-    private double _timeOut = 2.0;
+    [Export] public double TimeOut { get; set; } = 2.0;
     private bool _timerFinished;
 
     public override void _Process(double delta)
     {
         if (Engine.IsEditorHint())
             return;
-        base._PhysicsProcess(delta);
         if (_timerFinished)
             return;
-        if (_timeOut > 0)
+        if (TimeOut > 0)
         {
-            _timeOut -= delta;
+            TimeOut -= delta;
         }
         else
         {
@@ -29,11 +27,10 @@ public partial class TimedMessageBox : MessageBox
         }
     }
 
-    public async void TransitionOut()
+    public void TransitionOut()
     {
-        Tween fadeTween = GetTree().CreateTween();
+        Tween fadeTween = CreateTween();
         fadeTween.TweenProperty(this, "modulate:a", 0f, 0.1f);
-        await ToSignal(fadeTween, Tween.SignalName.Finished);
-        QueueFree();
+        fadeTween.TweenCallback(Callable.From(QueueFree));
     }
 }

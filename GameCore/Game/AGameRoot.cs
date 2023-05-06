@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GameCore.Actors;
 using GameCore.Audio;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.SaveData;
+using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
 
@@ -35,7 +38,15 @@ public abstract partial class AGameRoot : Node
     {
         SetNodeReferences();
         ProvideLocatorReferences();
-        Locator.CheckReferences();
+        List<string> unsetRefs = Locator.CheckReferences();
+        unsetRefs.AddRange(ActorsLocator.CheckReferences());
+        unsetRefs.AddRange(StatsLocator.CheckReferences());
+        if (unsetRefs.Count > 0)
+        {
+            string errMessage = "The following static Locator references have not been set: " + string.Join(", ", unsetRefs)
+                + ". Please create an autoload and load them in the _Ready method.";
+            throw new System.Exception(errMessage);
+        }
         Init();
     }
 

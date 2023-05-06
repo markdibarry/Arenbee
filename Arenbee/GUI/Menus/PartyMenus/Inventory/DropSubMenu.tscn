@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_d0xaj"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/DropSubMenu.cs" id="2_daqun"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_50myv"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_50myv"]
 
 [node name="DropSubMenu" instance=ExtResource("1_d0xaj")]
 script = ExtResource("2_daqun")

@@ -11,7 +11,7 @@ public abstract partial class AHUD : CanvasLayer
 
     public override void _Ready()
     {
-        MessageBoxList = GetNode<MessageBoxList>("MessageBoxListWrapper/MessageBoxList");
+        MessageBoxList = GetNode<MessageBoxList>("%MessageBoxList");
     }
 
     public override void _Process(double delta)

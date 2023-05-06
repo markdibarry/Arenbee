@@ -6,10 +6,8 @@ namespace Arenbee.Actors;
 public abstract partial class ActorBody
 {
     private readonly double _fallMultiplier = 2;
-    [Export]
-    private double _jumpHeight = 64;
-    [Export]
-    private double _timeToJumpPeak = 0.4;
+    [Export] private double _jumpHeight = 64;
+    [Export] private double _timeToJumpPeak = 0.4;
     public double JumpVelocity { get; private set; }
     public double JumpGravity { get; private set; }
 

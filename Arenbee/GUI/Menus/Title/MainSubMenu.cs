@@ -7,6 +7,7 @@ using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using Arenbee.SaveData;
 using GameCore;
+using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -108,7 +109,7 @@ public partial class MainSubMenu : OptionSubMenu
 
     private static GameSave GetNewGame()
     {
-        ActorData actorData = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)!;
+        ActorData actorData = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)!;
         return new GameSave(
             id: 0,
             lastModifiedUtc: DateTime.UtcNow,

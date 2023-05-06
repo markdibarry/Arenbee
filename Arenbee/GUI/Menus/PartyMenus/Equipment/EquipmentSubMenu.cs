@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
+using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -22,7 +23,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     public static string GetScenePath() => GDEx.GetScenePath();
     private Control _contentContainer = null!;
     private int _contentMargin;
-    private OptionGrid _partyOptions = null!;
+    private GridOptionContainer _partyOptions = null!;
     private OptionContainer _equipmentOptions = null!;
     private VBoxContainer _equipmentNameList = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
@@ -38,7 +39,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     protected override void MockData()
     {
-        Actor actor = Locator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         _partyActors = new List<Actor> { actor };
     }
 
@@ -87,7 +88,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     protected override void SetNodeReferences()
     {
         _contentContainer = GetNode<Control>("%VBoxContainer");
-        _partyOptions = GetNode<OptionGrid>("%PartyOptions");
+        _partyOptions = GetNode<GridOptionContainer>("%PartyOptions");
         _equipmentOptions = GetNode<OptionContainer>("%EquipmentOptions");
         _equipmentNameList = GetNode<VBoxContainer>("%EquipmentNameList");
         AddContainer(_partyOptions);
@@ -130,10 +131,12 @@ public partial class EquipmentSubMenu : OptionSubMenu
         foreach (EquipmentSlot slot in actor.Equipment.Slots)
         {
             var option = _textOptionScene.Instantiate<TextOption>();
-            option.LabelText = slot.SlotCategory.DisplayName + ":";
-            Label name = new();
-            name.Text = slot.ItemStack?.Item.DisplayName ?? "<None>";
-            name.HorizontalAlignment = HorizontalAlignment.Right;
+            option.LabelText = slot.SlotCategory.Abbreviation + ":";
+            Label name = new()
+            {
+                Text = slot.ItemStack?.Item.DisplayName ?? "<None>",
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
             option.OptionData = slot;
             _equipmentOptions.AddOption(option);
             _equipmentNameList.AddChild(name);

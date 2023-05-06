@@ -1,10 +1,8 @@
-﻿using GameCore.Statistics;
+﻿namespace GameCore.Statistics;
 
-namespace GameCore.Utility;
-
-public class MathI
+public static class MathI
 {
-    public static bool Compare(CompareOp op, int a, int b)
+    public static bool Compare(this CompareOp op, int a, int b)
     {
         return op switch
         {
@@ -19,7 +17,7 @@ public class MathI
         };
     }
 
-    public static int Compute(ModOp op, int a, int b)
+    public static int Compute(this ModOp op, int a, int b)
     {
         return op switch
         {

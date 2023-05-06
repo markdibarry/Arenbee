@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_p5vh8"]
 [ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="2_3bj4y"]
 [ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.cs" id="2_8jabe"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/OptionGrid.tscn" id="3_lq8um"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_lq8um"]
 
 [node name="MainSubMenu" instance=ExtResource("1_p5vh8")]
 script = ExtResource("2_8jabe")

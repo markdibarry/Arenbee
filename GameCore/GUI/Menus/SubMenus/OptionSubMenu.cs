@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Arenbee.Items;
 using GameCore.Enums;
-using GameCore.Items;
 using GameCore.Utility;
 using Godot;
 
@@ -131,20 +129,20 @@ public partial class OptionSubMenu : SubMenu
 
     private void OnItemSelectionChanged(OptionItem optionItem)
     {
-        if (optionItem.Selected)
-        {
-            if (optionItem.SelectionCursor != null)
-                return;
-            var cursor = _cursorScene.Instantiate<OptionCursor>();
-            cursor.EnableSelectionMode();
-            optionItem.SelectionCursor = cursor;
-            _cursorsContainer.AddChild(cursor);
-            cursor.MoveToTarget(optionItem);
-        }
-        else
+        if (!optionItem.Selected)
         {
             optionItem.SelectionCursor?.DisableSelectionMode();
+            return;
         }
+
+        if (optionItem.SelectionCursor != null)
+            return;
+
+        var cursor = _cursorScene.Instantiate<OptionCursor>();
+        cursor.EnableSelectionMode();
+        optionItem.SelectionCursor = cursor;
+        _cursorsContainer.AddChild(cursor);
+        cursor.MoveToTarget(optionItem);
     }
 
     private void OnSelectPressedBase()

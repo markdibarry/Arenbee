@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 
 namespace GameCore.GUI;
 
@@ -9,28 +10,26 @@ public partial class Sprite2DContainer : Container
 
     public override void _Ready()
     {
-        SetNewChild();
+        if (GetChildCount() != 1)
+            return;
+        Sprite2D = GetChild(0) as Sprite2D;
+        if (Sprite2D != null)
+            Sprite2D.ItemRectChanged += UpdateSize;
         ChildEnteredTree += OnChildEntered;
         ChildExitingTree += OnChildExiting;
+        UpdateSize();
     }
 
-    private void SetNewChild()
+    public override string[] _GetConfigurationWarnings()
     {
-        int childCount = GetChildCount();
-        if (childCount > 0)
-        {
-            Sprite2D ??= GetChildOrNull<Sprite2D>(0);
-            if (Sprite2D == null || childCount > 1)
-                GD.PrintErr("Sprite2DContainer should have one child and it must be of type Sprite2D.");
-            else
-                Sprite2D.ItemRectChanged += UpdateSize;
-        }
-        UpdateSize();
+        if (GetChildCount() != 1 || GetChild(0) is not Godot.Sprite2D)
+            return new string[] { "Sprite2DContainer is intended to work with a single Sprite2D child." };
+        return Array.Empty<string>();
     }
 
     private Vector2I GetNewSize()
     {
-        if (Sprite2D?.Visible != true)
+        if (Sprite2D == null || !Sprite2D.Visible)
             return Vector2I.Zero;
         float v = 0;
         float h = 0;
@@ -45,18 +44,25 @@ public partial class Sprite2DContainer : Container
 
     private void OnChildEntered(Node node)
     {
-        SetNewChild();
+        if (GetChildCount() != 1)
+            return;
+        Sprite2D = GetChild(0) as Sprite2D;
+        if (Sprite2D != null)
+            Sprite2D.ItemRectChanged += UpdateSize;
+        UpdateSize();
     }
 
     private void OnChildExiting(Node node)
     {
         if (node == Sprite2D)
             Sprite2D = null;
-        SetNewChild();
+        if (GetChildCount() <= 1)
+            return;
+        Sprite2D = GetChild(0) as Sprite2D;
+        if (Sprite2D != null)
+            Sprite2D.ItemRectChanged += UpdateSize;
+        UpdateSize();
     }
 
-    private void UpdateSize()
-    {
-        CustomMinimumSize = GetNewSize();
-    }
+    private void UpdateSize() => CustomMinimumSize = GetNewSize();
 }

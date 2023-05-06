@@ -1,5 +1,4 @@
 ﻿using GameCore.Statistics;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Statistics;
@@ -25,7 +24,7 @@ public partial class HPCondition : Condition
     protected override bool CheckCondition()
     {
         int percentMaxHP = (int)(Stats.MaxHP * TargetValue * 0.01);
-        return MathI.Compare(CompareOp, Stats.CurrentHP, percentMaxHP);
+        return CompareOp.Compare(Stats.CurrentHP, percentMaxHP);
     }
 
     protected override void SubscribeEvents() => Stats.DamageReceived += OnDamageReceived;
