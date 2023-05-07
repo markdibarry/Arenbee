@@ -6,14 +6,13 @@ using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
 using GameCore.Items;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Actors;
 
 public partial class ActorData : AActorData
 {
-    private static readonly AItemDB s_itemDB = Locator.ItemDB;
+    private static readonly AItemDB s_itemDB = ItemsLocator.ItemDB;
 
     public ActorData() { }
 
@@ -79,7 +78,7 @@ public partial class ActorData : AActorData
     public override Actor CreateActor(AInventory? externalInventory = null)
     {
         Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
-        IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = Locator.EquipmentSlotCategoryDB.GetCategoryPreset(EquipmentSlotPresetId);
+        IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = ItemsLocator.EquipmentSlotCategoryDB.GetCategoryPreset(EquipmentSlotPresetId);
         Equipment equipment = new(inventory, equipmentPreset);
         Actor actor = new(
             actorId: ActorId,

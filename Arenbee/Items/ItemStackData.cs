@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 using GameCore.Items;
-using GameCore.Utility;
 
 namespace Arenbee.Items;
 
 public class ItemStackData
 {
-    private static readonly AItemDB s_itemDB = Locator.ItemDB;
+    private static readonly AItemDB s_itemDB = ItemsLocator.ItemDB;
 
     public ItemStackData(ItemStackData itemStackData)
         : this(itemStackData.ItemId, itemStackData.Count)

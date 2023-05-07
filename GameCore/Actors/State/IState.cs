@@ -1,4 +1,4 @@
-﻿namespace GameCore.Utility;
+﻿namespace GameCore.Actors;
 
 public interface IState
 {

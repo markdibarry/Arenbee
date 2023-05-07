@@ -1,6 +1,6 @@
 ﻿using Arenbee.Actors.Animation;
 using Arenbee.Statistics;
-using GameCore.Utility;
+using GameCore.Actors;
 using Godot;
 
 namespace Arenbee.Actors.State.DefaultEnemy;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameCore.Utility;
+namespace GameCore.Actors;
 
 public abstract class StateMachine<TState> : IStateMachine
     where TState : IState

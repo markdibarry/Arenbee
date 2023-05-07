@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://nbqjbe4vr5nk"]
 
-[ext_resource type="PackedScene" uid="uid://blqjjq13kqy8j" path="res://GameCore/Utility/ColorAdjustment.tscn" id="2_rv66l"]
+[ext_resource type="PackedScene" uid="uid://blqjjq13kqy8j" path="res://GameCore/GUI/Misc/ColorAdjustment.tscn" id="2_rv66l"]
 
 [node name="AreaScene" type="Node2D"]
 

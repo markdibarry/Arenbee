@@ -5,6 +5,7 @@ using GameCore.Actors;
 using GameCore.Audio;
 using GameCore.GUI;
 using GameCore.Input;
+using GameCore.Items;
 using GameCore.SaveData;
 using GameCore.Statistics;
 using GameCore.Utility;
@@ -41,6 +42,7 @@ public abstract partial class AGameRoot : Node
         List<string> unsetRefs = Locator.CheckReferences();
         unsetRefs.AddRange(ActorsLocator.CheckReferences());
         unsetRefs.AddRange(StatsLocator.CheckReferences());
+        unsetRefs.AddRange(ItemsLocator.CheckReferences());
         if (unsetRefs.Count > 0)
         {
             string errMessage = "The following static Locator references have not been set: " + string.Join(", ", unsetRefs)

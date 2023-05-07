@@ -4,7 +4,7 @@ using Arenbee.Statistics;
 
 namespace Arenbee.Actors;
 
-public abstract class ActorBodyState : GameCore.Utility.State
+public abstract class ActorBodyState : GameCore.Actors.State
 {
     protected ActorBodyState(ActorBody actorBody)
     {

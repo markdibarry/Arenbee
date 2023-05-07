@@ -48,9 +48,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Arenbee\Actors\Animation\EnemyDeathEffect\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="GameCore\GameCore.Utility\GameCore.Utility.csproj" />
   </ItemGroup>
 </Project>

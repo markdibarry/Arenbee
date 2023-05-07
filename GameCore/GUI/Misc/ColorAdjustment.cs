@@ -1,7 +1,7 @@
 ﻿using System;
 using Godot;
 
-namespace GameCore.Utility;
+namespace GameCore.GUI;
 
 [Tool]
 public partial class ColorAdjustment : CanvasLayer

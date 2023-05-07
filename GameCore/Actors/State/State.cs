@@ -1,4 +1,4 @@
-﻿namespace GameCore.Utility;
+﻿namespace GameCore.Actors;
 
 public abstract class State : IState
 {

@@ -1,7 +1,7 @@
 ﻿using Arenbee.Actors;
 using Arenbee.Projectiles;
 using GameCore;
-using GameCore.Utility;
+using GameCore.Actors;
 
 namespace Arenbee.Items;
 

@@ -13,7 +13,7 @@ public class ItemDB : AItemDB
 
     protected override AItem[] BuildDB()
     {
-        var itemCategoryDB = Locator.ItemCategoryDB;
+        var itemCategoryDB = ItemsLocator.ItemCategoryDB;
         List<AItem> items = new();
         BuildWeapons(items, itemCategoryDB.GetCategory(ItemCategoryIds.Weapon)!);
         BuildHeadGear(items, itemCategoryDB.GetCategory(ItemCategoryIds.Headgear)!);

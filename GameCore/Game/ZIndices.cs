@@ -1,4 +1,4 @@
-﻿namespace GameCore.Utility;
+﻿namespace GameCore;
 
 public static class ZIndices
 {

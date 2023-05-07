@@ -1,6 +1,5 @@
 ﻿using Arenbee.Actors;
 using GameCore.Items;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.Items;
@@ -46,7 +45,7 @@ public abstract partial class HoldItem : Node2D
         ActorBody actorBody,
         ActionStateMachineBase stateMachine)
     {
-        Item = Locator.ItemDB.GetItem(itemId)!;
+        Item = ItemsLocator.ItemDB.GetItem(itemId)!;
         HoldItemType = holdItemType;
         ActorBody = actorBody;
         StateMachine = stateMachine;
