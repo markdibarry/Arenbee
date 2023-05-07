@@ -1,7 +1,7 @@
 ﻿using System;
 using Godot;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public partial class Portrait : AnimatedSprite2D
 {

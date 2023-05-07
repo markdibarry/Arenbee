@@ -42,7 +42,7 @@ public abstract class AStats
     public Dictionary<int, Stat> StatLookup { get; }
     public IDamageable StatsOwner { get; }
     protected List<IStatusEffect> StatusEffects { get; }
-
+    protected static AStatusEffectDB StatusEffectDB { get; } = StatsLocator.StatusEffectDB;
     public event Action<ADamageResult>? DamageReceived;
     public event Action<Modifier, ModChangeType>? ModChanged;
     public event Action<double>? Processed;
@@ -164,7 +164,7 @@ public abstract class AStats
     {
         if (StatusEffects.Any(x => x.EffectType == statusEffectType))
             return;
-        StatusEffectData? effectData = StatsLocator.StatusEffectDB.GetEffectData(statusEffectType);
+        StatusEffectData? effectData = StatusEffectDB.GetEffectData(statusEffectType);
         if (effectData == null)
             return;
         StatusEffect statusEffect = new(this, effectData);

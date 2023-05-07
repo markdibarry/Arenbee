@@ -2,7 +2,7 @@
 using System.Linq;
 using Godot;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class Speaker
 {

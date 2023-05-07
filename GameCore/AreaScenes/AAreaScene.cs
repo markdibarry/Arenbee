@@ -120,7 +120,7 @@ public partial class AAreaScene : Node2D
 
     private void ConnectHUDToExistingActors()
     {
-        foreach (var actorBody in ActorsContainer.GetChildren<AActorBody>())
+        foreach (AActorBody actorBody in ActorsContainer.GetChildren<AActorBody>())
             HUD.SubscribeActorBodyEvents(actorBody);
     }
 

@@ -2,11 +2,17 @@
 using System.Text;
 using GameCore.Utility;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class DialogLine : IStatement
 {
-    public DialogLine(Dialog dialog, DialogInterpreter interpreter, DialogScript script, LineData lineData, Speaker[] globalSpeakers, bool auto)
+    public DialogLine(
+        Dialog dialog,
+        DialogInterpreter interpreter,
+        DialogScript script,
+        LineData lineData,
+        Speaker[] globalSpeakers,
+        bool auto)
     {
         Auto = auto;
         Next = lineData.Next;

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class DialogScriptReader
 {

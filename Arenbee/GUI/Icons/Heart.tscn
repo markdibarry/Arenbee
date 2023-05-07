@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c000pnlx17lxe"]
 
 [ext_resource type="Texture2D" uid="uid://lc4bpjq7024u" path="res://Arenbee/GUI/Icons/Heart.png" id="1_343ba"]
-[ext_resource type="Script" path="res://GameCore/GUI/Containers/Sprite2DContainer.cs" id="1_y2n5b"]
+[ext_resource type="Script" path="res://GameCore/GUI/Misc/Sprite2DContainer.cs" id="1_y2n5b"]
 
 [node name="Heart" type="Container"]
 custom_minimum_size = Vector2(10, 10)

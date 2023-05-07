@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class DialogBridgeRegister
 {
@@ -28,8 +28,8 @@ public class DialogBridgeRegister
         {
             MethodInfo getMethodInfo = propertyInfo.GetGetMethod()!;
             MethodInfo setMethodInfo = propertyInfo.GetSetMethod()!;
-            var getter = getMethodInfo.CreateDelegate(GetDelegateType(getMethodInfo), _bridge);
-            var setter = setMethodInfo.CreateDelegate(GetDelegateType(setMethodInfo), _bridge);
+            Delegate getter = getMethodInfo.CreateDelegate(GetDelegateType(getMethodInfo), _bridge);
+            Delegate setter = setMethodInfo.CreateDelegate(GetDelegateType(setMethodInfo), _bridge);
             properties.Add(propertyInfo.Name, new(getter, setter, GetVarType(propertyInfo.PropertyType)));
         }
         return properties;
@@ -38,14 +38,14 @@ public class DialogBridgeRegister
     private Dictionary<string, FuncDef> GenerateMethods()
     {
         Dictionary<string, FuncDef> methods = new();
-        var methodInfos = _bridge.GetType()
+        IEnumerable<MethodInfo> methodInfos = _bridge.GetType()
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(x => !x.IsSpecialName);
-        foreach (var methodInfo in methodInfos)
+        foreach (MethodInfo methodInfo in methodInfos)
         {
-            var del = CreateDynamicDelegate(methodInfo, _bridge);
+            Func<object[], object?> del = CreateDynamicDelegate(methodInfo, _bridge);
             List<VarType> argTypes = new();
-            foreach (var paramInfo in methodInfo.GetParameters())
+            foreach (ParameterInfo paramInfo in methodInfo.GetParameters())
                 argTypes.Add(GetVarType(paramInfo.ParameterType));
             FuncDef funcDef = new(del, GetVarType(methodInfo.ReturnType), argTypes);
             methods.Add(methodInfo.Name, funcDef);
@@ -96,15 +96,15 @@ public class DialogBridgeRegister
 
         if (methodInfo.ReturnType != typeof(void))
         {
-            var lambda = Expression.Lambda<Func<object[], object?>>(
-                Expression.Convert(call, typeof(object)),
-                argParams);
-            return lambda.Compile();
+            return Expression
+                .Lambda<Func<object[], object?>>(Expression.Convert(call, typeof(object)), argParams)
+                .Compile();
         }
         else
         {
-            var lambda = Expression.Lambda<Action<object[]>>(call, argParams);
-            var compiled = lambda.Compile();
+            Action<object[]> compiled = Expression
+                .Lambda<Action<object[]>>(call, argParams)
+                .Compile();
             return (parameters) =>
             {
                 compiled(parameters);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GameCore.GUI.GameDialog;
 using GameCore.Utility;
 using Godot;
 

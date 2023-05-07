@@ -1,5 +1,4 @@
-﻿using GameCore.Enums;
-using GameCore.Utility;
+﻿using GameCore.Utility;
 using Godot;
 
 namespace GameCore.GUI;

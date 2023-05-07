@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Godot;
-using GameCore.Input;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using GameCore.Input;
 using GameCore.Utility;
+using Godot;
 
 namespace GameCore.GUI;
 

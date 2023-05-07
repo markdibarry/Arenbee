@@ -9,14 +9,14 @@ public class EquipmentSlotCategoryDB : AEquipmentSlotCategoryDB
     {
         return new EquipmentSlotCategory[]
         {
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Weapon, ItemCategoryIds.Weapon, "Weapon", "Weap."),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Headgear, ItemCategoryIds.Headgear, "Headgear", "Head."),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Shirt, ItemCategoryIds.Shirt, "Shirt", "Shirt"),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Pants, ItemCategoryIds.Pants, "Pants", "Pants"),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Footwear, ItemCategoryIds.Footwear, "Footwear", "Foot."),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Accessory1, ItemCategoryIds.Accessory, "Accessory 1", "Acc.1"),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.Accessory2, ItemCategoryIds.Accessory, "Accessory 2", "Acc.2"),
-            new EquipmentSlotCategory(EquipmentSlotCategoryIds.SubWeapon, ItemCategoryIds.SubWeapon, "Sub Weapon", "SubW.")
+            new(EquipmentSlotCategoryIds.Weapon, ItemCategoryIds.Weapon, "Weapon", "Weap."),
+            new(EquipmentSlotCategoryIds.Headgear, ItemCategoryIds.Headgear, "Headgear", "Head."),
+            new(EquipmentSlotCategoryIds.Shirt, ItemCategoryIds.Shirt, "Shirt", "Shirt"),
+            new(EquipmentSlotCategoryIds.Pants, ItemCategoryIds.Pants, "Pants", "Pants"),
+            new(EquipmentSlotCategoryIds.Footwear, ItemCategoryIds.Footwear, "Footwear", "Foot."),
+            new(EquipmentSlotCategoryIds.Accessory1, ItemCategoryIds.Accessory, "Accessory 1", "Acc.1"),
+            new(EquipmentSlotCategoryIds.Accessory2, ItemCategoryIds.Accessory, "Accessory 2", "Acc.2"),
+            new(EquipmentSlotCategoryIds.SubWeapon, ItemCategoryIds.SubWeapon, "Sub Weapon", "SubW.")
         };
     }
 

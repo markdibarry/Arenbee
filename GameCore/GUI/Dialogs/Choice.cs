@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class Choice : IStatement
 {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameCore.GUI.GameDialog;
 using GameCore.Input;
 using Godot;
 

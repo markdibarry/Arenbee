@@ -8,9 +8,10 @@ namespace Arenbee.GUI;
 [Tool]
 public partial class PlayerStatsDisplay : PanelContainer
 {
-    private Label _nameLabel = null!;
-    private HeartDisplay _heartDisplay = null!;
+    private static readonly AActorDataDB s_actorDataDB = ActorsLocator.ActorDataDB;
     private Actor? _actor;
+    private HeartDisplay _heartDisplay = null!;
+    private Label _nameLabel = null!;
 
     public override void _Ready()
     {
@@ -35,7 +36,8 @@ public partial class PlayerStatsDisplay : PanelContainer
 
     private void SetupMockData()
     {
-        _actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _actor = s_actorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        SetActor(_actor);
         Update();
     }
 }

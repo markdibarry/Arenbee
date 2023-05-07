@@ -20,12 +20,12 @@ public partial class LocatorAutoload : ALocatorAutoload
         Locator.ProvideLoaderFactory(new LoaderFactory());
         ActorsLocator.ProvideActorBodyDB(new ActorBodyDB());
         ActorsLocator.ProvideActorDataDB(new ActorDataDB());
-        ItemsLocator.ProvideItemCategoryDB(new ItemCategoryDB());
-        ItemsLocator.ProvideItemDB(new ItemDB());
-        ItemsLocator.ProvideEquipmentSlotCategoryDB(new EquipmentSlotCategoryDB());
         StatsLocator.ProvideConditionLookup(new ConditionLookup());
         StatsLocator.ProvideStatusEffectModifierFactory(new StatusEffectModifierFactory());
         StatsLocator.ProvideStatTypeDB(new StatTypeDB());
         StatsLocator.ProvideStatusEffectDB(new StatusEffectDB());
+        ItemsLocator.ProvideItemCategoryDB(new ItemCategoryDB());
+        ItemsLocator.ProvideItemDB(new ItemDB());
+        ItemsLocator.ProvideEquipmentSlotCategoryDB(new EquipmentSlotCategoryDB());
     }
 }

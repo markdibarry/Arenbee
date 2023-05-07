@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameCore.GUI.GameDialog;
+namespace GameCore.GUI;
 
 public class DialogInterpreter
 {

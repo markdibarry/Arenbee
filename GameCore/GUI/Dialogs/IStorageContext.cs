@@ -1,4 +1,5 @@
 ﻿namespace GameCore.GUI;
+
 public interface IStorageContext
 {
     void Clear();

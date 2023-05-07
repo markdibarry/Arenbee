@@ -21,6 +21,7 @@ public class Stats : AStats
         : base(stats)
     { }
 
+    private static readonly IStatusEffectModifierFactory s_statusEffectModFactory = StatsLocator.StatusEffectModifierFactory;
     private static readonly Random s_random = new();
     private readonly Dictionary<StatusEffectType, int> _statusChanceCache = new();
     public int CurrentHP => GetStat(StatType.HP)!.Value;
@@ -31,7 +32,7 @@ public class Stats : AStats
 
     public void AddKOStatus()
     {
-        base.AddMod(GameCore.Statistics.StatsLocator.StatusEffectModifierFactory.GetStatusEffectModifier((int)StatusEffectType.KO));
+        base.AddMod(s_statusEffectModFactory.GetStatusEffectModifier((int)StatusEffectType.KO));
     }
 
     public override int CalculateStat(int statType, bool ignoreHidden = false)
@@ -261,7 +262,7 @@ public class Stats : AStats
 
             if (100 - effectChance <= s_random.Next(100))
             {
-                Modifier effectMod = StatsLocator.StatusEffectModifierFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
+                Modifier effectMod = s_statusEffectModFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
                 effectMod.SourceType = SourceType.Independent;
                 AddMod(effectMod);
             }

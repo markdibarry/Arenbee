@@ -1,4 +1,4 @@
-﻿namespace GameCore.GUI.GameDialog;
+﻿namespace GameCore.GUI;
 
 public class Section : IStatement
 {

@@ -16,9 +16,9 @@ public static class Locator
     public static bool Initialized => s_initialized;
     public static AActionEffectDB ActionEffectDB => s_actionEffectDB;
     public static AAudioController Audio => s_gameRoot.AudioController;
+    public static ILoaderFactory LoaderFactory => s_loaderFactory;
     public static AGameRoot Root => s_gameRoot;
     public static AGameSession? Session => s_gameRoot?.GameSession;
-    public static ILoaderFactory LoaderFactory => s_loaderFactory;
     public static ATransitionController TransitionController => s_gameRoot.TransitionController;
 
     public static void SetInitialized() => s_initialized = true;

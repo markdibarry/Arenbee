@@ -1,4 +1,4 @@
-﻿namespace GameCore.Enums;
+﻿namespace GameCore;
 
 public enum Direction
 {

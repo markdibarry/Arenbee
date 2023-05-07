@@ -13,7 +13,7 @@ public partial class HUD : AHUD
 {
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    private static readonly AStatusEffectDB s_statusEffectDB = GameCore.Statistics.StatsLocator.StatusEffectDB;
+    private static readonly AStatusEffectDB s_statusEffectDB = StatsLocator.StatusEffectDB;
     private PlayerStatsDisplay _playerStatsDisplay = null!;
 
     public override void _Ready()

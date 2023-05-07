@@ -37,7 +37,7 @@ public abstract partial class AGameRoot : Node
     public override void _Ready()
     {
         SetNodeReferences();
-        ProvideLocatorReferences();
+        Locator.ProvideGameRoot(this);
         List<string> unsetRefs = Locator.CheckReferences();
         unsetRefs.AddRange(ActorsLocator.CheckReferences());
         unsetRefs.AddRange(StatsLocator.CheckReferences());
@@ -66,11 +66,6 @@ public abstract partial class AGameRoot : Node
         GameState.Init(GUIController);
         GameState.GameStateChanged += OnGameStateChanged;
         StartRoot();
-    }
-
-    protected virtual void ProvideLocatorReferences()
-    {
-        Locator.ProvideGameRoot(this);
     }
 
     protected virtual void StartRoot() => ResetToTitleScreen();
