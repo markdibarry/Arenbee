@@ -1,0 +1,3 @@
+[submodule "GameCore"]
+	path = GameCore
+	url = https://github.com/markdibarry/GameCore
