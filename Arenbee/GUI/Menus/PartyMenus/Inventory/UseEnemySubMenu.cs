@@ -9,6 +9,7 @@ using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
 using GameCore.AreaScenes;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;

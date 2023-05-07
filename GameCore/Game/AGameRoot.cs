@@ -6,7 +6,6 @@ using GameCore.Audio;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
-using GameCore.SaveData;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
@@ -74,10 +73,7 @@ public abstract partial class AGameRoot : Node
         Locator.ProvideGameRoot(this);
     }
 
-    protected virtual void StartRoot()
-    {
-        ResetToTitleScreen();
-    }
+    protected virtual void StartRoot() => ResetToTitleScreen();
 
     public override void _Process(double delta)
     {

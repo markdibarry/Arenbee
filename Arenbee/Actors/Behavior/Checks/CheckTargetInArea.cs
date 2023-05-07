@@ -1,5 +1,4 @@
-﻿using GameCore.Actors.Behavior;
-using Godot;
+﻿using Godot;
 
 namespace Arenbee.Actors.Behavior;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.GUI.Menus.PartyMenus.Equipment;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;

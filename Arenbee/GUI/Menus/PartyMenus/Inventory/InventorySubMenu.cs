@@ -2,6 +2,7 @@
 using System.Linq;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -42,8 +43,7 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         if (data is not int margin)
             return;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.AddThemeConstantOverride("margin_left", margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)

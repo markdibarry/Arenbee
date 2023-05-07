@@ -1,4 +1,0 @@
-title screen -> area scene
-title screen -> new Game
-area scene -> area scene
-party menu -> title screen

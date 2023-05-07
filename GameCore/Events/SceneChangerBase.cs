@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using GameCore.GUI;
-using GameCore.Utility;
 using Godot;
 
 namespace GameCore.Events;

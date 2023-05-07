@@ -2,10 +2,9 @@
 using GameCore.ActionEffects;
 using GameCore.Audio;
 using GameCore.GUI;
-using GameCore.Items;
 using Godot;
 
-namespace GameCore.Utility;
+namespace GameCore;
 
 public static class Locator
 {

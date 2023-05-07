@@ -5,14 +5,9 @@ namespace Arenbee.Statistics;
 
 public class DamageResult : ADamageResult
 {
-    public DamageResult()
-    {
-
-    }
-
     public ActionType ActionType { get; set; }
     public ElementType ElementDamage { get; set; }
     public StatusEffectType StatusEffectDamage { get; set; }
     public int ElementMultiplier { get; set; }
-    public List<Modifier> StatusEffects { get; set; }
+    public List<Modifier> StatusEffects { get; set; } = new();
 }

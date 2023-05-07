@@ -3,6 +3,7 @@ using Arenbee.Actors;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using Arenbee.Statistics;
+using GameCore;
 using GameCore.Actors;
 using GameCore.GUI;
 using GameCore.Items;
@@ -33,8 +34,7 @@ public partial class SelectSubMenu : OptionSubMenu
             return;
         _actor = dataModel.Actor;
         _slot = dataModel.Slot;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.AddThemeConstantOverride("margin_left", dataModel.Margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(dataModel.Margin);
         GameSession? gameSession = Locator.Session as GameSession;
         _inventory = gameSession?.MainParty?.Inventory!;
     }

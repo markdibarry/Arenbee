@@ -7,48 +7,42 @@
 [node name="DropSubMenu" instance=ExtResource("1_d0xaj")]
 script = ExtResource("2_daqun")
 
-[node name="MenuMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MenuMarginContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MenuMarginContainer/HBoxContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 262
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MenuMarginContainer/HBoxContainer" index="1"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0"]
 layout_mode = 2
 
-[node name="Message" type="Label" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="0"]
+[node name="Message" type="Label" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-text = "InvDro"
+text = "Menus_Inventory_DropMessage"
 
-[node name="DropOptions" parent="Foreground/MenuMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="1" instance=ExtResource("3_50myv")]
+[node name="DropOptions" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" index="1" instance=ExtResource("3_50myv")]
 unique_name_in_owner = true
 layout_mode = 2

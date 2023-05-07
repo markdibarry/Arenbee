@@ -1,6 +1,6 @@
-﻿using GameCore.SaveData;
+﻿using GameCore;
 
-namespace Arenbee.SaveData;
+namespace Arenbee;
 
 public class SaveService : ASaveService<GameSave>
 {

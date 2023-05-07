@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Arenbee.Actors;
 using GameCore.Actors;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -33,8 +34,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
     {
         if (data is not int margin)
             return;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.AddThemeConstantOverride("margin_left", margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
     protected override void MockData()

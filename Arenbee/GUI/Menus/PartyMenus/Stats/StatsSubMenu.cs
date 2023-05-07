@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Arenbee.Actors;
-using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
 using GameCore.Actors;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;
@@ -41,9 +41,7 @@ public partial class StatsSubMenu : OptionSubMenu
     {
         if (data is not int margin)
             return;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.RemoveThemeConstantOverride("margin_left");
-        marginContainer.AddThemeConstantOverride("margin_left", margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
     protected override void CustomSetup()

@@ -7,40 +7,24 @@
 [node name="UseEnemySubMenu" instance=ExtResource("1_iq4hw")]
 script = ExtResource("2_3amhs")
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="MessageContainer" type="PanelContainer" parent="Foreground/MarginContainer" index="0"]
+[node name="MessageContainer" type="PanelContainer" parent="Foreground" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MarginContainer/MessageContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/MessageContainer" index="0"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="MessageLabel" type="Label" parent="Foreground/MarginContainer/MessageContainer/MarginContainer" index="0"]
+[node name="MessageLabel" type="Label" parent="Foreground/MessageContainer/MarginContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "No enemies found!"
 
 [node name="EnemyOptions" parent="Foreground" index="1" instance=ExtResource("3_2atfj")]
 unique_name_in_owner = true
 layout_mode = 2
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 480.0
-offset_bottom = 270.0

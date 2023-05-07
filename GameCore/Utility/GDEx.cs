@@ -63,7 +63,6 @@ public static class GDEx
     /// <returns></returns>
     public static string TrS(this GodotObject obj, string message, StringName? context = null)
     {
-#if TOOLS
         if (Engine.IsEditorHint())
         {
             string[] strArr = message.Split("_");
@@ -73,7 +72,6 @@ public static class GDEx
             else if (strArr.Length == 2)
                 message = strArr[0] + strArr[1];
         }
-#endif
         return obj.Tr(message, context);
     }
 }

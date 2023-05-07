@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Arenbee.SaveData;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Utility;
 using Godot;

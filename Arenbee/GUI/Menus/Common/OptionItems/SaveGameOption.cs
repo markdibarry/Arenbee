@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Arenbee.Game;
-using Arenbee.SaveData;
 using Arenbee.Statistics;
 using GameCore.GUI;
 using GameCore.Utility;

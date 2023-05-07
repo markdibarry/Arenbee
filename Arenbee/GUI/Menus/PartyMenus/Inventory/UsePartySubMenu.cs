@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.ActionEffects;
 using Arenbee.Actors;
-using Arenbee.Game;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;
@@ -52,6 +52,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     {
         if (data is not (int margin, ItemStack itemStack))
             return;
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
         _itemStack = itemStack;
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
@@ -93,8 +94,8 @@ public partial class UsePartySubMenu : OptionSubMenu
 
             option.OptionData = actor;
             option.NameLabel.Text = actor.Name;
-            //option.HPContainer.StatNameText = "HP";
-            //option.MPContainer.StatNameText = "MP";
+            option.HPContainer.Text = this.TrS(StatTypeDB.GetStatTypeData(AttributeType.HP).Abbreviation) + ":";
+            option.MPContainer.Text = this.TrS(StatTypeDB.GetStatTypeData(AttributeType.MP).Abbreviation) + ":";
         }
         UpdatePartyDisplay();
     }

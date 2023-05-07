@@ -4,7 +4,7 @@ using Arenbee.Actors;
 using Arenbee.Items;
 using GameCore.Actors;
 
-namespace Arenbee.Game;
+namespace Arenbee;
 
 public class Party
 {

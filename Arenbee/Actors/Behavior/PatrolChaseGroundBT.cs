@@ -1,5 +1,4 @@
-﻿using GameCore.Actors;
-using GameCore.Actors.Behavior;
+﻿using GameCore.Actors.Behavior;
 
 namespace Arenbee.Actors.Behavior;
 

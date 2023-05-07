@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Arenbee.Game;
 using Arenbee.Items;
-using GameCore.Items;
-using GameCore.SaveData;
+using GameCore;
 
-namespace Arenbee.SaveData;
+namespace Arenbee;
 
 public class GameSave : IGameSave
 {

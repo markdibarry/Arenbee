@@ -1,5 +1,4 @@
-﻿using GameCore.Utility;
-using Godot;
+﻿using Godot;
 
 namespace GameCore.AreaScenes;
 

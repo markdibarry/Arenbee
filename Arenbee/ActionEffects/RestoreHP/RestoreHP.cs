@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Arenbee.Statistics;
 using GameCore.ActionEffects;
 using GameCore.Actors;
+using GameCore;
 using GameCore.GUI;
-using GameCore.Utility;
 using Godot;
 
 namespace Arenbee.ActionEffects;

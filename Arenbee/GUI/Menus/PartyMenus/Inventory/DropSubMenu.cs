@@ -1,4 +1,5 @@
 ﻿using Arenbee.Items;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Input;
 using GameCore.Items;
@@ -49,8 +50,7 @@ public partial class DropSubMenu : OptionSubMenu
         if (data is not (int margin, ItemStack itemStack))
             return;
         _itemStack = itemStack;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.AddThemeConstantOverride("margin_left", margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
     public override void HandleInput(GUIInputHandler menuInput, double delta)

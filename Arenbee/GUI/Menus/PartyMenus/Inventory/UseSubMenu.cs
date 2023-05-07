@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Arenbee.ActionEffects;
 using GameCore.ActionEffects;
+using GameCore;
 using GameCore.GUI;
 using GameCore.Items;
 using GameCore.Utility;
@@ -36,8 +37,7 @@ public partial class UseSubMenu : OptionSubMenu
         if (data is not (int margin, ItemStack itemStack))
             return;
         _itemStack = itemStack;
-        var marginContainer = GetNode<MarginContainer>("%MarginContainer");
-        marginContainer.AddThemeConstantOverride("margin_left", margin);
+        GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
     protected void OnResized()

@@ -3,7 +3,6 @@ using Arenbee.ActionEffects;
 using Arenbee.Statistics;
 using GameCore.Items;
 using GameCore.Statistics;
-using GameCore.Utility;
 
 namespace Arenbee.Items;
 

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using Arenbee.Actors;
 using Arenbee.Items;
 
-namespace Arenbee.Game;
+namespace Arenbee;
 
 public class PartyData
 {

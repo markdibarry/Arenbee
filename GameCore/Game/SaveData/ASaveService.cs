@@ -6,7 +6,7 @@ using System.Text.Json;
 using Godot;
 using System.Text.Json.Serialization.Metadata;
 
-namespace GameCore.SaveData;
+namespace GameCore;
 
 public abstract class ASaveService<T> where T : IGameSave
 {

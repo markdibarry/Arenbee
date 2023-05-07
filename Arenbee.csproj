@@ -16,8 +16,8 @@
     <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="GameCore\GameCore.Utility\**" />
-    <EmbeddedResource Remove="GameCore\GameCore.Utility\**" />
+    <Compile Remove="GameCore\Utility\**" />
+    <EmbeddedResource Remove="GameCore\Utility\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Arenbee\GUI\Localization\StatTypes.csv">
@@ -48,6 +48,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="GameCore\GameCore.Utility\GameCore.Utility.csproj" />
+    <ProjectReference Include="GameCore\Utility\GameCore.Utility.csproj" />
   </ItemGroup>
 </Project>

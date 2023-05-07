@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Arenbee.SaveData;
 using GameCore.GUI;
 
 namespace Arenbee.GUI;

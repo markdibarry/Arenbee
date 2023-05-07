@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Arenbee.AreaScenes;
-using Arenbee.Game;
 using Arenbee.GUI;
 using GameCore.Actors;
 using GameCore.Events;

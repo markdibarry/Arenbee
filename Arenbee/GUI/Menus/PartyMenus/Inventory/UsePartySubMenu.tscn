@@ -7,39 +7,33 @@
 [node name="UsePartySubMenu" instance=ExtResource("1_aolxn")]
 script = ExtResource("2_kyfpu")
 
-[node name="MainMarginContainer" type="MarginContainer" parent="Foreground" index="0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MainMarginContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Foreground" index="0"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 204
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="1"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Foreground/HBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer" index="0"]
+[node name="PanelContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="PartyOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0" instance=ExtResource("3_h6ddl")]
+[node name="PartyOptions" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/MarginContainer" index="0" instance=ExtResource("3_h6ddl")]
 unique_name_in_owner = true
 layout_mode = 2

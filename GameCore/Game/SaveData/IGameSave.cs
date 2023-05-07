@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameCore.SaveData;
+namespace GameCore;
 
 public interface IGameSave
 {
