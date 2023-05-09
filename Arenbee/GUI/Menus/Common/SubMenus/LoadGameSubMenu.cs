@@ -47,7 +47,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
             await _gameRoot.StartNewSession(gameSave!);
         };
 
-        ATransitionController tController = Locator.TransitionController;
+        BaseTransitionController tController = Locator.TransitionController;
         TransitionRequest request = new(
             BasicLoadingScreen.GetScenePath(),
             TransitionType.Game,

@@ -12,7 +12,7 @@ namespace Arenbee.Actors;
 
 public partial class ActorData : AActorData
 {
-    private static readonly AItemDB s_itemDB = ItemsLocator.ItemDB;
+    private static readonly IItemDB s_itemDB = ItemsLocator.ItemDB;
 
     public ActorData() { }
 

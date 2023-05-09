@@ -1,20 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://ievhf5ls7psh"]
+[gd_scene load_steps=4 format=3 uid="uid://ievhf5ls7psh"]
 
 [ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="1_jas0l"]
-[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/AGameRoot.tscn" id="1_luofh"]
-[ext_resource type="Script" path="res://Arenbee/Audio/AudioController.cs" id="5_ognf4"]
+[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/BaseGameRoot.tscn" id="1_jg3ne"]
 [ext_resource type="Script" path="res://GameCore/Game/GameCamera.cs" id="5_qvtd4"]
 
-[node name="GameRoot" instance=ExtResource("1_luofh")]
+[node name="GameRoot" instance=ExtResource("1_jg3ne")]
 script = ExtResource("1_jas0l")
 
 [node name="ColorRect" parent="MainBackground" index="0"]
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="AudioController" parent="GameDisplay" index="0"]
-script = ExtResource("5_ognf4")
 
 [node name="Transition" parent="GameDisplay" index="3"]
 layer = 90

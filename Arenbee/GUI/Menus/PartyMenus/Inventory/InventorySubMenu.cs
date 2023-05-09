@@ -23,7 +23,7 @@ public partial class InventorySubMenu : OptionSubMenu
     public static string GetScenePath() => GDEx.GetScenePath();
     private int _contentMargin;
     private AInventory _inventory;
-    private readonly AItemCategoryDB _itemCategoryDB = ItemsLocator.ItemCategoryDB;
+    private readonly IItemCategoryDB _itemCategoryDB = ItemsLocator.ItemCategoryDB;
     private OptionContainer _inventoryList = null!;
     private DynamicTextBox _itemInfo = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
@@ -111,12 +111,13 @@ public partial class InventorySubMenu : OptionSubMenu
 
     private List<TextOption> GetItemTypeOptions()
     {
-        List<TextOption> options = new(_itemCategoryDB.Categories.Count + 1);
+        IReadOnlyCollection<ItemCategory> categories = _itemCategoryDB.GetCategories();
+        List<TextOption> options = new(categories.Count + 1);
         var allOption = _textOptionScene.Instantiate<TextOption>();
         allOption.LabelText = "All";
         allOption.OptionData = "all";
         options.Add(allOption);
-        foreach (ItemCategory category in _itemCategoryDB.Categories)
+        foreach (ItemCategory category in categories)
         {
             var option = _textOptionScene.Instantiate<TextOption>();
             option.LabelText = category.DisplayName;

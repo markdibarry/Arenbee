@@ -16,7 +16,7 @@ namespace Arenbee.GUI.Menus.Title;
 public partial class MainSubMenu : OptionSubMenu
 {
     private OptionContainer _mainOptions = null!;
-    private AGameRoot _gameRoot = Locator.Root;
+    private BaseGameRoot _gameRoot = Locator.Root;
     private Control _mainContainer = null!;
     private readonly List<string> _menuKeys = new()
     {
@@ -84,7 +84,7 @@ public partial class MainSubMenu : OptionSubMenu
     private void StartNewGame()
     {
         CurrentState = State.Busy;
-        ATransitionController tController = Locator.TransitionController;
+        BaseTransitionController tController = Locator.TransitionController;
         TransitionRequest request = new(
             loadingScreenPath: BasicLoadingScreen.GetScenePath(),
             transitionType: TransitionType.Game,

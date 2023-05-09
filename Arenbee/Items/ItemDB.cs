@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Arenbee.ActionEffects;
 using Arenbee.Statistics;
 using GameCore.Items;
@@ -6,11 +7,23 @@ using GameCore.Statistics;
 
 namespace Arenbee.Items;
 
-public class ItemDB : AItemDB
+public class ItemDB : IItemDB
 {
     private static readonly IStatusEffectModifierFactory s_effectModFactory = StatsLocator.StatusEffectModifierFactory;
 
-    protected override AItem[] BuildDB()
+    public IReadOnlyCollection<AItem> Items { get; } = BuildDB();
+
+    public AItem? GetItem(string id)
+    {
+        return Items.FirstOrDefault(item => item.Id.Equals(id));
+    }
+
+    public IEnumerable<AItem> GetItemsByCategory(string itemCategoryId)
+    {
+        return Items.Where(item => item.ItemCategory.Id.Equals(itemCategoryId));
+    }
+
+    private static AItem[] BuildDB()
     {
         var itemCategoryDB = ItemsLocator.ItemCategoryDB;
         List<AItem> items = new();

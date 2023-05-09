@@ -3,7 +3,7 @@ using GameCore.ActionEffects;
 
 namespace Arenbee.ActionEffects;
 
-public class ActionEffectRequest : AActionEffectRequest
+public class ActionEffectRequest : BaseActionEffectRequest
 {
     public ActionEffectRequest(ActorBody? user, Actor[] targets, int actionType, int value1, int value2)
         : base(actionType, value1, value2)

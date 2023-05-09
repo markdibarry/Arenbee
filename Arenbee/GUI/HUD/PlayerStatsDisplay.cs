@@ -8,7 +8,7 @@ namespace Arenbee.GUI;
 [Tool]
 public partial class PlayerStatsDisplay : PanelContainer
 {
-    private static readonly AActorDataDB s_actorDataDB = ActorsLocator.ActorDataDB;
+    private static readonly IActorDataDB s_actorDataDB = ActorsLocator.ActorDataDB;
     private Actor? _actor;
     private HeartDisplay _heartDisplay = null!;
     private Label _nameLabel = null!;

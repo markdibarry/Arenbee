@@ -3,7 +3,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class ConditionLookup : IConditionLookup
+public class ConditionTypeDB : IConditionTypeDB
 {
     public Type GetConditionType(int conditionType)
     {

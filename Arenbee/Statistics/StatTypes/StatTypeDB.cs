@@ -5,7 +5,7 @@ using Godot;
 
 namespace Arenbee.Statistics;
 
-public class StatTypeDB : AStatTypeDB
+public class StatTypeDB : BaseStatTypeDB
 {
     public static StatTypeData GetStatCategoryData(StatCategory statCategory)
     {

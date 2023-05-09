@@ -4,9 +4,9 @@ using GameCore.Actors;
 
 namespace Arenbee.Actors;
 
-public class ActorBodyDB : AActorBodyDB
+public class ActorBodyPathDB : IActorBodyPathDB
 {
-    public override IReadOnlyDictionary<string, string> ActorBodies { get; } = new Dictionary<string, string>()
+    public IReadOnlyDictionary<string, string> ActorBodies { get; } = new Dictionary<string, string>()
     {
         { ActorBodyIds.Twosen, Twosen.GetScenePath() },
         { ActorBodyIds.Ball, Ball.GetScenePath() },
@@ -14,4 +14,11 @@ public class ActorBodyDB : AActorBodyDB
         { ActorBodyIds.Orc, Orc.GetScenePath() },
         { ActorBodyIds.Plant, Plant.GetScenePath() }
     };
+
+    public string? GetById(string bodyId)
+    {
+        if (ActorBodies.TryGetValue(bodyId, out string? result))
+            return result;
+        return null;
+    }
 }

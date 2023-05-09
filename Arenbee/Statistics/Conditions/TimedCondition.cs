@@ -9,7 +9,6 @@ public partial class TimedCondition : Condition
 {
     public TimedCondition() { }
 
-    [SetsRequiredMembers]
     public TimedCondition(TimedCondition condition)
             : base(condition)
     {
@@ -20,7 +19,7 @@ public partial class TimedCondition : Condition
 
     public override int ConditionType => (int)Statistics.ConditionType.Timed;
     [Export] public float StartValue { get; set; }
-    [Export] public required float TargetValue { get; set; }
+    [Export] public float TargetValue { get; set; }
     [Export] public float CurrentValue { get; set; }
 
     public override TimedCondition Clone() => new(this);

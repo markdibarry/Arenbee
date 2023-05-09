@@ -5,7 +5,7 @@ namespace Arenbee.Items;
 
 public class ItemStackData
 {
-    private static readonly AItemDB s_itemDB = ItemsLocator.ItemDB;
+    private static readonly IItemDB s_itemDB = ItemsLocator.ItemDB;
 
     public ItemStackData(ItemStackData itemStackData)
         : this(itemStackData.ItemId, itemStackData.Count)
@@ -29,7 +29,7 @@ public class ItemStackData
 
     public ItemStack? CreateItemStack() => CreateItemStack(s_itemDB);
 
-    public ItemStack? CreateItemStack(AItemDB itemDB)
+    public ItemStack? CreateItemStack(IItemDB itemDB)
     {
         AItem? item = s_itemDB.GetItem(ItemId);
         if (item == null)

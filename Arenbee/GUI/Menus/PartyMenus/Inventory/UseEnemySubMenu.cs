@@ -28,7 +28,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly AActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
+    private readonly IActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
     private readonly AAreaScene? _areaScene = Locator.Session?.CurrentAreaScene;
     private readonly GameSession _gameSession;
     private readonly Inventory _inventory;

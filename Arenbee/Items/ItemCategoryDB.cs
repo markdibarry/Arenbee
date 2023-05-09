@@ -1,10 +1,21 @@
-﻿using GameCore.Items;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GameCore.Items;
 
 namespace Arenbee.Items;
 
-public class ItemCategoryDB : AItemCategoryDB
+public class ItemCategoryDB : IItemCategoryDB
 {
-    protected override ItemCategory[] BuildDB()
+    public IReadOnlyCollection<ItemCategory> Categories { get; } = BuildDB();
+
+    public ItemCategory? GetCategory(string id)
+    {
+        return Categories.FirstOrDefault(category => category.Id.Equals(id));
+    }
+
+    public IReadOnlyCollection<ItemCategory> GetCategories() => Categories;
+
+    private static ItemCategory[] BuildDB()
     {
         return new ItemCategory[]
         {

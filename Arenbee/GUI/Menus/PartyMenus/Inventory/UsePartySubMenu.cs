@@ -29,7 +29,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private readonly AActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
+    private readonly IActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
     private readonly GameSession _gameSession;
     private readonly Inventory _inventory;
     private Party _party;

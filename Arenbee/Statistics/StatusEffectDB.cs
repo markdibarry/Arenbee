@@ -1,10 +1,19 @@
-﻿using GameCore.Statistics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class StatusEffectDB : AStatusEffectDB
+public class StatusEffectDB : IStatusEffectDB
 {
-    protected override StatusEffectData[] BuildDB()
+    public IReadOnlyCollection<StatusEffectData> Data { get; set; } = BuildDB();
+
+    public StatusEffectData? GetEffectData(int type)
+    {
+        return Data.FirstOrDefault(x => x.EffectType == type);
+    }
+
+    private static StatusEffectData[] BuildDB()
     {
         return new StatusEffectData[]
         {

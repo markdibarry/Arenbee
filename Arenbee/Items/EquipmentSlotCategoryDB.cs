@@ -1,11 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GameCore.Items;
 
 namespace Arenbee.Items;
 
-public class EquipmentSlotCategoryDB : AEquipmentSlotCategoryDB
+public class EquipmentSlotCategoryDB : IEquipmentSlotCategoryDB
 {
-    protected override EquipmentSlotCategory[] BuildDB()
+    public IReadOnlyCollection<EquipmentSlotCategory> Categories { get; } = BuildDB();
+    public IReadOnlyDictionary<string, string[]> Presets { get; } = BuildPresetDB();
+
+    public EquipmentSlotCategory? GetCategory(string id)
+    {
+        return Categories.FirstOrDefault(category => category.Id.Equals(id));
+    }
+
+    public IReadOnlyCollection<EquipmentSlotCategory> GetCategoryPreset(string id)
+    {
+        if (Presets.TryGetValue(id, out string[]? preset))
+            return preset.Select(GetCategory).OfType<EquipmentSlotCategory>().ToList();
+        return Array.Empty<EquipmentSlotCategory>();
+    }
+
+    private static EquipmentSlotCategory[] BuildDB()
     {
         return new EquipmentSlotCategory[]
         {
@@ -20,7 +37,7 @@ public class EquipmentSlotCategoryDB : AEquipmentSlotCategoryDB
         };
     }
 
-    protected override Dictionary<string, string[]> BuildPresetDB()
+    private static Dictionary<string, string[]> BuildPresetDB()
     {
         return new()
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Arenbee.Items;
 using Arenbee.Statistics;
 using GameCore.Actors;
@@ -7,9 +8,31 @@ using GameCore.Statistics;
 
 namespace Arenbee.Actors;
 
-public class ActorDataDB : AActorDataDB
+public class ActorDataDB : IActorDataDB
 {
-    protected override Dictionary<string, AActorData> BuildDB()
+    public IReadOnlyDictionary<string, AActorData> Data { get; private set; } = BuildDB();
+
+    public bool TryGetData<T>(string key, out T? value) where T : AActorData
+    {
+        if (Data.TryGetValue(key, out AActorData? actorData) && actorData is T t)
+        {
+            value = t;
+            return true;
+        }
+        value = default;
+        return false;
+    }
+
+    public T? GetData<T>(string id) where T : AActorData
+    {
+        if (Data.TryGetValue(id, out AActorData? actorData) && actorData is T t)
+            return t;
+        return null;
+    }
+
+    public string[] GetKeys() => Data.Keys.ToArray();
+
+    private static Dictionary<string, AActorData> BuildDB()
     {
         return new Dictionary<string, AActorData>()
         {

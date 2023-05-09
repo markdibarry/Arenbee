@@ -18,9 +18,9 @@ public partial class LocatorAutoload : ALocatorAutoload
     {
         Locator.ProvideActionEffectDB(new ActionEffectDB());
         Locator.ProvideLoaderFactory(new LoaderFactory());
-        ActorsLocator.ProvideActorBodyDB(new ActorBodyDB());
+        ActorsLocator.ProvideActorBodyDB(new ActorBodyPathDB());
         ActorsLocator.ProvideActorDataDB(new ActorDataDB());
-        StatsLocator.ProvideConditionLookup(new ConditionLookup());
+        StatsLocator.ProvideConditionLookup(new ConditionTypeDB());
         StatsLocator.ProvideStatusEffectModifierFactory(new StatusEffectModifierFactory());
         StatsLocator.ProvideStatTypeDB(new StatTypeDB());
         StatsLocator.ProvideStatusEffectDB(new StatusEffectDB());

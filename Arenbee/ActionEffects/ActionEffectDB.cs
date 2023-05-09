@@ -3,9 +3,18 @@ using GameCore.ActionEffects;
 
 namespace Arenbee.ActionEffects;
 
-public class ActionEffectDB : AActionEffectDB
+public class ActionEffectDB : IActionEffectDB
 {
-    protected override IReadOnlyDictionary<int, IActionEffect> BuildDB()
+    protected IReadOnlyDictionary<int, IActionEffect> Effects { get; } = BuildDB();
+
+    public IActionEffect? GetEffect(int type)
+    {
+        if (Effects.TryGetValue(type, out IActionEffect? effect))
+            return effect;
+        return null;
+    }
+
+    private static IReadOnlyDictionary<int, IActionEffect> BuildDB()
     {
         Dictionary<int, IActionEffect> effects = new()
         {
