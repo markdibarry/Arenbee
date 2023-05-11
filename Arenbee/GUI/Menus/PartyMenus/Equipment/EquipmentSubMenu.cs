@@ -69,10 +69,10 @@ public partial class EquipmentSubMenu : OptionSubMenu
         _contentMargin = (int)(_contentContainer.Position.X + _contentContainer.Size.X);
     }
 
-    protected override void OnItemFocused()
+    protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (CurrentContainer == _partyOptions)
-            UpdateEquipmentDisplay(CurrentContainer.FocusedItem);
+        if (optionContainer == _partyOptions)
+            UpdateEquipmentDisplay(optionItem);
     }
 
     protected override void OnSelectPressed()

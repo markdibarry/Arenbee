@@ -15,6 +15,7 @@ public partial class PartyMemberOption : OptionItem
 
     public override void _Ready()
     {
+        base._Ready();
         NameLabel = GetNode<Label>("%Name");
         HPContainer = GetNode<PointContainer>("%HPContainer");
         MPContainer = GetNode<PointContainer>("%MPContainer");

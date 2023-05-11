@@ -57,11 +57,11 @@ public partial class SelectSubMenu : OptionSubMenu
         _actorStatsDisplay.UpdateBaseValues(_actor.Stats);
     }
 
-    protected override void OnItemFocused()
+    protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
     {
         RemoveMockMods();
 
-        _currentItemStack = CurrentContainer?.FocusedItem?.OptionData as ItemStack;
+        _currentItemStack = optionItem?.OptionData as ItemStack;
         if (_currentItemStack != null)
         {
             foreach (Modifier mod in _currentItemStack.Item.Modifiers)

@@ -51,9 +51,9 @@ public partial class StatsSubMenu : OptionSubMenu
         _partyOptions.ReplaceChildren(options);
     }
 
-    protected override void OnItemFocused()
+    protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (CurrentContainer?.FocusedItem?.OptionData is not Actor actor)
+        if (optionItem?.OptionData is not Actor actor)
             return;
         _statsDisplay.UpdateStatsDisplay(actor.Stats, updateColor: false);
     }

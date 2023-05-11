@@ -50,7 +50,6 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
         {
-            UpdateItemDescription(null);
             Audio.PlaySoundFX("menu_close1.wav");
             FocusContainer(_typeList);
             return;
@@ -74,14 +73,20 @@ public partial class InventorySubMenu : OptionSubMenu
         _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
-    protected override void OnItemFocused()
+    protected override void OnFocusContainer(OptionContainer optionContainer)
     {
-        if (CurrentContainer == null)
+        if (optionContainer == _typeList)
+            UpdateItemDescription(null);
+    }
+
+    protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
+    {
+        if (optionItem == null)
             return;
-        if (CurrentContainer == _typeList)
-            UpdateItemList(CurrentContainer.FocusedItem, resetFocus: true);
+        if (optionContainer == _typeList)
+            UpdateItemList(optionItem, resetFocus: true);
         else
-            UpdateItemDescription(CurrentContainer.FocusedItem);
+            UpdateItemDescription(optionItem);
     }
 
     protected override void OnSelectPressed()

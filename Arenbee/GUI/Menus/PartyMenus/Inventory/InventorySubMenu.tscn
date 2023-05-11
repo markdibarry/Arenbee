@@ -32,6 +32,7 @@ size_flags_horizontal = 0
 
 [node name="ItemTypeContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer" index="0" instance=ExtResource("3_e2c41")]
 layout_mode = 2
@@ -61,6 +62,7 @@ value = 48.9796
 [node name="InventoryContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="1"]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer" index="0" instance=ExtResource("3_e2c41")]
 layout_mode = 2

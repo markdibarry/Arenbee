@@ -54,6 +54,7 @@ public partial class SaveGameOption : OptionItem
 
     public override void _Ready()
     {
+        base._Ready();
         GameNameLabel = GetNodeOrNull<Label>("%GameName");
         GameNameLabel.Text = _gameNameText;
         LevelLabel = GetNodeOrNull<Label>("%Level");

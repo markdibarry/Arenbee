@@ -27,6 +27,7 @@ layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="0"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0"]
 layout_mode = 2

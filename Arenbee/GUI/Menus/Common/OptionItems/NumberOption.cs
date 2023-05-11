@@ -24,6 +24,7 @@ public partial class NumberOption : OptionItem
 
     public override void _Ready()
     {
+        base._Ready();
         _label = GetNodeOrNull<Label>("%Label");
         _label.Text = _labelText;
     }
