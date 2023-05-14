@@ -22,7 +22,7 @@ public partial class InventorySubMenu : OptionSubMenu
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private int _contentMargin;
-    private AInventory _inventory;
+    private BaseInventory _inventory;
     private readonly IItemCategoryDB _itemCategoryDB = ItemsLocator.ItemCategoryDB;
     private OptionContainer _inventoryList = null!;
     private DynamicTextBox _itemInfo = null!;
@@ -34,8 +34,8 @@ public partial class InventorySubMenu : OptionSubMenu
 
     protected override void OnMockPreSetup()
     {
-        AItem potion = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
-        AItem metalStick = ItemsLocator.ItemDB.GetItem(ItemIds.GeneSupreme)!;
+        BaseItem potion = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
+        BaseItem metalStick = ItemsLocator.ItemDB.GetItem(ItemIds.GeneSupreme)!;
         _inventory = new Inventory(new ItemStack[] { new(potion, 2), new(metalStick, 1) });
     }
 

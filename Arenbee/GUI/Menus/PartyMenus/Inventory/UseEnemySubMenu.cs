@@ -29,15 +29,15 @@ public partial class UseEnemySubMenu : OptionSubMenu
 
     public static string GetScenePath() => GDEx.GetScenePath();
     private readonly IActionEffectDB _actionEffectDB = Locator.ActionEffectDB;
-    private readonly AAreaScene? _areaScene = Locator.Session?.CurrentAreaScene;
+    private readonly BaseAreaScene? _areaScene = Locator.Session?.CurrentAreaScene;
     private readonly GameSession _gameSession;
     private readonly Inventory _inventory;
     private IActionEffect _actionEffect = null!;
-    private List<AActorBody> _enemies = new();
+    private List<BaseActorBody> _enemies = new();
     private ItemStack _itemStack = null!;
     private PackedScene _noDisplayOptionScene = GD.Load<PackedScene>(NoDisplayOption.GetScenePath());
     private OptionContainer _enemyContainer = null!;
-    private AItem Item => _itemStack.Item;
+    private BaseItem Item => _itemStack.Item;
     private Control _messageContainer = null!;
     private Label _messageLabel = null!;
 
@@ -67,7 +67,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
             return;
         _areaScene.ColorAdjustment.Brightness = -0.5f;
 
-        foreach (AActorBody enemy in _enemies)
+        foreach (BaseActorBody enemy in _enemies)
             _areaScene.MoveToFocusLayer(enemy);
     }
 
@@ -75,7 +75,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     {
         _ = Menu.ShowInactiveSubMenus();
         _areaScene?.ColorAdjustment.Reset();
-        foreach (AActorBody enemy in _enemies)
+        foreach (BaseActorBody enemy in _enemies)
             _areaScene?.MoveToActorContainer(enemy);
     }
 
@@ -103,7 +103,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     private void DisplayOptions()
     {
         _enemyContainer.ClearOptionItems();
-        foreach (AActorBody actorBody in _enemies)
+        foreach (BaseActorBody actorBody in _enemies)
         {
             var option = _noDisplayOptionScene.Instantiate<NoDisplayOption>();
             _enemyContainer.AddOption(option);
@@ -130,19 +130,19 @@ public partial class UseEnemySubMenu : OptionSubMenu
         if (selectedItems.All(x => x.Disabled))
             return;
 
-        List<AActor> targets = new();
+        List<BaseActor> targets = new();
         foreach (OptionItem item in selectedItems)
         {
-            if (item.OptionData is not AActorBody actorBody)
+            if (item.OptionData is not BaseActorBody actorBody)
                 continue;
             if (actorBody.Actor == null)
                 continue;
             targets.Add(actorBody.Actor);
         }
-        AActor? user = _gameSession.MainParty?.Actors.First();
+        BaseActor? user = _gameSession.MainParty?.Actors.First();
 
         _areaScene?.ColorAdjustment.Reset();
-        foreach (AActorBody enemy in _enemies)
+        foreach (BaseActorBody enemy in _enemies)
             _areaScene?.MoveToActorContainer(enemy);
         await CloseMenuAsync();
 

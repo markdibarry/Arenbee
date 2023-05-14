@@ -24,7 +24,7 @@ public partial class HoldItemController : Node2D
         AddChild(holdItem);
     }
 
-    protected virtual void DetachHoldItemByItem(AItem item)
+    protected virtual void DetachHoldItemByItem(BaseItem item)
     {
         HoldItem? holdItem = HoldItems.Find(x => x.Item == item);
         if (holdItem != null)
@@ -46,13 +46,13 @@ public partial class HoldItemController : Node2D
         ActorBody = actorBody;
         if (ActorBody.Actor != null)
         {
-            AItem? weapon = ActorBody.Actor.Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
+            BaseItem? weapon = ActorBody.Actor.Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
             if (weapon != null)
                 SetHoldItem(null, weapon);
         }
     }
 
-    public void SetHoldItem(AItem? oldItem, AItem? newItem)
+    public void SetHoldItem(BaseItem? oldItem, BaseItem? newItem)
     {
         if (!_holdItemIds.Contains(oldItem?.ItemCategory.Id) && !_holdItemIds.Contains(newItem?.ItemCategory.Id))
             return;

@@ -31,7 +31,7 @@ public class ItemStackData
 
     public ItemStack? CreateItemStack(IItemDB itemDB)
     {
-        AItem? item = s_itemDB.GetItem(ItemId);
+        BaseItem? item = s_itemDB.GetItem(ItemId);
         if (item == null)
             return null;
         return new ItemStack(item, Count);

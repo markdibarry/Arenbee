@@ -3,7 +3,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public partial class HurtBox : AHurtBox
+public partial class HurtBox : BaseHurtBox
 {
     public override void SetHurtboxRole(int role)
     {

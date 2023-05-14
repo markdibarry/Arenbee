@@ -9,7 +9,7 @@ using Godot;
 
 namespace Arenbee.Events;
 
-public partial class SceneChanger : SceneChangerBase
+public partial class SceneChanger : BaseSceneChanger
 {
     protected override async Task ChangeScene()
     {
@@ -31,7 +31,7 @@ public partial class SceneChanger : SceneChangerBase
 
                 AreaScene areaScene = areaScenePacked!.Instantiate<AreaScene>();
                 GameSession.AddAreaScene(areaScene);
-                AActor actor = party!.Actors.First();
+                BaseActor actor = party!.Actors.First();
                 actor.ActorBody!.GlobalPosition = areaScene.GetSpawnPoint(0);
                 areaScene.AddActorBody(actor.ActorBody!);
             });

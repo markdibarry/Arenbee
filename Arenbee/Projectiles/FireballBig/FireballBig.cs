@@ -14,13 +14,13 @@ public partial class FireballBig : Node2D
     private double _speed = 250;
     private double _expiration = 0.5;
     public Direction Direction { get; set; }
-    public AHitBox HitBox { get; set; } = null!;
+    public BaseHitBox HitBox { get; set; } = null!;
 
     public override void _Ready()
     {
         _animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         _animatedSprite2D.Play();
-        HitBox = GetNode<AHitBox>("HitBox");
+        HitBox = GetNode<BaseHitBox>("HitBox");
         if (Direction == Direction.Left)
         {
             _speed *= -1;
@@ -37,7 +37,7 @@ public partial class FireballBig : Node2D
         GlobalPosition = new Vector2(x, GlobalPosition.Y);
     }
 
-    public static void CreateFireball(AActorBody actorBody)
+    public static void CreateFireball(BaseActorBody actorBody)
     {
         var fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<FireballBig>();
         int fireballOffset = 10;

@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/AActorBody.tscn" id="1_gioo5"]
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/BaseActorBody.tscn" id="1_gioo5"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_u04ek"]
 [ext_resource type="Texture2D" uid="uid://cnwfyddt1cb8e" path="res://Arenbee/Actors/ActorBodies/Null/Animation/Null.png" id="3_yfyyd"]
 

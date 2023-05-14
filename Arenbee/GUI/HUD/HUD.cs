@@ -28,7 +28,7 @@ public partial class HUD : AHUD
         GetNode<Label>("%FPSDisplay").Text = Engine.GetFramesPerSecond().ToString();
     }
 
-    public void OnActorDamaged(AActor actor, ADamageResult aDamageResult)
+    public void OnActorDamaged(BaseActor actor, BaseDamageResult aDamageResult)
     {
         DamageResult damageResult = (DamageResult)aDamageResult;
         switch (damageResult.ActionType)
@@ -44,13 +44,13 @@ public partial class HUD : AHUD
         }
     }
 
-    public void OnActorDefeated(AActor actor)
+    public void OnActorDefeated(BaseActor actor)
     {
         string defeatedMessage = $"{actor.Name} was defeated!";
         MessageQueue.Enqueue(defeatedMessage);
     }
 
-    public void OnActorStatusEffectChanged(AActor actor, int statusEffectType, ModChangeType changeType)
+    public void OnActorStatusEffectChanged(BaseActor actor, int statusEffectType, ModChangeType changeType)
     {
         string message;
         StatusEffectData? effectData = s_statusEffectDB.GetEffectData(statusEffectType);
@@ -63,20 +63,20 @@ public partial class HUD : AHUD
         MessageQueue.Enqueue(message);
     }
 
-    public void OnActorModChanged(AActor actor, Modifier mod, ModChangeType changeType)
+    public void OnActorModChanged(BaseActor actor, Modifier mod, ModChangeType changeType)
     { }
 
-    public void OnActorStatsChanged(AActor actor)
+    public void OnActorStatsChanged(BaseActor actor)
     {
         _playerStatsDisplay.Update();
     }
 
-    public void OnActorBodyFreeing(AActorBody actorBody)
+    public void OnActorBodyFreeing(BaseActorBody actorBody)
     {
         UnsubscribeActorBodyEvents(actorBody);
     }
 
-    public override void SubscribeActorBodyEvents(AActorBody actorBody)
+    public override void SubscribeActorBodyEvents(BaseActorBody actorBody)
     {
         actorBody.Freeing += OnActorBodyFreeing;
         if (actorBody.Actor is not Actor actor)
@@ -93,7 +93,7 @@ public partial class HUD : AHUD
         }
     }
 
-    public override void UnsubscribeActorBodyEvents(AActorBody actorBody)
+    public override void UnsubscribeActorBodyEvents(BaseActorBody actorBody)
     {
         actorBody.Freeing -= OnActorBodyFreeing;
         if (actorBody.Actor is not Actor actor)

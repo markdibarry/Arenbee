@@ -12,13 +12,13 @@ public partial class Fireball : Node2D
     public static string GetScenePath() => GDEx.GetScenePath();
     private double _speed = 250;
     private double _expiration = 0.5;
-    public AHitBox HitBox { get; set; } = null!;
+    public BaseHitBox HitBox { get; set; } = null!;
     public Direction Direction { get; set; }
 
     public override void _Ready()
     {
         Sprite2D sprite2D = GetNode<Sprite2D>("Sprite2D");
-        HitBox = GetNode<AHitBox>("HitBox");
+        HitBox = GetNode<BaseHitBox>("HitBox");
         if (Direction == Direction.Left)
         {
             _speed *= -1;
@@ -35,7 +35,7 @@ public partial class Fireball : Node2D
         GlobalPosition = new Vector2(x, GlobalPosition.Y);
     }
 
-    public static void CreateFireball(AActorBody actorBody)
+    public static void CreateFireball(BaseActorBody actorBody)
     {
         Fireball fireball = GD.Load<PackedScene>(GetScenePath()).Instantiate<Fireball>();
         int fireballOffset = 10;

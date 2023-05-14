@@ -10,7 +10,7 @@ using Godot;
 
 namespace Arenbee.Actors;
 
-public abstract partial class ActorBody : AActorBody
+public abstract partial class ActorBody : BaseActorBody
 {
     protected ActorBody()
         : base()
@@ -49,7 +49,7 @@ public abstract partial class ActorBody : AActorBody
         IFrameController.Process(delta);
     }
 
-    public void OnDamageReceived(AActor actor, ADamageResult damageResult)
+    public void OnDamageReceived(BaseActor actor, BaseDamageResult damageResult)
     {
         DamageNumber damageNumber = new();
         AddChild(damageNumber);
@@ -75,7 +75,7 @@ public abstract partial class ActorBody : AActorBody
         }
     }
 
-    public void SetHoldItem(AItem? oldItem, AItem? newItem)
+    public void SetHoldItem(BaseItem? oldItem, BaseItem? newItem)
     {
         HoldItemController?.SetHoldItem(oldItem, newItem);
     }

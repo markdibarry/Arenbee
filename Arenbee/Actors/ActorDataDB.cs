@@ -10,11 +10,11 @@ namespace Arenbee.Actors;
 
 public class ActorDataDB : IActorDataDB
 {
-    public IReadOnlyDictionary<string, AActorData> Data { get; private set; } = BuildDB();
+    public IReadOnlyDictionary<string, BaseActorData> Data { get; private set; } = BuildDB();
 
-    public bool TryGetData<T>(string key, out T? value) where T : AActorData
+    public bool TryGetData<T>(string key, out T? value) where T : BaseActorData
     {
-        if (Data.TryGetValue(key, out AActorData? actorData) && actorData is T t)
+        if (Data.TryGetValue(key, out BaseActorData? actorData) && actorData is T t)
         {
             value = t;
             return true;
@@ -23,18 +23,18 @@ public class ActorDataDB : IActorDataDB
         return false;
     }
 
-    public T? GetData<T>(string id) where T : AActorData
+    public T? GetData<T>(string id) where T : BaseActorData
     {
-        if (Data.TryGetValue(id, out AActorData? actorData) && actorData is T t)
+        if (Data.TryGetValue(id, out BaseActorData? actorData) && actorData is T t)
             return t;
         return null;
     }
 
     public string[] GetKeys() => Data.Keys.ToArray();
 
-    private static Dictionary<string, AActorData> BuildDB()
+    private static Dictionary<string, BaseActorData> BuildDB()
     {
-        return new Dictionary<string, AActorData>()
+        return new Dictionary<string, BaseActorData>()
         {
             {
                 ActorDataIds.Ball,

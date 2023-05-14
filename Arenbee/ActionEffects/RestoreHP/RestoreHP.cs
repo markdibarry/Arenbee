@@ -14,7 +14,7 @@ public class RestoreHP : IActionEffect
     public bool IsActionSequence => true;
     public int TargetType => (int)ActionEffects.TargetType.PartyMember;
 
-    public bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public bool CanUse(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         if (targets.Count != 1)
             return false;
@@ -22,9 +22,9 @@ public class RestoreHP : IActionEffect
         return !stats.HasFullHP && !stats.HasNoHP;
     }
 
-    public async Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public async Task Use(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
-        AActor target = targets[0];
+        BaseActor target = targets[0];
         if (target.ActorBody == null)
             return;
         GameSession? session = (GameSession)Locator.Session!;

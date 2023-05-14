@@ -12,7 +12,7 @@ public class StateDisplayController
     private Label _actionStateDisplay = null!;
     private Label _healthStateDisplay = null!;
 
-    public void CreateStateDisplay(AActorBody actor)
+    public void CreateStateDisplay(BaseActorBody actor)
     {
         var stateDisplay = GDEx.Instantiate<Control>(StateDisplay.GetScenePath());
         _airStateDisplay = stateDisplay.GetNode<Label>("AirState");

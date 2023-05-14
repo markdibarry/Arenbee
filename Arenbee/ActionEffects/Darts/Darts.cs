@@ -13,7 +13,7 @@ public class Darts : IActionEffect
     public bool IsActionSequence => true;
     public int TargetType => (int)ActionEffects.TargetType.EnemyAll;
 
-    public bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public bool CanUse(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         if (targets.Count == 0)
             return false;
@@ -21,18 +21,18 @@ public class Darts : IActionEffect
         return !stats.HasNoHP;
     }
 
-    public async Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public async Task Use(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         Random random = new();
         var dartTexture = GD.Load<Texture2D>("Arenbee/ActionEffects/Darts/Dart.png");
         for (int i = 0; i < 8; i++)
         {
-            AActor target = targets[random.Next(0, targets.Count)];
+            BaseActor target = targets[random.Next(0, targets.Count)];
             await ShootDart(dartTexture, user, target, value1);
         }
     }
 
-    private static async Task ShootDart(Texture2D dartTexture, AActor user, AActor target, int value1)
+    private static async Task ShootDart(Texture2D dartTexture, BaseActor user, BaseActor target, int value1)
     {
         Sprite2D sprite = new()
         {

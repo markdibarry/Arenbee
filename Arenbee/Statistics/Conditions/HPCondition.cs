@@ -31,5 +31,5 @@ public partial class HPCondition : Condition
 
     protected override void UnsubscribeEvents() => Stats.DamageReceived -= OnDamageReceived;
 
-    private void OnDamageReceived(ADamageResult damageResult) => UpdateCondition();
+    private void OnDamageReceived(BaseDamageResult damageResult) => UpdateCondition();
 }

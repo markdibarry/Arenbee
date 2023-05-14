@@ -2,6 +2,6 @@
 
 namespace Arenbee;
 
-public class SaveService : ASaveService<GameSave>
+public class SaveService : BaseSaveService<GameSave>
 {
 }

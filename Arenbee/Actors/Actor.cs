@@ -7,7 +7,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Actors;
 
-public class Actor : AActor
+public class Actor : BaseActor
 {
     public Actor(
         string actorId,
@@ -42,9 +42,9 @@ public class Actor : AActor
             ActorBody?.SetRole(role, false);
     }
 
-    public override void SetActorBody(AActorBody? actorBody)
+    public override void SetActorBody(BaseActorBody? actorBody)
     {
-        AItem? weapon = Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
+        BaseItem? weapon = Equipment.GetSlot(EquipmentSlotCategoryIds.Weapon)?.Item;
         if (ActorBody is ActorBody oldActorBody)
         {
             if (weapon != null)
@@ -62,7 +62,7 @@ public class Actor : AActor
         }
     }
 
-    protected override void OnEquipmentSet(EquipmentSlot slot, AItem? oldItem, AItem? newItem)
+    protected override void OnEquipmentSet(EquipmentSlot slot, BaseItem? oldItem, BaseItem? newItem)
     {
         ActorBody?.HoldItemController.SetHoldItem(oldItem, newItem);
     }

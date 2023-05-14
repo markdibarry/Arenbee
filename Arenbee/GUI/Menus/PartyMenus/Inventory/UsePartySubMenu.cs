@@ -37,13 +37,13 @@ public partial class UsePartySubMenu : OptionSubMenu
     private ItemStack _itemStack = null!;
     private PackedScene _partyMemberOptionScene = GD.Load<PackedScene>(PartyMemberOption.GetScenePath());
     private OptionContainer _partyContainer = null!;
-    private AItem Item => _itemStack.Item;
+    private BaseItem Item => _itemStack.Item;
 
     protected override void OnMockPreSetup()
     {
         Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor(_inventory)!;
         _party = new Party("temp", new List<Actor> { actor }, _inventory);
-        AItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
+        BaseItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
         _itemStack = new ItemStack(item, 2);
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
@@ -153,7 +153,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         if (selectedItems.All(x => x.Disabled))
             return;
 
-        List<AActor> targets = new();
+        List<BaseActor> targets = new();
         foreach (OptionItem option in selectedItems)
         {
             if (option.OptionData is not Actor actor)

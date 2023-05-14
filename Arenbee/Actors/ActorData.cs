@@ -10,7 +10,7 @@ using Godot;
 
 namespace Arenbee.Actors;
 
-public partial class ActorData : AActorData
+public partial class ActorData : BaseActorData
 {
     private static readonly IItemDB s_itemDB = ItemsLocator.ItemDB;
 
@@ -75,7 +75,7 @@ public partial class ActorData : AActorData
 
     public override ActorData Clone() => new(this);
 
-    public override Actor CreateActor(AInventory? externalInventory = null)
+    public override Actor CreateActor(BaseInventory? externalInventory = null)
     {
         Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
         IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = ItemsLocator.EquipmentSlotCategoryDB.GetCategoryPreset(EquipmentSlotPresetId);

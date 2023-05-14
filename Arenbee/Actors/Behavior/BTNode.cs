@@ -2,7 +2,7 @@
 
 namespace Arenbee.Actors.Behavior;
 
-public class BTNode : ABTNode
+public class BTNode : BaseBTNode
 {
     protected override ActorBody ActorBody => (ActorBody)ActorBodyInternal;
 }

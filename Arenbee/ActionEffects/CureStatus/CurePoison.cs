@@ -11,7 +11,7 @@ public class CurePoison : IActionEffect
     public bool IsActionSequence => false;
     public int TargetType => (int)ActionEffects.TargetType.PartyMember;
 
-    public bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public bool CanUse(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         if (targets.Count != 1)
             return false;
@@ -19,7 +19,7 @@ public class CurePoison : IActionEffect
         return stats.HasStatusEffect((int)StatusEffectType.Poison) && !stats.HasNoHP;
     }
 
-    public Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public Task Use(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         Stats stats = (Stats)targets[0].Stats;
         stats.RemoveModsByType(StatType.Poison);

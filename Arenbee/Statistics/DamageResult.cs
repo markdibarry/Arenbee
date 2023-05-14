@@ -3,7 +3,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class DamageResult : ADamageResult
+public class DamageResult : BaseDamageResult
 {
     public ActionType ActionType { get; set; }
     public ElementType ElementDamage { get; set; }

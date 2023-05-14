@@ -7,7 +7,7 @@ namespace Arenbee.Items;
 public abstract partial class HoldItem : Node2D
 {
     public AnimationPlayer AnimationPlayer { get; set; } = null!;
-    public AItem Item { get; set; } = null!;
+    public BaseItem Item { get; set; } = null!;
     public Sprite2D Sprite { get; set; } = null!;
     public string HoldItemType { get; set; } = null!;
     protected ActorBody ActorBody { get; set; } = null!;

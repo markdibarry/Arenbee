@@ -7,7 +7,7 @@ public static class StatusEffectMethods
 {
     public static void BurnTick(IStatusEffect statusEffect)
     {
-        AStats stats = statusEffect.Stats;
+        BaseStats stats = statusEffect.Stats;
         if (stats.StatsOwner is Actor actor && actor.ActorBody != null)
             actor.ActorBody.InputHandler.Jump.IsActionJustPressed = true;
         DamageRequest damageRequest = new()
@@ -21,7 +21,7 @@ public static class StatusEffectMethods
 
     public static void PoisonTick(IStatusEffect statusEffect)
     {
-        AStats stats = statusEffect.Stats;
+        BaseStats stats = statusEffect.Stats;
         DamageRequest damageRequest = new()
         {
             Value = (int)(stats.CalculateStat((int)StatType.MaxHP) * 0.05),

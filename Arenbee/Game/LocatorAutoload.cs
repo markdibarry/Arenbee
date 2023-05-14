@@ -12,7 +12,7 @@ using Godot;
 namespace Arenbee;
 
 [Tool]
-public partial class LocatorAutoload : ALocatorAutoload
+public partial class LocatorAutoload : BaseLocatorAutoload
 {
     protected override void Initialize()
     {

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bemdsaiiodtmd"]
 
-[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/AActorBody.tscn" id="1_06abq"]
+[ext_resource type="PackedScene" uid="uid://dn2j7yhjfw4es" path="res://GameCore/Actors/BaseActorBody.tscn" id="1_06abq"]
 [ext_resource type="Shader" path="res://GameCore/Shaders/Actor.gdshader" id="2_05g6h"]
 [ext_resource type="Script" path="res://Arenbee/Items/HoldItemController.cs" id="3_jnf8j"]
 

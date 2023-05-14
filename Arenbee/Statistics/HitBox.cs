@@ -4,7 +4,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public partial class HitBox : AHitBox
+public partial class HitBox : BaseHitBox
 {
     public HitBox()
     {
@@ -17,7 +17,7 @@ public partial class HitBox : AHitBox
         };
     }
 
-    public void SetBasicMeleeBox(AActorBody actorBody)
+    public void SetBasicMeleeBox(BaseActorBody actorBody)
     {
         if (actorBody.Actor is not Actor actor)
             return;

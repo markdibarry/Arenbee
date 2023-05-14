@@ -4,7 +4,7 @@ using System;
 
 namespace Arenbee.Statistics;
 
-public class DamageRequest : ADamageRequest
+public class DamageRequest : BaseDamageRequest
 {
     public DamageRequest()
     {

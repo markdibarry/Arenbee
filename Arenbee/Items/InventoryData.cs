@@ -7,7 +7,7 @@ namespace Arenbee.Items;
 
 public class InventoryData
 {
-    public InventoryData(AInventory inventory)
+    public InventoryData(BaseInventory inventory)
     {
         ItemStackData = inventory.Items.Select(x => new ItemStackData(x));
     }

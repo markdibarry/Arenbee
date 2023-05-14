@@ -5,7 +5,7 @@ using GameCore.Statistics;
 
 namespace Arenbee.Statistics;
 
-public class Stats : AStats
+public class Stats : BaseStats
 {
     public Stats(IDamageable damageable, IEnumerable<Stat> statLookup, IEnumerable<Modifier> mods)
         : base(damageable, statLookup, mods)
@@ -74,7 +74,7 @@ public class Stats : AStats
             RemoveMod(mod);
     }
 
-    protected override ADamageResult HandleDamage(ADamageRequest request)
+    protected override BaseDamageResult HandleDamage(BaseDamageRequest request)
     {
         DamageRequest damageRequest = (DamageRequest)request;
         int totalDamage = damageRequest.Value;

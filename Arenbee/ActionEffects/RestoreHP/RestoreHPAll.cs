@@ -12,7 +12,7 @@ public class RestoreHPAll : IActionEffect
     public bool IsActionSequence => true;
     public int TargetType => (int)ActionEffects.TargetType.PartyMemberAll;
 
-    public bool CanUse(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public bool CanUse(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         IActionEffect? restoreHP = Locator.ActionEffectDB.GetEffect((int)ActionEffectType.RestoreHP);
         if (restoreHP == null)
@@ -20,13 +20,13 @@ public class RestoreHPAll : IActionEffect
         return targets.Any(x => restoreHP.CanUse(null, new[] { x }, actionType, value1, value2));
     }
 
-    public async Task Use(AActor? user, IList<AActor> targets, int actionType, int value1, int value2)
+    public async Task Use(BaseActor? user, IList<BaseActor> targets, int actionType, int value1, int value2)
     {
         IActionEffect? restoreHP = Locator.ActionEffectDB.GetEffect((int)ActionEffectType.RestoreHP);
         if (restoreHP == null)
             return;
         List<Task> tasks = new();
-        foreach (AActor target in targets)
+        foreach (BaseActor target in targets)
             tasks.Add(restoreHP.Use(user, new[] { target }, actionType, value1, value2));
         await Task.WhenAll(tasks);
     }

@@ -2,7 +2,7 @@
 
 namespace Arenbee.Actors.Behavior;
 
-public abstract class BehaviorTree : ABehaviorTree
+public abstract class BehaviorTree : BaseBehaviorTree
 {
     protected BehaviorTree(ActorBody actorBody)
         : base(actorBody)

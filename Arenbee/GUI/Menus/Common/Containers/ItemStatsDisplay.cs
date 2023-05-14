@@ -58,7 +58,7 @@ public partial class ItemStatsDisplay : PanelContainer
         _elementDefContainer.UpdateType(StatCategory.ElementResist);
     }
 
-    public void UpdateStatsDisplay(AItem? item)
+    public void UpdateStatsDisplay(BaseItem? item)
     {
         List<Modifier> mods = item?.Modifiers?.Where(x => !x.IsHidden).ToList() ?? new();
         _hpContainer.UpdateValue(mods);

@@ -9,7 +9,6 @@ namespace Arenbee.GUI.Menus.Common;
 public partial class SaveGameSubMenu : OptionSubMenu
 {
     public static string GetScenePath() => GDEx.GetScenePath();
-    private List<(string, GameSave)> _gameSaves = new();
     private OptionContainer _saveOptions = null!;
     private PackedScene _saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
 
@@ -25,14 +24,32 @@ public partial class SaveGameSubMenu : OptionSubMenu
         var header = GetNode<Label>("%Header");
         header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
 
-        List<SaveGameOption> options = GetSaveGameOptions();
-        _saveOptions?.ReplaceChildren(options);
+        UpdateSaveOptions();
     }
 
     protected override void OnSubMenuResumed()
     {
-        List<SaveGameOption> options = GetSaveGameOptions();
-        _saveOptions?.ReplaceChildren(options);
+        UpdateSaveOptions();
+    }
+
+    private List<SaveGameOption> GetSaveGameOptions()
+    {
+        List<(string, GameSave)> gameSaves = SaveService.GetAllSaves();
+        List<SaveGameOption> options = new(3);
+        for (int i = 0; i < 3; i++)
+        {
+            var option = _saveGameOptionScene.Instantiate<SaveGameOption>();
+            option.GameNameText = $"File {i + 1}";
+            if (i < gameSaves.Count)
+                option.UpdateDisplay(gameSaves[i].Item2, gameSaves[i].Item1);
+            options.Add(option);
+        }
+        return options;
+    }
+
+    private void OpenSaveGameConfirmSubMenu(string? fileName)
+    {
+        _ = OpenSubMenuAsync(path: SaveConfirmSubMenu.GetScenePath(), data: fileName);
     }
 
     private void SetNodeReferences()
@@ -41,23 +58,9 @@ public partial class SaveGameSubMenu : OptionSubMenu
         AddContainer(_saveOptions);
     }
 
-    private void OpenSaveGameConfirmSubMenu(string? fileName)
+    private void UpdateSaveOptions()
     {
-        _ = OpenSubMenuAsync(path: SaveConfirmSubMenu.GetScenePath(), data: fileName);
-    }
-
-    private List<SaveGameOption> GetSaveGameOptions()
-    {
-        _gameSaves = SaveService.GetAllSaves();
-        List<SaveGameOption> options = new(3);
-        for (int i = 0; i < 3; i++)
-        {
-            var option = _saveGameOptionScene.Instantiate<SaveGameOption>();
-            option.GameNameText = $"File {i + 1}";
-            if (i < _gameSaves.Count)
-                option.UpdateDisplay(_gameSaves[i].Item2, _gameSaves[i].Item1);
-            options.Add(option);
-        }
-        return options;
+        List<SaveGameOption> options = GetSaveGameOptions();
+        _saveOptions?.ReplaceChildren(options);
     }
 }

@@ -11,7 +11,7 @@ using GameCore.Utility;
 
 namespace Arenbee;
 
-public partial class GameSession : AGameSession
+public partial class GameSession : BaseGameSession
 {
     public static string GetScenePath() => GDEx.GetScenePath();
     public Party? MainParty { get; set; }

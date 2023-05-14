@@ -1,8 +1,8 @@
 [gd_resource type="Theme" load_steps=16 format=3 uid="uid://ycu4lo6i6xj5"]
 
-[ext_resource type="FontVariation" uid="uid://cqmj0dcck45hb" path="res://Arenbee/GUI/Fonts/3x6custom.tres" id="1_xdew6"]
-[ext_resource type="Texture2D" uid="uid://bnoa5ecbv0drg" path="res://Arenbee/GUI/Borders/border2.png" id="2_wie4d"]
-[ext_resource type="FontFile" uid="uid://bwgmirjnrsccs" path="res://Arenbee/GUI/Fonts/m3x6.ttf" id="3_w4l6s"]
+[ext_resource type="FontVariation" uid="uid://cqmj0dcck45hb" path="res://Arenbee/GUI/Fonts/3x6custom.tres" id="1_mmmgf"]
+[ext_resource type="Texture2D" uid="uid://bnoa5ecbv0drg" path="res://Arenbee/GUI/Borders/border2.png" id="2_h1aju"]
+[ext_resource type="FontFile" uid="uid://bwgmirjnrsccs" path="res://Arenbee/GUI/Fonts/m3x6.ttf" id="3_6xj3g"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_psa38"]
 bg_color = Color(0.756863, 0.556863, 0.313726, 1)
@@ -55,7 +55,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-texture = ExtResource("2_wie4d")
+texture = ExtResource("2_h1aju")
 texture_margin_left = 5.0
 texture_margin_top = 5.0
 texture_margin_right = 5.0
@@ -68,7 +68,7 @@ content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
-texture = ExtResource("2_wie4d")
+texture = ExtResource("2_h1aju")
 texture_margin_left = 5.0
 texture_margin_top = 5.0
 texture_margin_right = 5.0
@@ -134,7 +134,7 @@ corner_radius_bottom_left = 1
 anti_aliasing = false
 
 [resource]
-default_font = ExtResource("3_w4l6s")
+default_font = ExtResource("3_6xj3g")
 HScrollBar/styles/grabber = SubResource("StyleBoxFlat_psa38")
 HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_fbl02")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_lemme")
@@ -143,20 +143,20 @@ HScrollBar/styles/scroll_focus = null
 Label/colors/font_outline_color = Color(0, 0, 0, 1)
 Label/constants/line_spacing = 0
 Label/constants/outline_size = 2
-Label/fonts/font = ExtResource("1_xdew6")
+Label/fonts/font = ExtResource("1_mmmgf")
 Label/styles/normal = null
 OptionContainer/base_type = &"PanelContainer"
 OptionContainer/styles/panel = SubResource("StyleBoxTexture_hjfji")
 PanelContainer/styles/panel = SubResource("StyleBoxTexture_exrfm")
 ProgressBar/colors/font_outline_color = Color(0, 0, 0, 1)
 ProgressBar/constants/outline_size = 2
-ProgressBar/fonts/font = ExtResource("1_xdew6")
+ProgressBar/fonts/font = ExtResource("1_mmmgf")
 ProgressBar/styles/bg = SubResource("StyleBoxFlat_r3alj")
 ProgressBar/styles/fg = SubResource("StyleBoxFlat_641gb")
 RichTextLabel/colors/font_outline_color = Color(0.12549, 0.12549, 0.12549, 1)
 RichTextLabel/constants/line_separation = 3
 RichTextLabel/constants/outline_size = 2
-RichTextLabel/fonts/normal_font = ExtResource("1_xdew6")
+RichTextLabel/fonts/normal_font = ExtResource("1_mmmgf")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_cc51u")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_engcw")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_idrqj")

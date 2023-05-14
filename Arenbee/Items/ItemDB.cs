@@ -11,22 +11,22 @@ public class ItemDB : IItemDB
 {
     private static readonly IStatusEffectModifierFactory s_effectModFactory = StatsLocator.StatusEffectModifierFactory;
 
-    public IReadOnlyCollection<AItem> Items { get; } = BuildDB();
+    public IReadOnlyCollection<BaseItem> Items { get; } = BuildDB();
 
-    public AItem? GetItem(string id)
+    public BaseItem? GetItem(string id)
     {
         return Items.FirstOrDefault(item => item.Id.Equals(id));
     }
 
-    public IEnumerable<AItem> GetItemsByCategory(string itemCategoryId)
+    public IEnumerable<BaseItem> GetItemsByCategory(string itemCategoryId)
     {
         return Items.Where(item => item.ItemCategory.Id.Equals(itemCategoryId));
     }
 
-    private static AItem[] BuildDB()
+    private static BaseItem[] BuildDB()
     {
         var itemCategoryDB = ItemsLocator.ItemCategoryDB;
-        List<AItem> items = new();
+        List<BaseItem> items = new();
         BuildWeapons(items, itemCategoryDB.GetCategory(ItemCategoryIds.Weapon)!);
         BuildHeadGear(items, itemCategoryDB.GetCategory(ItemCategoryIds.Headgear)!);
         BuildShirt(items, itemCategoryDB.GetCategory(ItemCategoryIds.Shirt)!);
@@ -39,7 +39,7 @@ public class ItemDB : IItemDB
         return items.ToArray();
     }
 
-    private static void BuildWeapons(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildWeapons(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.HockeyStick, itemCategory)
         {
@@ -87,7 +87,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildHeadGear(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildHeadGear(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.CheeseHat, itemCategory)
         {
@@ -147,7 +147,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildShirt(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildShirt(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.ClemsonHoodie, itemCategory)
         {
@@ -179,7 +179,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildPants(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildPants(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.JNCOJeans, itemCategory)
         {
@@ -211,7 +211,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildFootwear(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildFootwear(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.Vibrams, itemCategory)
         {
@@ -259,7 +259,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildAccessories(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildAccessories(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.FriendshipBracelet, itemCategory)
         {
@@ -334,7 +334,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildRestorative(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildRestorative(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.Potion, itemCategory)
         {
@@ -481,7 +481,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildField(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildField(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.EscapeRope, itemCategory)
         {
@@ -509,7 +509,7 @@ public class ItemDB : IItemDB
         });
     }
 
-    private static void BuildKey(List<AItem> items, ItemCategory itemCategory)
+    private static void BuildKey(List<BaseItem> items, ItemCategory itemCategory)
     {
         items.Add(new Item(ItemIds.BunnyNugget, itemCategory)
         {

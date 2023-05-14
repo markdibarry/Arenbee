@@ -6,7 +6,7 @@ public class PatrolChaseAirBT : BehaviorTree
 {
     public PatrolChaseAirBT(ActorBody actor) : base(actor) { }
 
-    protected override ABTNode SetupTree()
+    protected override BaseBTNode SetupTree()
     {
         return new Selector(new()
         {

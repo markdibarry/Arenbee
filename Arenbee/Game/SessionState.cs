@@ -15,7 +15,7 @@ public class SessionState
     public int TimesDied { get; set; }
     public int EnemiesDefeated { get; set; }
 
-    public void OnActorDefeated(AActor actor)
+    public void OnActorDefeated(BaseActor actor)
     {
         if (_gameSession.MainParty!.ContainsActor(actor))
             TimesDied++;
@@ -23,7 +23,7 @@ public class SessionState
             EnemiesDefeated++;
     }
 
-    public void OnActorDamaged(AActor actor, ADamageResult damageData)
+    public void OnActorDamaged(BaseActor actor, BaseDamageResult damageData)
     {
         if (_gameSession.MainParty!.ContainsActor(actor))
             TimesReceivedDamaged++;

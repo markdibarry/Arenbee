@@ -42,7 +42,7 @@ public partial class DropSubMenu : OptionSubMenu
 
     protected override void OnMockPreSetup()
     {
-        AItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
+        BaseItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
         _itemStack = new ItemStack(item, 3);
     }
 
