@@ -21,7 +21,7 @@ public partial class UseSubMenu : OptionSubMenu
     private int _referenceMargin;
     private readonly ActionEffectDB _actionEffectDB = (ActionEffectDB)Locator.ActionEffectDB;
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         _referenceContainer = GetNode<Control>("%VBoxContainer");
@@ -32,7 +32,7 @@ public partial class UseSubMenu : OptionSubMenu
         DisplayOptions();
     }
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not (int margin, ItemStack itemStack))
             return;

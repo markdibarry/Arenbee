@@ -34,8 +34,9 @@ public partial class MainSubMenu : OptionSubMenu
         await ToSignal(tween, Tween.SignalName.Finished);
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         PreventCancel = true;
         PreventCloseAll = true;
         List<TextOption> options = GetMenuOptions();
@@ -57,7 +58,7 @@ public partial class MainSubMenu : OptionSubMenu
         }
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _mainContainer = GetNode<Control>("%MainContainer");
         _mainOptions = GetNode<OptionContainer>("%MainOptions");

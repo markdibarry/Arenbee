@@ -25,13 +25,14 @@ public partial class DropSubMenu : OptionSubMenu
     private NumberOption _numberOption = null!;
     private int _count = 1;
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         DisplayOptions();
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         var label = GetNode<Label>("%Message");
         label.Text = this.TrS(Localization.Menus.Menus_Inventory_DropMessage);
@@ -39,13 +40,13 @@ public partial class DropSubMenu : OptionSubMenu
         AddContainer(_optionContainer);
     }
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         AItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
         _itemStack = new ItemStack(item, 3);
     }
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not (int margin, ItemStack itemStack))
             return;

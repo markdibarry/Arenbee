@@ -22,8 +22,9 @@ public partial class LoadGameSubMenu : OptionSubMenu
         ContinueSavedGame(fileName);
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         PreventCloseAll = true;
         var header = GetNode<Label>("%Header");
         header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
@@ -31,7 +32,7 @@ public partial class LoadGameSubMenu : OptionSubMenu
         _loadOptions.ReplaceChildren(options);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _loadOptions = GetNode<OptionContainer>("%LoadOptions");
         AddContainer(_loadOptions);

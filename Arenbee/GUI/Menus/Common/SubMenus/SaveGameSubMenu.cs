@@ -19,8 +19,9 @@ public partial class SaveGameSubMenu : OptionSubMenu
         OpenSaveGameConfirmSubMenu(fileName);
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         var header = GetNode<Label>("%Header");
         header.Text = this.TrS(Localization.Menus.Menus_Save_SavedGames);
 
@@ -28,7 +29,13 @@ public partial class SaveGameSubMenu : OptionSubMenu
         _saveOptions?.ReplaceChildren(options);
     }
 
-    protected override void SetNodeReferences()
+    protected override void OnSubMenuResumed()
+    {
+        List<SaveGameOption> options = GetSaveGameOptions();
+        _saveOptions?.ReplaceChildren(options);
+    }
+
+    private void SetNodeReferences()
     {
         _saveOptions = GetNode<OptionContainer>("%SaveOptions");
         AddContainer(_saveOptions);

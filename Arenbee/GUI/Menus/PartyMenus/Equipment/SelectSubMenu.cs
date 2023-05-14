@@ -28,7 +28,7 @@ public partial class SelectSubMenu : OptionSubMenu
     private ActorStatsDisplay _actorStatsDisplay = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not SelectSubMenuDataModel dataModel)
             return;
@@ -39,7 +39,7 @@ public partial class SelectSubMenu : OptionSubMenu
         _inventory = gameSession?.MainParty?.Inventory!;
     }
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         _actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         EquipmentSlotCategory category = ItemsLocator.EquipmentSlotCategoryDB.GetCategory(EquipmentSlotCategoryIds.Weapon)!;
@@ -49,8 +49,9 @@ public partial class SelectSubMenu : OptionSubMenu
         _inventory = new Inventory(new ItemStack[] { metalStick, magicWand });
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         var options = GetEquippableOptions();
         _equipOptions.ReplaceChildren(options);
@@ -86,7 +87,7 @@ public partial class SelectSubMenu : OptionSubMenu
         _ = CloseSubMenuAsync();
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         CreateMockStats();
         _currentItemStack = _slot.ItemStack;

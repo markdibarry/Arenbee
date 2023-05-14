@@ -41,7 +41,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     private Control _messageContainer = null!;
     private Label _messageLabel = null!;
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not ItemStack itemStack)
             return;
@@ -52,8 +52,9 @@ public partial class UseEnemySubMenu : OptionSubMenu
             .ToList() ?? new();
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         DisplayOptions();
     }
 
@@ -83,7 +84,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
         _ = HandleUse(CurrentContainer.FocusedItem);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _messageContainer = GetNode<Control>("%MessageContainer");
         _messageLabel = GetNode<Label>("%MessageLabel");

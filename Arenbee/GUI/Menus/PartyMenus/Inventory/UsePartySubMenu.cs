@@ -39,7 +39,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     private OptionContainer _partyContainer = null!;
     private AItem Item => _itemStack.Item;
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor(_inventory)!;
         _party = new Party("temp", new List<Actor> { actor }, _inventory);
@@ -48,7 +48,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not (int margin, ItemStack itemStack))
             return;
@@ -57,8 +57,9 @@ public partial class UsePartySubMenu : OptionSubMenu
         _actionEffect = _actionEffectDB.GetEffect(Item.UseData.ActionEffect)!;
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         DisplayOptions();
     }
@@ -68,7 +69,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         _ = HandleUse(CurrentContainer.FocusedItem);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _partyContainer = GetNode<OptionContainer>("%PartyOptions");
         AddContainer(_partyContainer);

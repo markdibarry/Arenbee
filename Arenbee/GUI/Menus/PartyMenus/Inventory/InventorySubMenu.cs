@@ -32,14 +32,14 @@ public partial class InventorySubMenu : OptionSubMenu
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         AItem potion = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
         AItem metalStick = ItemsLocator.ItemDB.GetItem(ItemIds.GeneSupreme)!;
         _inventory = new Inventory(new ItemStack[] { new(potion, 2), new(metalStick, 1) });
     }
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not int margin)
             return;
@@ -57,8 +57,9 @@ public partial class InventorySubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         _referenceContainer.Resized += OnResized;
         List<TextOption> typeOptions = GetItemTypeOptions();
@@ -73,7 +74,7 @@ public partial class InventorySubMenu : OptionSubMenu
         _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
-    protected override void OnFocusContainer(OptionContainer optionContainer)
+    protected override void OnContainerFocused(OptionContainer optionContainer)
     {
         if (optionContainer == _typeList)
             UpdateItemDescription(null);
@@ -97,13 +98,13 @@ public partial class InventorySubMenu : OptionSubMenu
             OpenUseSubMenu(CurrentContainer.FocusedItem);
     }
 
-    public override void ResumeSubMenu()
+    protected override void OnSubMenuResumed()
     {
-        UpdateItemList(_typeList.FocusedItem, resetFocus: false);
-        base.ResumeSubMenu();
+        if (_typeList.FocusedItem != null)
+            UpdateItemList(_typeList.FocusedItem, resetFocus: false);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _referenceContainer = GetNode<Control>("%VBoxContainer");
         _typeList = GetNode<OptionContainer>("%ItemTypeOptions");

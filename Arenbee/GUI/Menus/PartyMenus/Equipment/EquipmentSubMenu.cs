@@ -30,21 +30,22 @@ public partial class EquipmentSubMenu : OptionSubMenu
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
     private IReadOnlyCollection<Actor> _partyActors;
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not int margin)
             return;
         GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         _partyActors = new List<Actor> { actor };
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         _contentContainer.Resized += OnResized;
         UpdatePartyMemberOptions();
@@ -58,10 +59,9 @@ public partial class EquipmentSubMenu : OptionSubMenu
             base.HandleInput(menuInput, delta);
     }
 
-    public override void ResumeSubMenu()
+    protected override void OnSubMenuResumed()
     {
         UpdateEquipmentDisplay(_partyOptions.FocusedItem);
-        base.ResumeSubMenu();
     }
 
     protected void OnResized()
@@ -85,7 +85,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
             OpenEquipSelectMenu(CurrentContainer.FocusedItem);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _contentContainer = GetNode<Control>("%VBoxContainer");
         _partyOptions = GetNode<GridOptionContainer>("%PartyOptions");

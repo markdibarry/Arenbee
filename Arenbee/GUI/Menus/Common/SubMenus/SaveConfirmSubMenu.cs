@@ -18,14 +18,14 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         Localization.Menus.Menus_SaveConfirm_No
     };
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not string fileName)
             return;
         _fileName = fileName;
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
         var message = GetNode<Label>("%Message");
         message.Text = this.TrS(Localization.Menus.Menus_SaveConfirm_Message);

@@ -24,28 +24,29 @@ public partial class StatsSubMenu : OptionSubMenu
     private OptionContainer _partyOptions = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _partyOptions = GetNode<OptionContainer>("%PartyOptions");
         AddContainer(_partyOptions);
         _statsDisplay = GetNode<ActorStatsDisplay>("%StatsDisplay");
     }
 
-    protected override void MockData()
+    protected override void OnMockPreSetup()
     {
         Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
         _playerParty = new Party("temp", new List<Actor> { actor }, new());
     }
 
-    protected override void SetupData(object? data)
+    protected override void OnPreSetup(object? data)
     {
         if (data is not int margin)
             return;
         GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         List<TextOption> options = GetPartyMemberOptions();
         _partyOptions.ReplaceChildren(options);

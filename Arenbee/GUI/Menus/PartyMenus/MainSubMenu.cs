@@ -51,8 +51,9 @@ public partial class MainSubMenu : OptionSubMenu
         }
     }
 
-    protected override void CustomSetup()
+    protected override void OnSetup()
     {
+        SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         _referenceContainer.Resized += OnResized;
         _mainOptions.ReplaceChildren(GetMenuOptions());
@@ -63,7 +64,7 @@ public partial class MainSubMenu : OptionSubMenu
         _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
-    protected override void SetNodeReferences()
+    private void SetNodeReferences()
     {
         _referenceContainer = GetNode<Control>("%MainContainer");
         _mainOptions = GetNode<OptionContainer>("%MainOptions");
