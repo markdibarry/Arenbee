@@ -49,7 +49,7 @@ public abstract partial class ActorBody : BaseActorBody
         IFrameController.Process(delta);
     }
 
-    public void OnDamageReceived(BaseActor actor, BaseDamageResult damageResult)
+    public void OnDamageReceived(BaseActor actor, IDamageResult damageResult)
     {
         DamageNumber damageNumber = new();
         AddChild(damageNumber);

@@ -242,11 +242,11 @@ public static class StatTypeHelpers
         {
             ElementType.Fire => Colors.Red,
             ElementType.Wind => Colors.LightGreen,
-            ElementType.Water => Colors.Aquamarine,
-            ElementType.Earth => Colors.Brown,
-            ElementType.Plant => Colors.ForestGreen,
-            ElementType.Dark => Colors.Black,
-            ElementType.Light => Colors.White,
+            ElementType.Water => new Color(0, 0.5f, 1, 1),
+            ElementType.Earth => new Color(0.65f, 0.45f, 0.15f, 1),
+            ElementType.Plant => new Color(0.5f, 0.85f, 0, 1),
+            ElementType.Dark => new Color(0.5f, 0.4f, 0.6f, 1),
+            ElementType.Light => new Color(1, 1, 0.9f, 1),
             ElementType.Healing => Colors.Pink,
             _ => Colors.Gray
         };

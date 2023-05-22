@@ -5,7 +5,7 @@ using Godot;
 
 namespace Arenbee.Statistics;
 
-public class StatTypeDB : BaseStatTypeDB
+public class StatTypeDB : IStatTypeDB
 {
     public static StatTypeData GetStatCategoryData(StatCategory statCategory)
     {
@@ -28,12 +28,12 @@ public class StatTypeDB : BaseStatTypeDB
         return s_statTypes[StatType.None];
     }
 
-    public override string[] GetTypeNames()
+    public string[] GetTypeNames()
     {
         return System.Enum.GetNames(typeof(StatType));
     }
 
-    public override string[]? GetValueEnumOptions(int statType)
+    public string[]? GetValueEnumOptions(int statType)
     {
         StatCategory category = StatTypeHelpers.GetStatCategory(statType);
         if (category == StatCategory.AttackElement)

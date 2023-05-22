@@ -28,7 +28,7 @@ public partial class HUD : AHUD
         GetNode<Label>("%FPSDisplay").Text = Engine.GetFramesPerSecond().ToString();
     }
 
-    public void OnActorDamaged(BaseActor actor, BaseDamageResult aDamageResult)
+    public void OnActorDamaged(BaseActor actor, IDamageResult aDamageResult)
     {
         DamageResult damageResult = (DamageResult)aDamageResult;
         switch (damageResult.ActionType)

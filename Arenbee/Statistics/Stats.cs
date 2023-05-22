@@ -74,7 +74,7 @@ public class Stats : BaseStats
             RemoveMod(mod);
     }
 
-    protected override BaseDamageResult HandleDamage(BaseDamageRequest request)
+    protected override IDamageResult HandleDamage(IDamageRequest request)
     {
         DamageRequest damageRequest = (DamageRequest)request;
         int totalDamage = damageRequest.Value;

@@ -1,19 +1,16 @@
 [gd_scene load_steps=4 format=3 uid="uid://ievhf5ls7psh"]
 
-[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/BaseGameRoot.tscn" id="1_0pmkg"]
-[ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="2_hvmh2"]
-[ext_resource type="Script" path="res://GameCore/Game/GameCamera.cs" id="3_adrgp"]
+[ext_resource type="PackedScene" uid="uid://dfoicm8bddlks" path="res://GameCore/Game/BaseGameRoot.tscn" id="1_q6o4u"]
+[ext_resource type="Script" path="res://Arenbee/Game/GameRoot.cs" id="2_7vpre"]
+[ext_resource type="Script" path="res://GameCore/Game/GameCamera.cs" id="3_b1ugq"]
 
-[node name="GameRoot" instance=ExtResource("1_0pmkg")]
-script = ExtResource("2_hvmh2")
+[node name="GameRoot" instance=ExtResource("1_q6o4u")]
+script = ExtResource("2_7vpre")
 
 [node name="ColorRect" parent="MainBackground" index="0"]
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="Transition" parent="GameDisplay" index="3"]
-layer = 90
 
 [node name="GameCamera" type="Camera2D" parent="GameDisplay" index="4"]
 limit_left = 0
@@ -22,4 +19,4 @@ limit_smoothed = true
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 editor_draw_screen = false
-script = ExtResource("3_adrgp")
+script = ExtResource("3_b1ugq")

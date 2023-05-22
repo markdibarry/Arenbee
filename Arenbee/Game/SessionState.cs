@@ -23,7 +23,7 @@ public class SessionState
             EnemiesDefeated++;
     }
 
-    public void OnActorDamaged(BaseActor actor, BaseDamageResult damageData)
+    public void OnActorDamaged(BaseActor actor, IDamageResult damageData)
     {
         if (_gameSession.MainParty!.ContainsActor(actor))
             TimesReceivedDamaged++;
