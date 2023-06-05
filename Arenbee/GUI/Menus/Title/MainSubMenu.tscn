@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://bnn1x2csi7l1j"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_uuie0"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.cs" id="2_b8kc2"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="2_oprqe"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_2v0vs"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_pywej"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Title/MainSubMenu.cs" id="2_vwj6n"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_l0luu"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_0uvms"]
 
-[node name="MainSubMenu" instance=ExtResource("1_uuie0")]
-script = ExtResource("2_b8kc2")
+[node name="MainSubMenu" instance=ExtResource("1_pywej")]
+script = ExtResource("2_vwj6n")
 PreventCancel = true
 PreventCloseAll = true
 
@@ -18,18 +18,11 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"OptionContainer"
 
-[node name="WindowContainer" parent="Foreground/MainContainer" index="0" instance=ExtResource("2_oprqe")]
+[node name="WindowContainer" parent="Foreground/MainContainer" index="0" instance=ExtResource("3_l0luu")]
 layout_mode = 2
 
-[node name="MainOptions" parent="Foreground/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_2v0vs")]
+[node name="MainOptions" parent="Foreground/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_0uvms")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="HScrollBar" parent="Foreground/MainContainer/WindowContainer/ScrollBars" index="0"]
-page = 0.0
-
-[node name="VScrollBar" parent="Foreground/MainContainer/WindowContainer/ScrollBars" index="1"]
-page = 0.0
-value = 50.0
 
 [editable path="Foreground/MainContainer/WindowContainer"]

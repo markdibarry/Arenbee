@@ -1,12 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://21nu4wm7loql"]
+[gd_scene load_steps=6 format=3 uid="uid://21nu4wm7loql"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_tktbi"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_jx6af"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_7yf4f"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_ykdlq"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_i4loj"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/EquipmentSubMenu.cs" id="2_23nbj"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_areeh"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_raasm"]
+[ext_resource type="PackedScene" uid="uid://diyskp85elr1j" path="res://GameCore/GUI/Menus/Containers/TableContainer.tscn" id="5_fhynb"]
 
-[node name="EquipmentSubMenu" instance=ExtResource("1_tktbi")]
-script = ExtResource("2_jx6af")
+[node name="EquipmentSubMenu" instance=ExtResource("1_i4loj")]
+script = ExtResource("2_23nbj")
 
 [node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
@@ -38,43 +39,26 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer" index="0" instance=ExtResource("3_ykdlq")]
+[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer" index="0" instance=ExtResource("3_areeh")]
 layout_mode = 2
 
 [node name="ClipContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer" index="0"]
 MaxSize = Vector2(110, -1)
 
-[node name="PartyOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_7yf4f")]
+[node name="PartyOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_raasm")]
 unique_name_in_owner = true
 layout_mode = 2
 SingleRow = true
 
-[node name="Arrows" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer" index="1"]
-visible = false
-
-[node name="HScrollBar" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer/ScrollBars" index="0"]
-page = 90.3614
-
 [node name="EquipmentContainer" type="PanelContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer" index="1"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer" index="0"]
+[node name="EquipmentOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer" index="0" instance=ExtResource("5_fhynb")]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer" index="0"]
-layout_mode = 2
-
-[node name="EquipmentOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer/HBoxContainer" index="0" instance=ExtResource("3_7yf4f")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="EquipmentNameList" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/EquipmentContainer/MarginContainer/HBoxContainer" index="1"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 3
 
 [editable path="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer/PartyContainer/WindowContainer"]

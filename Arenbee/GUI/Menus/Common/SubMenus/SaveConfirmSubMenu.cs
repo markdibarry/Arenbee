@@ -34,9 +34,9 @@ public partial class SaveConfirmSubMenu : OptionSubMenu
         saveOptions.ReplaceChildren(GetMenuOptions());
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer?.FocusedItem?.OptionData is not string saveChoice)
+        if (optionItem.OptionData is not string saveChoice)
             return;
         switch (saveChoice)
         {

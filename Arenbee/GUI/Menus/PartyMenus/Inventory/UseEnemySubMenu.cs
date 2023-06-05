@@ -79,9 +79,9 @@ public partial class UseEnemySubMenu : OptionSubMenu
             _areaScene?.MoveToActorContainer(enemy);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        _ = HandleUse(CurrentContainer.FocusedItem);
+        _ = HandleUse(optionItem);
     }
 
     private void SetNodeReferences()
@@ -94,10 +94,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
         if (_itemStack == null)
             return;
         if (_actionEffect.TargetType == (int)TargetType.EnemyAll)
-        {
-            _enemyContainer.AllOptionEnabled = true;
-            _enemyContainer.SingleOptionsEnabled = false;
-        }
+            _enemyContainer.CurrentOptionMode = OptionMode.All;
     }
 
     private void DisplayOptions()
@@ -120,7 +117,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
     private async Task HandleUse(OptionItem? optionItem)
     {
         IEnumerable<OptionItem> selectedItems;
-        if (_enemyContainer.AllOptionEnabled)
+        if (_enemyContainer.CurrentOptionMode == OptionMode.All)
             selectedItems = _enemyContainer.GetSelectedItems();
         else if (optionItem != null)
             selectedItems = new OptionItem[] { optionItem };

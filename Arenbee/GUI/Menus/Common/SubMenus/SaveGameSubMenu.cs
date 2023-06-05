@@ -12,9 +12,9 @@ public partial class SaveGameSubMenu : OptionSubMenu
     private OptionContainer _saveOptions = null!;
     private PackedScene _saveGameOptionScene = GD.Load<PackedScene>(SaveGameOption.GetScenePath());
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        string? fileName = CurrentContainer?.FocusedItem?.OptionData as string;
+        string? fileName = optionItem.OptionData as string;
         OpenSaveGameConfirmSubMenu(fileName);
     }
 

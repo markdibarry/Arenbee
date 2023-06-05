@@ -26,9 +26,9 @@ public partial class MainSubMenu : OptionSubMenu
         Localization.Menus.Menus_Party_Quit
     };
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer?.FocusedItem?.OptionData is not string subMenuName)
+        if (optionItem.OptionData is not string subMenuName)
             return;
 
         switch (subMenuName)
@@ -55,11 +55,11 @@ public partial class MainSubMenu : OptionSubMenu
     {
         SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
-        _referenceContainer.Resized += OnResized;
+        _referenceContainer.ItemRectChanged += OnRefRectChanged;
         _mainOptions.ReplaceChildren(GetMenuOptions());
     }
 
-    protected void OnResized()
+    protected void OnRefRectChanged()
     {
         _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }

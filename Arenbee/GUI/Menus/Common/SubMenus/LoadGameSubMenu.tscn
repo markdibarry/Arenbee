@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://beqx3lqgyvb77"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_6jhky"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/LoadGameSubMenu.cs" id="2_dk8lc"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_6f0dg"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_hash1"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_aj4ru"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/Common/SubMenus/LoadGameSubMenu.cs" id="2_yrybn"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_222d2"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_fgxu4"]
 
-[node name="LoadGameSubMenu" instance=ExtResource("1_6jhky")]
-script = ExtResource("2_dk8lc")
+[node name="LoadGameSubMenu" instance=ExtResource("1_aj4ru")]
+script = ExtResource("2_yrybn")
 PreventCloseAll = true
 
 [node name="PanelContainer" type="PanelContainer" parent="Foreground" index="0"]
@@ -31,19 +31,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "SavSav"
 
-[node name="WindowContainer" parent="Foreground/PanelContainer/VBoxContainer" index="1" instance=ExtResource("3_6f0dg")]
+[node name="WindowContainer" parent="Foreground/PanelContainer/VBoxContainer" index="1" instance=ExtResource("3_222d2")]
 layout_mode = 2
 
-[node name="LoadOptions" parent="Foreground/PanelContainer/VBoxContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_hash1")]
+[node name="LoadOptions" parent="Foreground/PanelContainer/VBoxContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_fgxu4")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="HScrollBar" parent="Foreground/PanelContainer/VBoxContainer/WindowContainer/ScrollBars" index="0"]
-page = 16.4706
-value = 41.7647
-
-[node name="VScrollBar" parent="Foreground/PanelContainer/VBoxContainer/WindowContainer/ScrollBars" index="1"]
-page = 0.0
-value = 50.0
 
 [editable path="Foreground/PanelContainer/VBoxContainer/WindowContainer"]

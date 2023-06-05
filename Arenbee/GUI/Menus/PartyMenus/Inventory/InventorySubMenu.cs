@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Arenbee.GUI.Menus.Common;
 using Arenbee.Items;
 using GameCore;
@@ -46,11 +47,12 @@ public partial class InventorySubMenu : OptionSubMenu
         GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
-    public override void HandleInput(GUIInputHandler menuInput, double delta)
+    public override void HandleInput(IGUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _inventoryList)
         {
             Audio.PlaySoundFX("menu_close1.wav");
+
             FocusContainer(_typeList);
             return;
         }
@@ -61,7 +63,7 @@ public partial class InventorySubMenu : OptionSubMenu
     {
         SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
-        _referenceContainer.Resized += OnResized;
+        _referenceContainer.ItemRectChanged += OnRefRectChanged;
         List<TextOption> typeOptions = GetItemTypeOptions();
         _typeList.ReplaceChildren(typeOptions);
         _typeList.FocusItem(1);
@@ -69,7 +71,7 @@ public partial class InventorySubMenu : OptionSubMenu
         UpdateItemDescription(null);
     }
 
-    protected void OnResized()
+    protected void OnRefRectChanged()
     {
         _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
@@ -90,12 +92,18 @@ public partial class InventorySubMenu : OptionSubMenu
             UpdateItemDescription(optionItem);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemHovered(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer == _typeList)
+        if (optionContainer == _inventoryList)
+            UpdateItemDescription(optionItem);
+    }
+
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    {
+        if (optionContainer == _typeList)
             FocusContainer(_inventoryList);
-        else if (CurrentContainer == _inventoryList && CurrentContainer.FocusedItem != null)
-            OpenUseSubMenu(CurrentContainer.FocusedItem);
+        else if (optionContainer == _inventoryList)
+            OpenUseSubMenu(optionItem);
     }
 
     protected override void OnSubMenuResumed()

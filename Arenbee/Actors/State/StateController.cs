@@ -145,7 +145,7 @@ public class StateController : IStateController
 
     public void UpdateStates(double delta)
     {
-        if (_actorBody.InputHandler is DummyInputHandler)
+        if (_actorBody.InputHandler.Up.Alias == string.Empty)
             BehaviorTree?.Update(delta);
         MoveStateMachine.Update(delta);
         AirStateMachine.Update(delta);

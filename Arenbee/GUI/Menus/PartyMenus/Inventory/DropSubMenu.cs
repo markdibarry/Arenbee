@@ -54,7 +54,7 @@ public partial class DropSubMenu : OptionSubMenu
         GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
-    public override void HandleInput(GUIInputHandler menuInput, double delta)
+    public override void HandleInput(IGUIInputHandler menuInput, double delta)
     {
         if (menuInput.Left.IsActionJustPressed)
             UpdateCount(-1);
@@ -63,7 +63,7 @@ public partial class DropSubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
         int total = _itemStack.Count;
         _inventory.RemoveItem(_itemStack, _count);

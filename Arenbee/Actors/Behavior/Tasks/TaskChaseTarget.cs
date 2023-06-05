@@ -14,7 +14,7 @@ public class TaskChaseTarget : BTNode
             return NodeState.Failure;
 
         float distance = ActorBody.GlobalPosition.DistanceTo(target.GlobalPosition);
-        ActorInputHandler input = ActorBody.InputHandler;
+        IActorInputHandler input = ActorBody.InputHandler;
         if (distance > _attackDistance)
         {
             if (distance > _maxChaseDistance)

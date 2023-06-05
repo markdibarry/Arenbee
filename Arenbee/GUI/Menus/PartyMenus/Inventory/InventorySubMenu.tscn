@@ -1,14 +1,14 @@
 [gd_scene load_steps=7 format=3 uid="uid://ciqqmoodypfpx"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_uak7s"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_kvegx"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_e2c41"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_cv8q8"]
-[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="5_a0w2l"]
-[ext_resource type="PackedScene" uid="uid://csbncf5x8i8pd" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="6_aahyi"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_uj0yv"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Inventory/InventorySubMenu.cs" id="2_a00p2"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_qtaeh"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_y1cxm"]
+[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="5_mstux"]
+[ext_resource type="PackedScene" uid="uid://csbncf5x8i8pd" path="res://GameCore/GUI/Text/DynamicTextBox.tscn" id="6_qrws6"]
 
-[node name="InventorySubMenu" instance=ExtResource("1_uak7s")]
-script = ExtResource("2_kvegx")
+[node name="InventorySubMenu" instance=ExtResource("1_uj0yv")]
+script = ExtResource("2_a00p2")
 
 [node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
@@ -34,57 +34,43 @@ size_flags_horizontal = 0
 layout_mode = 2
 mouse_filter = 2
 
-[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer" index="0" instance=ExtResource("3_e2c41")]
+[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer" index="0" instance=ExtResource("3_qtaeh")]
 layout_mode = 2
 ScrollBarEnabled = false
 
-[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer" index="0"]
+[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer" index="2"]
 ClipX = true
 
-[node name="ItemTypeOptions" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_cv8q8")]
+[node name="ItemTypeOptions" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_y1cxm")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
 Columns = 10
 SingleRow = true
 
-[node name="ArrowRight" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/Arrows" index="3"]
-visible = true
-
-[node name="ScrollBars" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer" index="2"]
-visible = false
-
-[node name="HScrollBar" parent="Foreground/HBoxContainer/VBoxContainer/ItemTypeContainer/WindowContainer/ScrollBars" index="0"]
-visible = true
-page = 51.0204
-value = 48.9796
-
 [node name="InventoryContainer" type="PanelContainer" parent="Foreground/HBoxContainer/VBoxContainer" index="1"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer" index="0" instance=ExtResource("3_e2c41")]
+[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer" index="0" instance=ExtResource("3_qtaeh")]
 layout_mode = 2
-ScrollBarEnabled = false
 
-[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer" index="0"]
+[node name="ClipContainer" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer" index="2"]
 ClipX = true
 ClipY = true
 
-[node name="InventoryOptions" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_cv8q8")]
+[node name="InventoryOptions" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_y1cxm")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ScrollBars" parent="Foreground/HBoxContainer/VBoxContainer/InventoryContainer/WindowContainer" index="2"]
-visible = false
+CurrentOptionMode = 3
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/HBoxContainer" index="2"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="ItemStatsDisplay" parent="Foreground/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("5_a0w2l")]
+[node name="ItemStatsDisplay" parent="Foreground/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("5_mstux")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -99,7 +85,7 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="ItemInfo" parent="Foreground/HBoxContainer/VBoxContainer2/PanelContainer/MarginContainer" index="0" instance=ExtResource("6_aahyi")]
+[node name="ItemInfo" parent="Foreground/HBoxContainer/VBoxContainer2/PanelContainer/MarginContainer" index="0" instance=ExtResource("6_qrws6")]
 unique_name_in_owner = true
 layout_mode = 2
 

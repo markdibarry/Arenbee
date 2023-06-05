@@ -22,12 +22,12 @@ public partial class EquipmentSubMenu : OptionSubMenu
     }
 
     public static string GetScenePath() => GDEx.GetScenePath();
-    private Control _contentContainer = null!;
+    private Control _referenceContainer = null!;
     private int _contentMargin;
     private GridOptionContainer _partyOptions = null!;
     private OptionContainer _equipmentOptions = null!;
-    private VBoxContainer _equipmentNameList = null!;
     private PackedScene _textOptionScene = GD.Load<PackedScene>(TextOption.GetScenePath());
+    private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
     private IReadOnlyCollection<Actor> _partyActors;
 
     protected override void OnPreSetup(object? data)
@@ -47,11 +47,11 @@ public partial class EquipmentSubMenu : OptionSubMenu
     {
         SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
-        _contentContainer.Resized += OnResized;
+        _referenceContainer.ItemRectChanged += OnRefRectChanged;
         UpdatePartyMemberOptions();
     }
 
-    public override void HandleInput(GUIInputHandler menuInput, double delta)
+    public override void HandleInput(IGUIInputHandler menuInput, double delta)
     {
         if (menuInput.Cancel.IsActionJustPressed && CurrentContainer == _equipmentOptions)
             FocusContainer(_partyOptions);
@@ -61,12 +61,12 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     protected override void OnSubMenuResumed()
     {
-        UpdateEquipmentDisplay(_partyOptions.FocusedItem);
+        UpdateCurrentEquipmentOption(_equipmentOptions.FocusedItem);
     }
 
-    protected void OnResized()
+    protected void OnRefRectChanged()
     {
-        _contentMargin = (int)(_contentContainer.Position.X + _contentContainer.Size.X);
+        _contentMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
     protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
@@ -75,22 +75,19 @@ public partial class EquipmentSubMenu : OptionSubMenu
             UpdateEquipmentDisplay(optionItem);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer == null)
-            return;
-        if (CurrentContainer == _partyOptions)
+        if (optionContainer == _partyOptions)
             FocusContainer(_equipmentOptions);
         else
-            OpenEquipSelectMenu(CurrentContainer.FocusedItem);
+            OpenEquipSelectMenu(optionItem);
     }
 
     private void SetNodeReferences()
     {
-        _contentContainer = GetNode<Control>("%VBoxContainer");
+        _referenceContainer = GetNode<Control>("%VBoxContainer");
         _partyOptions = GetNode<GridOptionContainer>("%PartyOptions");
         _equipmentOptions = GetNode<OptionContainer>("%EquipmentOptions");
-        _equipmentNameList = GetNode<VBoxContainer>("%EquipmentNameList");
         AddContainer(_partyOptions);
         AddContainer(_equipmentOptions);
     }
@@ -127,20 +124,23 @@ public partial class EquipmentSubMenu : OptionSubMenu
         if (optionItem?.OptionData is not Actor actor)
             return;
         _equipmentOptions.ClearOptionItems();
-        _equipmentNameList.QueueFreeAllChildren();
         foreach (EquipmentSlot slot in actor.Equipment.Slots)
         {
-            var option = _textOptionScene.Instantiate<TextOption>();
-            option.LabelText = slot.SlotCategory.Abbreviation + ":";
-            Label name = new()
-            {
-                Text = slot.ItemStack?.Item.DisplayName ?? "<None>",
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
+            var option = _keyValueOptionScene.Instantiate<KeyValueOption>();
+            option.KeyText = slot.SlotCategory.Abbreviation + ":";
+            option.ValueText = slot.ItemStack?.Item.DisplayName ?? "<None>";
             option.OptionData = slot;
             _equipmentOptions.AddOption(option);
-            _equipmentNameList.AddChild(name);
         }
+    }
+
+    private static void UpdateCurrentEquipmentOption(OptionItem? optionItem)
+    {
+        if (optionItem?.OptionData is not EquipmentSlot slot)
+            return;
+        if (optionItem is not KeyValueOption kvOption)
+            return;
+        kvOption.ValueText = slot.ItemStack?.Item.DisplayName ?? "<None>";
     }
 
     private void UpdatePartyMemberOptions()

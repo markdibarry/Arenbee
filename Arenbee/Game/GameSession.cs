@@ -31,7 +31,7 @@ public partial class GameSession : BaseGameSession
 
     public Party? GetParty(string id) => Parties.FirstOrDefault(x => x.Id == id);
 
-    public override void HandleInput(GUIInputHandler menuInput, double delta)
+    public override void HandleInput(IGUIInputHandler menuInput, double delta)
     {
         if (menuInput.Start.IsActionJustPressed && !GUIController.GUIActive)
             OpenPartyMenuAsync();

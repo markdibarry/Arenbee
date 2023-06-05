@@ -15,14 +15,14 @@ public abstract partial class ActorBody : BaseActorBody
     protected ActorBody()
         : base()
     {
-        SetInputHandler(new DummyInputHandler());
+        SetInputHandler(InputFactory.CreateAIInput());
         IFrameController = new(this);
         JumpVelocity = 2.0f * _jumpHeight / _timeToJumpPeak * -1;
         JumpGravity = -2.0f * _jumpHeight / (_timeToJumpPeak * _timeToJumpPeak) * -1;
     }
 
     public override Actor? Actor => base.Actor as Actor;
-    public override ActorInputHandler InputHandler => (ActorInputHandler)base.InputHandler;
+    public override IActorInputHandler InputHandler => (IActorInputHandler)base.InputHandler;
     public ShaderMaterial BodyShader => (ShaderMaterial)BodySprite.Material;
     public HoldItemController HoldItemController { get; private set; } = null!;
     public IFrameController IFrameController { get; }

@@ -1,12 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://sab4tl1mtdau"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_riper"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.cs" id="2_5walo"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_exuo8"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_ngqqw"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_q8pti"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/MainSubMenu.cs" id="2_ky7ki"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_4cca1"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_clwjx"]
 
-[node name="MainSubMenu" instance=ExtResource("1_riper")]
-script = ExtResource("2_5walo")
+[node name="MainSubMenu" instance=ExtResource("1_q8pti")]
+script = ExtResource("2_ky7ki")
 
 [node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
@@ -24,20 +24,11 @@ layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="WindowContainer" parent="Foreground/HBoxContainer/MainContainer" index="0" instance=ExtResource("3_exuo8")]
+[node name="WindowContainer" parent="Foreground/HBoxContainer/MainContainer" index="0" instance=ExtResource("3_4cca1")]
 layout_mode = 2
 
-[node name="MainOptions" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_ngqqw")]
+[node name="MainOptions" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_clwjx")]
 unique_name_in_owner = true
 layout_mode = 2
-DimItems = true
-
-[node name="HScrollBar" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ScrollBars" index="0"]
-page = 76.9231
-value = 11.5385
-
-[node name="VScrollBar" parent="Foreground/HBoxContainer/MainContainer/WindowContainer/ScrollBars" index="1"]
-page = 96.1039
-value = 3.8961
 
 [editable path="Foreground/HBoxContainer/MainContainer/WindowContainer"]

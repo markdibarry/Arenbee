@@ -1,13 +1,13 @@
 [gd_scene load_steps=6 format=3 uid="uid://cl502bp7yma0g"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_2tdhu"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Stats/StatsSubMenu.cs" id="2_jtk67"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_xfctw"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_nt2y1"]
-[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_a7cxm"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_3iojb"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Stats/StatsSubMenu.cs" id="2_ria4o"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_q7bxr"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_mi6mi"]
+[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_50d0o"]
 
-[node name="StatsSubMenu" instance=ExtResource("1_2tdhu")]
-script = ExtResource("2_jtk67")
+[node name="StatsSubMenu" instance=ExtResource("1_3iojb")]
+script = ExtResource("2_ria4o")
 
 [node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
@@ -32,15 +32,15 @@ layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 
-[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0" instance=ExtResource("3_xfctw")]
+[node name="WindowContainer" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer" index="0" instance=ExtResource("3_q7bxr")]
 layout_mode = 2
 
-[node name="PartyOptions" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_nt2y1")]
+[node name="PartyOptions" parent="Foreground/HBoxContainer/VBoxContainer/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_mi6mi")]
 unique_name_in_owner = true
 layout_mode = 2
 SingleRow = true
 
-[node name="StatsDisplay" parent="Foreground/HBoxContainer/VBoxContainer" index="1" instance=ExtResource("5_a7cxm")]
+[node name="StatsDisplay" parent="Foreground/HBoxContainer/VBoxContainer" index="1" instance=ExtResource("5_50d0o")]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2

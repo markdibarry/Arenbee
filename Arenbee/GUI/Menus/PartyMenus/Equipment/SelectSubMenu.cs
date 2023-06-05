@@ -77,9 +77,9 @@ public partial class SelectSubMenu : OptionSubMenu
         _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack?.Item);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer?.FocusedItem?.OptionData is not ItemStack itemStack)
+        if (optionItem.OptionData is not ItemStack itemStack)
             _actor.Equipment.RemoveItem(_actor, _slot);
         else
             _actor.Equipment.TrySetItem(_actor, _slot, itemStack);

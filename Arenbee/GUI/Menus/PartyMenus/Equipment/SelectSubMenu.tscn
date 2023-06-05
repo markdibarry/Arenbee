@@ -1,14 +1,14 @@
 [gd_scene load_steps=7 format=3 uid="uid://cdk0jmlpilef2"]
 
-[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_togn2"]
-[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_70n7x"]
-[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_86551"]
-[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="3_jig2i"]
-[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="4_wtgju"]
-[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="5_qom7v"]
+[ext_resource type="PackedScene" uid="uid://woe07gniexc" path="res://GameCore/GUI/Menus/SubMenus/OptionSubMenu.tscn" id="1_5lgpg"]
+[ext_resource type="Script" path="res://Arenbee/GUI/Menus/PartyMenus/Equipment/SelectSubMenu.cs" id="2_r515u"]
+[ext_resource type="PackedScene" uid="uid://cynhh6ygxq8bl" path="res://GameCore/GUI/Menus/Containers/WindowContainer.tscn" id="3_nt265"]
+[ext_resource type="PackedScene" uid="uid://bo1ntvx40yyl1" path="res://GameCore/GUI/Menus/Containers/GridOptionContainer.tscn" id="4_61afq"]
+[ext_resource type="PackedScene" uid="uid://duwgrkvjv45m0" path="res://Arenbee/GUI/Menus/Common/Containers/ItemStatsDisplay.tscn" id="5_i1rtg"]
+[ext_resource type="PackedScene" uid="uid://ctnon04epm3od" path="res://Arenbee/GUI/Menus/Common/Containers/ActorStatsDisplay.tscn" id="6_fpsul"]
 
-[node name="SelectSubMenu" instance=ExtResource("1_togn2")]
-script = ExtResource("2_70n7x")
+[node name="SelectSubMenu" instance=ExtResource("1_5lgpg")]
+script = ExtResource("2_r515u")
 
 [node name="Foreground" parent="." index="1"]
 theme_override_constants/margin_left = 8
@@ -39,27 +39,24 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 146)
 layout_mode = 2
 
-[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer" index="0" instance=ExtResource("3_86551")]
+[node name="WindowContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer" index="0" instance=ExtResource("3_nt265")]
 layout_mode = 2
 
 [node name="ClipContainer" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer" index="0"]
 ClipY = true
 
-[node name="EquipOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("3_jig2i")]
+[node name="EquipOptions" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer/ClipContainer" index="0" instance=ExtResource("4_61afq")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="VScrollBar" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer1/PanelContainer/WindowContainer/ScrollBars" index="1"]
-page = 0.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Foreground/MainMarginContainer/HBoxContainer" index="2"]
 layout_mode = 2
 
-[node name="ItemStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("4_wtgju")]
+[node name="ItemStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="0" instance=ExtResource("5_i1rtg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ActorStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="1" instance=ExtResource("5_qom7v")]
+[node name="ActorStatsDisplay" parent="Foreground/MainMarginContainer/HBoxContainer/VBoxContainer2" index="1" instance=ExtResource("6_fpsul")]
 unique_name_in_owner = true
 layout_mode = 2
 

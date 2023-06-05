@@ -64,9 +64,9 @@ public partial class UsePartySubMenu : OptionSubMenu
         DisplayOptions();
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        _ = HandleUse(CurrentContainer.FocusedItem);
+        _ = HandleUse(optionItem);
     }
 
     private void SetNodeReferences()
@@ -77,10 +77,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         if (_itemStack == null || _actionEffect == null)
             return;
         if (_actionEffect.TargetType == (int)TargetType.PartyMemberAll)
-        {
-            _partyContainer.AllOptionEnabled = true;
-            _partyContainer.SingleOptionsEnabled = false;
-        }
+            _partyContainer.CurrentOptionMode = OptionMode.All;
     }
 
     private void DisplayOptions()
@@ -143,7 +140,7 @@ public partial class UsePartySubMenu : OptionSubMenu
     private async Task HandleUse(OptionItem? optionItem)
     {
         IEnumerable<OptionItem> selectedItems;
-        if (_partyContainer.AllOptionEnabled)
+        if (_partyContainer.CurrentOptionMode == OptionMode.All)
             selectedItems = _partyContainer.GetSelectedItems();
         else if (optionItem != null)
             selectedItems = new OptionItem[] { optionItem };

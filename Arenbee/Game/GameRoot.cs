@@ -2,6 +2,7 @@
 using Arenbee.GUI.Menus;
 using Arenbee.Input;
 using GameCore;
+using GameCore.Input;
 
 namespace Arenbee;
 
@@ -12,8 +13,8 @@ public partial class GameRoot : BaseGameRoot
     {
     }
 
-    public override MenuInputHandler MenuInput { get; } = new();
-    public override Player1InputHandler PlayerOneInput { get; } = new();
+    public override IGUIInputHandler MenuInput { get; } = InputFactory.CreateMenuInput();
+    public override IActorInputHandler PlayerOneInput { get; } = InputFactory.CreatePlayer1Input();
 
     protected override void StartRoot()
     {

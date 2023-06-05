@@ -25,7 +25,7 @@ public partial class UseSubMenu : OptionSubMenu
     {
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         _referenceContainer = GetNode<Control>("%VBoxContainer");
-        _referenceContainer.Resized += OnResized;
+        _referenceContainer.ItemRectChanged += OnRefRectChanged;
         _optionContainer = GetNode<OptionContainer>("%UseOptions");
         AddContainer(_optionContainer);
 
@@ -40,16 +40,14 @@ public partial class UseSubMenu : OptionSubMenu
         GetNode<MarginContainer>("%MarginContainer").SetLeftMargin(margin);
     }
 
-    protected void OnResized()
+    protected void OnRefRectChanged()
     {
         _referenceMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
-    protected override void OnSelectPressed()
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
     {
-        if (CurrentContainer?.FocusedItem?.OptionData is not string optionValue)
-            return;
-        if (CurrentContainer.FocusedItem.Disabled)
+        if (optionItem.Disabled || optionItem.OptionData is not string optionValue)
             return;
         if (optionValue == Localization.Menus.Menus_Inventory_Use_Use)
             HandleUse();
