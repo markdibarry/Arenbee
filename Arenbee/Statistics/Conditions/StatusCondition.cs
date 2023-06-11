@@ -18,16 +18,16 @@ public partial class StatusCondition : Condition
 
     public override StatusCondition Clone() => new(this);
 
-    protected override bool CheckCondition() => Stats.HasStatusEffect(TargetValue);
+    protected override bool CheckIfConditionMet(BaseStats stats) => stats.HasStatusEffect(TargetValue);
 
-    protected override void SubscribeEvents() => Stats.StatusEffectChanged += OnStatusEffectChanged;
+    public override void SubscribeEvents(BaseStats stats) => stats.StatusEffectChanged += OnStatusEffectChanged;
 
-    protected override void UnsubscribeEvents() => Stats.StatusEffectChanged -= OnStatusEffectChanged;
+    public override void UnsubscribeEvents(BaseStats stats) => stats.StatusEffectChanged -= OnStatusEffectChanged;
 
     private void OnStatusEffectChanged(int statusEffectType, ModChangeType changeType)
     {
         if (TargetValue != statusEffectType)
             return;
-        UpdateCondition();
+        RaiseConditionUpdated();
     }
 }

@@ -64,7 +64,7 @@ public partial class UsePartySubMenu : OptionSubMenu
         DisplayOptions();
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
         _ = HandleUse(optionItem);
     }

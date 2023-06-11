@@ -43,9 +43,9 @@ public partial class MainSubMenu : OptionSubMenu
         _mainOptions.ReplaceChildren(options);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (optionItem.OptionData is not string titleChoice)
+        if (optionItem?.OptionData is not string titleChoice)
             return;
         switch (titleChoice)
         {

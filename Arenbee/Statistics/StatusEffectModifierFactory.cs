@@ -29,7 +29,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     {
                         CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
-                        ResultType = ConditionResultType.RemoveOrDeactivate,
+                        ResultType = ConditionResultType.Remove | ConditionResultType.Deactivate,
                         AdditionalLogicOp = LogicOp.Or,
                         AdditionalCondition = new KOCondition()
                     }
@@ -50,7 +50,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     {
                         CompareOp = CompareOp.LessEquals,
                         TargetValue = 10,
-                        ResultType = ConditionResultType.RemoveOrDeactivate,
+                        ResultType = ConditionResultType.Remove | ConditionResultType.Deactivate,
                         AdditionalLogicOp = LogicOp.Or,
                         AdditionalCondition = new KOCondition()
                     }
@@ -69,7 +69,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                     },
                     new KOCondition()
                     {
-                        ResultType = ConditionResultType.RemoveOrDeactivate
+                        ResultType = ConditionResultType.Remove | ConditionResultType.Deactivate
                     }
                 },
                 isHidden: false),

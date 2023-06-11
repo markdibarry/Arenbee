@@ -51,10 +51,11 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnSetup()
     {
+        CreateMockStats();
+        _currentItemStack = _slot.ItemStack;
         SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
-        var options = GetEquippableOptions();
-        _equipOptions.ReplaceChildren(options);
+        DisplayEquippableOptions();
         _actorStatsDisplay.UpdateBaseValues(_actor.Stats);
     }
 
@@ -77,9 +78,9 @@ public partial class SelectSubMenu : OptionSubMenu
         _itemStatsDisplay.UpdateStatsDisplay(_currentItemStack?.Item);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (optionItem.OptionData is not ItemStack itemStack)
+        if (optionItem?.OptionData is not ItemStack itemStack)
             _actor.Equipment.RemoveItem(_actor, _slot);
         else
             _actor.Equipment.TrySetItem(_actor, _slot, itemStack);
@@ -87,32 +88,30 @@ public partial class SelectSubMenu : OptionSubMenu
         _ = CloseSubMenuAsync();
     }
 
-    private void SetNodeReferences()
-    {
-        CreateMockStats();
-        _currentItemStack = _slot.ItemStack;
-        _equipOptions = GetNode<OptionContainer>("%EquipOptions");
-        AddContainer(_equipOptions);
-        _actorStatsDisplay = GetNode<ActorStatsDisplay>("%ActorStatsDisplay");
-        _itemStatsDisplay = GetNode<ItemStatsDisplay>("%ItemStatsDisplay");
-    }
-
     private void CreateMockStats()
     {
         _mockStats = new(_actor.Stats);
-        RemoveMockMods();
+        foreach (var mod in _slot.Modifiers)
+            _mockStats.RemoveMod(mod);
     }
 
-    private List<KeyValueOption> GetEquippableOptions()
+    private void DisplayEquippableOptions()
     {
+        int focusIndex = 0;
         List<KeyValueOption> options = new();
         var unequipOption = _keyValueOptionScene.Instantiate<KeyValueOption>();
         unequipOption.KeyText = "<Unequip>";
         unequipOption.ValueText = string.Empty;
         unequipOption.OptionData = null;
         options.Add(unequipOption);
+
         if (_slot == null || _inventory == null)
-            return options;
+        {
+            _equipOptions.ReplaceChildren(options);
+            _equipOptions.FocusItem(focusIndex);
+            return;
+        }
+
         foreach (string itemCategoryId in _slot.SlotCategory.ItemCategoryIds)
         {
             foreach (ItemStack itemStack in _inventory.GetItemsByType(itemCategoryId))
@@ -124,12 +123,13 @@ public partial class SelectSubMenu : OptionSubMenu
                 if (!itemStack.CanReserve())
                     option.Disabled = true;
                 if (itemStack.Item == _slot.Item)
-                    _equipOptions.FocusItem(options.Count);
+                    focusIndex = options.Count;
                 options.Add(option);
             }
         }
 
-        return options;
+        _equipOptions.ReplaceChildren(options);
+        _equipOptions.FocusItem(focusIndex);
     }
 
     private void RemoveMockMods()
@@ -141,5 +141,13 @@ public partial class SelectSubMenu : OptionSubMenu
         }
 
         _mockMods.Clear();
+    }
+
+    private void SetNodeReferences()
+    {
+        _equipOptions = GetNode<OptionContainer>("%EquipOptions");
+        AddContainer(_equipOptions);
+        _actorStatsDisplay = GetNode<ActorStatsDisplay>("%ActorStatsDisplay");
+        _itemStatsDisplay = GetNode<ItemStatsDisplay>("%ItemStatsDisplay");
     }
 }

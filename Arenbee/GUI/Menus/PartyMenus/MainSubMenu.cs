@@ -26,9 +26,9 @@ public partial class MainSubMenu : OptionSubMenu
         Localization.Menus.Menus_Party_Quit
     };
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (optionItem.OptionData is not string subMenuName)
+        if (optionItem?.OptionData is not string subMenuName)
             return;
 
         switch (subMenuName)

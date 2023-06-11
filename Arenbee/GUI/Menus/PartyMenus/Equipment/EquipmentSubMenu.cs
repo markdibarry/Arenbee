@@ -75,7 +75,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
             UpdateEquipmentDisplay(optionItem);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
         if (optionContainer == _partyOptions)
             FocusContainer(_equipmentOptions);

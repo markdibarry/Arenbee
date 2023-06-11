@@ -63,7 +63,7 @@ public partial class DropSubMenu : OptionSubMenu
         base.HandleInput(menuInput, delta);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
         int total = _itemStack.Count;
         _inventory.RemoveItem(_itemStack, _count);

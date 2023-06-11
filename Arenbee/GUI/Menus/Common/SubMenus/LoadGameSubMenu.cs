@@ -15,9 +15,9 @@ public partial class LoadGameSubMenu : OptionSubMenu
     private GameRoot _gameRoot = (GameRoot)Locator.Root;
     public static string GetScenePath() => GDEx.GetScenePath();
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (optionItem.OptionData is not string fileName)
+        if (optionItem?.OptionData is not string fileName)
             return;
         ContinueSavedGame(fileName);
     }

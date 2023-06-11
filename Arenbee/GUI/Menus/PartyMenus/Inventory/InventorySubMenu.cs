@@ -98,7 +98,7 @@ public partial class InventorySubMenu : OptionSubMenu
             UpdateItemDescription(optionItem);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
         if (optionContainer == _typeList)
             FocusContainer(_inventoryList);
@@ -162,9 +162,9 @@ public partial class InventorySubMenu : OptionSubMenu
         return options;
     }
 
-    private void OpenUseSubMenu(OptionItem optionItem)
+    private void OpenUseSubMenu(OptionItem? optionItem)
     {
-        if (optionItem.OptionData is not ItemStack itemStack)
+        if (optionItem?.OptionData is not ItemStack itemStack)
             return;
         _ = OpenSubMenuAsync(path: UseSubMenu.GetScenePath(), data: (_contentMargin, itemStack));
     }

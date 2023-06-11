@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Arenbee.Statistics;
@@ -10,6 +10,7 @@ namespace Arenbee.ActionEffects;
 
 public class Darts : IActionEffect
 {
+    private static readonly string s_globalPositionName = Node2D.PropertyName.GlobalPosition.ToString();
     public bool IsActionSequence => true;
     public int TargetType => (int)ActionEffects.TargetType.EnemyAll;
 
@@ -42,7 +43,7 @@ public class Darts : IActionEffect
         };
         target.ActorBody.GetParent().AddChild(sprite);
         Tween dartTween = sprite.CreateTween();
-        dartTween.TweenProperty(sprite, Node2D.PropertyName.GlobalPosition.ToString(), target.ActorBody.GlobalPosition, 0.1f);
+        dartTween.TweenProperty(sprite, s_globalPositionName, target.ActorBody.GlobalPosition, 0.1f);
         await sprite.ToSignal(dartTween, Tween.SignalName.Finished);
 
         DamageRequest actionData = new()

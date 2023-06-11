@@ -12,15 +12,14 @@ public partial class KOCondition : Condition
     }
 
     public override int ConditionType => (int)Statistics.ConditionType.KO;
-    protected override Stats Stats => (Stats)base.Stats;
 
     public override KOCondition Clone() => new(this);
 
-    protected override bool CheckCondition() => Stats.CurrentHP <= 0;
+    public override void SubscribeEvents(BaseStats stats) => ((Stats)stats).HPDepleted += OnHPDepleted;
 
-    protected override void SubscribeEvents() => Stats.HPDepleted += OnHPDepleted;
+    public override void UnsubscribeEvents(BaseStats stats) => ((Stats)stats).HPDepleted -= OnHPDepleted;
 
-    protected override void UnsubscribeEvents() => Stats.HPDepleted -= OnHPDepleted;
+    protected override bool CheckIfConditionMet(BaseStats stats) => ((Stats)stats).CurrentHP <= 0;
 
-    private void OnHPDepleted() => UpdateCondition();
+    private void OnHPDepleted() => RaiseConditionUpdated();
 }

@@ -17,19 +17,19 @@ public partial class HPCondition : Condition
     public override int ConditionType => (int)Statistics.ConditionType.HPPercent;
     [Export] public CompareOp CompareOp { get; set; }
     [Export] public int TargetValue { get; set; }
-    protected override Stats Stats => (Stats)base.Stats;
 
     public override HPCondition Clone() => new(this);
 
-    protected override bool CheckCondition()
+    protected override bool CheckIfConditionMet(BaseStats baseStats)
     {
-        int percentMaxHP = (int)(Stats.MaxHP * TargetValue * 0.01);
-        return CompareOp.Compare(Stats.CurrentHP, percentMaxHP);
+        Stats stats = (Stats)baseStats;
+        int percentMaxHP = (int)(stats.MaxHP * TargetValue * 0.01);
+        return CompareOp.Compare(stats.CurrentHP, percentMaxHP);
     }
 
-    protected override void SubscribeEvents() => Stats.DamageReceived += OnDamageReceived;
+    public override void SubscribeEvents(BaseStats stats) => stats.DamageReceived += OnDamageReceived;
 
-    protected override void UnsubscribeEvents() => Stats.DamageReceived -= OnDamageReceived;
+    public override void UnsubscribeEvents(BaseStats stats) => stats.DamageReceived -= OnDamageReceived;
 
-    private void OnDamageReceived(IDamageResult damageResult) => UpdateCondition();
+    private void OnDamageReceived(IDamageResult damageResult) => RaiseConditionUpdated();
 }

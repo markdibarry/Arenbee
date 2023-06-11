@@ -45,9 +45,9 @@ public partial class UseSubMenu : OptionSubMenu
         _referenceMargin = (int)(_referenceContainer.Position.X + _referenceContainer.Size.X);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        if (optionItem.Disabled || optionItem.OptionData is not string optionValue)
+        if (optionItem == null || optionItem.Disabled || optionItem.OptionData is not string optionValue)
             return;
         if (optionValue == Localization.Menus.Menus_Inventory_Use_Use)
             HandleUse();

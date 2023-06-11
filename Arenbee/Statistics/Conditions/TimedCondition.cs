@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using GameCore.Statistics;
 using Godot;
 
@@ -30,11 +29,11 @@ public partial class TimedCondition : Condition
         base.Reset();
     }
 
-    protected override bool CheckCondition() => CurrentValue == TargetValue;
+    protected override bool CheckIfConditionMet(BaseStats stats) => CurrentValue == TargetValue;
 
-    protected override void SubscribeEvents() => Stats.Processed += OnProcessed;
+    public override void SubscribeEvents(BaseStats stats) => stats.Processed += OnProcessed;
 
-    protected override void UnsubscribeEvents() => Stats.Processed -= OnProcessed;
+    public override void UnsubscribeEvents(BaseStats stats) => stats.Processed -= OnProcessed;
 
     private void OnProcessed(double amount)
     {
@@ -46,6 +45,6 @@ public partial class TimedCondition : Condition
                 CurrentValue = Math.Max(CurrentValue - (float)amount, TargetValue);
         }
 
-        UpdateCondition();
+        RaiseConditionUpdated();
     }
 }

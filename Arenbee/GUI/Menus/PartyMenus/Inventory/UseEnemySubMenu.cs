@@ -79,7 +79,7 @@ public partial class UseEnemySubMenu : OptionSubMenu
             _areaScene?.MoveToActorContainer(enemy);
     }
 
-    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem optionItem)
+    protected override void OnItemPressed(OptionContainer optionContainer, OptionItem? optionItem)
     {
         _ = HandleUse(optionItem);
     }
