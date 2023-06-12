@@ -69,9 +69,9 @@ public class Stats : BaseStats
 
     public void RemoveModsByType(StatType statType)
     {
-        IEnumerable<Modifier> mods = GetModifiersByType((int)statType).Where(x => x.SourceType == SourceType.Independent);
-        foreach (Modifier mod in mods)
-            RemoveMod(mod);
+        IEnumerable<ModifierRef> modRefs = GetModifiersByType((int)statType).Where(x => x.Source == null);
+        foreach (ModifierRef modRef in modRefs)
+            RemoveMod(modRef);
     }
 
     protected override IDamageResult HandleDamage(IDamageRequest request)
@@ -135,13 +135,13 @@ public class Stats : BaseStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (Modifier mod in GetModifiersByType(statType).OrderBy(x => x.Op))
+        foreach (ModifierRef modRef in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
-            if (ignoreHidden && mod.IsHidden)
+            if (ignoreHidden && modRef.IsHidden)
                 continue;
-            if (!mod.IsActive)
+            if (!modRef.IsActive)
                 continue;
-            result = mod.Apply(result);
+            result = modRef.Apply(result);
         }
 
         return Math.Min(result, stat?.MaxValue ?? 999);
@@ -154,13 +154,13 @@ public class Stats : BaseStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (Modifier? mod in GetModifiersByType(statType).OrderBy(x => x.Op))
+        foreach (ModifierRef? modRef in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
-            if (ignoreHidden && mod.IsHidden)
+            if (ignoreHidden && modRef.IsHidden)
                 continue;
-            if (!mod.IsActive)
+            if (!modRef.IsActive)
                 continue;
-            result += mod.Value - ElementResist.None;
+            result += modRef.Value - ElementResist.None;
         }
 
         return Math.Clamp(result + ElementResist.None, ElementResist.Absorb, ElementResist.VeryWeak);
@@ -168,12 +168,12 @@ public class Stats : BaseStats
 
     private int CalculateAttackElement(int statType, bool ignoreHidden)
     {
-        Modifier? mod = GetModifiersByType(statType)
+        ModifierRef? modRef = GetModifiersByType(statType)
             .Where(x => x.IsActive)
-            .OrderBy(x => x.SourceType)
+            .OrderBy(x => x.Source == null)
             .LastOrDefault();
-        if (mod != null)
-            return mod.Value;
+        if (modRef != null)
+            return modRef.Value;
         Stat? stat = GetStat(statType);
         return stat?.Value ?? (int)ElementType.None;
     }
@@ -183,7 +183,7 @@ public class Stats : BaseStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (var mod in GetModifiersByType(statType).OrderBy(x => x.Op))
+        foreach (ModifierRef? mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -200,7 +200,7 @@ public class Stats : BaseStats
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
 
-        foreach (var mod in GetModifiersByType(statType).OrderBy(x => x.Op))
+        foreach (ModifierRef? mod in GetModifiersByType(statType).OrderBy(x => x.Op))
         {
             if (ignoreHidden && mod.IsHidden)
                 continue;
@@ -216,9 +216,9 @@ public class Stats : BaseStats
     {
         Stat? stat = GetStat(statType);
         int result = stat?.Value ?? default;
-        IReadOnlyCollection<Modifier> mods = GetModifiersByType(statType);
+        IReadOnlyCollection<ModifierRef> modRefs = GetModifiersByType(statType);
         // If any mods are present it should be active
-        if (result > 0 || mods.Any(x => x.IsActive))
+        if (result > 0 || modRefs.Any(x => x.IsActive))
             result = 1;
         StatType resist = StatTypeHelpers.GetStatusResistType((StatType)statType);
         // If fully resisted, status effect should be nullified
@@ -263,7 +263,6 @@ public class Stats : BaseStats
             if (100 - effectChance <= s_random.Next(100))
             {
                 Modifier effectMod = s_statusEffectModFactory.GetStatusEffectModifier((int)statusAttack.StatusEffectType);
-                effectMod.SourceType = SourceType.Independent;
                 AddMod(effectMod);
             }
         }

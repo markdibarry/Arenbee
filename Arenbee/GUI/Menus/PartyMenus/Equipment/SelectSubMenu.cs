@@ -91,8 +91,10 @@ public partial class SelectSubMenu : OptionSubMenu
     private void CreateMockStats()
     {
         _mockStats = new(_actor.Stats);
-        foreach (var mod in _slot.Modifiers)
-            _mockStats.RemoveMod(mod);
+        if (_slot.Item == null)
+            return;
+        foreach (Modifier mod in _slot.Item.Modifiers)
+            _mockStats.RemoveMod(mod, _slot, false);
     }
 
     private void DisplayEquippableOptions()
