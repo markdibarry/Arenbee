@@ -1,4 +1,5 @@
-﻿using Arenbee.Statistics;
+﻿using System;
+using Arenbee.Statistics;
 using GameCore.Utility;
 using Godot;
 
@@ -7,31 +8,32 @@ namespace Arenbee.GUI.Menus.Common;
 [Tool]
 public partial class ElementLarge : ElementDisplay
 {
-    public ElementLarge()
-    {
-        Effectiveness = ElementResist.None;
-    }
-
     public static string GetScenePath() => GDEx.GetScenePath();
     private Sprite2D _effectivenessSprite = null!;
-    public int Effectiveness { get; set; }
-
+    private int _effectiveness = ElementResist.None;
+    public int Effectiveness
+    {
+        get => _effectiveness;
+        set
+        {
+            _effectiveness = value;
+            DisplayEffectiveness(value);
+        }
+    }
 
     public override void _Ready()
     {
         base._Ready();
         _effectivenessSprite = GetNode<Sprite2D>("Effectiveness");
-        SetEffectiveness(Effectiveness);
+        DisplayEffectiveness(_effectiveness);
     }
 
-    public void SetEffectiveness(int value)
+    public void DisplayEffectiveness(int value)
     {
-        if (Effectiveness == ElementResist.None) return;
+        if (_effectivenessSprite == null || _effectiveness == ElementResist.None)
+            return;
         _effectivenessSprite.Show();
-        if (value > ElementResist.VeryWeak)
-            value = ElementResist.VeryWeak;
-        else if (value < ElementResist.Absorb)
-            value = ElementResist.Absorb;
+        Math.Clamp(value, ElementResist.Absorb, ElementResist.VeryWeak);
 
         switch (value)
         {

@@ -23,7 +23,6 @@ public partial class ElementDisplay : MarginContainer
 
     public override void _Ready()
     {
-        base._Ready();
         _elementColor = GetNode<TextureRect>("ElementColor");
         SetElementColor();
     }

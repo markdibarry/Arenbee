@@ -24,7 +24,6 @@ public partial class SelectSubMenu : OptionSubMenu
     private OptionContainer _equipOptions = null!;
     private PackedScene _keyValueOptionScene = GD.Load<PackedScene>(KeyValueOption.GetScenePath());
     private Stats _mockStats = null!;
-    private readonly List<Modifier> _mockMods = new();
     private ActorStatsDisplay _actorStatsDisplay = null!;
     private ItemStatsDisplay _itemStatsDisplay = null!;
 
@@ -51,8 +50,9 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnSetup()
     {
-        CreateMockStats();
+        _mockStats = new(_actor.Stats);
         _currentItemStack = _slot.ItemStack;
+
         SetNodeReferences();
         Foreground.SetMargin(PartyMenu.ForegroundMargin);
         DisplayEquippableOptions();
@@ -61,17 +61,17 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnItemFocused(OptionContainer optionContainer, OptionItem? optionItem)
     {
-        RemoveMockMods();
+        if (_currentItemStack != null)
+        {
+            foreach (Modifier mod in _currentItemStack.Item.Modifiers)
+                _mockStats.RemoveMod(mod, _slot);
+        }
 
         _currentItemStack = optionItem?.OptionData as ItemStack;
         if (_currentItemStack != null)
         {
             foreach (Modifier mod in _currentItemStack.Item.Modifiers)
-            {
-                Modifier newMod = new(mod);
-                _mockMods.Add(newMod);
-                _mockStats.AddMod(newMod);
-            }
+                _mockStats.AddMod(mod, _slot);
         }
 
         _actorStatsDisplay.UpdateStatsDisplay(_mockStats, updateColor: true);
@@ -86,15 +86,6 @@ public partial class SelectSubMenu : OptionSubMenu
             _actor.Equipment.TrySetItem(_actor, _slot, itemStack);
         CloseSoundPath = string.Empty;
         _ = CloseSubMenuAsync();
-    }
-
-    private void CreateMockStats()
-    {
-        _mockStats = new(_actor.Stats);
-        if (_slot.Item == null)
-            return;
-        foreach (Modifier mod in _slot.Item.Modifiers)
-            _mockStats.RemoveMod(mod, _slot, false);
     }
 
     private void DisplayEquippableOptions()
@@ -132,17 +123,6 @@ public partial class SelectSubMenu : OptionSubMenu
 
         _equipOptions.ReplaceChildren(options);
         _equipOptions.FocusItem(focusIndex);
-    }
-
-    private void RemoveMockMods()
-    {
-        if (_currentItemStack != null)
-        {
-            foreach (Modifier mod in _mockMods)
-                _mockStats.RemoveMod(mod);
-        }
-
-        _mockMods.Clear();
     }
 
     private void SetNodeReferences()
