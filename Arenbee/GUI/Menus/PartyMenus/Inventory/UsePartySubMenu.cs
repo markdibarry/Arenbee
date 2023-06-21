@@ -41,7 +41,7 @@ public partial class UsePartySubMenu : OptionSubMenu
 
     protected override void OnMockPreSetup()
     {
-        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor(_inventory)!;
+        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.ToActor(_inventory)!;
         _party = new Party("temp", new List<Actor> { actor }, _inventory);
         BaseItem item = ItemsLocator.ItemDB.GetItem(ItemIds.Potion)!;
         _itemStack = new ItemStack(item, 2);

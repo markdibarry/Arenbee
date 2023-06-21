@@ -1,4 +1,5 @@
 ﻿using GameCore.Statistics;
+using GCol = Godot.Collections;
 
 namespace Arenbee.Statistics;
 
@@ -18,7 +19,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.Poison,
                 op: ModOp.One,
                 value: 1,
-                conditions: new Godot.Collections.Array<Condition>()
+                conditions: new GCol.Array<Condition>()
                 {
                     new TimedCondition()
                     {
@@ -39,7 +40,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.Burn,
                 op: ModOp.One,
                 value: 1,
-                conditions: new Godot.Collections.Array<Condition>()
+                conditions: new GCol.Array<Condition>()
                 {
                     new TimedCondition()
                     {
@@ -60,7 +61,7 @@ public class StatusEffectModifierFactory : IStatusEffectModifierFactory
                 statType: (int)StatType.Burn,
                 op: ModOp.One,
                 value: 1,
-                conditions: new Godot.Collections.Array<Condition>()
+                conditions: new GCol.Array<Condition>()
                 {
                     new TimedCondition()
                     {

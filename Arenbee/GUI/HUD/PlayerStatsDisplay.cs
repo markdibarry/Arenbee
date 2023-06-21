@@ -36,7 +36,7 @@ public partial class PlayerStatsDisplay : PanelContainer
 
     private void SetupMockData()
     {
-        _actor = s_actorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _actor = s_actorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.ToActor()!;
         SetActor(_actor);
         Update();
     }

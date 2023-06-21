@@ -12,8 +12,6 @@ namespace Arenbee.Actors;
 
 public partial class ActorData : BaseActorData
 {
-    private static readonly IItemDB s_itemDB = ItemsLocator.ItemDB;
-
     public ActorData() { }
 
     [JsonConstructor]
@@ -75,9 +73,9 @@ public partial class ActorData : BaseActorData
 
     public override ActorData Clone() => new(this);
 
-    public override Actor CreateActor(BaseInventory? externalInventory = null)
+    public override Actor ToActor(BaseInventory? externalInventory = null)
     {
-        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.CreateItemStack(s_itemDB)).OfType<ItemStack>());
+        Inventory inventory = externalInventory as Inventory ?? new(ItemStackData.Select(x => x.ToItemStack()).OfType<ItemStack>());
         IReadOnlyCollection<EquipmentSlotCategory> equipmentPreset = ItemsLocator.EquipmentSlotCategoryDB.GetCategoryPreset(EquipmentSlotPresetId);
         Equipment equipment = new(inventory, equipmentPreset);
         Actor actor = new(

@@ -3,6 +3,7 @@ using Godot;
 
 namespace Arenbee.Statistics;
 
+[GlobalClass]
 public partial class StatusCondition : Condition
 {
     public StatusCondition() { }

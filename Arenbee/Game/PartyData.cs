@@ -31,10 +31,10 @@ public class PartyData
     public int InventoryIndex { get; set; } = -1;
     public IEnumerable<ItemStackData> Items { get; set; }
 
-    public Party CreateParty(IEnumerable<Inventory> inventories)
+    public Party ToParty(IEnumerable<Inventory> inventories)
     {
         Inventory inventory = inventories.ElementAt(InventoryIndex);
-        IEnumerable<Actor> actors = ActorData.Select(x => x.CreateActor(inventory));
+        IEnumerable<Actor> actors = ActorData.Select(x => x.ToActor(inventory));
         return new(PartyId, actors, inventory);
     }
 }

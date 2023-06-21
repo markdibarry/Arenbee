@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using GameCore.Statistics;
 using GameCore.Utility;
 using Godot;
+using GCol = Godot.Collections;
 
 namespace Arenbee.Statistics;
 
@@ -31,7 +32,7 @@ public partial class StatsData : Resource
     }
 
     [JsonConstructor]
-    public StatsData(Godot.Collections.Array<Stat> statLookup, Godot.Collections.Array<Modifier> modifiers)
+    public StatsData(GCol.Array<Stat> statLookup, GCol.Array<Modifier> modifiers)
     {
         StatLookup = statLookup;
         Modifiers = modifiers;
@@ -43,6 +44,6 @@ public partial class StatsData : Resource
         Modifiers = modifiers.ToGArray();
     }
 
-    [Export] public Godot.Collections.Array<Stat> StatLookup { get; private set; }
-    [Export] public Godot.Collections.Array<Modifier> Modifiers { get; private set; }
+    [Export] public GCol.Array<Stat> StatLookup { get; private set; }
+    [Export] public GCol.Array<Modifier> Modifiers { get; private set; }
 }

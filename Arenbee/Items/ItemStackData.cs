@@ -27,13 +27,9 @@ public class ItemStackData
     public int Count { get; }
     public string ItemId { get; }
 
-    public ItemStack? CreateItemStack() => CreateItemStack(s_itemDB);
-
-    public ItemStack? CreateItemStack(IItemDB itemDB)
+    public ItemStack? ToItemStack()
     {
         BaseItem? item = s_itemDB.GetItem(ItemId);
-        if (item == null)
-            return null;
-        return new ItemStack(item, Count);
+        return item == null ? null : new ItemStack(item, Count);
     }
 }

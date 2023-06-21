@@ -40,7 +40,7 @@ public partial class SelectSubMenu : OptionSubMenu
 
     protected override void OnMockPreSetup()
     {
-        _actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        _actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.ToActor()!;
         EquipmentSlotCategory category = ItemsLocator.EquipmentSlotCategoryDB.GetCategory(EquipmentSlotCategoryIds.Weapon)!;
         ItemStack metalStick = new(ItemsLocator.ItemDB.GetItem(ItemIds.MetalHockeyStick)!, 1);
         ItemStack magicWand = new(ItemsLocator.ItemDB.GetItem(ItemIds.Wand)!, 1);

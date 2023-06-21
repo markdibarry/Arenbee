@@ -39,7 +39,7 @@ public partial class EquipmentSubMenu : OptionSubMenu
 
     protected override void OnMockPreSetup()
     {
-        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.CreateActor()!;
+        Actor actor = ActorsLocator.ActorDataDB.GetData<ActorData>(ActorDataIds.Twosen)?.ToActor()!;
         _partyActors = new List<Actor> { actor };
     }
 

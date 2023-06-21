@@ -1,7 +1,9 @@
 ﻿using GameCore.Statistics;
+using Godot;
 
 namespace Arenbee.Statistics;
 
+[GlobalClass]
 public partial class KOCondition : Condition
 {
     public KOCondition() { }

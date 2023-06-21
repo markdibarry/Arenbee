@@ -22,7 +22,7 @@ public class InventoryData
 
     public Inventory CreateInventory()
     {
-        IEnumerable<ItemStack> itemStacks = ItemStackData.Select(x => x.CreateItemStack()).OfType<ItemStack>();
+        IEnumerable<ItemStack> itemStacks = ItemStackData.Select(x => x.ToItemStack()).OfType<ItemStack>();
         return new(itemStacks);
     }
 }

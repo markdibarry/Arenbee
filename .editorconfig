@@ -1,5 +1,9 @@
 # EditorConfig is awesome: https://EditorConfig.org
 
+# C# Guidelines
+[*.cs]
+guidelines = 120
+
 # top-most EditorConfig file
 root = true
 

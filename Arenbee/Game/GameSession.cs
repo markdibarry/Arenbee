@@ -57,7 +57,7 @@ public partial class GameSession : BaseGameSession
         GUIController = guiController;
         GameSave save = (GameSave)gameSave;
         IEnumerable<Inventory> inventories = save.Inventories.Select(x => x.CreateInventory());
-        Parties = save.Parties.Select(x => x.CreateParty(inventories)).ToList();
+        Parties = save.Parties.Select(x => x.ToParty(inventories)).ToList();
         MainParty = GetParty(save.MainPartyId);
         SessionState = save.SessionState;
 
