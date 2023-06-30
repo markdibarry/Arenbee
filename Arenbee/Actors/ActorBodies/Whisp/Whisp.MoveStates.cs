@@ -30,12 +30,6 @@ public partial class Whisp : ActorBody
                 PlayAnimation(AnimationName);
             }
 
-            public override void Update(double delta)
-            {
-            }
-
-            public override void Exit() { }
-
             public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
@@ -63,8 +57,6 @@ public partial class Whisp : ActorBody
                 ActorBody.Move();
             }
 
-            public override void Exit() { }
-
             public override bool TrySwitch(IStateMachine stateMachine)
             {
                 if (InputHandler.GetLeftAxis() == Godot.Vector2.Zero)
@@ -91,8 +83,6 @@ public partial class Whisp : ActorBody
                 ActorBody.UpdateDirection();
                 ActorBody.Move();
             }
-
-            public override void Exit() { }
 
             public override bool TrySwitch(IStateMachine stateMachine)
             {

@@ -31,8 +31,6 @@ public class AirStateMachine : AirStateMachineBase
         {
         }
 
-        public override void Exit() { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (!ActorBody.IsOnFloor())
@@ -48,14 +46,10 @@ public class AirStateMachine : AirStateMachineBase
         }
 
         public override void Enter() { }
-
         public override void Update(double delta)
         {
             ActorBody.ApplyFallGravity(delta);
-
         }
-
-        public override void Exit() { }
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {

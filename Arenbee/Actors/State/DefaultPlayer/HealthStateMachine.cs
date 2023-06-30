@@ -29,8 +29,6 @@ public class HealthStateMachine : HealthStateMachineBase
             StateController.PlayFallbackAnimation();
         }
 
-        public override void Update(double delta) { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Stats == null)
@@ -85,8 +83,6 @@ public class HealthStateMachine : HealthStateMachineBase
                 _isStaggered = false;
         }
 
-        public override void Exit() { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Stats != null && Stats.HasNoHP)
@@ -115,10 +111,6 @@ public class HealthStateMachine : HealthStateMachineBase
             ActorBody.HurtBoxes.SetMonitoringDeferred(false);
             ActorBody.Velocity = new Vector2(0, 0);
             PlayAnimation(AnimationName);
-        }
-
-        public override void Update(double delta)
-        {
         }
 
         public override void Exit()

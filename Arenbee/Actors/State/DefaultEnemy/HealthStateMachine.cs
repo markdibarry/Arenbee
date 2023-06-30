@@ -25,10 +25,6 @@ public class HealthStateMachine : HealthStateMachineBase
         {
         }
 
-        public override void Enter() { }
-
-        public override void Update(double delta) { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Stats.HasNoHP)
@@ -81,8 +77,6 @@ public class HealthStateMachine : HealthStateMachineBase
                 _isStaggered = false;
         }
 
-        public override void Exit() { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (Stats.HasNoHP)
@@ -107,8 +101,6 @@ public class HealthStateMachine : HealthStateMachineBase
             CreateDeathEffect();
             ActorBody.QueueFree();
         }
-
-        public override void Update(double delta) { }
 
         private void CreateDeathEffect()
         {

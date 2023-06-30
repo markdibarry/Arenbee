@@ -24,12 +24,6 @@ public partial class Plant : ActorBody
             {
                 PlayAnimation(AnimationName);
             }
-
-            public override void Update(double delta)
-            {
-            }
-
-            public override void Exit() { }
         }
     }
 }

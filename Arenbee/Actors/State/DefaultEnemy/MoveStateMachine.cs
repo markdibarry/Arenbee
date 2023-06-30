@@ -29,12 +29,6 @@ public class MoveStateMachine : MoveStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override void Update(double delta)
-        {
-        }
-
-        public override void Exit() { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))
@@ -66,8 +60,6 @@ public class MoveStateMachine : MoveStateMachineBase
             ActorBody.Move();
         }
 
-        public override void Exit() { }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))
@@ -98,8 +90,6 @@ public class MoveStateMachine : MoveStateMachineBase
             ActorBody.UpdateDirection();
             ActorBody.Move();
         }
-
-        public override void Exit() { }
 
         public override bool TrySwitch(IStateMachine stateMachine)
         {

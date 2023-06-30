@@ -30,10 +30,6 @@ public class MoveStateMachine : MoveStateMachineBase
             PlayAnimation(AnimationName);
         }
 
-        public override void Update(double delta)
-        {
-        }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Move))

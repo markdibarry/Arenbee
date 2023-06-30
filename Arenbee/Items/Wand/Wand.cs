@@ -12,15 +12,6 @@ public partial class Wand : HoldItem
         Setup(ItemIds.Wand, WeaponTypes.Wand, actorBody, new ActionStateMachine(actorBody, this));
     }
 
-    protected override void SetHitBoxes()
-    {
-    }
-
-    protected override void SetNodeReferences()
-    {
-        base.SetNodeReferences();
-    }
-
     public class ActionStateMachine : ActionStateMachineBase
     {
         public ActionStateMachine(ActorBody actorBody, HoldItem holdItem)
@@ -46,12 +37,6 @@ public partial class Wand : HoldItem
             {
                 StateController.PlayFallbackAnimation();
             }
-
-            public override void Update(double delta)
-            {
-            }
-
-            public override void Exit() { }
 
             public override bool TrySwitch(IStateMachine stateMachine)
             {
@@ -86,8 +71,6 @@ public partial class Wand : HoldItem
                 if (_counter > 0)
                     _counter -= delta;
             }
-
-            public override void Exit() { }
 
             public override bool TrySwitch(IStateMachine stateMachine)
             {
@@ -170,14 +153,6 @@ public partial class Wand : HoldItem
             {
                 PlayAnimation(AnimationName);
                 FireballBig.CreateFireball(ActorBody);
-            }
-
-            public override void Update(double delta)
-            {
-            }
-
-            public override void Exit()
-            {
             }
 
             public override bool TrySwitch(IStateMachine stateMachine)

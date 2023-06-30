@@ -25,10 +25,6 @@ public partial class Whisp : ActorBody
             {
                 StateController.PlayFallbackAnimation();
             }
-
-            public override void Update(double delta) { }
-
-            public override void Exit() { }
         }
     }
 }

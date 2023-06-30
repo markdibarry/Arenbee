@@ -26,10 +26,6 @@ public class ActionStateMachine : ActionStateMachineBase
             StateController.PlayFallbackAnimation();
         }
 
-        public override void Update(double delta)
-        {
-        }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (StateController.IsBlocked(BlockedState.Attack) || ActorBody.ContextAreas.Count > 0)
@@ -52,10 +48,6 @@ public class ActionStateMachine : ActionStateMachineBase
         public override void Enter()
         {
             PlayAnimation(AnimationName);
-        }
-
-        public override void Update(double delta)
-        {
         }
 
         public override bool TrySwitch(IStateMachine stateMachine)

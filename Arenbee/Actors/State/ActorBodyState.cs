@@ -1,10 +1,11 @@
 ﻿using System;
 using Arenbee.Input;
 using Arenbee.Statistics;
+using GameCore.Actors;
 
 namespace Arenbee.Actors;
 
-public abstract class ActorBodyState : GameCore.Actors.State
+public abstract class ActorBodyState : IState
 {
     protected ActorBodyState(ActorBody actorBody)
     {
@@ -17,6 +18,14 @@ public abstract class ActorBodyState : GameCore.Actors.State
     public StateController StateController => (StateController)ActorBody.StateController;
     public Stats? Stats => ActorBody.Actor?.Stats;
     protected ActorBody ActorBody { get; }
+
+    public virtual void Enter() { }
+
+    public virtual void Exit() { }
+
+    public virtual bool TrySwitch(IStateMachine stateMachine) => false;
+
+    public virtual void Update(double delta) { }
 
     protected abstract void PlayAnimation(string animationName);
 }

@@ -20,13 +20,5 @@ public class ActionStateMachine : ActionStateMachineBase
             : base(actor, holdItem)
         {
         }
-
-        public override void Enter() { }
-
-        public override void Update(double delta)
-        {
-        }
-
-        public override void Exit() { }
     }
 }
