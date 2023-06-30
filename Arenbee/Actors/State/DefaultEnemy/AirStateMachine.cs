@@ -27,10 +27,6 @@ public class AirStateMachine : AirStateMachineBase
             StateController.PlayFallbackAnimation();
         }
 
-        public override void Update(double delta)
-        {
-        }
-
         public override bool TrySwitch(IStateMachine stateMachine)
         {
             if (!ActorBody.IsOnFloor())
@@ -45,7 +41,6 @@ public class AirStateMachine : AirStateMachineBase
         {
         }
 
-        public override void Enter() { }
         public override void Update(double delta)
         {
             ActorBody.ApplyFallGravity(delta);
